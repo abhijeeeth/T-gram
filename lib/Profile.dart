@@ -82,7 +82,8 @@ class _ProfileState extends State<Profile> {
   //   });
   // }
   viewProfile() async {
-    const String url = 'http://192.168.54.114:8000/api/auth/ViewProfile';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ViewProfile';
     print(sessionToken);
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
@@ -277,7 +278,7 @@ class _ProfileState extends State<Profile> {
                         // String profile_base= _imgProfile.path != null ? 'data:image/png;base64,' + base64Encode(bytes) : '';
                         print(base64Image);
                         const String url =
-                            'http://192.168.54.114:8000/api/auth/EditProfile';
+                            'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/EditProfile';
 
                         Map data = {
                           "name": name.text,

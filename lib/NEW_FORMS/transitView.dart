@@ -171,7 +171,8 @@ class _transiViewState extends State<transiView> {
   // }
 
   View_Record() async {
-    String url = 'http://192.168.54.114:8000/api/auth/CheckTransit/';
+    String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/CheckTransit/';
     Map data = {"app_id": Ids};
 
     var body = json.encode(data);
@@ -913,7 +914,7 @@ class _transiViewState extends State<transiView> {
                                       fontSize: 18.0);
                                 } else {
                                   const String url =
-                                      'http://192.168.54.114:8000/api/auth/apply_orign_transit/';
+                                      'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/apply_orign_transit/';
                                   Map data = {
                                     "app_id": Ids,
                                     "dest_state": "Kerala",

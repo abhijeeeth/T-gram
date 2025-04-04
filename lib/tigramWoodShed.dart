@@ -166,7 +166,7 @@ class tigramWoodShedState extends State<tigramWoodShed> {
       disti.clear();
       status.clear();
       const String url =
-          'http://192.168.54.114:8000/api/auth/addtimber_district_species_filtration';
+          'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/addtimber_district_species_filtration';
       Map data = {
         "district": selectedDistrict ?? "",
         "species": dropdownValue ?? ""
@@ -217,7 +217,7 @@ class tigramWoodShedState extends State<tigramWoodShed> {
       division1.clear();
       dist1.clear();
       const String url =
-          'http://192.168.54.114:8000/api/auth/requirement_district_species_filtration';
+          'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/requirement_district_species_filtration';
 
       Map data = {
         "district": selectedDistrict ?? "",
@@ -288,7 +288,7 @@ class tigramWoodShedState extends State<tigramWoodShed> {
     disti.clear();
     status.clear();
     const String url =
-        'http://192.168.54.114:8000/api/auth/Buyer_Seller_Add_Data';
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/Buyer_Seller_Add_Data';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -346,7 +346,7 @@ class tigramWoodShedState extends State<tigramWoodShed> {
     division1.clear();
     dist1.clear();
     const String url =
-        'http://192.168.54.114:8000/api/auth/View_All_BuyerRequirement';
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/View_All_BuyerRequirement';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -404,7 +404,7 @@ class tigramWoodShedState extends State<tigramWoodShed> {
     disti2.clear();
     status2.clear();
     const String url =
-        'http://192.168.54.114:8000/api/auth/SellerView_SelectedDta';
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/SellerView_SelectedDta';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -445,7 +445,8 @@ class tigramWoodShedState extends State<tigramWoodShed> {
   LoadDistric() async {
     int RL = 0;
 
-    String url = 'http://192.168.54.114:8000/api/auth/ListDistrict';
+    String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ListDistrict';
 
     //  Map<String, String> headers = {
     //  'Content-Type': 'application/json',
@@ -471,7 +472,8 @@ class tigramWoodShedState extends State<tigramWoodShed> {
   }
 
   ListRange() async {
-    const String url = 'http://192.168.54.114:8000/api/auth/LoadTreeSpecies';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/LoadTreeSpecies';
     final response = await http.post(Uri.parse(url), headers: {
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -914,7 +916,7 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                                                                 value)] !=
                                                             null) {
                                                           const String url =
-                                                              "http://192.168.54.114:8000/api/auth/Delete_Timber_Data";
+                                                              "https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/Delete_Timber_Data";
                                                           Map data = {
                                                             "id": Ids[int.parse(
                                                                 value)]
@@ -1321,7 +1323,7 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                                               //           if (Ids[int.parse(value)] !=
                                               //               null) {
                                               //             const String url =
-                                              //                 "http://192.168.54.114:8000/api/auth/Select_Data";
+                                              //                 "https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/Select_Data";
                                               //             Map data = {
                                               //               "id": Ids[
                                               //                   int.parse(value)]

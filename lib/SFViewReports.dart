@@ -182,7 +182,8 @@ class _SFViewReportsState extends State<SFViewReports> {
   List t1_Rejected = [];
   //-----------------------End-Variable-----------------------------------
   Table_1() async {
-    const String url = ' http://192.168.54.114:8000/api/auth/sfd_table_one/';
+    const String url =
+        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/sfd_table_one/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -251,7 +252,8 @@ class _SFViewReportsState extends State<SFViewReports> {
   late Map<String, double> T2_C;
   //----------------End-Variable------------------------------------
   Table_2() async {
-    const String url = ' http://192.168.54.114:8000/api/auth/sfd_table_two/';
+    const String url =
+        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/sfd_table_two/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -332,7 +334,8 @@ class _SFViewReportsState extends State<SFViewReports> {
   //--end-Graph
   //-----------------------End-Variable---------------------------------
   Table_3() async {
-    const String url = ' http://192.168.54.114:8000/api/auth/sfd_table_three/';
+    const String url =
+        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/sfd_table_three/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -413,7 +416,8 @@ class _SFViewReportsState extends State<SFViewReports> {
   List t4_list = [];
   //-----------------------End-Variable---------------------------------
   Table_4() async {
-    const String url = ' http://192.168.54.114:8000/api/auth/sfd_table_four/';
+    const String url =
+        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/sfd_table_four/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -478,7 +482,8 @@ class _SFViewReportsState extends State<SFViewReports> {
   List t5_list = [];
   //-----------------------End-Variable---------------------------------
   Table_5() async {
-    const String url = ' http://192.168.54.114:8000/api/auth/sfd_table_five/';
+    const String url =
+        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/sfd_table_five/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -554,7 +559,8 @@ class _SFViewReportsState extends State<SFViewReports> {
   List t6_list = [];
   //-----------------------End-Variable---------------------------------
   Table_6() async {
-    const String url = ' http://192.168.54.114:8000/api/auth/sfd_table_six/';
+    const String url =
+        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/sfd_table_six/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -627,7 +633,8 @@ class _SFViewReportsState extends State<SFViewReports> {
   List t7_list = [];
   //-----------------------End-Variable---------------------------------
   Table_7() async {
-    const String url = ' http://192.168.54.114:8000/api/auth/sfd_table_seven/';
+    const String url =
+        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/sfd_table_seven/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -699,7 +706,8 @@ class _SFViewReportsState extends State<SFViewReports> {
   List t8_list = [];
   //-----------------------End-Variable---------------------------------
   Table_8() async {
-    const String url = ' http://192.168.54.114:8000/api/auth/sfd_table_eight/';
+    const String url =
+        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/sfd_table_eight/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -774,7 +782,8 @@ class _SFViewReportsState extends State<SFViewReports> {
   List t9_list = [];
   //-----------------------End-Variable---------------------------------
   Table_9() async {
-    const String url = ' http://192.168.54.114:8000/api/auth/sfd_table_nine/';
+    const String url =
+        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/sfd_table_nine/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -858,7 +867,7 @@ class _SFViewReportsState extends State<SFViewReports> {
   //----------------------End-Variable--------------------
   Table_10() async {
     const String url =
-        ' http://192.168.54.114:8000/api/auth/sfd_table_noc_one/';
+        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/sfd_table_noc_one/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -951,7 +960,8 @@ class _SFViewReportsState extends State<SFViewReports> {
   //api----------
 //---------------------Pie-chart------------------
   void pie_chart() async {
-    const String url = ' http://192.168.54.114:8000/api/auth/dashbord_chart';
+    const String url =
+        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/dashbord_chart';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',

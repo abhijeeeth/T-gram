@@ -60,7 +60,8 @@ class _NocViewApplicationState extends State<NocViewApplication> {
   //--------------------------
 
   void NocView() async {
-    String url = 'http://192.168.54.114:8000/api/auth/NocViewApplication';
+    String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/NocViewApplication';
     Map data = {
       "app_id": Ids,
     };

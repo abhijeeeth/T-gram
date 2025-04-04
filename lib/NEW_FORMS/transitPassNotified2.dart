@@ -628,7 +628,7 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
                                       mimePos = "application/pdf";
                                     }
                                     const String url =
-                                        'http://192.168.54.114:8000/api/auth/new_application_form/';
+                                        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_application_form/';
                                     Map data = {
                                       "name": Name_,
                                       "lat": latImage,

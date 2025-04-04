@@ -100,7 +100,8 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
   String ID_type = "";
   String ID_PROOF = "";
   void TransitView() async {
-    String url = 'http://192.168.54.114:8000/api/auth/SeeTransit/';
+    String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/SeeTransit/';
     Map data = {
       "transit_number": Ids,
     };
@@ -502,7 +503,7 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
                                 }
 
                                 const String url =
-                                    'http://192.168.54.114:8000/api/auth/ApproveNewProductTransit/';
+                                    'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ApproveNewProductTransit/';
                                 Map data = {
                                   "transit_number": transitId,
                                   "action": "Approve",
@@ -613,7 +614,7 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
                                   isShow = true;
                                 });
                                 const String url =
-                                    'http://192.168.54.114:8000/api/auth/ApproveNewProductTransit/';
+                                    'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ApproveNewProductTransit/';
                                 Map data = {
                                   "transit_number": transitId,
                                   "action": "Reject",

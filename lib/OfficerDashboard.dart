@@ -76,7 +76,8 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
 
 //---------------------Pie-chart------------------
   void pie_chart() async {
-    const String url = 'http://192.168.54.114:8000/api/auth/dashbord_chart';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/dashbord_chart';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -241,7 +242,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
     field_status.clear();
     print("Pending Application");
     const String url =
-        'http://192.168.54.114:8000/api/auth/PendingListViewApplication';
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/PendingListViewApplication';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -337,7 +338,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
     verify_forest1_1.clear();
     print("Approved Application");
     const String url =
-        'http://192.168.54.114:8000/api/auth/ApprovedListViewApplication';
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ApprovedListViewApplication';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -434,7 +435,8 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
   void DeemedApp() async {
     sr2.clear();
     print("Deemed Application");
-    const String url = 'http://192.168.54.114:8000/api/auth/DeemedApprovedList';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/DeemedApprovedList';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -496,7 +498,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
   void NocForm() async {
     sr3.clear();
     const String url =
-        'http://192.168.54.114:8000/api/auth/GetOfficerTransitPasses/';
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/GetOfficerTransitPasses/';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -846,7 +848,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                           //   icon: Icon(Icons.file_download),
                           //   onPressed: () async {
                           //     await launch(
-                          //         "http://192.168.54.114:8000/api/auth/summary_report/");
+                          //         "https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/summary_report/");
                           //   },
                           //   label: Text("Download"),
                           // ),
@@ -1126,7 +1128,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                             color: Colors.blue,
                                                             onPressed:
                                                                 () async {
-                                                              await launch("http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/" +
+                                                              await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_transit_pass_pdf/" +
                                                                   replaceSlashesWithDashes(
                                                                       App_no[int
                                                                           .parse(
@@ -1143,7 +1145,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                               .file_download),
                                                           color: Colors.blue,
                                                           onPressed: () async {
-                                                            await launch("http://192.168.54.114:8000/api/auth/new_user_report/" +
+                                                            await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_user_report/" +
                                                                 replaceSlashesWithDashes(
                                                                     App_no[int
                                                                         .parse(
@@ -1169,7 +1171,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                             color: Colors.blue,
                                                             onPressed:
                                                                 () async {
-                                                              await launch("http://192.168.54.114:8000/api/auth/qr_code_pdf/" +
+                                                              await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/qr_code_pdf/" +
                                                                   replaceSlashesWithDashes(
                                                                       App_no[int
                                                                           .parse(
@@ -1228,7 +1230,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                             color: Colors.blue,
                                                             onPressed:
                                                                 () async {
-                                                              await launch("http://192.168.54.114:8000/app/location_views/" +
+                                                              await launch("https://f4020lwv-8000.inc1.devtunnels.ms//app/location_views/" +
                                                                   replaceSlashesWithDashes(
                                                                       App_no[int
                                                                           .parse(
@@ -1520,7 +1522,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                     Colors.blue,
                                                                 onPressed:
                                                                     () async {
-                                                                  await launch("http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/"  +
+                                                                  await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_transit_pass_pdf/" +
                                                                       replaceSlashesWithDashes(
                                                                           App_no1[
                                                                               int.parse(value)]) +
@@ -1538,7 +1540,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                   Colors.blue,
                                                               onPressed:
                                                                   () async {
-                                                                await launch("http://192.168.54.114:8000/api/auth/new_user_report/" +
+                                                                await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_user_report/" +
                                                                     replaceSlashesWithDashes(
                                                                         App_no1[
                                                                             int.parse(value)]) +
@@ -1562,7 +1564,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                     Colors.blue,
                                                                 onPressed:
                                                                     () async {
-                                                                  await launch("http://192.168.54.114:8000/api/auth/qr_code_pdf/" +
+                                                                  await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/qr_code_pdf/" +
                                                                       replaceSlashesWithDashes(
                                                                           App_no1[
                                                                               int.parse(value)]) +
@@ -1623,7 +1625,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                     Colors.blue,
                                                                 onPressed:
                                                                     () async {
-                                                                  await launch("http://192.168.54.114:8000/app/location_views/" +
+                                                                  await launch("https://f4020lwv-8000.inc1.devtunnels.ms//app/location_views/" +
                                                                       replaceSlashesWithDashes(
                                                                           App_no1[
                                                                               int.parse(value)]) +
@@ -1900,7 +1902,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                     Colors.blue,
                                                                 onPressed:
                                                                     () async {
-                                                                  await launch("http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/" +
+                                                                  await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_transit_pass_pdf/" +
                                                                       replaceSlashesWithDashes(
                                                                           App_no2[
                                                                               int.parse(value)]) +
@@ -1918,7 +1920,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                   Colors.blue,
                                                               onPressed:
                                                                   () async {
-                                                                await launch("http://192.168.54.114:8000/api/auth/new_user_report/" +
+                                                                await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_user_report/" +
                                                                     replaceSlashesWithDashes(
                                                                         App_no2[
                                                                             int.parse(value)]) +
@@ -1942,7 +1944,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                     Colors.blue,
                                                                 onPressed:
                                                                     () async {
-                                                                  await launch("http://192.168.54.114:8000/api/auth/qr_code_pdf/" +
+                                                                  await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/qr_code_pdf/" +
                                                                       replaceSlashesWithDashes(
                                                                           App_no2[
                                                                               int.parse(value)]) +
@@ -2170,7 +2172,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                       .blue,
                                                                   onPressed:
                                                                       () async {
-                                                                    await launch("http://192.168.54.114:8000/app/location_views/" +
+                                                                    await launch("https://f4020lwv-8000.inc1.devtunnels.ms//app/location_views/" +
                                                                         replaceSlashesWithDashes(
                                                                             App_no3[int.parse(value)]) +
                                                                         "/");
@@ -2187,7 +2189,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                             //     onPressed:
                                                             //         () async {
                                                             //       await launch(
-                                                            //           " http://192.168.54.114:8000/api/auth/new_noc_pdf/" +
+                                                            //           " https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_noc_pdf/" +
                                                             //               Ids3[int.parse(
                                                             //                   value)] +
                                                             //               "/");
@@ -2306,7 +2308,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                       ),
                       onTap: () async {
                         const String url =
-                            'http://192.168.54.114:8000/api/auth/logout/';
+                            'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/logout/';
                         await http.post(
                           Uri.parse(url),
                           headers: <String, String>{

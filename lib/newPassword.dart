@@ -143,7 +143,7 @@ class _newPasswordState extends State<newPassword> {
                             fontSize: 18.0);
                       } else {
                         const String url =
-                            'http://192.168.54.114:8000/api/auth/changepassword';
+                            'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/changepassword';
                         Map data = {
                           "phone": userId,
                           "passwd": Password.text,

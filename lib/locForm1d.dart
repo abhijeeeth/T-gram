@@ -813,7 +813,7 @@ class _locForm1dState extends State<locForm1d> {
                                 });
 
                                 const String url =
-                                    'http://192.168.54.114:8000/api/auth/InsertRecord';
+                                    'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/InsertRecord';
                                 Map data = {
                                   "name": App_no,
                                   "address": address,
@@ -1029,7 +1029,7 @@ class _locForm1dState extends State<locForm1d> {
                                 });
 
                                 const String url =
-                                    'http://192.168.54.114:8000/api/auth/Formtwophaseone';
+                                    'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/Formtwophaseone';
                                 Map data = {
                                   "name": App_no,
                                   "address": address,

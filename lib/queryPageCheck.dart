@@ -91,7 +91,8 @@ class _queryPageState extends State<queryPage> {
     _remarkfile = (result.files.first.name);
     print(_remarkfile);
     if (_remarkfile != null) {
-      const String url = 'http://192.168.54.114:8000/api/auth/scaned_details';
+      const String url =
+          'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/scaned_details';
       Map data = {
         "app_form_id": newString,
         "checkpost_officer_id": userId,
@@ -306,7 +307,7 @@ class _queryPageState extends State<queryPage> {
                             if (newString != null && latImage2 != "") {
                               submitData(newString);
                               // const String url =
-                              //     'http://192.168.54.114:8000/api/auth/scaned_details';
+                              //     'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/scaned_details';
                               // Map data = {
                               //   "app_form_id": newString,
                               //   "checkpost_officer_id": userId,

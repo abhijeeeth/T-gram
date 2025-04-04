@@ -619,7 +619,7 @@ class _signupState extends State<signup> {
                           fontSize: 18.0);
                     } else {
                       const String url =
-                          'http://192.168.54.114:8000/api/auth/NewRegisterAPI';
+                          'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/NewRegisterAPI';
                       // final bytes6 = File(_imageFile.path).readAsBytesSync();
                       // String aadhar_base= _imageFile != null ? 'data:image/png;base64,' + base64Encode(bytes6) : '';
                       print(base64Image);
@@ -659,7 +659,7 @@ class _signupState extends State<signup> {
                         //     textColor: Colors.white,
                         //     fontSize: 18.0);
                         const String url1 =
-                            'http://192.168.54.114:8000/api/auth/register_otp_verification';
+                            'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/register_otp_verification';
                         Map data1 = {
                           "phone": Mobile.text,
                         };
@@ -792,7 +792,7 @@ class _signupState extends State<signup> {
                                   fontSize: 18.0);
                             } else {
                               const String url =
-                                  'http://192.168.54.114:8000/api/auth/register_Otp_verify';
+                                  'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/register_Otp_verify';
                               Map data = {
                                 "phone": Mobile.text,
                                 "otp": otp.text,

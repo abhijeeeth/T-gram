@@ -348,7 +348,8 @@ class _locForm1aState extends State<locForm1a> {
   List<String> Rname = [];
   int RL = 0;
   void ListRange() async {
-    const String url = 'http://192.168.54.114:8000/api/auth/ListRange';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ListRange';
     final response = await http.get(Uri.parse(url), headers: {
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -368,7 +369,8 @@ class _locForm1aState extends State<locForm1a> {
 
   ListDivision() async {
     int DL = 0;
-    const String url = 'http://192.168.54.114:8000/api/auth/LoadDivision';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/LoadDivision';
     Map data = {
       "range_area": _selectedDiv ?? "",
     };
@@ -396,7 +398,8 @@ class _locForm1aState extends State<locForm1a> {
   LoadDistric() async {
     int RL = 0;
 
-    String url = 'http://192.168.54.114:8000/api/auth/ListDistrict';
+    String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ListDistrict';
 
     var response = await http.get(
       Uri.parse(url),
@@ -420,7 +423,8 @@ class _locForm1aState extends State<locForm1a> {
   List<String> taluka = [];
   LoadTaluka() async {
     int RL = 0;
-    const String url = 'http://192.168.54.114:8000/api/auth/LoadTaluka';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/LoadTaluka';
 
     Map data = {
       "district": _selectedDistrict ?? "",
@@ -448,7 +452,8 @@ class _locForm1aState extends State<locForm1a> {
   List<String> VillageL = [];
   LoadVillage() async {
     int RL = 0;
-    const String url = 'http://192.168.54.114:8000/api/auth/LoadVillage';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/LoadVillage';
     Map data = {"taluka": _selectedTaluke ?? ""};
     print(data);
     var body = json.encode(data);

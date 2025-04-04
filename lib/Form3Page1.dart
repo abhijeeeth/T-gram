@@ -52,7 +52,8 @@ class _Form3Page1State extends State<Form3Page1> {
   final List Sname = [];
 
   Future<void> ViewApplication() async {
-    const String url = 'http://192.168.54.114:8000/api/auth/ViewApplication';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ViewApplication';
     Map data = {"app_id": Ids1};
     print(data);
     var body = json.encode(data);
@@ -118,7 +119,8 @@ class _Form3Page1State extends State<Form3Page1> {
   var holder_IDs = [];
   getSpecies() async {
     print("----------------ALL Species----------------");
-    const String url = 'http://192.168.54.114:8000/api/auth/TreeSpeciesList';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/TreeSpeciesList';
     var response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"

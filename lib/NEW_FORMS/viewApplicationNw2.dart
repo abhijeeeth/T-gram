@@ -248,7 +248,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
       String errorMessage = '';
       if (field_status) {
         errorMessage = 'Field verification already completed';
-      } else if (assigned_deputy1_id != null) {
+      } else if (assigned_deputy1_id != 0) {
         // This is the issue
         errorMessage = 'Deputy already assigned';
       } else if (verify_range_officer) {
@@ -369,17 +369,8 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
       String fieldRequre,
       String userLoc,
       bool fieldStatus) {
-    // Add early validation
-    if (!canViewApplication()) {
-      return {
-        'can_assign_officer': false,
-        'transit_pass_exist': false,
-        'reject_visible': false,
-        'feild_butt_range': false,
-        'final_approve': false,
-        'add_LOC': false
-      };
-    }
+    print(
+        "DEBUG DisableButton: userGroup=$userGroup, isFormTwo=$isFormTwo, assignedDeputy1Id=$assignedDeputy1Id");
 
     // Initialize with default values
     bool can_assign_officer = false;
@@ -390,74 +381,32 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
     bool add_Loc = false;
 
     if (userGroup == 'forest range officer') {
-      // Log the exact condition variables for debugging
-      print("DEBUG: isFormTwo=$isFormTwo, assignedDeputy1Id=$assignedDeputy1Id, " +
-          "assigned_range_id=$assigned_range_id, verifyRangeOfficer=$verifyRangeOfficer, " +
-          "fieldStatus=$fieldStatus, verifyOfficer=$verifyOfficer");
-
-      // PRIMARY CONDITION: Check if application is eligible for assignment
-      if (!isFormTwo &&
-          assignedDeputy1Id == 0 &&
-          assigned_range_id == 0 &&
-          !verifyRangeOfficer) {
-        // This is the case where Range Officer should be able to assign deputy
-        can_assign_officer = true;
-        transit_pass_exist = false;
-        reject_visible = true;
-        feild_butt_range = false;
-        approvefinal = false;
-        print("Case: Assign deputy conditions met");
-        // Return immediately to prevent other conditions from overriding
-        return {
-          'can_assign_officer': can_assign_officer,
-          'transit_pass_exist': transit_pass_exist,
-          'reject_visible': reject_visible,
-          'feild_butt_range': feild_butt_range,
-          'final_approve': approvefinal,
-          'add_LOC': add_Loc
-        };
+      // Handle Form Two applications
+      if (isFormTwo) {
+        // For Form Two, allow assignment if not yet verified
+        if (!verifyRangeOfficer && !fieldStatus && assignedDeputy1Id == 0) {
+          can_assign_officer = true;
+          reject_visible = true;
+          print("Form Two: Can assign officer");
+        } else if (!verifyRangeOfficer && fieldStatus) {
+          approvefinal = true;
+          print("Form Two: Ready for approval");
+        }
+      } else {
+        // Handle regular applications
+        if (!verifyRangeOfficer && assignedDeputy1Id == 0 && !fieldStatus) {
+          can_assign_officer = true;
+          reject_visible = true;
+          print("Regular: Can assign officer");
+        } else if (!verifyRangeOfficer && fieldStatus) {
+          approvefinal = true;
+          print("Regular: Ready for approval");
+        }
       }
-
-      // Other conditions now won't override the primary assignment case
-      // ... existing code for other conditions ...
-
-      // FIELD VERIFICATION CONDITION
-      if (!isFormTwo &&
-          assignedDeputy1Id == 0 &&
-          !verifyRangeOfficer &&
-          !fieldStatus) {
-        can_assign_officer = false;
-        transit_pass_exist = false;
-        reject_visible = false;
-        feild_butt_range = true; // Enable field verification
-        approvefinal = false;
-        print("Case: Field verification conditions met");
-      }
-
-      // APPROVAL CONDITION
-      if (!isFormTwo && !verifyRangeOfficer && fieldStatus) {
-        can_assign_officer = false;
-        transit_pass_exist = false;
-        reject_visible = true;
-        feild_butt_range = false;
-        approvefinal = true;
-        print("Case: Approval conditions met");
-      }
-
-      // ALL DONE CONDITION
-      if (!isFormTwo && verifyRangeOfficer && fieldStatus) {
-        can_assign_officer = false;
-        transit_pass_exist = false;
-        reject_visible = false;
-        feild_butt_range = false;
-        approvefinal = false;
-        print("Case: All done conditions met");
-      }
-    } else if (userGroup == 'deputy range officer') {
-      // ... existing code for deputy range officer ...
-    } else if (userGroup == 'user') {
-      // ... existing code for user ...
     }
+
+    print(
+        "Button States: can_assign=$can_assign_officer, approve=$approvefinal, reject=$reject_visible");
 
     return {
       'can_assign_officer': can_assign_officer,
@@ -484,10 +433,11 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
 
       print("Fetching deputies for range ID: $rangeId");
 
-      String url = 'http://192.168.146.9:8000/api/auth/get_deputies/';
+      String url =
+          'https://f4020lwv-8000.inc1.devtunnels.ms/api/auth/get_deputies/';
       Map data = {"range": rangeId}; // Use dynamic range ID
       var body = json.encode(data);
-
+      print(sessionToken);
       final response = await http.post(Uri.parse(url),
           headers: <String, String>{
             'Content-Type': 'application/json',
@@ -526,7 +476,8 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
   }
 
   feachLog() async {
-    String url = 'http://192.168.146.9:8000/api/auth/get_req_log/';
+    String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms/api/auth/get_req_log/';
     Map data = {"app_id": Ids};
     var body = json.encode(data);
     final response = await http.post(Uri.parse(url),
@@ -556,7 +507,8 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
   }
 
   fechAppLog() async {
-    String url = 'http://192.168.146.9:8000/api/auth/get_verified_log/';
+    String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms/api/auth/get_verified_log/';
     Map data = {"app_id": Ids};
     var body = json.encode(data);
     final response = await http.post(Uri.parse(url),
@@ -805,10 +757,14 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
 
   bool canViewApplication() {
     if (userGroup == 'forest range officer') {
-      return !is_form_two && // Not Form 2
-          assigned_deputy1_id == 0 && // Changed from null check
-          assigned_range_id == 0 && // Changed from null check
-          !verify_range_officer; // Not yet verified
+      // For Form Two applications
+      if (is_form_two) {
+        return !verify_range_officer; // Allow if not yet verified by range officer
+      }
+      // For regular applications
+      return assigned_deputy1_id == 0 &&
+          assigned_range_id == 0 &&
+          !verify_range_officer;
     }
     return false;
   }
@@ -1120,7 +1076,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                     fontSize: 18.0);
                               } else {
                                 const String url =
-                                    'http://192.168.146.9:8000/api/auth/assgin_deputy/';
+                                    'https://f4020lwv-8000.inc1.devtunnels.ms/api/auth/assgin_deputy/';
                                 Map data = {
                                   "app_id": Ids,
                                   "deputy_id": dropdownValue3 != null
@@ -1266,7 +1222,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                   fontSize: 18.0);
                             } else {
                               const String url =
-                                  'http://192.168.146.9:8000/api/auth/approve_cutting_pass_new/';
+                                  'https://f4020lwv-8000.inc1.devtunnels.ms/api/auth/approve_cutting_pass_new/';
                               Map data = {
                                 "app_id": int.parse(Ids),
                                 "type": "Reject",
@@ -1674,7 +1630,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                   fontSize: 18.0);
                             } else {
                               const String url =
-                                  'http://192.168.146.9:8000/api/auth/approve_cutting_pass_new/';
+                                  'https://f4020lwv-8000.inc1.devtunnels.ms/api/auth/approve_cutting_pass_new/';
                               Map data = {
                                 "app_id": int.parse(Ids),
                                 "type": "Approve",
@@ -1837,7 +1793,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                             fontSize: 18.0);
                       } else {
                         const String url =
-                            'http://192.168.146.9:8000/api/auth/AddLocation/';
+                            'https://f4020lwv-8000.inc1.devtunnels.ms/api/auth/AddLocation/';
                         Map data = {
                           "app_id": int.parse(Ids),
                           "lat": latImage_u,
@@ -2366,7 +2322,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                               isShow = true;
                             });
                             const String url =
-                                'http://192.168.146.9:8000/api/auth/field_verify/';
+                                'https://f4020lwv-8000.inc1.devtunnels.ms/api/auth/field_verify/';
                             Map data = {
                               "app_id": Ids,
                               "location_img1": {
@@ -2812,7 +2768,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                   fontSize: 18.0);
                             } else {
                               const String url =
-                                  'http://192.168.146.9:8000/api/auth/assgin_deputy/';
+                                  'https://f4020lwv-8000.inc1.devtunnels.ms/api/auth/assgin_deputy/';
                               Map data = {
                                 "app_id": Ids,
                                 "deputy_id": dropdownValue3 != null

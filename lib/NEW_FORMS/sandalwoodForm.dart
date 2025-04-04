@@ -109,8 +109,8 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
   }
 
   Future<void> fetchVillage() async {
-    final response = await http
-        .get(Uri.parse('http://192.168.54.114:8000/api/auth/villages/'));
+    final response = await http.get(Uri.parse(
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/villages/'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
@@ -135,7 +135,8 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
   List<String> divisions = [];
   LoadDivisionRange() async {
     int DL = 0;
-    const String url = 'http://192.168.54.114:8000/api/auth/villages/';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/villages/';
     Map data = {
       "village": _selectedVillage,
     };
@@ -1043,7 +1044,7 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
                                         fontSize: 18.0);
                                   } else {
                                     const String url =
-                                        'http://192.168.54.114:8000/api/auth/new_application_form/';
+                                        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_application_form/';
                                     Map data = {
                                       "name": nameC.text,
                                       "survey_no": survayC.text,

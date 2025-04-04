@@ -2113,7 +2113,8 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
   List<String> divisions = [];
   LoadData() async {
     int DL = 0;
-    const String url = 'http://192.168.54.114:8000/api/auth/villages/';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/villages/';
     Map data = {
       "village": village__,
     };

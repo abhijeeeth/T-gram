@@ -1168,7 +1168,7 @@ class _Form2State extends State<Form2> {
                                   });
 
                                   const String url =
-                                      'http://192.168.54.114:8000/api/auth/InsertRecord';
+                                      'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/InsertRecord';
                                   Map data = {
                                     "name": Name,
                                     "address": Address,

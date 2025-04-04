@@ -1521,7 +1521,7 @@ class _noc_Form2State extends State<noc_Form2> {
                                   isShow = true;
                                 });
                                 const String url =
-                                    'http://192.168.54.114:8000/api/auth/Apply_for_noc/';
+                                    'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/Apply_for_noc/';
                                 Map data = {
                                   "name": Name,
                                   "address": Address,

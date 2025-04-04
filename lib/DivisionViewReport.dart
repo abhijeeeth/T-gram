@@ -185,7 +185,8 @@ class _DivisionViewReportState extends State<DivisionViewReport> {
   List t1_Rejected = [];
   //-----------------------End-Variable-----------------------------------
   Table_1() async {
-    const String url = ' http://192.168.54.114:8000/api/auth/dfo_table_one/';
+    const String url =
+        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/dfo_table_one/';
     Map data = {
       "area_range": SelectedRange == "All Range" ? "" : SelectedRange,
     };
@@ -244,7 +245,8 @@ class _DivisionViewReportState extends State<DivisionViewReport> {
   // Variables are already declared as nullable above
   //----------------End-Variable------------------------------------
   Table_2() async {
-    const String url = ' http://192.168.54.114:8000/api/auth/dfo_table_two/';
+    const String url =
+        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/dfo_table_two/';
     Map data = {
       "area_range": SelectedRange == "All Range" ? "" : SelectedRange,
     };
@@ -316,7 +318,8 @@ class _DivisionViewReportState extends State<DivisionViewReport> {
   //--end-Graph
   //-----------------------End-Variable---------------------------------
   Table_3() async {
-    const String url = ' http://192.168.54.114:8000/api/auth/dfo_table_three/';
+    const String url =
+        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/dfo_table_three/';
     Map data = {
       "area_range": SelectedRange == "All Range" ? "" : SelectedRange,
     };
@@ -388,7 +391,8 @@ class _DivisionViewReportState extends State<DivisionViewReport> {
   List t4_list = [];
   //-----------------------End-Variable---------------------------------
   Table_4() async {
-    const String url = ' http://192.168.54.114:8000/api/auth/dfo_table_four/';
+    const String url =
+        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/dfo_table_four/';
     Map data = {
       "area_range": SelectedRange == "All Range" ? "" : SelectedRange,
     };
@@ -444,7 +448,8 @@ class _DivisionViewReportState extends State<DivisionViewReport> {
   List t5_list = [];
   //-----------------------End-Variable---------------------------------
   Table_5() async {
-    const String url = ' http://192.168.54.114:8000/api/auth/dfo_table_five/';
+    const String url =
+        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/dfo_table_five/';
     Map data = {
       "area_range": SelectedRange == "All Range" ? "" : SelectedRange,
     };
@@ -511,7 +516,8 @@ class _DivisionViewReportState extends State<DivisionViewReport> {
   List t6_list = [];
   //-----------------------End-Variable---------------------------------
   Table_6() async {
-    const String url = ' http://192.168.54.114:8000/api/auth/dfo_table_six/';
+    const String url =
+        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/dfo_table_six/';
     Map data = {
       "area_range": SelectedRange == "All Range" ? "" : SelectedRange,
     };
@@ -575,7 +581,8 @@ class _DivisionViewReportState extends State<DivisionViewReport> {
   List t7_list = [];
   //-----------------------End-Variable---------------------------------
   Table_7() async {
-    const String url = ' http://192.168.54.114:8000/api/auth/dfo_table_seven/';
+    const String url =
+        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/dfo_table_seven/';
     Map data = {
       "area_range": SelectedRange == "All Range" ? "" : SelectedRange,
     };
@@ -638,7 +645,8 @@ class _DivisionViewReportState extends State<DivisionViewReport> {
   List t8_list = [];
   //-----------------------End-Variable---------------------------------
   Table_8() async {
-    const String url = ' http://192.168.54.114:8000/api/auth/dfo_table_eight/';
+    const String url =
+        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/dfo_table_eight/';
     Map data = {
       "area_range": SelectedRange == "All Range" ? "" : SelectedRange,
     };
@@ -704,7 +712,8 @@ class _DivisionViewReportState extends State<DivisionViewReport> {
   List t9_list = [];
   //-----------------------End-Variable---------------------------------
   Table_9() async {
-    const String url = ' http://192.168.54.114:8000/api/auth/dfo_table_nine/';
+    const String url =
+        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/dfo_table_nine/';
     Map data = {
       "area_range": SelectedRange == "All Range" ? "" : SelectedRange,
     };
@@ -779,7 +788,7 @@ class _DivisionViewReportState extends State<DivisionViewReport> {
   //----------------------End-Variable--------------------
   Table_10() async {
     const String url =
-        ' http://192.168.54.114:8000/api/auth/dfo_table_noc_one/ ';
+        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/dfo_table_noc_one/ ';
     Map data = {
       "area_range": SelectedRange == "All Range" ? "" : SelectedRange,
     };
@@ -876,7 +885,8 @@ class _DivisionViewReportState extends State<DivisionViewReport> {
   //api----------
 //---------------------Pie-chart------------------
   void pie_chart() async {
-    const String url = ' http://192.168.54.114:8000/api/auth/dashbord_chart';
+    const String url =
+        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/dashbord_chart';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -898,7 +908,7 @@ class _DivisionViewReportState extends State<DivisionViewReport> {
     print("hello");
 
     const String url =
-        'http://192.168.54.114:8000/api/auth/ApprovedListViewApplication';
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ApprovedListViewApplication';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"

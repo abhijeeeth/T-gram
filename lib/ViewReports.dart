@@ -208,7 +208,8 @@ class _ViewReportsState extends State<ViewReports> {
   List t1_Rejected = [];
   //-----------------------End-Variable-----------------------------------
   Table_1() async {
-    const String url = 'http://192.168.54.114:8000/api/auth/table_one/';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/table_one/';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -262,7 +263,8 @@ class _ViewReportsState extends State<ViewReports> {
   Map<String, double> T2_C;
   //----------------End-Variable------------------------------------
   Table_2() async {
-    const String url = 'http://192.168.54.114:8000/api/auth/table_two/';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/table_two/';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -328,7 +330,8 @@ class _ViewReportsState extends State<ViewReports> {
   //--end-Graph
   //-----------------------End-Variable---------------------------------
   Table_3() async {
-    const String url = 'http://192.168.54.114:8000/api/auth/table_three/';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/table_three/';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -394,7 +397,8 @@ class _ViewReportsState extends State<ViewReports> {
   List t4_list = [];
   //-----------------------End-Variable---------------------------------
   Table_4() async {
-    const String url = 'http://192.168.54.114:8000/api/auth/table_four/';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/table_four/';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -444,7 +448,8 @@ class _ViewReportsState extends State<ViewReports> {
   List t5_list = [];
   //-----------------------End-Variable---------------------------------
   Table_5() async {
-    const String url = 'http://192.168.54.114:8000/api/auth/table_five/';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/table_five/';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -505,7 +510,8 @@ class _ViewReportsState extends State<ViewReports> {
   List t6_list = [];
   //-----------------------End-Variable---------------------------------
   Table_6() async {
-    const String url = 'http://192.168.54.114:8000/api/auth/table_six/';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/table_six/';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -563,7 +569,8 @@ class _ViewReportsState extends State<ViewReports> {
   List t7_list = [];
   //-----------------------End-Variable---------------------------------
   Table_7() async {
-    const String url = 'http://192.168.54.114:8000/api/auth/table_seven/';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/table_seven/';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -620,7 +627,8 @@ class _ViewReportsState extends State<ViewReports> {
   List t8_list = [];
   //-----------------------End-Variable---------------------------------
   Table_8() async {
-    const String url = 'http://192.168.54.114:8000/api/auth/table_eight/';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/table_eight/';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -680,7 +688,8 @@ class _ViewReportsState extends State<ViewReports> {
   List t9_list = [];
   //----------------ارياتable---------------------------------
   Table_9() async {
-    const String url = 'http://192.168.54.114:8000/api/auth/table_nine/';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/table_nine/';
     var response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -748,7 +757,8 @@ class _ViewReportsState extends State<ViewReports> {
   List t10_list = [];
   //----------------------End-Variable--------------------
   Table_10() async {
-    const String url = 'http://192.168.54.114:8000/api/auth/table_noc_one/';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/table_noc_one/';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -807,7 +817,8 @@ class _ViewReportsState extends State<ViewReports> {
   List checkpost_name = [];
   List t11_list = [];
   Table_11() async {
-    const String url = 'http://192.168.54.114:8000/api/auth/table_eleven';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/table_eleven';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -895,7 +906,8 @@ class _ViewReportsState extends State<ViewReports> {
   //api----------
 //---------------------Pie-chart------------------
   void pie_chart() async {
-    const String url = 'http://192.168.54.114:8000/api/auth/dashbord_chart';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/dashbord_chart';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -917,7 +929,7 @@ class _ViewReportsState extends State<ViewReports> {
     print("hello");
 
     const String url =
-        'http://192.168.54.114:8000/api/auth/ApprovedListViewApplication';
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ApprovedListViewApplication';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"

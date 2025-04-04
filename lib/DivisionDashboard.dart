@@ -69,7 +69,8 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
 
 //---------------------Pie-chart------------------
   void pie_chart() async {
-    const String url = 'http://192.168.54.114:8000/api/auth/dashbord_chart';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/dashbord_chart';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token ${sessionToken ?? ''}"
@@ -87,7 +88,8 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
 
 //------------------End--Pie--Chart--------------
 
-  String url = " http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/90/";
+  String url =
+      " https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_transit_pass_pdf/90/";
 
   //---------------Table ----------------------
 
@@ -226,7 +228,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
     verify_forest1.clear();
     //---------------clear---------------
     const String url =
-        'http://192.168.54.114:8000/api/auth/DfoPendingListViewApplication';
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/DfoPendingListViewApplication';
     Map data = {
       "area_range": SelectedRange == "All Range" ? "" : SelectedRange ?? "",
     };
@@ -330,7 +332,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
     verify_forest1_1.clear();
     //----------clear-----------
     const String url =
-        'http://192.168.54.114:8000/api/auth/DfoApprovedListViewApplication';
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/DfoApprovedListViewApplication';
     Map data = {
       "area_range": SelectedRange == "All Range" ? "" : SelectedRange ?? "",
     };
@@ -431,7 +433,8 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
   void DeemedApp() async {
     print("Deemed Application");
     sr2.clear();
-    const String url = 'http://192.168.54.114:8000/api/auth/DeemedApprovedList';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/DeemedApprovedList';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -497,7 +500,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
     print("Noc Application");
     sr3.clear();
     const String url =
-        'http://192.168.54.114:8000/api/auth/NocListApplication/';
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/NocListApplication/';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -868,7 +871,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                           icon: Icon(Icons.file_download),
                           onPressed: () async {
                             await launch(
-                                " http://192.168.54.114:8000/api/auth/summary_report/");
+                                " https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/summary_report/");
                           },
                           label: Text("Download"),
                         ),
@@ -1170,7 +1173,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    "${" http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/" + Ids[int.parse(value)]}/");
+                                                                    "${" https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_transit_pass_pdf/" + Ids[int.parse(value)]}/");
                                                                 // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                               },
                                                             ),
@@ -1184,7 +1187,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                             onPressed:
                                                                 () async {
                                                               await launch(
-                                                                  "${"http://192.168.54.114:8000/api/auth/new_user_report/" + Ids[int.parse(value)]}/");
+                                                                  "${"https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_user_report/" + Ids[int.parse(value)]}/");
                                                               // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                             },
                                                           ),
@@ -1205,7 +1208,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    "${" http://192.168.54.114:8000/api/auth/qr_code_pdf/" + Ids[int.parse(value)]}/");
+                                                                    "${" https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/qr_code_pdf/" + Ids[int.parse(value)]}/");
                                                                 // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                               },
                                                             ),
@@ -1523,7 +1526,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    "${" http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/" + Ids1[int.parse(value)]}/");
+                                                                    "${" https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_transit_pass_pdf/" + Ids1[int.parse(value)]}/");
                                                                 // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                               },
                                                             ),
@@ -1537,7 +1540,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                             onPressed:
                                                                 () async {
                                                               await launch(
-                                                                  "${" http://192.168.54.114:8000/api/auth/new_user_report/" + Ids1[int.parse(value)]}/");
+                                                                  "${" https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_user_report/" + Ids1[int.parse(value)]}/");
                                                               // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                             },
                                                           ),
@@ -1558,7 +1561,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    "${" http://192.168.54.114:8000/api/auth/qr_code_pdf/" + Ids1[int.parse(value)]}/");
+                                                                    "${" https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/qr_code_pdf/" + Ids1[int.parse(value)]}/");
                                                                 // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                               },
                                                             ),
@@ -1813,7 +1816,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    "${" http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/" + Ids[int.parse(value)]}/");
+                                                                    "${" https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_transit_pass_pdf/" + Ids[int.parse(value)]}/");
                                                                 // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                               },
                                                             ),
@@ -1827,7 +1830,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                             onPressed:
                                                                 () async {
                                                               await launch(
-                                                                  "${" http://192.168.54.114:8000/api/auth/new_user_report/" + Ids2[int.parse(value)]}/");
+                                                                  "${" https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_user_report/" + Ids2[int.parse(value)]}/");
                                                               // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                             },
                                                           ),
@@ -1848,7 +1851,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    "${" http://192.168.54.114:8000/api/auth/qr_code_pdf/" + Ids[int.parse(value)]}/");
+                                                                    "${" https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/qr_code_pdf/" + Ids[int.parse(value)]}/");
                                                                 // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                               },
                                                             ),
@@ -2045,7 +2048,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                             onPressed:
                                                                 () async {
                                                               await launch(
-                                                                  "${" http://192.168.54.114:8000/api/auth/new_noc_pdf/" + Ids3[int.parse(value)]}/");
+                                                                  "${" https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_noc_pdf/" + Ids3[int.parse(value)]}/");
                                                               // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                             },
                                                           ),
@@ -2193,7 +2196,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                     ),
                     onTap: () async {
                       const String url =
-                          'http://192.168.54.114:8000/api/auth/logout/';
+                          'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/logout/';
                       await http.post(
                         Uri.parse(url),
                         headers: <String, String>{

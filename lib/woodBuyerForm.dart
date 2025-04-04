@@ -296,7 +296,7 @@ class _woodBuyerFormState extends State<woodBuyerForm> {
                           isShow = true;
                         });
                         const String url =
-                            'http://192.168.54.114:8000/api/auth/Firm_Registration';
+                            'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/Firm_Registration';
                         Map data = {
                           "id": userId,
                           "organization": orgName.text,

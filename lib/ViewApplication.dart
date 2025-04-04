@@ -45,7 +45,8 @@ class _ViewApplicationState extends State<ViewApplication> {
   String userEmail;
   _ViewApplicationState(this.sessionToken, this.userId, this.userGroup,
       this.Ids, this.Range, this.userName, this.userEmail);
-  String url = 'http://192.168.54.114:8000/api/auth/ViewApplication';
+  String url =
+      'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ViewApplication';
 
   late bool verify_officer;
   late bool deputy_range_officer;
@@ -140,7 +141,8 @@ class _ViewApplicationState extends State<ViewApplication> {
 
   //---end vehical-----------
   View_Record() async {
-    String url = 'http://192.168.54.114:8000/api/auth/ViewApplication';
+    String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ViewApplication';
     Map data = {"app_id": Ids};
     print(data);
     var body = json.encode(data);
@@ -1151,7 +1153,8 @@ class _ViewApplicationState extends State<ViewApplication> {
     });
 
     try {
-      const String url = 'http://192.168.54.114:8000/api/auth/UpdateTimberlog';
+      const String url =
+          'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/UpdateTimberlog';
       Map data = {"app_id": Ids, "log_details": log_details};
       var body = json.encode(data);
 

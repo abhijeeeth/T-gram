@@ -84,7 +84,8 @@ class _NocFormState extends State<NocForm> {
   List<String> district = [];
   LoadDistric() async {
     int RL = 0;
-    const String url = 'http://192.168.54.114:8000/api/auth/ListDistrict';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ListDistrict';
     var response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -105,7 +106,8 @@ class _NocFormState extends State<NocForm> {
   LoadTaluka() async {
     // taluka.clear();
     int RL = 0;
-    const String url = 'http://192.168.54.114:8000/api/auth/LoadTaluka';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/LoadTaluka';
     Map data = {
       "district": selectedDistrict,
     };
@@ -132,7 +134,8 @@ class _NocFormState extends State<NocForm> {
   List<String> Village = [];
   LoadVillage() async {
     int RL = 0;
-    const String url = 'http://192.168.54.114:8000/api/auth/LoadVillage';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/LoadVillage';
     Map data = {"taluka": selectedTaluka};
     print(data);
     var body = json.encode(data);
@@ -159,7 +162,8 @@ class _NocFormState extends State<NocForm> {
   List<String> Rname = [];
   int RL = 0;
   ListRange() async {
-    const String url = 'http://192.168.54.114:8000/api/auth/ListRange';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ListRange';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -181,7 +185,8 @@ class _NocFormState extends State<NocForm> {
 
   int DL = 0;
   ListDivision() async {
-    const String url = 'http://192.168.54.114:8000/api/auth/LoadDivision';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/LoadDivision';
     Map data = {
       "range_area": dropdownValue,
     };

@@ -138,7 +138,7 @@ class _forgetPasswordState extends State<forgetPassword> {
                               } else {
                                 NewPage = true;
                                 const String url =
-                                    'http://192.168.54.114:8000/api/auth/forgotpassword';
+                                    'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/forgotpassword';
                                 Map data = {
                                   "username":
                                       f_userName.text.replaceAll(' ', ''),
@@ -284,7 +284,7 @@ class _forgetPasswordState extends State<forgetPassword> {
                                             fontSize: 18.0);
                                       } else {
                                         const String url =
-                                            'http://192.168.54.114:8000/api/auth/forgotverifyotp';
+                                            'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/forgotverifyotp';
                                         Map data = {
                                           "phone":
                                               f_Mobile.text.replaceAll(' ', ''),

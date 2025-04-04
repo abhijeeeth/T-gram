@@ -96,7 +96,8 @@ class _woodshedAddReqState extends State<woodshedAddReq> {
   LoadDistric() async {
     int RL = 0;
 
-    String url = 'http://192.168.54.114:8000/api/auth/ListDistrict';
+    String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ListDistrict';
 
     //  Map<String, String> headers = {
     //  'Content-Type': 'application/json',
@@ -122,7 +123,8 @@ class _woodshedAddReqState extends State<woodshedAddReq> {
   }
 
   ListRange() async {
-    const String url = 'http://192.168.54.114:8000/api/auth/ListRange';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ListRange';
     final response = await http.get(Uri.parse(url), headers: {
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -398,7 +400,7 @@ class _woodshedAddReqState extends State<woodshedAddReq> {
                       isShow = true;
                     });
                     const String url =
-                        'http://192.168.54.114:8000/api/auth/Add_Requirement';
+                        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/Add_Requirement';
                     Map data = {
                       "id": userId,
                       "name": Name.text,

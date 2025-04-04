@@ -768,8 +768,8 @@ class _transitPassNonNot2State extends State<transitPassNonNot2> {
   }
 
   Future<void> submitApplication() async {
-    final url =
-        Uri.parse('http://192.168.54.114:8000/api/auth/new_application_form/');
+    final url = Uri.parse(
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_application_form/');
 
     var request = http.MultipartRequest('POST', url);
 

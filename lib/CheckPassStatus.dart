@@ -64,7 +64,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
   _CheckPassStatusState(this.sessionToken, this.userName, this.userEmail,
       this.userGroup, this.userId);
   final imageUrl =
-      "http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/90/";
+      "https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_transit_pass_pdf/90/";
   final scheduler = LazyScheduler(latency: Duration(seconds: 1));
 
   // List<Status> status = <Status>[];
@@ -194,7 +194,8 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
     App_Status_0.clear();
     Remark_0.clear();
 
-    const String url = 'http://192.168.54.114:8000/api/auth/GetTransitPasses';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/GetTransitPasses';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -300,7 +301,8 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
     field_status.clear();
     //-----clear------
 
-    const String url = 'http://192.168.54.114:8000/api/auth/GetCuttingPasses';
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/GetCuttingPasses';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -378,7 +380,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
     sr3.clear();
 
     const String url =
-        'http://192.168.54.114:8000/api/auth/UserNocListApplication';
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/UserNocListApplication';
     var response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -717,7 +719,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                                       .blue,
                                                                   onPressed:
                                                                       () async {
-                                                                    await launch("http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/" +
+                                                                    await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_transit_pass_pdf/" +
                                                                         App_no_0[
                                                                             int.parse(value)] +
                                                                         "/");
@@ -743,7 +745,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                                       () async {
                                                                     // _downloadFile(down,"TransitPass.pdf");
                                                                     //   downloadFile();
-                                                                    await launch("http://192.168.54.114:8000/api/auth/new_user_report/" +
+                                                                    await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_user_report/" +
                                                                         App_no_0[
                                                                             int.parse(value)] +
                                                                         "/");
@@ -796,7 +798,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                                       .blue,
                                                                   onPressed:
                                                                       () async {
-                                                                    await launch("http://192.168.54.114:8000/app/location_views/" +
+                                                                    await launch("https://f4020lwv-8000.inc1.devtunnels.ms//app/location_views/" +
                                                                         Ids_0[int.parse(
                                                                             value)] +
                                                                         "/");
@@ -1158,7 +1160,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                                       .blue,
                                                                   onPressed:
                                                                       () async {
-                                                                    await launch("http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/" +
+                                                                    await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_transit_pass_pdf/" +
                                                                         Ids[int.parse(
                                                                             value)] +
                                                                         "/");
@@ -1183,7 +1185,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                                       .blue,
                                                                   onPressed:
                                                                       () async {
-                                                                    await launch("http://192.168.54.114:8000/api/auth/new_user_report/" +
+                                                                    await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_user_report/" +
                                                                         Ids[int.parse(
                                                                             value)] +
                                                                         "/");
@@ -1230,7 +1232,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                                       .blue,
                                                                   onPressed:
                                                                       () async {
-                                                                    await launch("http://192.168.54.114:8000/app/location_views/" +
+                                                                    await launch("https://f4020lwv-8000.inc1.devtunnels.ms//app/location_views/" +
                                                                         Ids[int.parse(
                                                                             value)] +
                                                                         "/");

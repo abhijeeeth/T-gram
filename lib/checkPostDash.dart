@@ -102,7 +102,7 @@ class _checkPostState extends State<checkPost> {
 
     print("Scanning Application");
     const String url =
-        'http://192.168.54.114:8000/api/auth/ScanedListApplication';
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ScanedListApplication';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -299,7 +299,7 @@ class _checkPostState extends State<checkPost> {
                                                         color: Colors.blue,
                                                         onPressed: () async {
                                                           await launch(
-                                                              "${"http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/" + App_no[int.parse(value)]}/");
+                                                              "${"https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_transit_pass_pdf/" + App_no[int.parse(value)]}/");
                                                           // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                         },
                                                       ),
@@ -312,7 +312,7 @@ class _checkPostState extends State<checkPost> {
                                                   //     color: Colors.blue,
                                                   //     onPressed: () async {
                                                   //       await launch(
-                                                  //           "http://192.168.54.114:8000/api/auth/new_user_report/" +
+                                                  //           "https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_user_report/" +
                                                   //               Ids[int.parse(
                                                   //                   value)] +
                                                   //               "/");
@@ -330,7 +330,7 @@ class _checkPostState extends State<checkPost> {
                                                         color: Colors.blue,
                                                         onPressed: () async {
                                                           await launch(
-                                                              "${"http://192.168.54.114:8000/api/auth/qr_code_pdf/" + App_no[int.parse(value)]}/");
+                                                              "${"https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/qr_code_pdf/" + App_no[int.parse(value)]}/");
                                                           // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                         },
                                                       ),
@@ -438,7 +438,7 @@ class _checkPostState extends State<checkPost> {
                     ),
                     onTap: () async {
                       const String url =
-                          'http://192.168.54.114:8000/api/auth/logout/';
+                          'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/logout/';
                       await http.post(
                         Uri.parse(url),
                         headers: <String, String>{

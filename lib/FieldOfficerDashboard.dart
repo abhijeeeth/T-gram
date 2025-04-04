@@ -103,7 +103,7 @@ class _FieldOfficerDashboardState extends State<FieldOfficerDashboard> {
                 onTap: () async {
                   if (Ids.text.isNotEmpty) {
                     await launch(
-                        " http://192.168.54.114:8000/api/auth/qr_code_pdf/${Ids.text}/");
+                        " https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/qr_code_pdf/${Ids.text}/");
                   } else {
                     Fluttertoast.showToast(
                         msg: 'Login Successful',
@@ -143,7 +143,7 @@ class _FieldOfficerDashboardState extends State<FieldOfficerDashboard> {
               InkWell(
                 onTap: () async {
                   await launch(
-                      " http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/${Ids.text}/");
+                      " https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_transit_pass_pdf/${Ids.text}/");
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.40,
@@ -178,7 +178,7 @@ class _FieldOfficerDashboardState extends State<FieldOfficerDashboard> {
               InkWell(
                 onTap: () async {
                   await launch(
-                      " http://192.168.54.114:8000/api/auth/new_user_report/${Ids.text}/");
+                      " https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_user_report/${Ids.text}/");
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.40,
@@ -208,7 +208,7 @@ class _FieldOfficerDashboardState extends State<FieldOfficerDashboard> {
               InkWell(
                 onTap: () async {
                   await launch(
-                      " http://192.168.54.114:8000/api/auth/qr_code_pdf/${Ids.text}/");
+                      " https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/qr_code_pdf/${Ids.text}/");
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.40,
@@ -317,7 +317,7 @@ class _FieldOfficerDashboardState extends State<FieldOfficerDashboard> {
                     ),
                     onTap: () async {
                       const String url =
-                          'http://192.168.54.114:8000/api/auth/logout/';
+                          'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/logout/';
                       await http.post(
                         Uri.parse(url),
                         headers: <String, String>{
