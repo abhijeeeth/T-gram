@@ -20,11 +20,11 @@ class sandalwoodForm extends StatefulWidget {
   int userId;
   // ignore: use_key_in_widget_constructors
   sandalwoodForm(
-      {this.sessionToken,
-      this.userName,
-      this.userEmail,
-      this.userGroup,
-      this.userId});
+      {required this.sessionToken,
+      required this.userName,
+      required this.userEmail,
+      required this.userGroup,
+      required this.userId});
 
   @override
   // ignore: no_logic_in_create_state
@@ -54,13 +54,13 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
   bool flag1 = false;
   bool flag2 = false;
 
-  File _imageLandSkech;
-  File _imageLandPoss;
-  File _landPossProff;
-  File _landSkech;
+  File? _imageLandSkech;
+  File? _imageLandPoss;
+  File? _landPossProff;
+  File? _landSkech;
   String LAND_PROOF = "";
   String LAND_PROOF1 = "";
-  File _imglandTax;
+  File? _imglandTax;
   String LAND_PROOF_TYPE = "";
   String land_proof_type = "";
   String _selectedVillage = '';
@@ -76,10 +76,10 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
   final TextEditingController treeH = TextEditingController();
   final TextEditingController treeG = TextEditingController();
   List<VillageData> villages = [];
-  String divisionData;
-  String rangeData;
+  String? divisionData;
+  String? rangeData;
   List<Map<String, String>> trees = []; // List to store tree data
-  String selectedReason;
+  String? selectedReason;
   void addTree(String height, String girth) {
     setState(() {
       trees.add({'height': height, 'girth': girth});
@@ -102,15 +102,15 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
   final _formKey1 = GlobalKey<FormState>();
   final _formKey2 = GlobalKey<FormState>();
   bool _validateFields() {
-    if (_formKey.currentState != null && _formKey.currentState.validate()) {
+    if (_formKey.currentState != null && _formKey.currentState!.validate()) {
       return false;
     }
     return true;
   }
 
   Future<void> fetchVillage() async {
-    final response =
-        await http.get(Uri.parse('http://13.234.208.246/api/auth/villages/'));
+    final response = await http
+        .get(Uri.parse('http://192.168.54.114:8000/api/auth/villages/'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
@@ -135,7 +135,7 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
   List<String> divisions = [];
   LoadDivisionRange() async {
     int DL = 0;
-    const String url = 'http://13.234.208.246/api/auth/villages/';
+    const String url = 'http://192.168.54.114:8000/api/auth/villages/';
     Map data = {
       "village": _selectedVillage,
     };
@@ -200,9 +200,9 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
                   title: const Text('Apply for cutting'),
                   value: '1',
                   groupValue: selectedValue,
-                  onChanged: (value) {
+                  onChanged: (String? value) {
                     setState(() {
-                      selectedValue = value;
+                      selectedValue = value ?? '0';
                     });
                   },
                 ),
@@ -327,7 +327,7 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
                                   fontSize: 16),
                             ),
 
-                            onChanged: (String data) {
+                            onChanged: (String? data) {
                               setState(() {
                                 divisionData = data; // Update selected value
                               });
@@ -384,7 +384,7 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
                                   fontSize: 16),
                             ),
 
-                            onChanged: (String data) {
+                            onChanged: (String? data) {
                               setState(() {
                                 rangeData = data; // Update selected value
                               });
@@ -516,7 +516,7 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
                                                                     .currentState !=
                                                                 null &&
                                                             _formKey1
-                                                                .currentState
+                                                                .currentState!
                                                                 .validate()) {
                                                           // If the form is valid, proceed with adding the tree
                                                           addTree(treeH.text,
@@ -581,9 +581,9 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
                                               icon: const Icon(Icons.edit),
                                               onPressed: () {
                                                 treeH.text =
-                                                    trees[index]['height'];
+                                                    trees[index]['height']!;
                                                 treeG.text =
-                                                    trees[index]['girth'];
+                                                    trees[index]['girth']!;
                                                 showDialog(
                                                   context: context,
                                                   builder:
@@ -688,7 +688,7 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
                                                                     if (_formKey2.currentState !=
                                                                             null &&
                                                                         _formKey2
-                                                                            .currentState
+                                                                            .currentState!
                                                                             .validate()) {
                                                                       updateTree(
                                                                           index,
@@ -703,13 +703,14 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
                                                                   },
                                                                   style: ElevatedButton
                                                                       .styleFrom(
-                                                                    primary: Colors
-                                                                        .grey, // Gray background color
-                                                                    onPrimary:
+                                                                    foregroundColor:
                                                                         Colors
-                                                                            .white, // Text color
+                                                                            .white,
+                                                                    backgroundColor:
+                                                                        Colors
+                                                                            .grey, // Text color
                                                                     padding: const EdgeInsets
-                                                                            .symmetric(
+                                                                        .symmetric(
                                                                         horizontal:
                                                                             24,
                                                                         vertical:
@@ -781,8 +782,8 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
                               });
                             },
                             style: ElevatedButton.styleFrom(
-                              primary: Colors.grey[200], // Background color
-                              onPrimary: Colors.black87, // Text color
+                              foregroundColor: Colors.black87,
+                              backgroundColor: Colors.grey[200], // Text color
                               padding: const EdgeInsets.all(
                                   16.0), // Padding inside the button
                               side: const BorderSide(
@@ -813,8 +814,8 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
                                 Expanded(
                                   child: Text(
                                     _landPossProff != null
-                                        ? 'PDF File: ${_landPossProff.path.split('/').last}'
-                                        : 'Image File: ${_imageLandPoss.path.split('/').last}',
+                                        ? 'PDF File: ${_landPossProff!.path.split('/').last}'
+                                        : 'Image File: ${_imageLandPoss!.path.split('/').last}',
                                     style: TextStyle(color: Colors.black),
                                   ),
                                 ),
@@ -846,8 +847,8 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
                               });
                             },
                             style: ElevatedButton.styleFrom(
-                              primary: Colors.grey[200], // Background color
-                              onPrimary: Colors.black87, // Text color
+                              foregroundColor: Colors.black87,
+                              backgroundColor: Colors.grey[200], // Text color
                               padding: const EdgeInsets.all(
                                   16.0), // Padding inside the button
                               side: const BorderSide(
@@ -878,8 +879,8 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
                                 Expanded(
                                   child: Text(
                                     _landSkech != null
-                                        ? 'PDF File: ${_landSkech.path.split('/').last}'
-                                        : 'Image File: ${_imageLandSkech.path.split('/').last}',
+                                        ? 'PDF File: ${_landSkech!.path.split('/').last}'
+                                        : 'Image File: ${_imageLandSkech!.path.split('/').last}',
                                     style: const TextStyle(color: Colors.black),
                                   ),
                                 ),
@@ -1010,7 +1011,7 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
                             child: ElevatedButton(
                               onPressed: () async {
                                 if (_formKey.currentState != null &&
-                                    _formKey.currentState.validate()) {
+                                    _formKey.currentState!.validate()) {
                                   if (trees.isEmpty) {
                                     Fluttertoast.showToast(
                                         msg: "Please add tree details",
@@ -1042,7 +1043,7 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
                                         fontSize: 18.0);
                                   } else {
                                     const String url =
-                                        'http://13.234.208.246/api/auth/new_application_form/';
+                                        'http://192.168.54.114:8000/api/auth/new_application_form/';
                                     Map data = {
                                       "name": nameC.text,
                                       "survey_no": survayC.text,
@@ -1107,7 +1108,7 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
                   groupValue: selectedValue,
                   onChanged: (value) {
                     setState(() {
-                      selectedValue = value;
+                      selectedValue = value!;
                     });
                   },
                 ),
@@ -1243,30 +1244,28 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
     );
   }
 
-  Future<bool> _onBackPressed() {
-    return showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: const Text('Do you want to go Home page'),
-            actions: <Widget>[
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(false),
-                child: const Text("NO"),
-              ),
-              const SizedBox(height: 16),
-              new GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pop(true);
-                },
-                child: const Text("YES"),
-              ),
-            ],
+  Future<bool> _onBackPressed() async {
+    final shouldPop = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Do you want to go Home page'),
+        actions: <Widget>[
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(false),
+            child: const Text("NO"),
           ),
-        ) ??
-        false;
+          const SizedBox(height: 16),
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(true),
+            child: const Text("YES"),
+          ),
+        ],
+      ),
+    );
+    return shouldPop ?? false;
   }
 
-  Future<String> convertPdfToBase64(String pdfFilePath) async {
+  Future<String?> convertPdfToBase64(String pdfFilePath) async {
     final pdfFile = File(pdfFilePath);
 
     if (await pdfFile.exists()) {
@@ -1397,7 +1396,8 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
                     final selectedVillageName = _suggestions[index];
                     final selectedVillage = villages.firstWhere(
                       (village) => village.villageName == selectedVillageName,
-                      orElse: () => null,
+                      orElse: () => VillageData(
+                          id: 0, villageName: '', isNotified: false),
                     );
 
                     if (selectedVillage != null) {
@@ -1464,13 +1464,13 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
             if (flag1) {
               _landPossProff = File(filePath);
               convertPdfToBase64(filePath).then((pdfBase64) {
-                LAND_PROOF = pdfBase64;
+                LAND_PROOF = pdfBase64 ?? '';
                 LAND_PROOF_TYPE = "PDF";
               });
             } else if (flag2) {
               _landSkech = File(filePath);
               convertPdfToBase64(filePath).then((pdfBase64) {
-                LAND_PROOF1 = pdfBase64;
+                LAND_PROOF1 = pdfBase64 ?? '';
                 LAND_PROOF_TYPE = "PDF";
               });
             }
@@ -1521,9 +1521,9 @@ class VillageData {
   final bool isNotified;
 
   VillageData({
-    this.id,
-    this.villageName,
-    this.isNotified,
+    required this.id,
+    required this.villageName,
+    required this.isNotified,
   });
 
   factory VillageData.fromJson(Map<String, dynamic> json) {

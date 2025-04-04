@@ -25,17 +25,18 @@ import 'package:tigramnks/OfficerDashboard.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class transitViewAndApprove extends StatefulWidget {
-  String userGroup;
-  String sessionToken;
-  String Ids;
-  String userName;
-  String userEmail;
+  String? userGroup;
+  String? sessionToken;
+  String? Ids;
+  String? userName;
+  String? userEmail;
   transitViewAndApprove(
-      {this.userGroup,
-      this.sessionToken,
-      this.Ids,
-      this.userName,
-      this.userEmail});
+      {super.key,
+      required this.userGroup,
+      required this.sessionToken,
+      required this.Ids,
+      required this.userName,
+      required this.userEmail});
 
   @override
   State<transitViewAndApprove> createState() => _transitViewAndApproveState(
@@ -43,11 +44,16 @@ class transitViewAndApprove extends StatefulWidget {
 }
 
 class _transitViewAndApproveState extends State<transitViewAndApprove> {
-  String userGroup;
-  String sessionToken;
-  String Ids;
-  String userName;
-  String userEmail;
+  String? userGroup;
+  String? sessionToken;
+  String? Ids;
+  String? userName;
+  String? userEmail;
+  late File _pdfIDProof;
+  late File _imageIDProof;
+  late Map<String, dynamic> responseJSON;
+  late String transitId;
+
   _transitViewAndApproveState(this.userGroup, this.sessionToken, this.Ids,
       this.userName, this.userEmail);
 
@@ -66,10 +72,9 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
   }
 
   TextEditingController remark = TextEditingController();
-    bool isShow = false;
+  bool isShow = false;
   List c1 = [];
   String name = "";
-  String transitId;
 
   String address = "";
   String villageName = "";
@@ -89,14 +94,13 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
   final List swanB = [];
   final List statusF = [];
   final List speciesType = [];
-  Map<String, dynamic> responseJSON;
   List<CardData> cardDataList = [];
   List<String> selectedProductIds = [];
   String mimeID = "";
   String ID_type = "";
   String ID_PROOF = "";
   void TransitView() async {
-    String url = 'http://13.234.208.246/api/auth/SeeTransit/';
+    String url = 'http://192.168.54.114:8000/api/auth/SeeTransit/';
     Map data = {
       "transit_number": Ids,
     };
@@ -182,7 +186,7 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
 
       return pdfBase64;
     } else {
-      return null;
+      return '';
     }
   }
 
@@ -192,7 +196,7 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
         onWillPop: _onBackPressed,
         child: Scaffold(
           backgroundColor: Colors.white,
-          appBar: NewGradientAppBar(
+          appBar: AppBar(
             title: const Text(
               "TRANSIT PASS ",
               style: TextStyle(
@@ -200,61 +204,59 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
                 color: Colors.white,
               ),
             ),
-            gradient: LinearGradient(
-                colors: [HexColor("#26f596"), HexColor("#0499f2")]),
             elevation: 0,
           ),
           body: responseJSON == null
-              ? CircularProgressIndicator() // Display loading indicator while fetching data
+              ? const CircularProgressIndicator() // Display loading indicator while fetching data
               : SingleChildScrollView(
                   child: Column(
                     children: <Widget>[
                       Card(
+                        elevation: 2,
                         child: ListTile(
-                          title: Text(
+                          title: const Text(
                             'Transit Pass ID',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black),
                           ),
                           trailing: Text(transitId,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.blue)),
                         ),
-                        elevation: 2,
                       ),
                       Card(
+                        elevation: 2,
                         child: ListTile(
-                          title: Text(
+                          title: const Text(
                             'Applicant Name',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black),
                           ),
                           trailing: Text(name,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.blue)),
                         ),
-                        elevation: 2,
                       ),
                       Card(
+                        elevation: 2,
                         child: ListTile(
-                          title: Text(
+                          title: const Text(
                             "Address",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black),
                           ),
                           trailing: Text(address,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.blue)),
                         ),
-                        elevation: 2,
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Padding(
                         padding: const EdgeInsets.only(
                             left: 15.0, right: 15.0, top: 10, bottom: 0),
@@ -271,12 +273,12 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
                           ]),
                         ),
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Visibility(
                         visible: true,
                         child: Container(
                           height: 200, // Adjust the height as needed
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                               right: 10,
                               left: 10,
                               top: 20,
@@ -290,7 +292,7 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
                           child: Row(
                             children: [
                               if (cardDataList.length > 1)
-                                Icon(
+                                const Icon(
                                   Icons.arrow_downward,
                                   size: 22,
                                   color: Colors.blue, // Customize icon color
@@ -317,7 +319,7 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
                                                   Expanded(
                                                     child: Text(
                                                       '    $key:',
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold,
                                                       ),
@@ -340,7 +342,7 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
                                                 Expanded(
                                                   child: Text(
                                                     '    $key:',
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
                                                     ),
@@ -374,9 +376,9 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
                                               child: CheckboxListTile(
                                                 value: selectedProductIds
                                                     .contains(productId),
-                                                onChanged: (bool value) {
+                                                onChanged: (bool? value) {
                                                   setState(() {
-                                                    if (value) {
+                                                    if (value ?? false) {
                                                       selectedProductIds
                                                           .add(productId);
                                                     } else {
@@ -442,13 +444,13 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
                           mainAxisSize: MainAxisSize.max,
                           children: <Widget>[
                             TextButton.icon(
-                              icon: Icon(Icons.image),
+                              icon: const Icon(Icons.image),
                               onPressed: (() {
                                 _pickImageOrPDF();
                               }),
-                              label: Text("Upload remark File"),
+                              label: const Text("Upload remark File"),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             Icon(
                               Icons.check_circle,
                               color:
@@ -462,7 +464,7 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
                       ),
                       Visibility(
                         visible: isShow,
-                        child: CircularProgressIndicator(
+                        child: const CircularProgressIndicator(
                           valueColor:
                               AlwaysStoppedAnimation<Color>(Colors.green),
                           strokeWidth: 8,
@@ -500,7 +502,7 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
                                 }
 
                                 const String url =
-                                    'http://13.234.208.246/api/auth/ApproveNewProductTransit/';
+                                    'http://192.168.54.114:8000/api/auth/ApproveNewProductTransit/';
                                 Map data = {
                                   "transit_number": transitId,
                                   "action": "Approve",
@@ -551,7 +553,7 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
                                     context,
                                     PageRouteBuilder(
                                         transitionDuration:
-                                            Duration(milliseconds: 250),
+                                            const Duration(milliseconds: 250),
                                         transitionsBuilder: (context, animation,
                                             animationTime, child) {
                                           return ScaleTransition(
@@ -563,14 +565,17 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
                                         pageBuilder: (context, animation,
                                             animationTime) {
                                           return OfficerDashboard(
-                                              sessionToken: sessionToken,
-                                              userName: userName,
-                                              userEmail: userEmail,
-                                              userGroup: userGroup);
+                                              sessionToken: sessionToken ?? "",
+                                              userName: userName ?? "",
+                                              userEmail: userEmail ?? "",
+                                              userGroup: userGroup ?? "",
+                                              userId: 1,
+                                              dropdownValue: "All",
+                                              Range: const ["All"]);
                                         }));
                               }
                             },
-                            child: Text(
+                            child: const Text(
                               'APPROVE',
                               style: TextStyle(
                                 color: Colors.black,
@@ -608,7 +613,7 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
                                   isShow = true;
                                 });
                                 const String url =
-                                    'http://13.234.208.246/api/auth/ApproveNewProductTransit/';
+                                    'http://192.168.54.114:8000/api/auth/ApproveNewProductTransit/';
                                 Map data = {
                                   "transit_number": transitId,
                                   "action": "Reject",
@@ -659,7 +664,7 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
                                     context,
                                     PageRouteBuilder(
                                         transitionDuration:
-                                            Duration(milliseconds: 250),
+                                            const Duration(milliseconds: 250),
                                         transitionsBuilder: (context, animation,
                                             animationTime, child) {
                                           return ScaleTransition(
@@ -671,14 +676,17 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
                                         pageBuilder: (context, animation,
                                             animationTime) {
                                           return OfficerDashboard(
-                                              sessionToken: sessionToken,
-                                              userName: userName,
-                                              userEmail: userEmail,
-                                              userGroup: userGroup);
+                                              sessionToken: sessionToken ?? "",
+                                              userName: userName ?? "",
+                                              userEmail: userEmail ?? "",
+                                              userGroup: userGroup ?? "",
+                                              userId: 1,
+                                              dropdownValue: "All",
+                                              Range: const ["All"]);
                                         }));
                               }
                             },
-                            child: Text(
+                            child: const Text(
                               'Reject',
                               style: TextStyle(
                                 color: Colors.black,
@@ -696,29 +704,27 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
         ));
   }
 
-  Future<bool> _onBackPressed() {
-    return showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: const Text('Do you want to go previous page'),
-            actions: <Widget>[
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(false),
-                child: const Text("NO"),
-              ),
-              const SizedBox(height: 16),
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(true),
-                child: const Text("YES"),
-              ),
-            ],
+  Future<bool> _onBackPressed() async {
+    final shouldPop = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Do you want to go previous page'),
+        actions: <Widget>[
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(false),
+            child: const Text("NO"),
           ),
-        ) ??
-        false;
+          const SizedBox(height: 16),
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(true),
+            child: const Text("YES"),
+          ),
+        ],
+      ),
+    );
+    return shouldPop ?? false;
   }
 
-  File _pdfIDProof;
-  File _imageIDProof;
   Future<void> _pickImageOrPDF() async {
     final picker = ImagePicker();
     showDialog(
@@ -738,7 +744,7 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
                           final filePath = result.files.single.path;
 
                           setState(() {
-                            _pdfIDProof = File(filePath);
+                            _pdfIDProof = File(filePath!);
                             convertPdfToBase64(filePath).then((pdfBase64) {
                               ID_PROOF = pdfBase64;
                               ID_type = "PDF";
@@ -747,10 +753,10 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
                         }
                       },
                       splashColor: Colors.blueAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.picture_as_pdf_sharp,
                               color: Colors.blueAccent,
@@ -782,10 +788,10 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
                         }
                       },
                       splashColor: Colors.greenAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.image,
                               color: Colors.blueAccent,
@@ -813,7 +819,7 @@ class CardData {
   final Map<String, dynamic> jsonItemData;
 
   CardData({
-    this.generatedString,
-    this.jsonItemData,
+    required this.generatedString,
+    required this.jsonItemData,
   });
 }

@@ -13,16 +13,17 @@ import 'package:http/http.dart' as http;
 import 'package:tigramnks/tigramWoodShed.dart';
 
 class woodshedAdd extends StatefulWidget {
-  int userId;
-  String sessionToken;
-  String userName;
-  String userEmail;
+  final int userId;
+  final String sessionToken;
+  final String userName;
+  final String userEmail;
 
-  woodshedAdd({
-    this.userId,
-    this.sessionToken,
-    this.userName,
-    this.userEmail,
+  const woodshedAdd({
+    super.key,
+    required this.userId,
+    required this.sessionToken,
+    required this.userName,
+    required this.userEmail,
   });
   @override
   State<woodshedAdd> createState() =>
@@ -37,7 +38,7 @@ class _woodshedAddState extends State<woodshedAdd> {
   _woodshedAddState(
       this.userId, this.sessionToken, this.userName, this.userEmail);
 
-  String dropdownValue2;
+  String? dropdownValue2;
   String holder = '';
   List<String> specias = [
     "Rosewood (Dalbergia latifolia)",
@@ -108,9 +109,9 @@ class _woodshedAddState extends State<woodshedAdd> {
     }
   }
 
-  String dropdownValue;
-  String selectedDistrict;
-  String DD;
+  String? dropdownValue;
+  String? selectedDistrict;
+  String? DD;
   List<String> Rname = [];
   int RL = 0;
   List<String> Dname = [];
@@ -119,7 +120,7 @@ class _woodshedAddState extends State<woodshedAdd> {
   LoadDistric() async {
     int RL = 0;
 
-    String url = 'http://13.234.208.246/api/auth/ListDistrict';
+    String url = 'http://192.168.54.114:8000/api/auth/ListDistrict';
 
     //  Map<String, String> headers = {
     //  'Content-Type': 'application/json',
@@ -155,7 +156,7 @@ class _woodshedAddState extends State<woodshedAdd> {
   }
 
   ListRange() async {
-    const String url = 'http://13.234.208.246/api/auth/ListRange';
+    const String url = 'http://192.168.54.114:8000/api/auth/ListRange';
     final response = await http.get(Uri.parse(url), headers: {
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -185,8 +186,8 @@ class _woodshedAddState extends State<woodshedAdd> {
                         await setfilepicgallery();
                       },
                       splashColor: Colors.greenAccent,
-                      child: Row(
-                        children: const [
+                      child: const Row(
+                        children: [
                           Padding(
                             padding: EdgeInsets.all(8.0),
                             child: Icon(
@@ -214,7 +215,7 @@ class _woodshedAddState extends State<woodshedAdd> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: NewGradientAppBar(
+      appBar: AppBar(
         title: const Text(
           "Add Timber",
           style: TextStyle(
@@ -223,8 +224,7 @@ class _woodshedAddState extends State<woodshedAdd> {
           ),
         ),
         //backgroundColor: ColorLinearGradient(colors: [HexColor("#26f596"),HexColor("#0499f2")]),
-        gradient:
-            LinearGradient(colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -236,7 +236,7 @@ class _woodshedAddState extends State<woodshedAdd> {
                     left: 15.0, right: 15.0, top: 10, bottom: 0),
                 child: RichText(
                   textAlign: TextAlign.right,
-                  text: TextSpan(children: <TextSpan>[
+                  text: const TextSpan(children: <TextSpan>[
                     TextSpan(
                         text:
                             "Division                                District",
@@ -252,8 +252,8 @@ class _woodshedAddState extends State<woodshedAdd> {
             Container(
               width: double.infinity,
               margin: const EdgeInsets.only(top: 8, left: 15, right: 15),
-              decoration: new BoxDecoration(
-                  border: new Border.all(
+              decoration: BoxDecoration(
+                  border: Border.all(
                     color: Colors.grey,
                     width: 1,
                   ),
@@ -263,14 +263,14 @@ class _woodshedAddState extends State<woodshedAdd> {
               child: Row(children: <Widget>[
                 DropdownButton<String>(
                   value: dropdownValue,
-                  icon: Icon(Icons.arrow_drop_down),
+                  icon: const Icon(Icons.arrow_drop_down),
                   iconSize: 24,
                   elevation: 16,
-                  style: TextStyle(color: Colors.black, fontSize: 18),
+                  style: const TextStyle(color: Colors.black, fontSize: 18),
                   hint: RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(children: <TextSpan>[
-                      TextSpan(
+                      const TextSpan(
                           text: "Select Division",
                           style: TextStyle(
                               color: Colors.black,
@@ -287,9 +287,9 @@ class _woodshedAddState extends State<woodshedAdd> {
                         height: 2,
                         color: Colors.grey,
                       ),*/
-                  onChanged: (String data) {
+                  onChanged: (String? data) {
                     setState(() {
-                      dropdownValue = data;
+                      dropdownValue = data!;
                     });
                     print(dropdownValue);
                   },
@@ -306,13 +306,13 @@ class _woodshedAddState extends State<woodshedAdd> {
                     );
                   }).toList(),
                 ),
-                Spacer(),
+                const Spacer(),
                 DropdownButton<String>(
                   value: selectedDistrict,
-                  icon: Icon(Icons.arrow_drop_down),
+                  icon: const Icon(Icons.arrow_drop_down),
                   iconSize: 24,
                   elevation: 16,
-                  style: TextStyle(color: Colors.black, fontSize: 18),
+                  style: const TextStyle(color: Colors.black, fontSize: 18),
                   hint: RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(children: <TextSpan>[
@@ -333,9 +333,9 @@ class _woodshedAddState extends State<woodshedAdd> {
                         height: 2,
                         color: Colors.grey,
                       ),*/
-                  onChanged: (String data) {
+                  onChanged: (String? data) {
                     setState(() {
-                      selectedDistrict = data;
+                      selectedDistrict = data!;
                     });
                     print(selectedDistrict);
                   },
@@ -344,7 +344,7 @@ class _woodshedAddState extends State<woodshedAdd> {
                       value: value,
                       child: Text(
                         value,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                     );
@@ -354,8 +354,8 @@ class _woodshedAddState extends State<woodshedAdd> {
             ),
             Container(
               margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-              decoration: new BoxDecoration(
-                  border: new Border.all(
+              decoration: BoxDecoration(
+                  border: Border.all(
                     color: Colors.grey,
                     width: 1,
                   ),
@@ -365,18 +365,18 @@ class _woodshedAddState extends State<woodshedAdd> {
               child: DropdownButton<String>(
                 value: dropdownValue2,
                 isExpanded: true,
-                icon: Icon(Icons.arrow_drop_down),
+                icon: const Icon(Icons.arrow_drop_down),
                 iconSize: 24,
                 elevation: 16,
-                style: TextStyle(color: Colors.black, fontSize: 18),
-                hint: Text(" Select Species of tree :"),
+                style: const TextStyle(color: Colors.black, fontSize: 18),
+                hint: const Text(" Select Species of tree :"),
                 /*underline: Container(
                            height: 2,
                            color: Colors.grey,
                          ),*/
-                onChanged: (String data) {
+                onChanged: (String? data) {
                   setState(() {
-                    dropdownValue2 = data;
+                    dropdownValue2 = data!;
                   });
                 },
                 items: specias.map<DropdownMenuItem<String>>((String value) {
@@ -416,7 +416,7 @@ class _woodshedAddState extends State<woodshedAdd> {
                       // border: OutlineInputBorder(),
                       labelText: 'Address',
                       hintText: 'Enter Your Address'),
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.bold, color: Colors.blue)),
             ),
             Padding(
@@ -440,7 +440,7 @@ class _woodshedAddState extends State<woodshedAdd> {
               width: double.infinity,
               margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
               decoration: BoxDecoration(
-                  border: new Border.all(
+                  border: Border.all(
                     color: Colors.grey,
                     width: 1,
                   ),
@@ -449,14 +449,14 @@ class _woodshedAddState extends State<woodshedAdd> {
                   left: 10.0, right: 0, top: 10, bottom: 0),
               child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
                 TextButton.icon(
-                  icon: Icon(Icons.image),
+                  icon: const Icon(Icons.image),
                   onPressed: () {
                     setState(() {
                       _showpickoptiondialog(context);
                       //  takePhoto(ImageSource.gallery);
                     });
                   },
-                  label: Text("Timber image"),
+                  label: const Text("Timber image"),
                 ),
                 Icon(
                   Icons.check_circle,
@@ -471,17 +471,16 @@ class _woodshedAddState extends State<woodshedAdd> {
               //padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
                 controller: quntity,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderSide: BorderSide(width: 2),
-                      borderRadius:
-                          const BorderRadius.all(const Radius.circular(14.0)),
+                      borderRadius: BorderRadius.all(Radius.circular(14.0)),
                     ),
                     labelText: 'Quantity',
                     hintText: 'Enter Required Number of timber'),
                 keyboardType: TextInputType.number,
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.blue),
               ),
             ),
             Visibility(
@@ -500,9 +499,9 @@ class _woodshedAddState extends State<woodshedAdd> {
                   borderRadius: BorderRadius.circular(8)),
               child: TextButton(
                 onPressed: () async {
-                  if ((Name.text.length == 0) ||
-                      (Address.text.length == 0) ||
-                      (phone.text.length == 0) ||
+                  if ((Name.text.isEmpty) ||
+                      (Address.text.isEmpty) ||
+                      (phone.text.isEmpty) ||
                       (base64Image == null)) {
                     Fluttertoast.showToast(
                         msg: "Please select and fill all Field",
@@ -517,7 +516,7 @@ class _woodshedAddState extends State<woodshedAdd> {
                       isShow = true;
                     });
                     const String url =
-                        'http://13.234.208.246/api/auth/Add_Timber_Details';
+                        'http://192.168.54.114:8000/api/auth/Add_Timber_Details';
                     Map data = {
                       "name": Name.text,
                       "division": dropdownValue.toString(),
@@ -570,7 +569,8 @@ class _woodshedAddState extends State<woodshedAdd> {
                     Navigator.pushReplacement(
                         context,
                         PageRouteBuilder(
-                            transitionDuration: Duration(milliseconds: 250),
+                            transitionDuration:
+                                const Duration(milliseconds: 250),
                             transitionsBuilder:
                                 (context, animation, animationTime, child) {
                               return ScaleTransition(
@@ -584,11 +584,13 @@ class _woodshedAddState extends State<woodshedAdd> {
                                 sessionToken: sessionToken,
                                 userName: userName,
                                 userEmail: userEmail,
+                                userId: userId,
+                                userCato: "user",
                               );
                             }));
                   }
                 },
-                child: Text(
+                child: const Text(
                   'Submit',
                   style: TextStyle(
                     color: Colors.black,

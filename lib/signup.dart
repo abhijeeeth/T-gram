@@ -39,7 +39,7 @@ class _signupState extends State<signup> {
   var _image;
 
   bool validateEmail(String value) {
-    Pattern pattern =
+    String pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regex = new RegExp(pattern);
     return (!regex.hasMatch(value)) ? false : true;
@@ -47,7 +47,7 @@ class _signupState extends State<signup> {
 
   //--DropDown List ----
 
-  Item selectedUser;
+  Item? selectedUser; // Made nullable with ?
   List<Item> users = <Item>[
     const Item('Aadhar Card'),
     const Item('Driving License'),
@@ -59,12 +59,7 @@ class _signupState extends State<signup> {
   //--End- DropDown List
 //--device File fetching--
 
-  Future<void> _IdPrrof() async {
-    FilePickerResult result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['jpg', 'pdf', 'doc'],
-    );
-  }
+  // Removed unused _IdPrrof method
 
   final picker = ImagePicker();
   Future<void> setfilepicgallery() async {
@@ -189,7 +184,7 @@ class _signupState extends State<signup> {
             ));
   }
 
-  String dropdownValue;
+  String? dropdownValue;
   String sproof_holder = '';
   List<String> s_proof = [
     'Aadhar Card',
@@ -201,7 +196,7 @@ class _signupState extends State<signup> {
   bool check = false;
   void getDropDownItem() {
     setState(() {
-      sproof_holder = dropdownValue;
+      sproof_holder = dropdownValue!;
       if (sproof_holder != null) {
         check = true;
       } else {
@@ -378,7 +373,7 @@ class _signupState extends State<signup> {
                   height: 2,
                   color: Colors.grey,
                 ),*/
-                  onChanged: (String data) {
+                  onChanged: (String? data) {
                     setState(() {
                       dropdownValue = data;
                       if (dropdownValue == data) {
@@ -461,6 +456,7 @@ class _signupState extends State<signup> {
                     color: Colors.white,
                   );
                 }
+                return Container(); // Add this line
               }),
               /* Padding(
               padding: const EdgeInsets.only(
@@ -623,7 +619,7 @@ class _signupState extends State<signup> {
                           fontSize: 18.0);
                     } else {
                       const String url =
-                          'http://13.234.208.246/api/auth/NewRegisterAPI';
+                          'http://192.168.54.114:8000/api/auth/NewRegisterAPI';
                       // final bytes6 = File(_imageFile.path).readAsBytesSync();
                       // String aadhar_base= _imageFile != null ? 'data:image/png;base64,' + base64Encode(bytes6) : '';
                       print(base64Image);
@@ -663,7 +659,7 @@ class _signupState extends State<signup> {
                         //     textColor: Colors.white,
                         //     fontSize: 18.0);
                         const String url1 =
-                            'http://13.234.208.246/api/auth/register_otp_verification';
+                            'http://192.168.54.114:8000/api/auth/register_otp_verification';
                         Map data1 = {
                           "phone": Mobile.text,
                         };
@@ -796,7 +792,7 @@ class _signupState extends State<signup> {
                                   fontSize: 18.0);
                             } else {
                               const String url =
-                                  'http://13.234.208.246/api/auth/register_Otp_verify';
+                                  'http://192.168.54.114:8000/api/auth/register_Otp_verify';
                               Map data = {
                                 "phone": Mobile.text,
                                 "otp": otp.text,

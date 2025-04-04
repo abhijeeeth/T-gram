@@ -17,21 +17,22 @@ import 'model/formOneModel.dart';
 class TransitPass extends StatefulWidget {
   //final formOneFields form;
   final int formOneIndex;
-  String sessionToken;
-  String userName;
-  String userEmail;
-  int userId;
+  String? sessionToken;
+  String? userName;
+  String? userEmail;
+  int? userId;
 
   TransitPass(
-      {this.sessionToken,
-      this.userName,
-      this.userEmail,
-      this.userId,
+      {super.key,
+      required this.sessionToken,
+      required this.userName,
+      required this.userEmail,
+      required this.userId,
       //this.form,
-      this.formOneIndex});
+      required this.formOneIndex});
   @override
-  _TransitPassState createState() =>
-      _TransitPassState(sessionToken, userName, userEmail, userId);
+  _TransitPassState createState() => _TransitPassState(
+      sessionToken ?? '', userName ?? '', userEmail ?? '', userId ?? 0);
 }
 
 class _TransitPassState extends State<TransitPass> {
@@ -56,10 +57,22 @@ class _TransitPassState extends State<TransitPass> {
   String longImage3 = "";
   String latImage4 = "";
   String longImage4 = "";
-  dataBaseSqf dbHelper;
+  dataBaseSqf dbHelper = dataBaseSqf.instance();
+  String dropdownValue;
+  String dropdownValue1;
+  String selectedDistrict;
+  String selectedTaluka;
+  String SelectedVillage;
+  String DD;
 
   _TransitPassState(
-      this.sessionToken, this.userName, this.userEmail, this.userId);
+      this.sessionToken, this.userName, this.userEmail, this.userId,
+      {this.dropdownValue = '',
+      this.dropdownValue1 = '',
+      this.selectedDistrict = '',
+      this.selectedTaluka = '',
+      this.SelectedVillage = '',
+      this.DD = ''});
   //-----------------Controller----------------------------
 
   TextEditingController Name = TextEditingController();
@@ -90,7 +103,6 @@ class _TransitPassState extends State<TransitPass> {
 
   dynamic _pickImageError;
 
-  String dropdownValue;
   String range_holder = '';
   List<String> range = [
     'Paruthippally',
@@ -104,7 +116,6 @@ class _TransitPassState extends State<TransitPass> {
     print(range_holder);
   }
 
-  String dropdownValue1;
   String division_holder = '';
   List<String> Division = [
     'Trivandrum',
@@ -113,7 +124,7 @@ class _TransitPassState extends State<TransitPass> {
     setState(() {
       division_holder = dropdownValue1;
     });
-    print("------------" + division_holder);
+    print("------------$division_holder");
   }
 
   @override
@@ -127,14 +138,13 @@ class _TransitPassState extends State<TransitPass> {
   }
 
   //------------------------------Taluka & Distric------------------------------
-  String selectedTaluka;
-  String selectedDistrict;
+
   //----------------------------District----------------------------------
   List<String> district = [];
   LoadDistric() async {
     int RL = 0;
 
-    String url = 'http://13.234.208.246/api/auth/ListDistrict';
+    String url = 'http://192.168.54.114:8000/api/auth/ListDistrict';
 
     //  Map<String, String> headers = {
     //  'Content-Type': 'application/json',
@@ -163,7 +173,7 @@ class _TransitPassState extends State<TransitPass> {
   List<String> taluka = [];
   LoadTaluka() async {
     int RL = 0;
-    const String url = 'http://13.234.208.246/api/auth/LoadTaluka';
+    const String url = 'http://192.168.54.114:8000/api/auth/LoadTaluka';
 
     Map data = {
       "district": selectedDistrict ?? "",
@@ -187,11 +197,10 @@ class _TransitPassState extends State<TransitPass> {
   }
 
   //----------------------------------Village--------------------------------
-  String SelectedVillage;
   List<String> Village = [];
   LoadVillage() async {
     int RL = 0;
-    const String url = 'http://13.234.208.246/api/auth/LoadVillage';
+    const String url = 'http://192.168.54.114:8000/api/auth/LoadVillage';
     Map data = {"taluka": selectedTaluka ?? ""};
     print(data);
     var body = json.encode(data);
@@ -218,7 +227,7 @@ class _TransitPassState extends State<TransitPass> {
   List<String> Rname = [];
   int RL = 0;
   ListRange() async {
-    const String url = 'http://13.234.208.246/api/auth/ListRange';
+    const String url = 'http://192.168.54.114:8000/api/auth/ListRange';
     final response = await http.get(Uri.parse(url), headers: {
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -236,12 +245,11 @@ class _TransitPassState extends State<TransitPass> {
     print(Rname);
   }
 
-  String DD;
   List<String> Dname = [];
 
   ListDivision() async {
     int DL = 0;
-    const String url = 'http://13.234.208.246/api/auth/LoadDivision';
+    const String url = 'http://192.168.54.114:8000/api/auth/LoadDivision';
     Map data = {
       "range_area": dropdownValue ?? "",
     };
@@ -447,10 +455,10 @@ class _TransitPassState extends State<TransitPass> {
                         await setfilepiccam();
                       },
                       splashColor: Colors.blueAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.camera,
                               color: Colors.blueAccent,
@@ -532,10 +540,10 @@ class _TransitPassState extends State<TransitPass> {
                         await setfilepiccampic2();
                       },
                       splashColor: Colors.blueAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.camera,
                               color: Colors.blueAccent,
@@ -617,10 +625,10 @@ class _TransitPassState extends State<TransitPass> {
                         await setfilepiccampic3();
                       },
                       splashColor: Colors.blueAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.camera,
                               color: Colors.blueAccent,
@@ -690,26 +698,26 @@ class _TransitPassState extends State<TransitPass> {
             ));
   }
 
-  Future<bool> _onBackPressed() {
-    return showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: new Text('Do you want to go previous page'),
-            content: new Text('Changes you made may not be saved.'),
-            actions: <Widget>[
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(false),
-                child: Text("NO"),
-              ),
-              SizedBox(height: 16),
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(true),
-                child: Text("YES"),
-              ),
-            ],
+  Future<bool> _onBackPressed() async {
+    final shouldPop = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Do you want to go previous page'),
+        content: const Text('Changes you made may not be saved.'),
+        actions: <Widget>[
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(false),
+            child: const Text("NO"),
           ),
-        ) ??
-        false;
+          const SizedBox(height: 16),
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(true),
+            child: const Text("YES"),
+          ),
+        ],
+      ),
+    );
+    return shouldPop ?? false;
   }
 
   void _showpickoptiondialogImg4(BuildContext context) {
@@ -724,10 +732,10 @@ class _TransitPassState extends State<TransitPass> {
                         await setfilepiccampic4();
                       },
                       splashColor: Colors.blueAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.camera,
                               color: Colors.blueAccent,
@@ -805,13 +813,13 @@ class _TransitPassState extends State<TransitPass> {
     final text = Pincode.value.text;
     // Note: you can do your own custom validation here
     // Move this logic this outside the widget for more testable code
-    if (text.length == 0) {
+    if (text.isEmpty) {
       return '';
     } else if (text.length < 6) {
       return 'Please input valid pincode';
     }
-    // return null if the text is valid
-    return null;
+    // return empty string if the text is valid
+    return '';
   }
 
 //--------------------------------End DropDown Api Connection-------------------
@@ -822,8 +830,8 @@ class _TransitPassState extends State<TransitPass> {
       onWillPop: _onBackPressed,
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: NewGradientAppBar(
-          title: Text(
+        appBar: AppBar(
+          title: const Text(
             "Form - I",
             style: TextStyle(
               fontSize: 20,
@@ -831,8 +839,7 @@ class _TransitPassState extends State<TransitPass> {
             ),
           ),
           //backgroundColor: ColorLinearGradient(colors: [HexColor("#26f596"),HexColor("#0499f2")]),
-          gradient: LinearGradient(
-              colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+
           elevation: 0,
         ),
         body: SingleChildScrollView(
@@ -844,7 +851,7 @@ class _TransitPassState extends State<TransitPass> {
                     left: 15.0, right: 15.0, top: 10, bottom: 0),
                 child: RichText(
                   textAlign: TextAlign.right,
-                  text: TextSpan(children: <TextSpan>[
+                  text: const TextSpan(children: <TextSpan>[
                     TextSpan(
                         text: "Division                                Range",
                         style: TextStyle(
@@ -858,8 +865,8 @@ class _TransitPassState extends State<TransitPass> {
               Container(
                 width: double.infinity,
                 margin: const EdgeInsets.only(top: 8, left: 15, right: 15),
-                decoration: new BoxDecoration(
-                    border: new Border.all(
+                decoration: BoxDecoration(
+                    border: Border.all(
                       color: Colors.grey,
                       width: 1,
                     ),
@@ -869,13 +876,13 @@ class _TransitPassState extends State<TransitPass> {
                 child: Row(children: <Widget>[
                   DropdownButton<String>(
                     value: dropdownValue,
-                    icon: Icon(Icons.arrow_drop_down),
+                    icon: const Icon(Icons.arrow_drop_down),
                     iconSize: 24,
                     elevation: 16,
-                    style: TextStyle(color: Colors.black, fontSize: 18),
+                    style: const TextStyle(color: Colors.black, fontSize: 18),
                     hint: RichText(
                       textAlign: TextAlign.center,
-                      text: TextSpan(children: <TextSpan>[
+                      text: const TextSpan(children: <TextSpan>[
                         TextSpan(
                             text: "Select Division",
                             style: TextStyle(
@@ -893,9 +900,9 @@ class _TransitPassState extends State<TransitPass> {
                           height: 2,
                           color: Colors.grey,
                         ),*/
-                    onChanged: (String data) {
+                    onChanged: (String? data) {
                       setState(() {
-                        dropdownValue = data;
+                        dropdownValue = data!;
                         ListDivision();
                       });
                       print(dropdownValue);
@@ -907,22 +914,22 @@ class _TransitPassState extends State<TransitPass> {
                         value: value,
                         child: Text(
                           value,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 13, fontWeight: FontWeight.bold),
                         ),
                       );
                     }).toList(),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   DropdownButton<String>(
                     value: dropdownValue1,
-                    icon: Icon(Icons.arrow_drop_down),
+                    icon: const Icon(Icons.arrow_drop_down),
                     iconSize: 24,
                     elevation: 16,
-                    style: TextStyle(color: Colors.black, fontSize: 18),
+                    style: const TextStyle(color: Colors.black, fontSize: 18),
                     hint: RichText(
                       textAlign: TextAlign.center,
-                      text: TextSpan(children: <TextSpan>[
+                      text: const TextSpan(children: <TextSpan>[
                         TextSpan(
                             text: "Select Range",
                             style: TextStyle(
@@ -941,9 +948,9 @@ class _TransitPassState extends State<TransitPass> {
                           height: 2,
                           color: Colors.grey,
                         ),*/
-                    onChanged: (String data) {
+                    onChanged: (String? data) {
                       setState(() {
-                        dropdownValue1 = data;
+                        dropdownValue1 = data!;
                       });
                       print(dropdownValue1);
                     },
@@ -954,7 +961,7 @@ class _TransitPassState extends State<TransitPass> {
                         value: value,
                         child: Text(
                           value,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 13, fontWeight: FontWeight.bold),
                         ),
                       );
@@ -967,16 +974,15 @@ class _TransitPassState extends State<TransitPass> {
                     left: 15.0, right: 15.0, top: 15, bottom: 0),
                 child: TextField(
                     controller: Name,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         border: OutlineInputBorder(
                           borderSide: BorderSide(width: 2),
-                          borderRadius: const BorderRadius.all(
-                              const Radius.circular(14.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(14.0)),
                         ),
                         // border: OutlineInputBorder(),
                         labelText: 'Name *',
                         hintText: 'Enter Your Name'),
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.blue)),
               ),
               Padding(
@@ -985,15 +991,14 @@ class _TransitPassState extends State<TransitPass> {
                 //padding: EdgeInsets.symmetric(horizontal: 15),
                 child: TextField(
                   controller: Address,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       border: OutlineInputBorder(
                         borderSide: BorderSide(width: 2),
-                        borderRadius:
-                            const BorderRadius.all(const Radius.circular(14.0)),
+                        borderRadius: BorderRadius.all(Radius.circular(14.0)),
                       ),
                       labelText: 'Address*',
                       hintText: 'Enter Your Address'),
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.bold, color: Colors.blue),
                 ),
               ),
@@ -1003,15 +1008,14 @@ class _TransitPassState extends State<TransitPass> {
                 //padding: EdgeInsets.symmetric(horizontal: 15),
                 child: TextField(
                   controller: survey_no,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       border: OutlineInputBorder(
                         borderSide: BorderSide(width: 2),
-                        borderRadius:
-                            const BorderRadius.all(const Radius.circular(14.0)),
+                        borderRadius: BorderRadius.all(Radius.circular(14.0)),
                       ),
                       labelText: 'Survey Number*',
                       hintText: 'Enter Survey Number'),
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.bold, color: Colors.blue),
                 ),
               ),
@@ -1029,7 +1033,7 @@ class _TransitPassState extends State<TransitPass> {
                       labelText: 'Trees Proposed to be cut*',
                       hintText: 'Enter Number of Trees'),
                   keyboardType: TextInputType.number,
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.bold, color: Colors.blue),
                 ),
               ),
@@ -1038,7 +1042,7 @@ class _TransitPassState extends State<TransitPass> {
                     left: 15.0, right: 15.0, top: 10, bottom: 0),
                 child: RichText(
                   textAlign: TextAlign.right,
-                  text: TextSpan(children: <TextSpan>[
+                  text: const TextSpan(children: <TextSpan>[
                     TextSpan(
                         text: "District                                Taluke",
                         style: TextStyle(
@@ -1052,8 +1056,8 @@ class _TransitPassState extends State<TransitPass> {
               Container(
                 width: double.infinity,
                 margin: const EdgeInsets.only(top: 8, left: 15, right: 15),
-                decoration: new BoxDecoration(
-                    border: new Border.all(
+                decoration: BoxDecoration(
+                    border: Border.all(
                       color: Colors.grey,
                       width: 1,
                     ),
@@ -1063,13 +1067,13 @@ class _TransitPassState extends State<TransitPass> {
                 child: Row(children: <Widget>[
                   DropdownButton<String>(
                     value: selectedDistrict,
-                    icon: Icon(Icons.arrow_drop_down),
+                    icon: const Icon(Icons.arrow_drop_down),
                     iconSize: 24,
                     elevation: 16,
-                    style: TextStyle(color: Colors.black, fontSize: 18),
+                    style: const TextStyle(color: Colors.black, fontSize: 18),
                     hint: RichText(
                       textAlign: TextAlign.center,
-                      text: TextSpan(children: <TextSpan>[
+                      text: const TextSpan(children: <TextSpan>[
                         TextSpan(
                             text: "Select District",
                             style: TextStyle(
@@ -1087,9 +1091,9 @@ class _TransitPassState extends State<TransitPass> {
                           height: 2,
                           color: Colors.grey,
                         ),*/
-                    onChanged: (String data) {
+                    onChanged: (String? data) {
                       setState(() {
-                        selectedDistrict = data;
+                        selectedDistrict = data!;
                         LoadTaluka();
                       });
                       print(selectedDistrict);
@@ -1100,23 +1104,23 @@ class _TransitPassState extends State<TransitPass> {
                         value: value,
                         child: Text(
                           value,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 13, fontWeight: FontWeight.bold),
                         ),
                       );
                     }).toList(),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   DropdownButton<String>(
                     value: selectedTaluka,
-                    icon: Icon(Icons.arrow_drop_down),
+                    icon: const Icon(Icons.arrow_drop_down),
                     iconSize: 24,
                     elevation: 16,
-                    style: TextStyle(color: Colors.black, fontSize: 18),
+                    style: const TextStyle(color: Colors.black, fontSize: 18),
                     hint: RichText(
                       textAlign: TextAlign.center,
-                      text: TextSpan(children: <TextSpan>[
-                        const TextSpan(
+                      text: const TextSpan(children: <TextSpan>[
+                        TextSpan(
                             text: "Select Taluka",
                             style: TextStyle(
                                 color: Colors.black,
@@ -1133,9 +1137,9 @@ class _TransitPassState extends State<TransitPass> {
                           height: 2,
                           color: Colors.grey,
                         ),*/
-                    onChanged: (String data) {
+                    onChanged: (String? data) {
                       setState(() {
-                        selectedTaluka = data;
+                        selectedTaluka = data!;
                         LoadVillage();
                       });
                       print(selectedTaluka);
@@ -1145,7 +1149,7 @@ class _TransitPassState extends State<TransitPass> {
                         value: value,
                         child: Text(
                           value,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 13, fontWeight: FontWeight.bold),
                         ),
                       );
@@ -1158,7 +1162,7 @@ class _TransitPassState extends State<TransitPass> {
                     left: 15.0, right: 15.0, top: 10, bottom: 0),
                 child: RichText(
                   textAlign: TextAlign.right,
-                  text: TextSpan(children: <TextSpan>[
+                  text: const TextSpan(children: <TextSpan>[
                     TextSpan(
                         text: "Village",
                         style: TextStyle(
@@ -1172,8 +1176,8 @@ class _TransitPassState extends State<TransitPass> {
               Container(
                 width: double.infinity,
                 margin: const EdgeInsets.only(top: 8, left: 15, right: 15),
-                decoration: new BoxDecoration(
-                    border: new Border.all(
+                decoration: BoxDecoration(
+                    border: Border.all(
                       color: Colors.grey,
                       width: 1,
                     ),
@@ -1182,13 +1186,13 @@ class _TransitPassState extends State<TransitPass> {
                     left: 10.0, right: 10, top: 10, bottom: 0),
                 child: DropdownButton<String>(
                   value: SelectedVillage,
-                  icon: Icon(Icons.arrow_drop_down),
+                  icon: const Icon(Icons.arrow_drop_down),
                   iconSize: 24,
                   elevation: 16,
-                  style: TextStyle(color: Colors.black, fontSize: 18),
+                  style: const TextStyle(color: Colors.black, fontSize: 18),
                   hint: RichText(
                     textAlign: TextAlign.left,
-                    text: TextSpan(children: <TextSpan>[
+                    text: const TextSpan(children: <TextSpan>[
                       TextSpan(
                           text: "Select Village",
                           style: TextStyle(
@@ -1202,9 +1206,9 @@ class _TransitPassState extends State<TransitPass> {
                       //     )),
                     ]),
                   ),
-                  onChanged: (String data) {
+                  onChanged: (String? data) {
                     setState(() {
-                      SelectedVillage = data;
+                      SelectedVillage = data!;
                     });
                     print(SelectedVillage);
                   },
@@ -1213,7 +1217,7 @@ class _TransitPassState extends State<TransitPass> {
                       value: value,
                       child: Text(
                         value,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                     );
@@ -1226,15 +1230,14 @@ class _TransitPassState extends State<TransitPass> {
                 //padding: EdgeInsets.symmetric(horizontal: 15),
                 child: TextField(
                     controller: block,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         border: OutlineInputBorder(
                           borderSide: BorderSide(width: 2),
-                          borderRadius: const BorderRadius.all(
-                              const Radius.circular(14.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(14.0)),
                         ),
                         labelText: 'Block',
                         hintText: 'Enter Your Block'),
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.blue)),
               ),
               Padding(
@@ -1249,15 +1252,14 @@ class _TransitPassState extends State<TransitPass> {
                     keyboardType: TextInputType.number,
                     maxLength: 6,
                     decoration: InputDecoration(
-                        border: OutlineInputBorder(
+                        border: const OutlineInputBorder(
                           borderSide: BorderSide(width: 2),
-                          borderRadius: const BorderRadius.all(
-                              const Radius.circular(14.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(14.0)),
                         ),
                         labelText: 'Pincode',
                         hintText: 'Enter Your Pincode',
                         errorText: _errorText),
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.blue)),
               ),
               Padding(
@@ -1265,7 +1267,7 @@ class _TransitPassState extends State<TransitPass> {
                     left: 15.0, right: 15.0, top: 10, bottom: 0),
                 child: RichText(
                   textAlign: TextAlign.center,
-                  text: TextSpan(children: <TextSpan>[
+                  text: const TextSpan(children: <TextSpan>[
                     TextSpan(
                         text:
                             "Please add location site photographs now, you can't update it later.",
@@ -1280,8 +1282,8 @@ class _TransitPassState extends State<TransitPass> {
               Container(
                 width: double.infinity,
                 margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                decoration: new BoxDecoration(
-                    border: new Border.all(
+                decoration: BoxDecoration(
+                    border: Border.all(
                       color: Colors.grey,
                       width: 1,
                     ),
@@ -1290,7 +1292,7 @@ class _TransitPassState extends State<TransitPass> {
                     left: 10.0, right: 0, top: 10, bottom: 0),
                 child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
                   TextButton.icon(
-                    icon: Icon(Icons.image),
+                    icon: const Icon(Icons.image),
                     onPressed: () {
                       setState(() {
                         getCurrentLocation1();
@@ -1299,7 +1301,7 @@ class _TransitPassState extends State<TransitPass> {
                     },
                     label: const Text("Location site photograph 1"),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Icon(
                     Icons.check_circle,
                     color: ((_image1) == null) && (latImage1 == "")
@@ -1312,8 +1314,8 @@ class _TransitPassState extends State<TransitPass> {
               Container(
                 width: double.infinity,
                 margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                decoration: new BoxDecoration(
-                    border: new Border.all(
+                decoration: BoxDecoration(
+                    border: Border.all(
                       color: Colors.grey,
                       width: 1,
                     ),
@@ -1322,7 +1324,7 @@ class _TransitPassState extends State<TransitPass> {
                     left: 10.0, right: 0, top: 10, bottom: 0),
                 child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
                   TextButton.icon(
-                    icon: Icon(Icons.image),
+                    icon: const Icon(Icons.image),
                     onPressed: () {
                       setState(() {
                         getCurrentLocation2();
@@ -1331,7 +1333,7 @@ class _TransitPassState extends State<TransitPass> {
                     },
                     label: const Text("Location site photograph 2"),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Icon(
                     Icons.check_circle,
                     color: ((_image2) == null) && (latImage2 == "")
@@ -1344,8 +1346,8 @@ class _TransitPassState extends State<TransitPass> {
               Container(
                 width: double.infinity,
                 margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                decoration: new BoxDecoration(
-                    border: new Border.all(
+                decoration: BoxDecoration(
+                    border: Border.all(
                       color: Colors.grey,
                       width: 1,
                     ),
@@ -1354,7 +1356,7 @@ class _TransitPassState extends State<TransitPass> {
                     left: 10.0, right: 0, top: 10, bottom: 0),
                 child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
                   TextButton.icon(
-                    icon: Icon(Icons.image),
+                    icon: const Icon(Icons.image),
                     onPressed: () {
                       setState(() {
                         getCurrentLocation3();
@@ -1363,7 +1365,7 @@ class _TransitPassState extends State<TransitPass> {
                     },
                     label: const Text("Location site photograph 3"),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Icon(
                     Icons.check_circle,
                     color: ((_image3) == null) && (latImage3 == "")
@@ -1376,8 +1378,8 @@ class _TransitPassState extends State<TransitPass> {
               Container(
                 width: double.infinity,
                 margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                decoration: new BoxDecoration(
-                    border: new Border.all(
+                decoration: BoxDecoration(
+                    border: Border.all(
                       color: Colors.grey,
                       width: 1,
                     ),
@@ -1386,7 +1388,7 @@ class _TransitPassState extends State<TransitPass> {
                     left: 10.0, right: 0, top: 10, bottom: 0),
                 child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
                   TextButton.icon(
-                    icon: Icon(Icons.image),
+                    icon: const Icon(Icons.image),
                     onPressed: () {
                       setState(() {
                         getCurrentLocation4();
@@ -1395,7 +1397,7 @@ class _TransitPassState extends State<TransitPass> {
                     },
                     label: const Text("Location site photograph 4"),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Icon(
                     Icons.check_circle,
                     color: ((_image4) == null) && (latImage4 == "")
@@ -1411,10 +1413,9 @@ class _TransitPassState extends State<TransitPass> {
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: FloatingActionButton(
           isExtended: true,
-          child: Icon(Icons.navigate_next),
           backgroundColor: HexColor("#0499f2"),
           onPressed: () async {
-            if (Name.text.length == 0) {
+            if (Name.text.isEmpty) {
               Fluttertoast.showToast(
                   msg: "Please add name ",
                   toastLength: Toast.LENGTH_SHORT,
@@ -1423,7 +1424,7 @@ class _TransitPassState extends State<TransitPass> {
                   backgroundColor: Colors.red,
                   textColor: Colors.white,
                   fontSize: 18.0);
-            } else if (Address.text.length == 0) {
+            } else if (Address.text.isEmpty) {
               Fluttertoast.showToast(
                   msg: "Please add Address ",
                   toastLength: Toast.LENGTH_SHORT,
@@ -1432,7 +1433,7 @@ class _TransitPassState extends State<TransitPass> {
                   backgroundColor: Colors.red,
                   textColor: Colors.white,
                   fontSize: 18.0);
-            } else if (survey_no.text.length == 0) {
+            } else if (survey_no.text.isEmpty) {
               Fluttertoast.showToast(
                   msg: "Please add survay number ",
                   toastLength: Toast.LENGTH_SHORT,
@@ -1441,7 +1442,7 @@ class _TransitPassState extends State<TransitPass> {
                   backgroundColor: Colors.red,
                   textColor: Colors.white,
                   fontSize: 18.0);
-            } else if (Tree_Proposed_to_cut.text.length == 0) {
+            } else if (Tree_Proposed_to_cut.text.isEmpty) {
               Fluttertoast.showToast(
                   msg: "Please add Tree Proposed to cut ",
                   toastLength: Toast.LENGTH_SHORT,
@@ -1451,17 +1452,17 @@ class _TransitPassState extends State<TransitPass> {
                   textColor: Colors.white,
                   fontSize: 18.0);
             } else if ((_image1 == null) ||
-                (latImage1.length == 0) ||
-                (longImage1.length == 0) ||
+                (latImage1.isEmpty) ||
+                (longImage1.isEmpty) ||
                 (_image2 == null) ||
-                (latImage2.length == 0) ||
-                (longImage2.length == 0) ||
+                (latImage2.isEmpty) ||
+                (longImage2.isEmpty) ||
                 (_image3 == null) ||
-                (latImage3.length == 0) ||
-                (longImage3.length == 0) ||
+                (latImage3.isEmpty) ||
+                (longImage3.isEmpty) ||
                 (_image4 == null) ||
                 (latImage4.isEmpty) ||
-                (longImage4.length == 0)) {
+                (longImage4.isEmpty)) {
               Fluttertoast.showToast(
                   msg: "Please take Location Images ",
                   toastLength: Toast.LENGTH_SHORT,
@@ -1474,7 +1475,7 @@ class _TransitPassState extends State<TransitPass> {
               Navigator.pushReplacement(
                   context,
                   PageRouteBuilder(
-                      transitionDuration: Duration(milliseconds: 400),
+                      transitionDuration: const Duration(milliseconds: 400),
                       transitionsBuilder:
                           (context, animation, animationTime, child) {
                         return ScaleTransition(
@@ -1518,6 +1519,7 @@ class _TransitPassState extends State<TransitPass> {
               print(sessionToken + dropdownValue1 + userName);
             }
           },
+          child: const Icon(Icons.navigate_next),
         ),
       ),
     );

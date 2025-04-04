@@ -44,11 +44,11 @@ class CheckPassStatus extends StatefulWidget {
   String userGroup;
   int userId;
   CheckPassStatus(
-      {this.sessionToken,
-      this.userName,
-      this.userEmail,
-      this.userGroup,
-      this.userId});
+      {required this.sessionToken,
+      required this.userName,
+      required this.userEmail,
+      required this.userGroup,
+      required this.userId});
   @override
   _CheckPassStatusState createState() => _CheckPassStatusState(
       sessionToken, userName, userEmail, userGroup, userId);
@@ -63,7 +63,8 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
 
   _CheckPassStatusState(this.sessionToken, this.userName, this.userEmail,
       this.userGroup, this.userId);
-  final imageUrl = "http://13.234.208.246/api/auth/new_transit_pass_pdf/90/";
+  final imageUrl =
+      "http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/90/";
   final scheduler = LazyScheduler(latency: Duration(seconds: 1));
 
   // List<Status> status = <Status>[];
@@ -72,7 +73,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
   bool downloading = true;
   String downloadingStr = "No data";
   double download = 0.0;
-  File f;
+  late File f;
 
   Future downloadFile() async {
     try {
@@ -95,7 +96,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
         });
       });
     } catch (e) {
-      print(e.getMessage());
+      print(e.toString());
     }
   }
 
@@ -127,21 +128,27 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
   ReceivePort _receivePort = ReceivePort();
 
   static downloadingCallback(id, status, progress) {
-    SendPort sendPort = IsolateNameServer.lookupPortByName("downloading");
-    sendPort.send([id, status, progress]);
+    SendPort? sendPort = IsolateNameServer.lookupPortByName("downloading");
+    if (sendPort != null) {
+      sendPort.send([id, status, progress]);
+    }
   }
 
   void _requestDownload(String link) async {
     final status = await Permission.storage.request();
     if (status.isGranted) {
       final localPath = await getExternalStorageDirectory();
-      final Id = await FlutterDownloader.enqueue(
-        url: link,
-        savedDir: localPath.path,
-        showNotification: true,
-        openFileFromNotification: true,
-      );
-      print(localPath.path);
+      if (localPath != null) {
+        final Id = await FlutterDownloader.enqueue(
+          url: link,
+          savedDir: localPath.path,
+          showNotification: true,
+          openFileFromNotification: true,
+        );
+        print(localPath.path);
+      } else {
+        print("External storage directory is null");
+      }
     } else {
       print("Permission deined");
     }
@@ -151,16 +158,19 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
     final status = await Permission.storage.request();
     if (status.isGranted) {
       final localPath = await getExternalStorageDirectory();
-      final Id1 = await FlutterDownloader.enqueue(
-        url: link,
-
-        savedDir: localPath.path,
-        showNotification: true,
-        // show download progress in status bar (for Android)
-        openFileFromNotification:
-            true, // click on notification to open downloaded file (for Android)
-      );
-      print(localPath.path);
+      if (localPath != null) {
+        final Id1 = await FlutterDownloader.enqueue(
+          url: link,
+          savedDir: localPath.path,
+          showNotification: true,
+          // show download progress in status bar (for Android)
+          openFileFromNotification:
+              true, // click on notification to open downloaded file (for Android)
+        );
+        print(localPath.path);
+      } else {
+        print("External storage directory is null");
+      }
     } else {
       print("Permission deined");
     }
@@ -184,7 +194,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
     App_Status_0.clear();
     Remark_0.clear();
 
-    const String url = 'http://13.234.208.246/api/auth/GetTransitPasses';
+    const String url = 'http://192.168.54.114:8000/api/auth/GetTransitPasses';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -252,7 +262,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
   final List recomend_Officer = [];
   final List field_status = [];
   //------------
-  Map<String, dynamic> responseJSON;
+  late Map<String, dynamic> responseJSON;
   int allApplication = 0;
   void check_pass() async {
     //----clear----
@@ -290,7 +300,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
     field_status.clear();
     //-----clear------
 
-    const String url = 'http://13.234.208.246/api/auth/GetCuttingPasses';
+    const String url = 'http://192.168.54.114:8000/api/auth/GetCuttingPasses';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -367,7 +377,8 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
   void NocForm() async {
     sr3.clear();
 
-    const String url = 'http://13.234.208.246/api/auth/UserNocListApplication';
+    const String url =
+        'http://192.168.54.114:8000/api/auth/UserNocListApplication';
     var response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -429,6 +440,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
         return 'Yet to Assign for Stage 1';
       }
     }
+    return 'N/A'; // Default return value when isForm2 is false
   }
 
   int daysBetween(DateTime from) {
@@ -458,30 +470,21 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
   int _radioValue = 0;
   bool flag = true;
   var tab = 0;
-  @override
-  void _handleRadioValueChange(int value) async {
-    setState(() {
-      _radioValue = value;
-      if (_radioValue == 0) {
-        setState(() {
+  void _handleRadioValueChange(int? value) {
+    if (value != null) {
+      setState(() {
+        _radioValue = value;
+        if (_radioValue == 0) {
           tab = 0;
           flag = true;
           cut_pass();
-        });
-      } else if (_radioValue == 1) {
-        setState(() {
+        } else if (_radioValue == 1) {
           tab = 1;
           flag = true;
           check_pass();
-        });
-      } else if (_radioValue == 2) {
-        setState(() {
-          tab = 2;
-          flag = false;
-          NocForm();
-        });
-      }
-    });
+        }
+      });
+    }
   }
 
   Future<bool> _onBackPressed() async {
@@ -519,7 +522,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
-          appBar: NewGradientAppBar(
+          appBar: AppBar(
             title: Text('Forms'),
             // actions: [
             //   IconButton(
@@ -544,14 +547,8 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                     activeFgColor: Colors.white,
                     inactiveBgColor: Colors.grey[200],
                     inactiveFgColor: Colors.blue,
-                    // labels: ['Transit \n Pass  ', ' Cutting \n Pass', 'NOC  '],
-                    // activeBgColors: [
-                    //   [Colors.orange],
-                    //   [Colors.green],
-                    //   [Colors.orange]
-                    // ],
-                    labels: ['Transit \n Pass  ', ' Cutting \n Pass'],
-                    activeBgColors: [
+                    labels: const ['Transit \n Pass  ', ' Cutting \n Pass'],
+                    activeBgColors: const [
                       [Colors.orange],
                       [Colors.green]
                     ],
@@ -579,13 +576,13 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                         padding: const EdgeInsets.only(
                             left: 2, right: 2, top: 2, bottom: 2),
                         child: Scrollbar(
-                            isAlwaysShown: true,
+                            thumbVisibility: true,
                             thickness: 15,
                             child: SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 padding: const EdgeInsets.only(bottom: 15),
                                 child: Scrollbar(
-                                    isAlwaysShown: true,
+                                    thumbVisibility: true,
                                     thickness: 15,
                                     child: SingleChildScrollView(
                                         scrollDirection: Axis.vertical,
@@ -720,7 +717,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                                       .blue,
                                                                   onPressed:
                                                                       () async {
-                                                                    await launch("http://13.234.208.246/api/auth/new_transit_pass_pdf/" +
+                                                                    await launch("http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/" +
                                                                         App_no_0[
                                                                             int.parse(value)] +
                                                                         "/");
@@ -746,7 +743,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                                       () async {
                                                                     // _downloadFile(down,"TransitPass.pdf");
                                                                     //   downloadFile();
-                                                                    await launch("http://13.234.208.246/api/auth/new_user_report/" +
+                                                                    await launch("http://192.168.54.114:8000/api/auth/new_user_report/" +
                                                                         App_no_0[
                                                                             int.parse(value)] +
                                                                         "/");
@@ -799,7 +796,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                                       .blue,
                                                                   onPressed:
                                                                       () async {
-                                                                    await launch("http://13.234.208.246/app/location_views/" +
+                                                                    await launch("http://192.168.54.114:8000/app/location_views/" +
                                                                         Ids_0[int.parse(
                                                                             value)] +
                                                                         "/");
@@ -834,13 +831,13 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                         padding: const EdgeInsets.only(
                             left: 2, right: 2, top: 2, bottom: 2),
                         child: Scrollbar(
-                            isAlwaysShown: true,
+                            thumbVisibility: true,
                             thickness: 15,
                             child: SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 padding: const EdgeInsets.only(bottom: 15),
                                 child: Scrollbar(
-                                    isAlwaysShown: true,
+                                    thumbVisibility: true,
                                     thickness: 15,
                                     child: SingleChildScrollView(
                                         scrollDirection: Axis.vertical,
@@ -1161,7 +1158,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                                       .blue,
                                                                   onPressed:
                                                                       () async {
-                                                                    await launch("http://13.234.208.246/api/auth/new_transit_pass_pdf/" +
+                                                                    await launch("http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/" +
                                                                         Ids[int.parse(
                                                                             value)] +
                                                                         "/");
@@ -1186,7 +1183,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                                       .blue,
                                                                   onPressed:
                                                                       () async {
-                                                                    await launch("http://13.234.208.246/api/auth/new_user_report/" +
+                                                                    await launch("http://192.168.54.114:8000/api/auth/new_user_report/" +
                                                                         Ids[int.parse(
                                                                             value)] +
                                                                         "/");
@@ -1215,13 +1212,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                                       await Navigator.push(
                                                                           context,
                                                                           MaterialPageRoute(
-                                                                              builder: (_) => ViewApplication(
-                                                                                    sessionToken: sessionToken,
-                                                                                    userGroup: userGroup,
-                                                                                    Ids: IDS,
-                                                                                    userName: userName,
-                                                                                    userEmail: userEmail,
-                                                                                    userId: userId,
+                                                                              builder: (_) => ViewApplication(sessionToken: sessionToken, userGroup: userGroup, Ids: IDS, userName: userName, userEmail: userEmail, userId: userId, Range: [] // Add the required Range parameter
                                                                                   )));
                                                                     }
                                                                   },
@@ -1239,7 +1230,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                                       .blue,
                                                                   onPressed:
                                                                       () async {
-                                                                    await launch("http://13.234.208.246/app/location_views/" +
+                                                                    await launch("http://192.168.54.114:8000/app/location_views/" +
                                                                         Ids[int.parse(
                                                                             value)] +
                                                                         "/");
@@ -1253,196 +1244,15 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                   )
                                                   .toList(),
                                         ))))));
+                  } else {
+                    // Default case when tab is neither 0 nor 1
+                    return Container(
+                      height: MediaQuery.of(context).size.height * 0.79,
+                      child: Center(
+                        child: Text("No data available"),
+                      ),
+                    );
                   }
-                  //  else
-                  // if (tab == 2) {
-                  //   return Container(
-                  //       height: MediaQuery.of(context).size.height * 0.78,
-                  //       decoration: BoxDecoration(
-                  //         borderRadius: BorderRadius.circular(5),
-                  //         color: Colors.white,
-                  //         boxShadow: const [
-                  //           BoxShadow(
-                  //             color: Colors.green,
-                  //             blurRadius: 2.0,
-                  //             spreadRadius: 1.0,
-                  //             //offset: Offset(2.0, 2.0), // shadow direction: bottom right
-                  //           )
-                  //         ],
-                  //       ),
-                  //       margin: const EdgeInsets.only(
-                  //           left: 5, right: 5, top: 2, bottom: 10),
-                  //       padding: const EdgeInsets.only(
-                  //           left: 2, right: 2, top: 2, bottom: 2),
-                  //       child: Scrollbar(
-                  //           isAlwaysShown: true,
-                  //           thickness: 15,
-                  //           child: SingleChildScrollView(
-                  //               scrollDirection: Axis.horizontal,
-                  //               padding: const EdgeInsets.only(bottom: 10),
-                  //               child: Scrollbar(
-                  //                   isAlwaysShown: true,
-                  //                   thickness: 15,
-                  //                   child: SingleChildScrollView(
-                  //                       scrollDirection: Axis.vertical,
-                  //                       child: DataTable(
-                  //                         columnSpacing: 20,
-                  //                         dividerThickness: 2,
-                  //                         headingRowColor:
-                  //                             MaterialStateColor.resolveWith(
-                  //                                 (states) => Colors.green),
-                  //                         columns: [
-                  //                           DataColumn(
-                  //                             label: Text(
-                  //                               'S.No',
-                  //                               style: TextStyle(
-                  //                                   fontWeight: FontWeight.bold,
-                  //                                   color: Colors.white),
-                  //                             ),
-                  //                           ),
-                  //                           DataColumn(
-                  //                               label: Text(
-                  //                             'Application\n       No',
-                  //                             style: TextStyle(
-                  //                                 fontWeight: FontWeight.bold,
-                  //                                 color: Colors.white),
-                  //                           )),
-                  //                           DataColumn(
-                  //                               label: Text(
-                  //                             'Application\n      Name',
-                  //                             style: TextStyle(
-                  //                                 fontWeight: FontWeight.bold,
-                  //                                 color: Colors.white),
-                  //                           )),
-                  //                           DataColumn(
-                  //                               label: Text(
-                  //                             'Application\n      Date',
-                  //                             style: TextStyle(
-                  //                                 fontWeight: FontWeight.bold,
-                  //                                 color: Colors.white),
-                  //                           )),
-                  //                           //DataColumn(label: Text('Current\n   Status',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),)),
-                  //                           //DataColumn(label: Text('Days  left\nfor Approved',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),)),
-                  //                           // DataColumn(label: Text('Approved\n    Date',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),)),
-                  //                           DataColumn(
-                  //                               label: Text(
-                  //                             'Action',
-                  //                             style: TextStyle(
-                  //                                 fontWeight: FontWeight.bold,
-                  //                                 color: Colors.white),
-                  //                           )),
-                  //                           DataColumn(
-                  //                               label: Text(
-                  //                             'Download\n   NOC',
-                  //                             style: TextStyle(
-                  //                                 fontWeight: FontWeight.bold,
-                  //                                 color: Colors.white),
-                  //                           )),
-                  //                           //DataColumn(label: Text('Download\n Report',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),)),
-                  //                           //DataColumn(label: Text('QR Code',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),)),
-                  //                           //DataColumn(label: Text('Remark',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),)),
-                  //                           // DataColumn(label: Text('Remark\n  Date',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),)),
-                  //                         ],
-                  //                         rows:
-                  //                             sr3 // Loops through dataColumnText, each iteration assigning the value to element
-                  //                                 .map(
-                  //                                   ((value) => DataRow(
-                  //                                         cells: <DataCell>[
-                  //                                           DataCell((Text((int
-                  //                                                       .parse(
-                  //                                                           value) +
-                  //                                                   1)
-                  //                                               .toString()))), //Extracting from Map element the value
-                  //                                           DataCell(Text(App_no3[
-                  //                                                   int.parse(
-                  //                                                       value)]
-                  //                                               .toString())),
-                  //                                           DataCell(Text(App_Name3[
-                  //                                                   int.parse(
-                  //                                                       value)]
-                  //                                               .toString())),
-                  //                                           DataCell(Text(App_Date3[
-                  //                                                   int.parse(
-                  //                                                       value)]
-                  //                                               .toString())),
-                  //                                           //DataCell(Text(Current_status3[int.parse(value)].toString()=='S'?"Submitted":Current_status3[int.parse(value)].toString()=='P'?"Pending":"Rejected")),
-                  //                                           // DataCell(Text(days_left_transit3[int.parse(value)].toString()==6?"Not Generated":"Not Generated")),
-                  //                                           // DataCell(Text((Approved_date3[int.parse(value)].toString()=='true')?Approved_date3[int.parse(value)].toString():"N/A",)),
-                  //                                           DataCell(
-                  //                                             new Visibility(
-                  //                                               // visible: (Current_status[int.parse(value)].toString()=='A')?true:false,
-                  //                                               child:
-                  //                                                   IconButton(
-                  //                                                 icon: new Icon(
-                  //                                                     Icons
-                  //                                                         .visibility),
-                  //                                                 color: Colors
-                  //                                                     .blue,
-                  //                                                 onPressed:
-                  //                                                     () {
-                  //                                                   String IDS =
-                  //                                                       Ids3[int.parse(value)]
-                  //                                                           .toString();
-                  //                                                   Navigator.push(
-                  //                                                       context,
-                  //                                                       MaterialPageRoute(
-                  //                                                           builder: (_) => NocViewApplication(
-                  //                                                                 sessionToken: sessionToken,
-                  //                                                                 userGroup: userGroup,
-                  //                                                                 Ids: IDS,
-                  //                                                               )));
-                  //                                                 },
-                  //                                               ),
-                  //                                             ),
-                  //                                           ),
-                  //                                           DataCell(
-                  //                                             IconButton(
-                  //                                               icon: new Icon(Icons
-                  //                                                   .file_download),
-                  //                                               color:
-                  //                                                   Colors.blue,
-                  //                                               onPressed:
-                  //                                                   () async {
-                  //                                                 await launch(
-                  //                                                     "http://13.234.208.246/api/auth/new_noc_pdf/" +
-                  //                                                         Ids3[int.parse(
-                  //                                                             value)] +
-                  //                                                         "/");
-                  //                                                 // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-                  //                                               },
-                  //                                             ),
-                  //                                           ),
-                  //                                           /*DataCell( new  Visibility(
-                  //                           //  visible: (Current_status[int.parse(value)].toString()=='A')?true:false,
-                  //                           child: IconButton(
-                  //                             icon: new Icon(Icons.file_download),
-                  //                             color: Colors.blue,
-                  //                             onPressed: ()async{
-                  //                               await launch("http://65.1.132.43:8080/api/auth/new_user_report/"+Ids[int.parse(value)]+"/");
-                  //                               // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-                  //                             },
-                  //                           ),
-                  //                         ),
-                  //                         ),*/
-                  //                                           /*DataCell(new  Visibility(
-                  //                           visible: (Current_status3[int.parse(value)].toString()=='Accepted')?true:false,
-                  //                           child: IconButton(
-                  //                             icon: new Icon(Icons.qr_code_outlined),
-                  //                             color: Colors.blue,
-                  //                             onPressed: ()async{
-                  //                               await launch("http://65.1.132.43:8080/api/auth/qr_code_pdf/"+Ids[int.parse(value)]+"/");
-                  //                               // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-                  //                             },
-                  //                           ),
-                  //                         ),),*/
-                  //                                           //DataCell(Text((Remark3[int.parse(value)].toString()=='null')?Remark3[int.parse(value)].toString():"N/A",)),
-                  //                                           //DataCell(Text((Remark_date3[int.parse(value)].toString()!='null')?Remark_date3[int.parse(value)].toString():"N/A",)),
-                  //                                         ],
-                  //                                       )),
-                  //                                 )
-                  //                                 .toList(),
-                  //                       ))))));
-                  // }
                 }),
               ],
             ),

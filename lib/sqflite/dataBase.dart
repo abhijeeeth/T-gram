@@ -7,7 +7,6 @@ import 'package:tigramnks/Form1.dart';
 
 import '../model/formOneModel.dart';
 
-
 // class dataBaseSqf {
 //   static final dataBaseSqf _databaseHelper = dataBaseSqf._();
 
@@ -23,11 +22,11 @@ import '../model/formOneModel.dart';
 //         await database.execute(
 //           """
 //             CREATE TABLE formOneTable (
-//               id INTEGER PRIMARY KEY AUTOINCREMENT, 
+//               id INTEGER PRIMARY KEY AUTOINCREMENT,
 //               name TEXT ,
-//               address INTEGER , 
-//               survayno TEXT 
-             
+//               address INTEGER ,
+//               survayno TEXT
+
 //             )
 //           """,
 //               // treeProposed TEXT,
@@ -102,7 +101,6 @@ import '../model/formOneModel.dart';
 
 // }
 
-
 // }
 
 // class dataBaseSqf{
@@ -125,7 +123,7 @@ import '../model/formOneModel.dart';
 // Future _createDB(Database db, int version)async{
 //   const idType = ' INTEGER PRIMARY KEY ';
 //   const textType =' TEXT ';
-  
+
 //   await db.execute('''
 // CREATE TABLE $tableFormone(
 //     ${formOneFields.id} $idType,
@@ -169,10 +167,8 @@ import '../model/formOneModel.dart';
 //     ${formOneFields.trees_cutted} $textType
 //     )''');
 
-
 //  }
 
- 
 //   Future<formOneModel> create(formOneModel note) async {
 //     final db = await instance.database;
 
@@ -187,7 +183,7 @@ import '../model/formOneModel.dart';
 //     final id = await db.insert(tableFormone, note.toJson());
 //     return note.copy(id: id);
 //   }
-   
+
 //   Future <formOneModel> readnote(int id) async{
 //     final db = await instance.database;
 //     final maps =await db.query(tableFormone,columns:formOneFields.values,
@@ -204,13 +200,11 @@ import '../model/formOneModel.dart';
 //   //   final result = await db.query(tableFormone);
 //   //   return result.map((json)=>formOneModel.fromJson(json)).toList();
 //   // }
- 
 
 //   Future close()async{
 //     final db =await instance.database;
 //     db.close();
 //   }
-
 
 //     Future<List<formOneModel>> readAllNotes() async {
 //     final db = await instance.database;
@@ -227,10 +221,10 @@ import '../model/formOneModel.dart';
 //     final db =await instance.database;
 
 //     return db.update(
-//       tableFormone , 
+//       tableFormone ,
 //       note.toJson(),
 //      where: '${formOneFields.id} = ?',whereArgs: [note.id],);
-     
+
 //   }
 //   Future <int> delete(int id )async{
 //     final db =await instance.database;
@@ -255,7 +249,7 @@ class dataBaseSqf {
   // static const String COLUMN_Purpose = "Purpose";
   // static const String COLUMN_driver_name = "driver_name";
   // static const String COLUMN_vehicel_reg = "vehicel_reg";
-  
+
   // static const String COLUMN_phone= "phone";
   // static const String COLUMN_mode= "mode";
   // static const String COLUMN_destination_address = "destination_address";
@@ -282,49 +276,49 @@ class dataBaseSqf {
   // static const String COLUMN_image3_log= "image3_log";
   // static const String COLUMN_image4_log = "image4_log";
   // static const String COLUMN_trees_cutted = "trees_cutted";
-  
+
 ////////////////////////////////
 
-      // "$COLUMN_treeProposed  TEXT,"
-    // "$COLUMN_village  TEXT,"
-    // "$COLUMN_district  TEXT,"
-    // "$COLUMN_block  TEXT,"
-    // "$COLUMN_taluka  TEXT,"
-    // "$COLUMN_division  TEXT,"
-    // "$COLUMN_pincode  TEXT,"
-    // "$COLUMN_Purpose  TEXT,"
-    // "$COLUMN_driver_name  TEXT,"
-    // "$COLUMN_vehicel_reg   TEXT,"
-    // "$COLUMN_phone  TEXT,"
-    // "$COLUMN_mode  TEXT,"
-    // "$COLUMN_destination_address  TEXT,"
-    // "$COLUMN_destination_state  TEXT,"
-    // "$COLUMN_licence_img  TEXT,"
-    // "$COLUMN_ownership_proof_img  TEXT,"
-    // "$COLUMN_revenue_application_img  TEXT,"
-    // "$COLUMN_revenue_approval_img  TEXT,"
-    // "$COLUMN_declaration_img  TEXT,"
-    // "$COLUMN_location_sketch_img  TEXT,"
-    // "$COLUMN_tree_ownership_img  TEXT,"
-    // "$COLUMN_aadhar_card_img  TEXT,"
-    // "$COLUMN_signature_img  TEXT,"
-    // "$COLUMN_location_img1  TEXT,"
-    // "$COLUMN_location_img2  TEXT,"
-    // "$COLUMN_location_img3  TEXT,"
-    // "$COLUMN_location_img4  TEXT,"
-    // "$COLUMN_image1_lat  TEXT,"
-    // "$COLUMN_image2_lat  TEXT,"
-    // "$COLUMN_image3_lat  TEXT,"
-    // "$COLUMN_image1_log  TEXT,"
-    // "$COLUMN_image2_log  TEXT,"
-    // "$COLUMN_image3_log  TEXT,"
-    // "$COLUMN_image4_log  TEXT,"
-    // "$COLUMN_trees_cutted TEXT"
+  // "$COLUMN_treeProposed  TEXT,"
+  // "$COLUMN_village  TEXT,"
+  // "$COLUMN_district  TEXT,"
+  // "$COLUMN_block  TEXT,"
+  // "$COLUMN_taluka  TEXT,"
+  // "$COLUMN_division  TEXT,"
+  // "$COLUMN_pincode  TEXT,"
+  // "$COLUMN_Purpose  TEXT,"
+  // "$COLUMN_driver_name  TEXT,"
+  // "$COLUMN_vehicel_reg   TEXT,"
+  // "$COLUMN_phone  TEXT,"
+  // "$COLUMN_mode  TEXT,"
+  // "$COLUMN_destination_address  TEXT,"
+  // "$COLUMN_destination_state  TEXT,"
+  // "$COLUMN_licence_img  TEXT,"
+  // "$COLUMN_ownership_proof_img  TEXT,"
+  // "$COLUMN_revenue_application_img  TEXT,"
+  // "$COLUMN_revenue_approval_img  TEXT,"
+  // "$COLUMN_declaration_img  TEXT,"
+  // "$COLUMN_location_sketch_img  TEXT,"
+  // "$COLUMN_tree_ownership_img  TEXT,"
+  // "$COLUMN_aadhar_card_img  TEXT,"
+  // "$COLUMN_signature_img  TEXT,"
+  // "$COLUMN_location_img1  TEXT,"
+  // "$COLUMN_location_img2  TEXT,"
+  // "$COLUMN_location_img3  TEXT,"
+  // "$COLUMN_location_img4  TEXT,"
+  // "$COLUMN_image1_lat  TEXT,"
+  // "$COLUMN_image2_lat  TEXT,"
+  // "$COLUMN_image3_lat  TEXT,"
+  // "$COLUMN_image1_log  TEXT,"
+  // "$COLUMN_image2_log  TEXT,"
+  // "$COLUMN_image3_log  TEXT,"
+  // "$COLUMN_image4_log  TEXT,"
+  // "$COLUMN_trees_cutted TEXT"
 
   dataBaseSqf._();
   static final dataBaseSqf db = dataBaseSqf._();
 
-  Database _database;
+  late Database _database;
 
   Future<Database> get database async {
     print("database getter called");
@@ -347,7 +341,7 @@ class dataBaseSqf {
       onCreate: (Database database, int version) async {
         print("Creating formonefields table");
 
-          await database.execute('''
+        await database.execute('''
 CREATE TABLE $TABLE_FORMONE(
     "$COLUMN_id INTEGER PRIMARY KEY,"
     "$COLUMN_name  TEXT,"
@@ -362,50 +356,47 @@ CREATE TABLE $TABLE_FORMONE(
   Future<List<formOneFields>> getFormOnes() async {
     final db = await database;
 
-    var foods = await db
-        .query(TABLE_FORMONE, columns: [
-          COLUMN_id,
-          COLUMN_name,
-          COLUMN_address,
-          COLUMN_survayno,
-          // COLUMN_treeProposed,
-          // COLUMN_village,
-          // COLUMN_district,
-          // COLUMN_block ,
-          // COLUMN_taluka,
-          // COLUMN_division,
-          // COLUMN_pincode,
-          // COLUMN_Purpose ,
-          // COLUMN_driver_name,
-          // COLUMN_vehicel_reg,
-          // COLUMN_phone,
-          // COLUMN_mode,
-          // COLUMN_destination_address,
-          // COLUMN_destination_state,
-          // COLUMN_licence_img,
-          // COLUMN_ownership_proof_img,
-          // COLUMN_revenue_application_img,          
-          // COLUMN_revenue_application_img, 
-          // COLUMN_revenue_approval_img ,
-          // COLUMN_declaration_img ,
-          // COLUMN_location_sketch_img ,
-          // COLUMN_tree_ownership_img,
-          // COLUMN_aadhar_card_img ,
-          // COLUMN_signature_img,
-          // COLUMN_location_img1,
-          // COLUMN_location_img2, 
-          // COLUMN_location_img3 ,
-          // COLUMN_location_img4,
-          // COLUMN_image1_lat,
-          // COLUMN_image2_lat,
-          // COLUMN_image3_lat,
-          // COLUMN_image1_log,
-          // COLUMN_image3_log,
-          // COLUMN_image4_log ,
-          // COLUMN_trees_cutted 
-
-          
-          ]);
+    var foods = await db.query(TABLE_FORMONE, columns: [
+      COLUMN_id,
+      COLUMN_name,
+      COLUMN_address,
+      COLUMN_survayno,
+      // COLUMN_treeProposed,
+      // COLUMN_village,
+      // COLUMN_district,
+      // COLUMN_block ,
+      // COLUMN_taluka,
+      // COLUMN_division,
+      // COLUMN_pincode,
+      // COLUMN_Purpose ,
+      // COLUMN_driver_name,
+      // COLUMN_vehicel_reg,
+      // COLUMN_phone,
+      // COLUMN_mode,
+      // COLUMN_destination_address,
+      // COLUMN_destination_state,
+      // COLUMN_licence_img,
+      // COLUMN_ownership_proof_img,
+      // COLUMN_revenue_application_img,
+      // COLUMN_revenue_application_img,
+      // COLUMN_revenue_approval_img ,
+      // COLUMN_declaration_img ,
+      // COLUMN_location_sketch_img ,
+      // COLUMN_tree_ownership_img,
+      // COLUMN_aadhar_card_img ,
+      // COLUMN_signature_img,
+      // COLUMN_location_img1,
+      // COLUMN_location_img2,
+      // COLUMN_location_img3 ,
+      // COLUMN_location_img4,
+      // COLUMN_image1_lat,
+      // COLUMN_image2_lat,
+      // COLUMN_image3_lat,
+      // COLUMN_image1_log,
+      // COLUMN_image3_log,
+      // COLUMN_image4_log ,
+      // COLUMN_trees_cutted
+    ]);
 
     List<formOneFields> foodList = <formOneFields>[];
 
@@ -443,5 +434,9 @@ CREATE TABLE $TABLE_FORMONE(
       where: "id = ?",
       whereArgs: [formonefields.id],
     );
+  }
+
+  static dataBaseSqf instance() {
+    return dataBaseSqf.db;
   }
 }

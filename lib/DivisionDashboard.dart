@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names, prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
@@ -18,15 +20,16 @@ import 'package:pie_chart/pie_chart.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DivisonDashBoard extends StatefulWidget {
-  String sessionToken;
-  int userId;
-  String userName;
-  String userEmail;
-  String userGroup;
-  String dropdownValue;
-  List<String> userRange;
+  String? sessionToken;
+  int? userId;
+  String? userName;
+  String? userEmail;
+  String? userGroup;
+  String? dropdownValue;
+  List<String>? userRange;
   DivisonDashBoard(
-      {this.userId,
+      {super.key,
+      this.userId,
       this.userName,
       this.userEmail,
       this.sessionToken,
@@ -39,19 +42,20 @@ class DivisonDashBoard extends StatefulWidget {
 }
 
 class _DivisonDashBoardState extends State<DivisonDashBoard> {
-  String sessionToken;
-  int userId;
-  String userName;
-  String userEmail;
-  String userGroup;
-  String dropdownValue;
-  List<String> userRange;
+  String? sessionToken;
+  int? userId;
+  String? userName;
+  String? userEmail;
+  String? userGroup;
+  String? dropdownValue;
+  List<String>? userRange;
 
   _DivisonDashBoardState(this.userId, this.userName, this.userEmail,
       this.sessionToken, this.userGroup, this.dropdownValue, this.userRange);
   double Approved = 0;
   double Rejected = 0;
   double Pending = 0;
+  @override
   void initState() {
     super.initState();
     pie_chart();
@@ -59,16 +63,16 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
     ApprovedApp();
     DeemedApp();
     NocForm();
-    userRange.insert(0, "All Range");
+    userRange = userRange ?? [];
+    userRange!.insert(0, "All Range");
   }
 
 //---------------------Pie-chart------------------
   void pie_chart() async {
-    const String url = 'http://13.234.208.246/api/auth/dashbord_chart';
-
+    const String url = 'http://192.168.54.114:8000/api/auth/dashbord_chart';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
-      'Authorization': "token $sessionToken"
+      'Authorization': "token ${sessionToken ?? ''}"
     });
     Map<String, dynamic> responseJSON = json.decode(response.body);
     print(responseJSON);
@@ -83,7 +87,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
 
 //------------------End--Pie--Chart--------------
 
-  String url = " http://13.234.208.246/api/auth/new_transit_pass_pdf/90/";
+  String url = " http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/90/";
 
   //---------------Table ----------------------
 
@@ -222,25 +226,20 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
     verify_forest1.clear();
     //---------------clear---------------
     const String url =
-        'http://13.234.208.246/api/auth/DfoPendingListViewApplication';
+        'http://192.168.54.114:8000/api/auth/DfoPendingListViewApplication';
     Map data = {
-      "area_range": SelectedRange == "All Range"
-          ? ""
-          : SelectedRange == null
-              ? ""
-              : SelectedRange,
+      "area_range": SelectedRange == "All Range" ? "" : SelectedRange ?? "",
     };
     print(data);
     var body = json.encode(data);
-    print(body);
     final response = await http.post(Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json',
-          'Authorization': "token $sessionToken"
+          'Authorization': "token ${sessionToken ?? ''}"
         },
         body: body);
-    Map<String, dynamic> responseJSON = json.decode(response.body);
     print("Division Officer Pending");
+    Map<String, dynamic> responseJSON = json.decode(response.body);
     print(responseJSON);
     List list = responseJSON["data"];
     setState(() {
@@ -331,13 +330,9 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
     verify_forest1_1.clear();
     //----------clear-----------
     const String url =
-        'http://13.234.208.246/api/auth/DfoApprovedListViewApplication';
+        'http://192.168.54.114:8000/api/auth/DfoApprovedListViewApplication';
     Map data = {
-      "area_range": SelectedRange == "All Range"
-          ? ""
-          : SelectedRange == null
-              ? ""
-              : SelectedRange,
+      "area_range": SelectedRange == "All Range" ? "" : SelectedRange ?? "",
     };
     var body = json.encode(data);
     final response = await http.post(Uri.parse(url),
@@ -436,7 +431,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
   void DeemedApp() async {
     print("Deemed Application");
     sr2.clear();
-    const String url = 'http://13.234.208.246/api/auth/DeemedApprovedList';
+    const String url = 'http://192.168.54.114:8000/api/auth/DeemedApprovedList';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -501,7 +496,8 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
   void NocForm() async {
     print("Noc Application");
     sr3.clear();
-    const String url = 'http://13.234.208.246/api/auth/NocListApplication/';
+    const String url =
+        'http://192.168.54.114:8000/api/auth/NocListApplication/';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -538,7 +534,8 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
   bool flag = true;
   var tab = 0;
   @override
-  void _handleRadioValueChange(int value) async {
+  void _handleRadioValueChange(int? value) async {
+    if (value == null) return;
     pie_chart();
     setState(() {
       _radioValue = value;
@@ -594,17 +591,8 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
       String forest, String deputy, String revenue) {
     if (AppStatus == 'R') {
       return disapproved;
-    } else if (division != null) {
+    } else
       return division;
-    } else if (forest != null) {
-      return forest;
-    } else if (deputy != null) {
-      return deputy;
-    } else if (revenue != null) {
-      return revenue;
-    } else {
-      return "N/A";
-    }
   }
 
   String OfficerStatus(
@@ -634,14 +622,14 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
         if (AppStatus == 'R') {
           return "Rejected By Forest Range Officer";
         } else {
-          return "Recommended by Forest Range Officer \& \n Division Officer Recommendation Pending ";
+          return "Recommended by Forest Range Officer & \n Division Officer Recommendation Pending ";
         }
       }
     } else if (deputy == true) {
       if (AppStatus == 'R') {
         return "Rejected By Deputy Range Officer";
       } else {
-        return "Recommended by Deputy Range Officer \& \n Forest Range Officer Recommendation Pending";
+        return "Recommended by Deputy Range Officer & \n Forest Range Officer Recommendation Pending";
       }
     } else if (verify_forest1 == true) {
       if (log_updated_by_user == true) {
@@ -667,7 +655,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
       if (AppStatus == 'R') {
         return "Rejected By Revenue  Officer";
       } else {
-        return "Recommended by Revenue  Officer \& \n Deputy Officer Recommendation Pending";
+        return "Recommended by Revenue  Officer & \n Deputy Officer Recommendation Pending";
       }
     } else {
       if (AppStatus == 'R') {
@@ -681,18 +669,9 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
   String AssignOfficer(bool isForm2, String assign_deputy2,
       String assign_deputy1, bool log_updated_by_user) {
     if (isForm2 == true) {
-      if (assign_deputy2 != null) {
-        return assign_deputy2;
-      } else if (assign_deputy1 != null) {
-        if (log_updated_by_user == true) {
-          return 'Yet to Assign for Stage 2';
-        } else {
-          return assign_deputy1;
-        }
-      } else {
-        return 'Yet to Assign for Stage 1';
-      }
+      return assign_deputy2;
     }
+    return 'N/A'; // Default return value if isForm2 is false
   }
 
   int daysBetween(DateTime from) {
@@ -707,46 +686,49 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
     }
   }
 
-  int _currentSortColumn = 0;
-  bool _isAscending = true;
+  final int _currentSortColumn = 0;
+  final bool _isAscending = true;
 
-  String SelectedRange;
+  String? SelectedRange;
 
-  Future<bool> _onBackPressed() {
-    return showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text('Are you sure?'),
-              content: Text('Do you want to exit an App'),
-              actions: <Widget>[
-                TextButton(
-                  child: Text('No'),
-                  onPressed: () {
-                    Navigator.of(context).pop(false);
-                  },
-                ),
-                TextButton(
-                  child: Text('Yes'),
-                  onPressed: () {
-                    Navigator.of(context).pop(true);
-                  },
-                )
-              ],
-            );
-          },
-        ) ??
-        false;
+  get userMobile => null;
+
+  get userAddress => null;
+
+  Future<bool> _onBackPressed() async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Are you sure?'),
+          content: Text('Do you want to exit an App'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            TextButton(
+              child: Text('Yes'),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            )
+          ],
+        );
+      },
+    );
+    return result ?? false;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: NewGradientAppBar(
+      appBar: AppBar(
         title: Text("Dashboard"),
-        gradient:
-            LinearGradient(colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+
         //backgroundColor: Colors.blueGrey,
         elevation: 0,
         actions: [
@@ -775,25 +757,28 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                         height: 2,
                         color: Colors.grey,
                       ),*/
-            onChanged: (String data) {
-              setState(() {
-                SelectedRange = data;
-                PendingApp();
-                ApprovedApp();
-                DeemedApp();
-                NocForm();
-              });
-              print(SelectedRange);
+            onChanged: (String? data) {
+              if (data != null) {
+                setState(() {
+                  SelectedRange = data;
+                  PendingApp();
+                  ApprovedApp();
+                  DeemedApp();
+                  NocForm();
+                });
+                print(SelectedRange);
+              }
             },
             items: userRange
-                .toSet()
-                .toList()
-                .map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
+                    ?.toSet()
+                    .toList()
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList() ??
+                [],
           ),
         ],
       ),
@@ -883,7 +868,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                           icon: Icon(Icons.file_download),
                           onPressed: () async {
                             await launch(
-                                " http://13.234.208.246/api/auth/summary_report/");
+                                " http://192.168.54.114:8000/api/auth/summary_report/");
                           },
                           label: Text("Download"),
                         ),
@@ -909,13 +894,13 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                     padding: const EdgeInsets.only(
                         left: 2, right: 2, top: 2, bottom: 2),
                     child: Scrollbar(
-                        isAlwaysShown: true,
+                        thumbVisibility: true,
                         thickness: 15,
                         child: SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             padding: const EdgeInsets.only(bottom: 15),
                             child: Scrollbar(
-                                isAlwaysShown: true,
+                                thumbVisibility: true,
                                 thickness: 15,
                                 child: SingleChildScrollView(
                                     scrollDirection: Axis.vertical,
@@ -925,7 +910,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                       columnSpacing: 20,
                                       dividerThickness: 2,
                                       headingRowColor:
-                                          MaterialStateColor.resolveWith(
+                                          WidgetStateColor.resolveWith(
                                               (states) => Colors.orange),
                                       columns: [
                                         DataColumn(
@@ -1138,10 +1123,10 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                                         value)]
                                                                 .toString()))),
                                                         DataCell(
-                                                          new Visibility(
+                                                          Visibility(
                                                             // visible: (Current_status[int.parse(value)].toString()=='A')?true:false,
                                                             child: IconButton(
-                                                              icon: new Icon(Icons
+                                                              icon: Icon(Icons
                                                                   .visibility),
                                                               color:
                                                                   Colors.blue,
@@ -1156,9 +1141,13 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                                       context,
                                                                       MaterialPageRoute(
                                                                           builder: (_) => ViewApplication(
-                                                                                sessionToken: sessionToken,
-                                                                                userGroup: userGroup,
+                                                                                sessionToken: sessionToken ?? "",
+                                                                                userGroup: userGroup ?? "",
                                                                                 Ids: IDS,
+                                                                                userId: userId ?? 0,
+                                                                                Range: userRange ?? [],
+                                                                                userName: userName ?? "",
+                                                                                userEmail: userEmail ?? "",
                                                                               )));
                                                                 }
                                                               },
@@ -1166,7 +1155,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                           ),
                                                         ),
                                                         DataCell(
-                                                          new Visibility(
+                                                          Visibility(
                                                             visible: (Current_status[
                                                                             int.parse(value)]
                                                                         .toString() ==
@@ -1174,17 +1163,14 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                                 ? true
                                                                 : false,
                                                             child: IconButton(
-                                                              icon: new Icon(Icons
+                                                              icon: Icon(Icons
                                                                   .file_download),
                                                               color:
                                                                   Colors.blue,
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    " http://13.234.208.246/api/auth/new_transit_pass_pdf/" +
-                                                                        Ids[int.parse(
-                                                                            value)] +
-                                                                        "/");
+                                                                    "${" http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/" + Ids[int.parse(value)]}/");
                                                                 // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                               },
                                                             ),
@@ -1192,22 +1178,19 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                         ),
                                                         DataCell(
                                                           IconButton(
-                                                            icon: new Icon(Icons
+                                                            icon: Icon(Icons
                                                                 .file_download),
                                                             color: Colors.blue,
                                                             onPressed:
                                                                 () async {
                                                               await launch(
-                                                                  "http://13.234.208.246/api/auth/new_user_report/" +
-                                                                      Ids[int.parse(
-                                                                          value)] +
-                                                                      "/");
+                                                                  "${"http://192.168.54.114:8000/api/auth/new_user_report/" + Ids[int.parse(value)]}/");
                                                               // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                             },
                                                           ),
                                                         ),
                                                         DataCell(
-                                                          new Visibility(
+                                                          Visibility(
                                                             visible: (Current_status[
                                                                             int.parse(value)]
                                                                         .toString() ==
@@ -1215,17 +1198,14 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                                 ? true
                                                                 : false,
                                                             child: IconButton(
-                                                              icon: new Icon(Icons
+                                                              icon: Icon(Icons
                                                                   .qr_code_outlined),
                                                               color:
                                                                   Colors.blue,
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    " http://13.234.208.246/api/auth/qr_code_pdf/" +
-                                                                        Ids[int.parse(
-                                                                            value)] +
-                                                                        "/");
+                                                                    "${" http://192.168.54.114:8000/api/auth/qr_code_pdf/" + Ids[int.parse(value)]}/");
                                                                 // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                               },
                                                             ),
@@ -1294,13 +1274,13 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                     padding: const EdgeInsets.only(
                         left: 2, right: 2, top: 2, bottom: 2),
                     child: Scrollbar(
-                        isAlwaysShown: true,
+                        thumbVisibility: true,
                         thickness: 15,
                         child: SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             padding: const EdgeInsets.only(bottom: 15),
                             child: Scrollbar(
-                                isAlwaysShown: true,
+                                thumbVisibility: true,
                                 thickness: 15,
                                 child: SingleChildScrollView(
                                     scrollDirection: Axis.vertical,
@@ -1310,7 +1290,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                       columnSpacing: 30,
                                       dividerThickness: 2,
                                       headingRowColor:
-                                          MaterialStateColor.resolveWith(
+                                          WidgetStateColor.resolveWith(
                                               (states) => Colors.green),
                                       columns: [
                                         DataColumn(
@@ -1491,7 +1471,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                                         value)]
                                                                 .toString())),
                                                         DataCell(
-                                                          new Visibility(
+                                                          Visibility(
                                                             visible: (Current_status1[
                                                                             int.parse(value)]
                                                                         .toString() ==
@@ -1499,7 +1479,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                                 ? true
                                                                 : false,
                                                             child: IconButton(
-                                                              icon: new Icon(Icons
+                                                              icon: Icon(Icons
                                                                   .visibility),
                                                               color:
                                                                   Colors.blue,
@@ -1514,9 +1494,13 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                                       context,
                                                                       MaterialPageRoute(
                                                                           builder: (_) => ViewApplication(
-                                                                                sessionToken: sessionToken,
-                                                                                userGroup: userGroup,
+                                                                                sessionToken: sessionToken ?? "",
+                                                                                userGroup: userGroup ?? "",
                                                                                 Ids: IDS,
+                                                                                userId: userId ?? 0,
+                                                                                Range: userRange ?? [],
+                                                                                userName: userName ?? "",
+                                                                                userEmail: userEmail ?? "",
                                                                               )));
                                                                 }
                                                               },
@@ -1524,7 +1508,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                           ),
                                                         ),
                                                         DataCell(
-                                                          new Visibility(
+                                                          Visibility(
                                                             visible: (Current_status1[
                                                                             int.parse(value)]
                                                                         .toString() ==
@@ -1532,17 +1516,14 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                                 ? true
                                                                 : false,
                                                             child: IconButton(
-                                                              icon: new Icon(Icons
+                                                              icon: Icon(Icons
                                                                   .file_download),
                                                               color:
                                                                   Colors.blue,
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    " http://13.234.208.246/api/auth/new_transit_pass_pdf/" +
-                                                                        Ids1[int.parse(
-                                                                            value)] +
-                                                                        "/");
+                                                                    "${" http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/" + Ids1[int.parse(value)]}/");
                                                                 // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                               },
                                                             ),
@@ -1550,22 +1531,19 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                         ),
                                                         DataCell(
                                                           IconButton(
-                                                            icon: new Icon(Icons
+                                                            icon: Icon(Icons
                                                                 .file_download),
                                                             color: Colors.blue,
                                                             onPressed:
                                                                 () async {
                                                               await launch(
-                                                                  " http://13.234.208.246/api/auth/new_user_report/" +
-                                                                      Ids1[int.parse(
-                                                                          value)] +
-                                                                      "/");
+                                                                  "${" http://192.168.54.114:8000/api/auth/new_user_report/" + Ids1[int.parse(value)]}/");
                                                               // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                             },
                                                           ),
                                                         ),
                                                         DataCell(
-                                                          new Visibility(
+                                                          Visibility(
                                                             visible: (Current_status1[
                                                                             int.parse(value)]
                                                                         .toString() ==
@@ -1573,17 +1551,14 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                                 ? true
                                                                 : false,
                                                             child: IconButton(
-                                                              icon: new Icon(Icons
+                                                              icon: Icon(Icons
                                                                   .qr_code_outlined),
                                                               color:
                                                                   Colors.blue,
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    " http://13.234.208.246/api/auth/qr_code_pdf/" +
-                                                                        Ids1[int.parse(
-                                                                            value)] +
-                                                                        "/");
+                                                                    "${" http://192.168.54.114:8000/api/auth/qr_code_pdf/" + Ids1[int.parse(value)]}/");
                                                                 // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                               },
                                                             ),
@@ -1652,13 +1627,13 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                     padding: const EdgeInsets.only(
                         left: 2, right: 2, top: 2, bottom: 2),
                     child: Scrollbar(
-                        isAlwaysShown: true,
+                        thumbVisibility: true,
                         thickness: 15,
                         child: SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             padding: const EdgeInsets.only(bottom: 15),
                             child: Scrollbar(
-                                isAlwaysShown: true,
+                                thumbVisibility: true,
                                 thickness: 15,
                                 child: SingleChildScrollView(
                                     scrollDirection: Axis.vertical,
@@ -1668,7 +1643,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                       columnSpacing: 20,
                                       dividerThickness: 2,
                                       headingRowColor:
-                                          MaterialStateColor.resolveWith(
+                                          WidgetStateColor.resolveWith(
                                               (states) => Colors.cyan),
                                       columns: [
                                         DataColumn(
@@ -1791,10 +1766,10 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                                         value)]
                                                                 .toString())),
                                                         DataCell(
-                                                          new Visibility(
+                                                          Visibility(
                                                             // visible: (Current_status[int.parse(value)].toString()=='A')?true:false,
                                                             child: IconButton(
-                                                              icon: new Icon(Icons
+                                                              icon: Icon(Icons
                                                                   .visibility),
                                                               color:
                                                                   Colors.blue,
@@ -1809,9 +1784,13 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                                       context,
                                                                       MaterialPageRoute(
                                                                           builder: (_) => ViewApplication(
-                                                                                sessionToken: sessionToken,
-                                                                                userGroup: userGroup,
+                                                                                sessionToken: sessionToken ?? "",
+                                                                                userGroup: userGroup ?? "",
                                                                                 Ids: IDS,
+                                                                                userId: userId ?? 0,
+                                                                                Range: userRange ?? [],
+                                                                                userName: userName ?? "",
+                                                                                userEmail: userEmail ?? "",
                                                                               )));
                                                                 }
                                                               },
@@ -1819,7 +1798,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                           ),
                                                         ),
                                                         DataCell(
-                                                          new Visibility(
+                                                          Visibility(
                                                             visible: (Current_status2[
                                                                             int.parse(value)]
                                                                         .toString() ==
@@ -1827,17 +1806,14 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                                 ? true
                                                                 : false,
                                                             child: IconButton(
-                                                              icon: new Icon(Icons
+                                                              icon: Icon(Icons
                                                                   .file_download),
                                                               color:
                                                                   Colors.blue,
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    " http://13.234.208.246/api/auth/new_transit_pass_pdf/" +
-                                                                        Ids[int.parse(
-                                                                            value)] +
-                                                                        "/");
+                                                                    "${" http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/" + Ids[int.parse(value)]}/");
                                                                 // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                               },
                                                             ),
@@ -1845,22 +1821,19 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                         ),
                                                         DataCell(
                                                           IconButton(
-                                                            icon: new Icon(Icons
+                                                            icon: Icon(Icons
                                                                 .file_download),
                                                             color: Colors.blue,
                                                             onPressed:
                                                                 () async {
                                                               await launch(
-                                                                  " http://13.234.208.246/api/auth/new_user_report/" +
-                                                                      Ids2[int.parse(
-                                                                          value)] +
-                                                                      "/");
+                                                                  "${" http://192.168.54.114:8000/api/auth/new_user_report/" + Ids2[int.parse(value)]}/");
                                                               // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                             },
                                                           ),
                                                         ),
                                                         DataCell(
-                                                          new Visibility(
+                                                          Visibility(
                                                             visible: (Current_status2[
                                                                             int.parse(value)]
                                                                         .toString() ==
@@ -1868,17 +1841,14 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                                 ? true
                                                                 : false,
                                                             child: IconButton(
-                                                              icon: new Icon(Icons
+                                                              icon: Icon(Icons
                                                                   .qr_code_outlined),
                                                               color:
                                                                   Colors.blue,
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    " http://13.234.208.246/api/auth/qr_code_pdf/" +
-                                                                        Ids[int.parse(
-                                                                            value)] +
-                                                                        "/");
+                                                                    "${" http://192.168.54.114:8000/api/auth/qr_code_pdf/" + Ids[int.parse(value)]}/");
                                                                 // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                               },
                                                             ),
@@ -1947,13 +1917,13 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                     padding: const EdgeInsets.only(
                         left: 2, right: 2, top: 2, bottom: 2),
                     child: Scrollbar(
-                        isAlwaysShown: true,
+                        thumbVisibility: true,
                         thickness: 15,
                         child: SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             padding: const EdgeInsets.only(bottom: 15),
                             child: Scrollbar(
-                                isAlwaysShown: true,
+                                thumbVisibility: true,
                                 thickness: 15,
                                 child: SingleChildScrollView(
                                     scrollDirection: Axis.vertical,
@@ -1963,7 +1933,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                       columnSpacing: 20,
                                       dividerThickness: 2,
                                       headingRowColor:
-                                          MaterialStateColor.resolveWith(
+                                          WidgetStateColor.resolveWith(
                                               (states) => Colors.blue),
                                       columns: [
                                         DataColumn(
@@ -2044,7 +2014,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                         // DataCell(Text((Approved_date3[int.parse(value)].toString()=='true')?Approved_date3[int.parse(value)].toString():"N/A",)),
                                                         DataCell(
                                                           IconButton(
-                                                            icon: new Icon(Icons
+                                                            icon: Icon(Icons
                                                                 .visibility),
                                                             color: Colors.blue,
                                                             onPressed: () {
@@ -2059,8 +2029,8 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                                     MaterialPageRoute(
                                                                         builder: (_) =>
                                                                             NocViewApplication(
-                                                                              sessionToken: sessionToken,
-                                                                              userGroup: userGroup,
+                                                                              sessionToken: sessionToken ?? "",
+                                                                              userGroup: userGroup ?? "",
                                                                               Ids: IDS,
                                                                             )));
                                                               }
@@ -2069,16 +2039,13 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                         ),
                                                         DataCell(
                                                           IconButton(
-                                                            icon: new Icon(Icons
+                                                            icon: Icon(Icons
                                                                 .file_download),
                                                             color: Colors.blue,
                                                             onPressed:
                                                                 () async {
                                                               await launch(
-                                                                  " http://13.234.208.246/api/auth/new_noc_pdf/" +
-                                                                      Ids3[int.parse(
-                                                                          value)] +
-                                                                      "/");
+                                                                  "${" http://192.168.54.114:8000/api/auth/new_noc_pdf/" + Ids3[int.parse(value)]}/");
                                                               // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                             },
                                                           ),
@@ -2114,6 +2081,12 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                               .toList(),
                                     ))))));
               }
+              // Default case when none of the tab conditions match
+              return Container(
+                child: Center(
+                  child: Text("No content available"),
+                ),
+              );
             }),
           ],
         ),
@@ -2135,7 +2108,9 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                   currentAccountPicture: CircleAvatar(
                     backgroundColor: Colors.white,
                     child: Text(
-                      userName[0].toUpperCase(),
+                      userName != null && userName!.isNotEmpty
+                          ? userName![0].toUpperCase()
+                          : "U",
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     ),
                   ),
@@ -2155,7 +2130,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                           context,
                           MaterialPageRoute(
                               builder: (_) => DivisionReport(
-                                  sessionToken: sessionToken,
+                                  sessionToken: sessionToken ?? "",
                                   userRange: userRange)));
                     }),
                 ListTile(
@@ -2173,10 +2148,13 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                           context,
                           MaterialPageRoute(
                               builder: (_) => OfficerDashboard(
-                                    sessionToken: sessionToken,
-                                    userName: userName,
-                                    userEmail: userEmail,
-                                    userGroup: userGroup,
+                                    sessionToken: sessionToken ?? "",
+                                    userName: userName ?? "",
+                                    userEmail: userEmail ?? "",
+                                    userGroup: userGroup ?? "",
+                                    dropdownValue: '',
+                                    Range: [],
+                                    userId: userId ?? 0,
                                   )));
                     }),
                 ListTile(
@@ -2190,8 +2168,18 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     ),
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => QueryPage()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => QueryPage(
+                                    userId: userId ?? 0,
+                                    sessionToken: sessionToken ?? "",
+                                    userName: userName ?? "",
+                                    userEmail: userEmail ?? "",
+                                    userMobile: userMobile ?? "Unknown Mobile",
+                                    userAddress:
+                                        userAddress ?? "Unknown Address",
+                                  )));
                     }),
                 ListTile(
                     leading: Icon(
@@ -2204,7 +2192,8 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     ),
                     onTap: () async {
-                      const String url = 'http://13.234.208.246/api/auth/logout/';
+                      const String url =
+                          'http://192.168.54.114:8000/api/auth/logout/';
                       await http.post(
                         Uri.parse(url),
                         headers: <String, String>{
@@ -2224,6 +2213,5 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
         ),
       ),
     );
-    ;
   }
 }

@@ -9,7 +9,11 @@ class NocViewApplication extends StatefulWidget {
   String userGroup;
   String sessionToken;
   String Ids;
-  NocViewApplication({this.userGroup, this.sessionToken, this.Ids});
+  NocViewApplication(
+      {super.key,
+      required this.userGroup,
+      required this.sessionToken,
+      required this.Ids});
 
   @override
   _NocViewApplicationState createState() =>
@@ -56,7 +60,7 @@ class _NocViewApplicationState extends State<NocViewApplication> {
   //--------------------------
 
   void NocView() async {
-    String url = 'http://13.234.208.246/api/auth/NocViewApplication';
+    String url = 'http://192.168.54.114:8000/api/auth/NocViewApplication';
     Map data = {
       "app_id": Ids,
     };
@@ -104,17 +108,17 @@ class _NocViewApplicationState extends State<NocViewApplication> {
 
   Future<bool> _onBackPressed() {
     Navigator.pop(context);
+    return Future.value(true);
   }
 
   @override
   Widget build(BuildContext context) {
-    return new WillPopScope(
+    return WillPopScope(
         onWillPop: _onBackPressed,
         child: Scaffold(
-          appBar: NewGradientAppBar(
-            title: Text("Noc View Application"),
-            gradient: LinearGradient(
-                colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+          appBar: AppBar(
+            title: const Text("Noc View Application"),
+
             //backgroundColor: Colors.blueGrey,
             elevation: 0,
             //  automaticallyImplyLeading: false,
@@ -128,7 +132,7 @@ class _NocViewApplicationState extends State<NocViewApplication> {
                       borderRadius: BorderRadius.circular(12.0),
                       color: Colors.white,
                       border: Border.all(color: Colors.blueGrey, width: 1),
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
                           color: Colors.black,
                           blurRadius: 2.0,
@@ -141,21 +145,22 @@ class _NocViewApplicationState extends State<NocViewApplication> {
                     margin: const EdgeInsets.all(8),
                     child: Column(children: <Widget>[
                       Card(
+                        elevation: 2,
                         child: ListTile(
-                          title: Text(
+                          title: const Text(
                             'Name',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black),
                           ),
                           trailing: Text(Name.toString(),
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.blue)),
                         ),
-                        elevation: 2,
                       ),
-                      Card(
+                      const Card(
+                        elevation: 2,
                         child: ListTile(
                           title: Text(
                             'Address',
@@ -164,20 +169,20 @@ class _NocViewApplicationState extends State<NocViewApplication> {
                                 color: Colors.black),
                           ),
                         ),
-                        elevation: 2,
                       ),
                       Card(
+                        elevation: 2,
                         child: ListTile(
                           title: Text(
                             Address.toString(),
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.blue),
                           ),
                         ),
-                        elevation: 2,
                       ),
-                      Card(
+                      const Card(
+                        elevation: 2,
                         child: ListTile(
                           title: Text(
                             'List showing the species of tree or trees proposed to be cut,etc',
@@ -186,20 +191,20 @@ class _NocViewApplicationState extends State<NocViewApplication> {
                                 color: Colors.black),
                           ),
                         ),
-                        elevation: 2,
                       ),
                       Card(
+                        elevation: 2,
                         child: ListTile(
                           title: Text(
                             treeSpecies.toString(),
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.blue),
                           ),
                         ),
-                        elevation: 2,
                       ),
-                      Card(
+                      const Card(
+                        elevation: 2,
                         child: ListTile(
                           title: Text(
                             'Survey No. and extent of the field or fields on which the tree or treesproposed to be cut,uprooted or burnt stand',
@@ -208,20 +213,20 @@ class _NocViewApplicationState extends State<NocViewApplication> {
                                 color: Colors.black),
                           ),
                         ),
-                        elevation: 2,
                       ),
                       Card(
+                        elevation: 2,
                         child: ListTile(
                           title: Text(
                             SurveyNo.toString(),
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.blue),
                           ),
                         ),
-                        elevation: 2,
                       ),
-                      Card(
+                      const Card(
+                        elevation: 2,
                         child: ListTile(
                           title: Text(
                             'Name of the Village/Taluka/Block and District where the land on which the tree or trees stand/lie',
@@ -230,20 +235,20 @@ class _NocViewApplicationState extends State<NocViewApplication> {
                                 color: Colors.black),
                           ),
                         ),
-                        elevation: 2,
                       ),
                       Card(
+                        elevation: 2,
                         child: ListTile(
                           title: Text(
                             VillageName.toString(),
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.blue),
                           ),
                         ),
-                        elevation: 2,
                       ),
-                      Card(
+                      const Card(
+                        elevation: 2,
                         child: ListTile(
                           title: Text(
                             'Proof of ownership of the trees',
@@ -252,20 +257,20 @@ class _NocViewApplicationState extends State<NocViewApplication> {
                                 color: Colors.black),
                           ),
                         ),
-                        elevation: 2,
                       ),
                       Card(
+                        elevation: 2,
                         child: ListTile(
                           title: Text(
                             OwnershipProof.toString(),
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.blue),
                           ),
                         ),
-                        elevation: 2,
                       ),
-                      Card(
+                      const Card(
+                        elevation: 2,
                         child: ListTile(
                           title: Text(
                             'Purpose for which trees are proposed to be cut,etc',
@@ -274,24 +279,23 @@ class _NocViewApplicationState extends State<NocViewApplication> {
                                 color: Colors.black),
                           ),
                         ),
-                        elevation: 2,
                       ),
                       Card(
+                        elevation: 2,
                         child: ListTile(
                           title: Text(
                             purpose.toString(),
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.blue),
                           ),
                         ),
-                        elevation: 2,
                       ),
                       /*Card(child: ListTile(title: Text('Details of generation proposed', style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black),),
                       ),
                         elevation: 2,),
                       Card(child: ListTile(title: Text(proposed.toString(), style: TextStyle(fontWeight: FontWeight.bold,color: Colors.blue),),), elevation: 2,),*/
-                      Text(
+                      const Text(
                         '----------VOLUME DESCRIPTIONS-----------',
                         textAlign: TextAlign.left,
                         style: TextStyle(
@@ -311,10 +315,9 @@ class _NocViewApplicationState extends State<NocViewApplication> {
                                   dividerThickness: 2,
                                   columnSpacing: 25,
                                   showBottomBorder: true,
-                                  headingRowColor:
-                                      MaterialStateColor.resolveWith(
-                                          (states) => Colors.orange),
-                                  columns: [
+                                  headingRowColor: WidgetStateColor.resolveWith(
+                                      (states) => Colors.orange),
+                                  columns: const [
                                     DataColumn(
                                         label: Text(
                                       'S.No',

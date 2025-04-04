@@ -44,10 +44,10 @@ class formOneFields {
   //  String trees_cutted;
 
   formOneFields({
-    this.id,
-    this.name,
-    this.address,
-    this.survayno,
+    required this.id,
+    required this.name,
+    required this.address,
+    required this.survayno,
     //  this. treeProposed,
     //  this. village,
     //  this. district,
@@ -232,7 +232,7 @@ class formOneFields {
 
 // }
 
-  Map<String, Object> toMap() {
+  Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
       dataBaseSqf.COLUMN_id: id,
       dataBaseSqf.COLUMN_name: name,
@@ -283,11 +283,11 @@ class formOneFields {
     return map;
   }
 
-  formOneFields.fromMap(Map<String, dynamic> map) {
-    id = map[dataBaseSqf.COLUMN_id];
-    name = map[dataBaseSqf.COLUMN_name];
-    address = map[dataBaseSqf.COLUMN_address];
-    survayno = map[dataBaseSqf.COLUMN_survayno];
+  formOneFields.fromMap(Map<String, dynamic> map)
+      : id = map[dataBaseSqf.COLUMN_id],
+        name = map[dataBaseSqf.COLUMN_name],
+        address = map[dataBaseSqf.COLUMN_address],
+        survayno = map[dataBaseSqf.COLUMN_survayno] {
     // treeProposed = map[dataBaseSqf.COLUMN_treeProposed];
     // village = map[dataBaseSqf.COLUMN_village];
     // district = map[dataBaseSqf.COLUMN_district];

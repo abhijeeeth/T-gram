@@ -10,28 +10,29 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:io' as Io;
 
 class Form3Page2 extends StatefulWidget {
-  String Name;
-  String Address;
-  List log_details;
-  String sessionToken;
-  String Ids1;
-  Form3Page2(
-      {this.sessionToken,
-      this.Ids1,
-      this.Name,
-      this.Address,
-      this.log_details});
+  final String Name;
+  final String Address;
+  final List log_details;
+  final String sessionToken;
+  final String Ids1;
+  const Form3Page2(
+      {super.key,
+      required this.sessionToken,
+      required this.Ids1,
+      required this.Name,
+      required this.Address,
+      required this.log_details});
   @override
   _Form3Page2State createState() =>
       _Form3Page2State(sessionToken, Ids1, Name, Address, log_details);
 }
 
 class _Form3Page2State extends State<Form3Page2> {
-  String Name;
-  String Address;
-  List log_details;
-  String sessionToken;
-  String Ids1;
+  final String Name;
+  final String Address;
+  final List log_details;
+  final String sessionToken;
+  final String Ids1;
   _Form3Page2State(
       this.sessionToken, this.Ids1, this.Name, this.Address, this.log_details);
 
@@ -41,7 +42,7 @@ class _Form3Page2State extends State<Form3Page2> {
   TextEditingController Time = TextEditingController();
   TextEditingController Remarks = TextEditingController();
   TextEditingController destination = TextEditingController();
-  File _Signature;
+  late File _Signature;
   final ImagePicker _picker1 = ImagePicker();
   var _imageSignature;
   String base64ImageSignature = 'empty';
@@ -90,10 +91,10 @@ class _Form3Page2State extends State<Form3Page2> {
                         await setSignaturepicgallery();
                       },
                       splashColor: Colors.greenAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.image,
                               color: Colors.blueAccent,
@@ -129,7 +130,7 @@ class _Form3Page2State extends State<Form3Page2> {
   bool isShow = false;
   Future<bool> loginAction() async {
     //replace the below line of code with your login request
-    const String url = 'http://13.234.208.246/api/auth/FormThree';
+    const String url = 'http://192.168.54.114:8000/api/auth/FormThree';
     Map data = {
       "app_id": int.parse(Ids1),
       "marks": Marks.text,
@@ -166,7 +167,7 @@ class _Form3Page2State extends State<Form3Page2> {
     setState(() {
       isShow = false;
     });
-    isShow == true ? CircularProgressIndicator() : Text('done');
+    isShow == true ? const CircularProgressIndicator() : const Text('done');
     return true;
   }
 
@@ -174,8 +175,8 @@ class _Form3Page2State extends State<Form3Page2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: NewGradientAppBar(
-        title: Text(
+      appBar: AppBar(
+        title: const Text(
           "FORM - III",
           style: TextStyle(
             fontSize: 20,
@@ -183,8 +184,7 @@ class _Form3Page2State extends State<Form3Page2> {
           ),
         ),
         //backgroundColor: ColorLinearGradient(colors: [HexColor("#26f596"),HexColor("#0499f2")]),
-        gradient:
-            LinearGradient(colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+
         elevation: 0,
         //automaticallyImplyLeading: false,
       ),
@@ -197,16 +197,15 @@ class _Form3Page2State extends State<Form3Page2> {
               //padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
                 controller: Marks,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderSide: BorderSide(width: 2),
-                      borderRadius:
-                          const BorderRadius.all(const Radius.circular(14.0)),
+                      borderRadius: BorderRadius.all(Radius.circular(14.0)),
                     ),
                     labelText: 'Marks',
                     hintText: 'Enter Marks'),
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.blue),
               ),
             ),
             Padding(
@@ -215,16 +214,15 @@ class _Form3Page2State extends State<Form3Page2> {
               //padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
                 controller: Whence,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderSide: BorderSide(width: 2),
-                      borderRadius:
-                          const BorderRadius.all(const Radius.circular(14.0)),
+                      borderRadius: BorderRadius.all(Radius.circular(14.0)),
                     ),
                     labelText: 'Whence Obtained',
                     hintText: 'Enter Whence Obtained'),
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.blue),
               ),
             ),
             Padding(
@@ -233,16 +231,15 @@ class _Form3Page2State extends State<Form3Page2> {
               //padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
                 controller: destination,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderSide: BorderSide(width: 2),
-                      borderRadius:
-                          const BorderRadius.all(const Radius.circular(14.0)),
+                      borderRadius: BorderRadius.all(Radius.circular(14.0)),
                     ),
                     labelText: 'Destination',
                     hintText: 'Enter Destination'),
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.blue),
               ),
             ),
             Padding(
@@ -251,16 +248,15 @@ class _Form3Page2State extends State<Form3Page2> {
               //padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
                 controller: Route,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderSide: BorderSide(width: 2),
-                      borderRadius:
-                          const BorderRadius.all(const Radius.circular(14.0)),
+                      borderRadius: BorderRadius.all(Radius.circular(14.0)),
                     ),
                     labelText: 'Route',
                     hintText: 'Enter Route of Forest Watch Station'),
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.blue),
               ),
             ),
             Padding(
@@ -269,16 +265,15 @@ class _Form3Page2State extends State<Form3Page2> {
               //padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
                 controller: Time,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderSide: BorderSide(width: 2),
-                      borderRadius:
-                          const BorderRadius.all(const Radius.circular(14.0)),
+                      borderRadius: BorderRadius.all(Radius.circular(14.0)),
                     ),
                     labelText: 'Time Allowed (In days)',
                     hintText: 'Enter Time Allowed (In days)'),
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.blue),
               ),
             ),
             Padding(
@@ -287,24 +282,23 @@ class _Form3Page2State extends State<Form3Page2> {
               //padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
                 controller: Remarks,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderSide: BorderSide(width: 2),
-                      borderRadius:
-                          const BorderRadius.all(const Radius.circular(14.0)),
+                      borderRadius: BorderRadius.all(Radius.circular(14.0)),
                     ),
                     labelText: 'Remarks',
                     hintText: 'Enter Remarks'),
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.blue),
               ),
             ),
             Container(
               width: double.infinity,
               margin: const EdgeInsets.only(
                   top: 15, right: 15, left: 15, bottom: 10),
-              decoration: new BoxDecoration(
-                  border: new Border.all(
+              decoration: BoxDecoration(
+                  border: Border.all(
                     color: Colors.grey,
                     width: 1,
                   ),
@@ -313,15 +307,15 @@ class _Form3Page2State extends State<Form3Page2> {
                   left: 10.0, right: 10, top: 10, bottom: 0),
               child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
                 TextButton.icon(
-                  icon: Icon(Icons.image),
+                  icon: const Icon(Icons.image),
                   onPressed: () {
                     _showpickoptiondialogSignature(
                         context); //      Signature(ImageSource.gallery);
                     //  print(_Signature.path);
                   },
-                  label: Text("Signature"),
+                  label: const Text("Signature"),
                 ),
-                Spacer(),
+                const Spacer(),
                 Icon(
                   Icons.check_circle,
                   color: (_imageSignature) == null ? Colors.red : Colors.green,
@@ -331,14 +325,14 @@ class _Form3Page2State extends State<Form3Page2> {
             ),
             Visibility(
               visible: isShow,
-              child: CircularProgressIndicator(
+              child: const CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
                 strokeWidth: 8,
               ),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Colors.yellowAccent,
+                backgroundColor: Colors.yellowAccent,
               ),
               onPressed: () async {
                 setState(() {
@@ -347,7 +341,7 @@ class _Form3Page2State extends State<Form3Page2> {
                 await loginAction();
                 // Respond to button press
               },
-              child: Text(
+              child: const Text(
                 'Submit',
                 style: TextStyle(color: Colors.black),
               ),

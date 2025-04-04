@@ -20,12 +20,13 @@ class Profile extends StatefulWidget {
   String userMobile;
   String userAddress;
   Profile({
-    this.sessionToken,
-    this.userName,
-    this.userEmail,
-    this.userMobile,
-    this.userAddress,
-    this.userProfile,
+    super.key,
+    required this.sessionToken,
+    required this.userName,
+    required this.userEmail,
+    required this.userMobile,
+    required this.userAddress,
+    required this.userProfile,
   });
   @override
   _ProfileState createState() => _ProfileState(
@@ -54,6 +55,7 @@ class _ProfileState extends State<Profile> {
     });
   }
 
+  @override
   void initState() {
     super.initState();
     viewProfile();
@@ -80,7 +82,7 @@ class _ProfileState extends State<Profile> {
   //   });
   // }
   viewProfile() async {
-    const String url = 'http://13.234.208.246/api/auth/ViewProfile';
+    const String url = 'http://192.168.54.114:8000/api/auth/ViewProfile';
     print(sessionToken);
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
@@ -149,10 +151,10 @@ class _ProfileState extends State<Profile> {
                         await setfilepiccam();
                       },
                       splashColor: Colors.blueAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.camera,
                               color: Colors.blueAccent,
@@ -173,10 +175,10 @@ class _ProfileState extends State<Profile> {
                         await setfilepicgallery();
                       },
                       splashColor: Colors.greenAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.image,
                               color: Colors.blueAccent,
@@ -225,8 +227,20 @@ class _ProfileState extends State<Profile> {
   Future<bool> _onBackPressed() {
     Navigator.pop(
       context,
-      MaterialPageRoute(builder: (context) => HomePage()),
+      MaterialPageRoute(
+          builder: (context) => HomePage(
+                sessionToken: sessionToken,
+                userId: 0,
+                userName: userName,
+                userEmail: userEmail,
+                userMobile: userMobile,
+                userAddress: userAddress,
+                userProfile: userProfile,
+                userGroup: '',
+                userCato: '',
+              )),
     );
+    return Future.value(false);
   }
 
   @override
@@ -234,17 +248,16 @@ class _ProfileState extends State<Profile> {
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
-        appBar: NewGradientAppBar(
-          title: Text("Profile "),
-          gradient: LinearGradient(
-              colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+        appBar: AppBar(
+          title: const Text("Profile "),
+
           actions: [
             Container(
-              padding: EdgeInsets.only(right: 15),
+              padding: const EdgeInsets.only(right: 15),
               child: LayoutBuilder(builder: (context, constraints) {
                 if (flag == true) {
                   return IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.edit_rounded,
                         color: Colors.white,
                       ),
@@ -255,7 +268,7 @@ class _ProfileState extends State<Profile> {
                       });
                 } else if (flag == false) {
                   return IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.save_rounded,
                         color: Colors.white,
                       ),
@@ -264,7 +277,7 @@ class _ProfileState extends State<Profile> {
                         // String profile_base= _imgProfile.path != null ? 'data:image/png;base64,' + base64Encode(bytes) : '';
                         print(base64Image);
                         const String url =
-                            'http://13.234.208.246/api/auth/EditProfile';
+                            'http://192.168.54.114:8000/api/auth/EditProfile';
 
                         Map data = {
                           "name": name.text,
@@ -306,6 +319,7 @@ class _ProfileState extends State<Profile> {
                         });
                       });
                 }
+                return Container(); // Add this line
               }),
             )
           ],
@@ -321,7 +335,7 @@ class _ProfileState extends State<Profile> {
                   borderRadius: BorderRadius.circular(8),
                   color: Colors.white,
                   border: Border.all(color: Colors.lightGreenAccent, width: 2),
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
                       color: Colors.black,
                       blurRadius: 2.0,
@@ -343,7 +357,7 @@ class _ProfileState extends State<Profile> {
                             height: MediaQuery.of(context).size.height / 4,
                             width: double.infinity,
                             fit: BoxFit.cover,
-                            image: NetworkImage(
+                            image: const NetworkImage(
                                 "https://images.pexels.com/photos/311458/pexels-photo-311458.jpeg?cs=srgb&dl=pexels-scott-webb-311458.jpg&fm=jpg"),
                           ),
                           //   Positioned(
@@ -357,10 +371,10 @@ class _ProfileState extends State<Profile> {
                         ]),
                         Card(
                           child: ListTile(
-                            leading: Icon(Icons.perm_identity_rounded),
+                            leading: const Icon(Icons.perm_identity_rounded),
                             title: Text(
                               Vname,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.blue),
                             ),
@@ -368,10 +382,10 @@ class _ProfileState extends State<Profile> {
                         ),
                         Card(
                           child: ListTile(
-                            leading: Icon(Icons.email_outlined),
+                            leading: const Icon(Icons.email_outlined),
                             title: Text(
                               Vemail,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.blue),
                             ),
@@ -379,10 +393,10 @@ class _ProfileState extends State<Profile> {
                         ),
                         Card(
                           child: ListTile(
-                            leading: Icon(Icons.phone),
+                            leading: const Icon(Icons.phone),
                             title: Text(
                               Vphone,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.blue),
                             ),
@@ -390,10 +404,10 @@ class _ProfileState extends State<Profile> {
                         ),
                         Card(
                           child: ListTile(
-                            leading: Icon(Icons.home_outlined),
+                            leading: const Icon(Icons.home_outlined),
                             title: Text(
                               Vaddress,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.blue),
                             ),
@@ -414,7 +428,7 @@ class _ProfileState extends State<Profile> {
                               height: MediaQuery.of(context).size.height / 4,
                               width: double.infinity,
                               fit: BoxFit.cover,
-                              image: NetworkImage(
+                              image: const NetworkImage(
                                   "https://images.pexels.com/photos/311458/pexels-photo-311458.jpeg?cs=srgb&dl=pexels-scott-webb-311458.jpg&fm=jpg"),
                             ),
                             // Positioned(
@@ -445,12 +459,12 @@ class _ProfileState extends State<Profile> {
                         ),
                         Card(
                           child: ListTile(
-                            leading: Icon(Icons.perm_identity_rounded),
+                            leading: const Icon(Icons.perm_identity_rounded),
                             title: TextField(
                               controller: name,
                               decoration: InputDecoration(
                                   border: InputBorder.none, hintText: userName),
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.blue),
                             ),
@@ -458,10 +472,10 @@ class _ProfileState extends State<Profile> {
                         ),
                         Card(
                           child: ListTile(
-                            leading: Icon(Icons.email_outlined),
+                            leading: const Icon(Icons.email_outlined),
                             title: Text(
                               userEmail,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.blue),
                             ),
@@ -469,14 +483,14 @@ class _ProfileState extends State<Profile> {
                         ),
                         Card(
                           child: ListTile(
-                            leading: Icon(Icons.phone),
+                            leading: const Icon(Icons.phone),
                             title: TextField(
                               controller: phone,
                               keyboardType: TextInputType.number,
                               decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: userMobile),
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.blue),
                             ),
@@ -484,13 +498,13 @@ class _ProfileState extends State<Profile> {
                         ),
                         Card(
                           child: ListTile(
-                            leading: Icon(Icons.home_outlined),
+                            leading: const Icon(Icons.home_outlined),
                             title: TextField(
                               controller: address,
                               decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: userAddress.toString()),
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.blue),
                             ),
@@ -499,6 +513,7 @@ class _ProfileState extends State<Profile> {
                       ],
                     );
                   }
+                  return Container(); // Add this line
                 }),
               )
             ],

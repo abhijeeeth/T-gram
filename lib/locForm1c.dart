@@ -71,54 +71,55 @@ class locForm1c extends StatefulWidget {
   String selectProof;
   String logData;
   locForm1c(
-      {this.sessionToken,
-      this.userId,
-      this.id,
-      this.Type,
-      this.userName,
-      this.userEmail,
-      this.App_no,
-      this.Division,
-      this.Range,
-      this.District,
-      this.Taluke,
-      this.Village,
-      this.address,
-      this.survay,
-      this.treePCut,
-      this.blockL,
-      this.pin,
-      this.imageA,
-      this.imageB,
-      this.imageC,
-      this.imageD,
-      this.image1lat,
-      this.image2lat,
-      this.image3lat,
-      this.image4lat,
-      this.image1log,
-      this.image2log,
-      this.image3log,
-      this.image4log,
-      this.treespecies,
-      this.purposecut,
-      this.drivername,
-      this.vechclereg,
-      this.mode,
-      this.phone,
-      this.destAddress,
-      this.destState,
-      this.licenceImg,
-      this.ownerProof,
-      this.revenApplication,
-      this.revenApprove,
-      this.declaration,
-      this.locationSkch,
-      this.treeOwnership,
-      this.aadarcard,
-      this.signatureImg,
-      this.selectProof,
-      this.logData});
+      {super.key,
+      required this.sessionToken,
+      required this.userId,
+      required this.id,
+      required this.Type,
+      required this.userName,
+      required this.userEmail,
+      required this.App_no,
+      required this.Division,
+      required this.Range,
+      required this.District,
+      required this.Taluke,
+      required this.Village,
+      required this.address,
+      required this.survay,
+      required this.treePCut,
+      required this.blockL,
+      required this.pin,
+      required this.imageA,
+      required this.imageB,
+      required this.imageC,
+      required this.imageD,
+      required this.image1lat,
+      required this.image2lat,
+      required this.image3lat,
+      required this.image4lat,
+      required this.image1log,
+      required this.image2log,
+      required this.image3log,
+      required this.image4log,
+      required this.treespecies,
+      required this.purposecut,
+      required this.drivername,
+      required this.vechclereg,
+      required this.mode,
+      required this.phone,
+      required this.destAddress,
+      required this.destState,
+      required this.licenceImg,
+      required this.ownerProof,
+      required this.revenApplication,
+      required this.revenApprove,
+      required this.declaration,
+      required this.locationSkch,
+      required this.treeOwnership,
+      required this.aadarcard,
+      required this.signatureImg,
+      required this.selectProof,
+      required this.logData});
 
   @override
   State<locForm1c> createState() => _locForm1cState(
@@ -173,6 +174,7 @@ class locForm1c extends StatefulWidget {
 }
 
 class _locForm1cState extends State<locForm1c> {
+  @override
   void initState() {
     super.initState();
 
@@ -277,7 +279,7 @@ class _locForm1cState extends State<locForm1c> {
       this.selectProof,
       this.logData);
 
-  String dropdownValue2;
+  late String dropdownValue2;
   String holder = '';
   List<String> IdProof = [
     'Aadhar Card',
@@ -342,8 +344,8 @@ class _locForm1cState extends State<locForm1c> {
                         await setfilepicgallery();
                       },
                       splashColor: Colors.greenAccent,
-                      child: Row(
-                        children: const [
+                      child: const Row(
+                        children: [
                           Padding(
                             padding: EdgeInsets.all(8.0),
                             child: Icon(
@@ -379,10 +381,10 @@ class _locForm1cState extends State<locForm1c> {
                         await setfilepicgalleryOwn();
                       },
                       splashColor: Colors.greenAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.image,
                               color: Colors.blueAccent,
@@ -416,10 +418,10 @@ class _locForm1cState extends State<locForm1c> {
                         await setApprovepicgallery();
                       },
                       splashColor: Colors.greenAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.image,
                               color: Colors.blueAccent,
@@ -453,10 +455,10 @@ class _locForm1cState extends State<locForm1c> {
                         await setDeclarepicgallery();
                       },
                       splashColor: Colors.greenAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.image,
                               color: Colors.blueAccent,
@@ -490,8 +492,8 @@ class _locForm1cState extends State<locForm1c> {
                         await setSkechIpicgallery();
                       },
                       splashColor: Colors.greenAccent,
-                      child: Row(
-                        children: const [
+                      child: const Row(
+                        children: [
                           Padding(
                             padding: EdgeInsets.all(8.0),
                             child: Icon(
@@ -527,10 +529,10 @@ class _locForm1cState extends State<locForm1c> {
                         await setTreeOwnpicgallery();
                       },
                       splashColor: Colors.greenAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.image,
                               color: Colors.blueAccent,
@@ -564,10 +566,10 @@ class _locForm1cState extends State<locForm1c> {
                         await setIDProofpicgallery();
                       },
                       splashColor: Colors.greenAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.image,
                               color: Colors.blueAccent,
@@ -737,17 +739,16 @@ class _locForm1cState extends State<locForm1c> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: NewGradientAppBar(
+      appBar: AppBar(
         //backgroundColor:Colors.blueGrey,
-        title: Text(
+        title: const Text(
           "FORM - I",
           style: TextStyle(
             color: Colors.white,
             fontSize: 20,
           ),
         ),
-        gradient:
-            LinearGradient(colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+
         elevation: 0,
         // automaticallyImplyLeading: false,
       ),
@@ -759,8 +760,8 @@ class _locForm1cState extends State<locForm1c> {
           Container(
             width: double.infinity,
             margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-            decoration: new BoxDecoration(
-                border: new Border.all(
+            decoration: BoxDecoration(
+                border: Border.all(
                   color: Colors.grey,
                   width: 1,
                 ),
@@ -769,7 +770,7 @@ class _locForm1cState extends State<locForm1c> {
                 left: 10.0, right: 20, top: 10, bottom: 0),
             child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
               TextButton.icon(
-                icon: Icon(Icons.image),
+                icon: const Icon(Icons.image),
                 onPressed: () {
                   setState(() {
                     _showpickoptiondialogOwn(context);
@@ -788,8 +789,8 @@ class _locForm1cState extends State<locForm1c> {
           Container(
             width: double.infinity,
             margin: const EdgeInsets.only(top: 5, left: 15, right: 15),
-            decoration: new BoxDecoration(
-                border: new Border.all(
+            decoration: BoxDecoration(
+                border: Border.all(
                   color: Colors.grey,
                   width: 1,
                 ),
@@ -798,16 +799,16 @@ class _locForm1cState extends State<locForm1c> {
                 left: 10.0, right: 20, top: 10, bottom: 0),
             child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
               TextButton.icon(
-                icon: Icon(Icons.image),
+                icon: const Icon(Icons.image),
                 onPressed: () {
                   setState(() {
                     _showpickoptiondialog(context);
                   });
                   //  _RevenueApplication(ImageSource.gallery);
                 },
-                label: Text("Revenue Application "),
+                label: const Text("Revenue Application "),
               ),
-              Spacer(),
+              const Spacer(),
               Icon(
                 Icons.check_circle,
                 color:
@@ -820,8 +821,8 @@ class _locForm1cState extends State<locForm1c> {
           Container(
             width: double.infinity,
             margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-            decoration: new BoxDecoration(
-                border: new Border.all(
+            decoration: BoxDecoration(
+                border: Border.all(
                   color: Colors.grey,
                   width: 1,
                 ),
@@ -830,16 +831,16 @@ class _locForm1cState extends State<locForm1c> {
                 left: 10.0, right: 20, top: 10, bottom: 0),
             child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
               TextButton.icon(
-                icon: Icon(Icons.image),
+                icon: const Icon(Icons.image),
                 onPressed: () {
                   setState(() {
                     _showpickoptiondialogApprove(context);
                   });
                   // _RevenueApproval(ImageSource.gallery);
                 },
-                label: Text("Revenue Approval"),
+                label: const Text("Revenue Approval"),
               ),
-              Spacer(),
+              const Spacer(),
               Icon(
                 Icons.check_circle,
                 color:
@@ -852,8 +853,8 @@ class _locForm1cState extends State<locForm1c> {
           Container(
             width: double.infinity,
             margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-            decoration: new BoxDecoration(
-                border: new Border.all(
+            decoration: BoxDecoration(
+                border: Border.all(
                   color: Colors.grey,
                   width: 1,
                 ),
@@ -862,7 +863,7 @@ class _locForm1cState extends State<locForm1c> {
                 left: 10.0, right: 20, top: 10, bottom: 0),
             child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
               TextButton.icon(
-                icon: Icon(Icons.image),
+                icon: const Icon(Icons.image),
                 onPressed: () {
                   setState(() {
                     _showpickoptiondialogDeclaration(context);
@@ -870,9 +871,9 @@ class _locForm1cState extends State<locForm1c> {
                   });
                   // Declaration(ImageSource.gallery);
                 },
-                label: Text("Declaration"),
+                label: const Text("Declaration"),
               ),
-              Spacer(),
+              const Spacer(),
               Icon(
                 Icons.check_circle,
                 color: _declFunction() == "FALSE" ? Colors.red : Colors.green,
@@ -884,8 +885,8 @@ class _locForm1cState extends State<locForm1c> {
           Container(
             width: double.infinity,
             margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-            decoration: new BoxDecoration(
-                border: new Border.all(
+            decoration: BoxDecoration(
+                border: Border.all(
                   color: Colors.grey,
                   width: 1,
                 ),
@@ -894,7 +895,7 @@ class _locForm1cState extends State<locForm1c> {
                 left: 10.0, right: 20, top: 10, bottom: 0),
             child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
               TextButton.icon(
-                icon: Icon(Icons.image),
+                icon: const Icon(Icons.image),
                 onPressed: () {
                   setState(() {
                     _showpickoptiondialogSkechI(context);
@@ -902,9 +903,9 @@ class _locForm1cState extends State<locForm1c> {
                   });
                   // _LocationSketch(ImageSource.gallery);
                 },
-                label: Text("Location Sketch"),
+                label: const Text("Location Sketch"),
               ),
-              Spacer(),
+              const Spacer(),
               Icon(
                 Icons.check_circle,
                 color: _locskFunction() == "FALSE" ? Colors.red : Colors.green,
@@ -916,8 +917,8 @@ class _locForm1cState extends State<locForm1c> {
           Container(
             width: double.infinity,
             margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-            decoration: new BoxDecoration(
-                border: new Border.all(
+            decoration: BoxDecoration(
+                border: Border.all(
                   color: Colors.grey,
                   width: 1,
                 ),
@@ -926,7 +927,7 @@ class _locForm1cState extends State<locForm1c> {
                 left: 10.0, right: 20, top: 10, bottom: 0),
             child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
               TextButton.icon(
-                icon: Icon(Icons.image),
+                icon: const Icon(Icons.image),
                 onPressed: () {
                   setState(() {
                     _showpickoptiondialogTreeOwn(context);
@@ -934,9 +935,9 @@ class _locForm1cState extends State<locForm1c> {
                   });
                   // _TreeOwnership(ImageSource.gallery);
                 },
-                label: Text("Tree Ownership Details"),
+                label: const Text("Tree Ownership Details"),
               ),
-              Spacer(),
+              const Spacer(),
               Icon(
                 Icons.check_circle,
                 color:
@@ -947,8 +948,8 @@ class _locForm1cState extends State<locForm1c> {
           ),
           Container(
             margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-            decoration: new BoxDecoration(
-                border: new Border.all(
+            decoration: BoxDecoration(
+                border: Border.all(
                   color: Colors.grey,
                   width: 1,
                 ),
@@ -958,18 +959,18 @@ class _locForm1cState extends State<locForm1c> {
             child: DropdownButton<String>(
               value: dropdownValue2,
               isExpanded: true,
-              icon: Icon(Icons.arrow_drop_down),
+              icon: const Icon(Icons.arrow_drop_down),
               iconSize: 24,
               elevation: 16,
-              style: TextStyle(color: Colors.black, fontSize: 18),
-              hint: Text("Select Photo Identity Proof"),
+              style: const TextStyle(color: Colors.black, fontSize: 18),
+              hint: const Text("Select Photo Identity Proof"),
               /*underline: Container(
                            height: 2,
                            color: Colors.grey,
                          ),*/
-              onChanged: (String data) {
+              onChanged: (String? data) {
                 setState(() {
-                  dropdownValue2 = data;
+                  dropdownValue2 = data!;
                 });
                 print(dropdownValue2);
               },
@@ -985,8 +986,8 @@ class _locForm1cState extends State<locForm1c> {
             width: double.infinity,
             margin:
                 const EdgeInsets.only(top: 15, left: 15, right: 15, bottom: 20),
-            decoration: new BoxDecoration(
-                border: new Border.all(
+            decoration: BoxDecoration(
+                border: Border.all(
                   color: Colors.grey,
                   width: 1,
                 ),
@@ -995,7 +996,7 @@ class _locForm1cState extends State<locForm1c> {
                 left: 10.0, right: 15, top: 10, bottom: 5),
             child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
               TextButton.icon(
-                icon: Icon(Icons.image),
+                icon: const Icon(Icons.image),
                 onPressed: () {
                   setState(() {
                     _showpickoptiondialogIDProof(context);
@@ -1003,9 +1004,9 @@ class _locForm1cState extends State<locForm1c> {
                   });
                   //  _IdProof(ImageSource.gallery);
                 },
-                label: Text("Upload Photo ID Proof"),
+                label: const Text("Upload Photo ID Proof"),
               ),
-              Spacer(),
+              const Spacer(),
               Icon(
                 Icons.check_circle,
                 color: _aadharFunction() == "FALSE" ? Colors.red : Colors.green,
@@ -1019,7 +1020,6 @@ class _locForm1cState extends State<locForm1c> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         isExtended: true,
-        child: Icon(Icons.navigate_next),
         backgroundColor: HexColor("#0499f2"),
         onPressed: () async {
           // if ((dropdownValue == null)
@@ -1062,7 +1062,7 @@ class _locForm1cState extends State<locForm1c> {
           Navigator.pushReplacement(
               context,
               PageRouteBuilder(
-                  transitionDuration: Duration(milliseconds: 400),
+                  transitionDuration: const Duration(milliseconds: 400),
                   transitionsBuilder:
                       (context, animation, animationTime, child) {
                     return ScaleTransition(
@@ -1127,6 +1127,7 @@ class _locForm1cState extends State<locForm1c> {
           // print(sessionToken + dropdorwnValue1 + userName);
           // }
         },
+        child: const Icon(Icons.navigate_next),
       ),
     );
   }

@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:convert';
 import 'dart:math';
 
@@ -38,24 +40,25 @@ class noc_Form2 extends StatefulWidget {
   List holder_1;
   bool flag1;
   noc_Form2(
-      {this.sessionToken,
-      this.dropdownValue,
-      this.dropdownValue1,
-      this.userName,
-      this.userEmail,
-      this.userId,
-      this.Name,
-      this.Address,
-      this.survey_no,
-      this.Tree_Proposed_to_cut,
-      this.village,
-      this.Taluka,
-      this.block,
-      this.District,
-      this.Pincode,
-      this.Purpose,
-      this.holder_1,
-      this.flag1});
+      {super.key,
+      required this.sessionToken,
+      required this.dropdownValue,
+      required this.dropdownValue1,
+      required this.userName,
+      required this.userEmail,
+      required this.userId,
+      required this.Name,
+      required this.Address,
+      required this.survey_no,
+      required this.Tree_Proposed_to_cut,
+      required this.village,
+      required this.Taluka,
+      required this.block,
+      required this.District,
+      required this.Pincode,
+      required this.Purpose,
+      required this.holder_1,
+      required this.flag1});
   @override
   _noc_Form2State createState() => _noc_Form2State(
       sessionToken,
@@ -120,9 +123,10 @@ class _noc_Form2State extends State<noc_Form2> {
       this.Pincode,
       this.Purpose,
       this.holder_1,
-      this.flag1);
+      this.flag1)
+      : v = 0.0;
 
-  GoogleMapController mapController;
+  late GoogleMapController mapController;
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   List values = [];
   Future<Widget> AddMap(BuildContext context) async {
@@ -135,7 +139,7 @@ class _noc_Form2State extends State<noc_Form2> {
                     EdgeInsets.only(bottom: 30, top: 30, left: 10, right: 10),
                 contentPadding: EdgeInsets.all(5),
                 clipBehavior: Clip.antiAliasWithSaveLayer,
-                content: Container(
+                content: SizedBox(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
                   child: GoogleMap(
@@ -148,9 +152,7 @@ class _noc_Form2State extends State<noc_Form2> {
                         target: LatLng(10.8505, 76.2711), zoom: 14),
                     //polygons: myPolygon(),
                     onMapCreated: onMapCreated,
-                    markers: Set<Marker>.of(markers.values) == null
-                        ? LatLng(10.8505, 76.2711)
-                        : Set<Marker>.of(markers.values),
+                    markers: Set<Marker>.of(markers.values),
                     onTap: (latlang) {
                       setState(() {
                         values.clear();
@@ -163,11 +165,8 @@ class _noc_Form2State extends State<noc_Form2> {
                           infoWindow: InfoWindow(
                             title:
                                 "Tree Location", //+(values.length +1).toString(),
-                            snippet: "( Latitude : " +
-                                latlang.latitude.toStringAsPrecision(8) +
-                                " , Longitude : " +
-                                latlang.longitude.toStringAsPrecision(8) +
-                                ")",
+                            snippet:
+                                "( Latitude : ${latlang.latitude.toStringAsPrecision(8)} , Longitude : ${latlang.longitude.toStringAsPrecision(8)})",
                           ),
                           icon: BitmapDescriptor.defaultMarker,
                         );
@@ -255,9 +254,9 @@ class _noc_Form2State extends State<noc_Form2> {
                       },
                       splashColor: Colors.greenAccent,
                       child: Row(
-                        children: [
+                        children: const [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.image,
                               color: Colors.blueAccent,
@@ -340,9 +339,9 @@ class _noc_Form2State extends State<noc_Form2> {
                       },
                       splashColor: Colors.greenAccent,
                       child: Row(
-                        children: [
+                        children: const [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.image,
                               color: Colors.blueAccent,
@@ -398,7 +397,7 @@ class _noc_Form2State extends State<noc_Form2> {
             text: "Latitude : ",
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
         TextSpan(
-            text: values.length == 0 ? '' : values[0].toString(),
+            text: values.isEmpty ? '' : values[0].toString(),
             style: TextStyle(
               color: Colors.blueAccent[700],
               fontSize: 14,
@@ -415,7 +414,7 @@ class _noc_Form2State extends State<noc_Form2> {
             text: "Longitude : ",
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
         TextSpan(
-            text: values.length == 0 ? '' : values[1].toString(),
+            text: values.isEmpty ? '' : values[1].toString(),
             style: TextStyle(
               color: Colors.blueAccent[700],
               fontSize: 14,
@@ -428,7 +427,7 @@ class _noc_Form2State extends State<noc_Form2> {
     return  Text((_getVolume(girth, length).toString()).toString());
   }*/
   //-----------------------------------End-GeoLocator---------------------------
-  String dropdownValue2;
+  String dropdownValue2 = '';
   String holder = '';
   List<String> IdProof = [
     'Aadhar Card',
@@ -442,17 +441,17 @@ class _noc_Form2State extends State<noc_Form2> {
     setState(() {
       holder = dropdownValue;
     });
-    print("-----------------------" + holder);
+    print("-----------------------$holder");
   }
 
-  String dropdownValue3;
+  String dropdownValue3 = '';
   String spacies_holder = '';
 
   void getDropDownItem1() {
     setState(() {
       spacies_holder = dropdownValue1;
     });
-    print("-----------------------" + holder);
+    print("-----------------------$holder");
   }
 
   bool flag = true;
@@ -468,14 +467,14 @@ class _noc_Form2State extends State<noc_Form2> {
   List Longitude = [];
   List n_list = [];
   Map<String, String> logs = {};
-  final List<TextEditingController> _controllers = List();
+  final List<TextEditingController> _controllers = [];
   double v;
   // double _getVolume(double girth, double length) {
   //   v = (girth / 4) * (girth / 4) * length;
 
   //   return v;
   // }
-   double _getVolume(double girth, double length) {
+  double _getVolume(double girth, double length) {
     // Convert girth from cm to meters
     double girthInMeters = girth * 0.01;
 
@@ -539,7 +538,7 @@ class _noc_Form2State extends State<noc_Form2> {
                         keyboardType: TextInputType.number,
                         controller: length,
                         validator: (value) {
-                          return value.isNotEmpty ? null : "Enter Height(M)";
+                          return value!.isNotEmpty ? null : "Enter Height(M)";
                         },
                         decoration:
                             InputDecoration(hintText: "Please Enter Height(M)"),
@@ -548,7 +547,7 @@ class _noc_Form2State extends State<noc_Form2> {
                         keyboardType: TextInputType.number,
                         controller: girth,
                         validator: (value) {
-                          return value.isNotEmpty ? null : "Enter Girth(cm)";
+                          return value!.isNotEmpty ? null : "Enter Girth(cm)";
                         },
                         decoration:
                             InputDecoration(hintText: "Please Enter Girth(cm)"),
@@ -619,16 +618,7 @@ class _noc_Form2State extends State<noc_Form2> {
                         fontSize: 16),
                   ),
                   onTap: () {
-                    if (dropdownValue3 == null) {
-                      Fluttertoast.showToast(
-                          msg: "Please select tree type ",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.CENTER,
-                          timeInSecForIosWeb: 1,
-                          backgroundColor: Colors.red,
-                          textColor: Colors.white,
-                          fontSize: 18.0);
-                    } else if (length.text.length == 0) {
+                    if (length.text.isEmpty) {
                       Fluttertoast.showToast(
                           msg: "Please add legth ",
                           toastLength: Toast.LENGTH_SHORT,
@@ -637,7 +627,7 @@ class _noc_Form2State extends State<noc_Form2> {
                           backgroundColor: Colors.red,
                           textColor: Colors.white,
                           fontSize: 18.0);
-                    } else if (girth.text.length == 0) {
+                    } else if (girth.text.isEmpty) {
                       Fluttertoast.showToast(
                           msg: "Please add girth ",
                           toastLength: Toast.LENGTH_SHORT,
@@ -752,7 +742,9 @@ class _noc_Form2State extends State<noc_Form2> {
                         //initialValue: log_details[index]['length'],
                         controller: length,
                         validator: (value) {
-                          return value.isNotEmpty ? null : "Enter Length";
+                          return value != null && value.isNotEmpty
+                              ? null
+                              : "Enter Length";
                         },
                         decoration:
                             InputDecoration(hintText: "Please Enter Length"),
@@ -761,7 +753,7 @@ class _noc_Form2State extends State<noc_Form2> {
                         keyboardType: TextInputType.number,
                         controller: girth,
                         validator: (value) {
-                          return value.isNotEmpty ? null : "Enter girth";
+                          return value!.isNotEmpty ? null : "Enter girth";
                         },
                         decoration:
                             InputDecoration(hintText: "Please Enter girth"),
@@ -820,8 +812,8 @@ class _noc_Form2State extends State<noc_Form2> {
                   ),
                   onTap: () {
                     if ((dropdownValue3 == null) ||
-                        (length.text.length == 0) ||
-                        (girth.text.length == 0)) {
+                        (length.text.isEmpty) ||
+                        (girth.text.isEmpty)) {
                       Fluttertoast.showToast(
                           msg: "Please add all details ",
                           toastLength: Toast.LENGTH_SHORT,
@@ -865,7 +857,7 @@ class _noc_Form2State extends State<noc_Form2> {
                     print(n_list);
                     print(Species);
                     print(d);
-                    if (_formKey.currentState.validate()) {
+                    if (_formKey.currentState!.validate()) {
                       // Do something like updating SharedPreferences or User Settings etc.
                       length.clear();
                       girth.clear();
@@ -917,15 +909,15 @@ class _noc_Form2State extends State<noc_Form2> {
   TextEditingController mode_transport = TextEditingController();
   //--Code For radio button--
   int _radioValue = 0;
-  String maintenance;
-  int maintenance_cost;
-  int estimatedMaintenanceCost;
-  bool isEnabled;
+  String maintenance = '';
+  int maintenance_cost = 0;
+  int estimatedMaintenanceCost = 0;
+  bool isEnabled = false;
   bool flag2 = false;
   @override
-  void _handleRadioValueChange(int value) {
+  void _handleRadioValueChange(int? value) {
     setState(() {
-      _radioValue = value;
+      _radioValue = value!;
       if (_radioValue == 1) {
         maintenance = 'YES';
         setState(() {
@@ -998,7 +990,7 @@ class _noc_Form2State extends State<noc_Form2> {
   //-------------------------------Progress bar---------------------------------
   Future<bool> loginAction() async {
     //replace the below line of code with your login request
-    await new Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     return false;
   }
 
@@ -1007,16 +999,15 @@ class _noc_Form2State extends State<noc_Form2> {
   Widget build(BuildContext context) {
     //print(_controllers);
     return Scaffold(
-        appBar: NewGradientAppBar(
+        appBar: AppBar(
           // backgroundColor: Colors.blueGrey,
           title: Text(" NOC Form"),
-          gradient: LinearGradient(
-              colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+
           elevation: 0,
           //automaticallyImplyLeading: false,
         ),
         body: Scrollbar(
-            isAlwaysShown: true,
+            thumbVisibility: true,
             thickness: 8,
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
@@ -1032,7 +1023,7 @@ class _noc_Form2State extends State<noc_Form2> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
                               color: Colors.white,
-                              boxShadow: [
+                              boxShadow: const [
                                 BoxShadow(
                                   color: Colors.black,
                                   blurRadius: 2.0,
@@ -1043,7 +1034,7 @@ class _noc_Form2State extends State<noc_Form2> {
                               ],
                             ),
                             child: Scrollbar(
-                                isAlwaysShown: true,
+                                thumbVisibility: true,
                                 thickness: 15,
                                 child: SingleChildScrollView(
                                     scrollDirection: Axis.horizontal,
@@ -1119,28 +1110,28 @@ class _noc_Form2State extends State<noc_Form2> {
                                                     DataRow(cells: [
                                                       DataCell(Text((index + 1)
                                                           .toString())),
-                                                      DataCell(Container(
+                                                      DataCell(SizedBox(
                                                           width: 180,
                                                           child: Text(
                                                             log_details[index][
                                                                     'species_of_tree']
                                                                 .toString(),
                                                           ))),
-                                                      DataCell(Container(
+                                                      DataCell(SizedBox(
                                                           width: 100,
                                                           child: Text(
                                                             log_details[index]
                                                                     ['length']
                                                                 .toString(),
                                                           ))),
-                                                      DataCell(Container(
+                                                      DataCell(SizedBox(
                                                           width: 100,
                                                           child: Text(
                                                             log_details[index]
                                                                     ['breadth']
                                                                 .toString(),
                                                           ))),
-                                                      DataCell(Container(
+                                                      DataCell(SizedBox(
                                                           width: 100,
                                                           child: Text(
                                                             log_details[index]
@@ -1212,12 +1203,13 @@ class _noc_Form2State extends State<noc_Form2> {
                           color: Colors.white,
                         );
                       }
+                      return Container(); // Add this line
                     }),
                     Container(
                       margin:
                           const EdgeInsets.only(top: 5, left: 15, right: 15),
-                      decoration: new BoxDecoration(
-                          border: new Border.all(
+                      decoration: BoxDecoration(
+                          border: Border.all(
                             color: Colors.grey,
                             width: 1,
                           ),
@@ -1236,9 +1228,9 @@ class _noc_Form2State extends State<noc_Form2> {
                          height: 2,
                          color: Colors.grey,
                        ),*/
-                        onChanged: (String data) {
+                        onChanged: (String? data) {
                           setState(() {
-                            dropdownValue2 = data;
+                            dropdownValue2 = data!;
                           });
                           print(dropdownValue2);
                         },
@@ -1255,8 +1247,8 @@ class _noc_Form2State extends State<noc_Form2> {
                       width: double.infinity,
                       margin: const EdgeInsets.only(
                           top: 15, left: 15, right: 15, bottom: 15),
-                      decoration: new BoxDecoration(
-                          border: new Border.all(
+                      decoration: BoxDecoration(
+                          border: Border.all(
                             color: Colors.grey,
                             width: 1,
                           ),
@@ -1296,8 +1288,8 @@ class _noc_Form2State extends State<noc_Form2> {
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderSide: BorderSide(width: 2),
-                            borderRadius: const BorderRadius.all(
-                                const Radius.circular(14.0)),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(14.0)),
                           ),
                           labelText: 'Destination *',
                           hintText: 'Destination Details',
@@ -1313,7 +1305,7 @@ class _noc_Form2State extends State<noc_Form2> {
                       child: Column(children: <Widget>[
                         Row(children: <Widget>[
                           Expanded(
-                            child: new Text(
+                            child: Text(
                               'Enter Vehicle Details',
                               style: TextStyle(
                                   fontSize: 15, fontWeight: FontWeight.bold),
@@ -1355,7 +1347,7 @@ class _noc_Form2State extends State<noc_Form2> {
                                       border: OutlineInputBorder(
                                         borderSide: BorderSide(width: 2),
                                         borderRadius: const BorderRadius.all(
-                                            const Radius.circular(14.0)),
+                                            Radius.circular(14.0)),
                                       ),
                                       labelText: "Vehicle Registration Number",
                                     ),
@@ -1370,7 +1362,7 @@ class _noc_Form2State extends State<noc_Form2> {
                                     border: OutlineInputBorder(
                                       borderSide: BorderSide(width: 2),
                                       borderRadius: const BorderRadius.all(
-                                          const Radius.circular(14.0)),
+                                          Radius.circular(14.0)),
                                     ),
                                     labelText: 'Name of the driver',
                                   ),
@@ -1388,7 +1380,7 @@ class _noc_Form2State extends State<noc_Form2> {
                                     border: OutlineInputBorder(
                                       borderSide: BorderSide(width: 2),
                                       borderRadius: const BorderRadius.all(
-                                          const Radius.circular(14.0)),
+                                          Radius.circular(14.0)),
                                     ),
                                     labelText: 'Phone Number of the Driver',
                                   ),
@@ -1406,7 +1398,7 @@ class _noc_Form2State extends State<noc_Form2> {
                                     border: OutlineInputBorder(
                                       borderSide: BorderSide(width: 2),
                                       borderRadius: const BorderRadius.all(
-                                          const Radius.circular(14.0)),
+                                          Radius.circular(14.0)),
                                     ),
                                     labelText: 'Vehicle Used',
                                   ),
@@ -1418,6 +1410,7 @@ class _noc_Form2State extends State<noc_Form2> {
                               color: Colors.white,
                             );
                           }
+                          return Container(); // Add this line
                         }),
                         Visibility(
                           visible: isShow,
@@ -1430,8 +1423,8 @@ class _noc_Form2State extends State<noc_Form2> {
                         Container(
                           width: double.infinity,
                           margin: const EdgeInsets.only(top: 15, right: 15),
-                          decoration: new BoxDecoration(
-                              border: new Border.all(
+                          decoration: BoxDecoration(
+                              border: Border.all(
                                 color: Colors.grey,
                                 width: 1,
                               ),
@@ -1490,7 +1483,7 @@ class _noc_Form2State extends State<noc_Form2> {
                                     backgroundColor: Colors.red,
                                     textColor: Colors.white,
                                     fontSize: 18.0);
-                              } else if (destination_add.text.length == 0) {
+                              } else if (destination_add.text.isEmpty) {
                                 Fluttertoast.showToast(
                                     msg: "Please add destination address",
                                     toastLength: Toast.LENGTH_SHORT,
@@ -1527,8 +1520,8 @@ class _noc_Form2State extends State<noc_Form2> {
                                 setState(() {
                                   isShow = true;
                                 });
-                                final String url =
-                                    'http://13.234.208.246/api/auth/Apply_for_noc/';
+                                const String url =
+                                    'http://192.168.54.114:8000/api/auth/Apply_for_noc/';
                                 Map data = {
                                   "name": Name,
                                   "address": Address,
@@ -1609,7 +1602,12 @@ class _noc_Form2State extends State<noc_Form2> {
                                               sessionToken: sessionToken,
                                               userName: userName,
                                               userEmail: userEmail,
-                                              userId: userId);
+                                              userId: userId,
+                                              userMobile: '',
+                                              userAddress: '',
+                                              userProfile: '',
+                                              userGroup: '',
+                                              userCato: '');
                                         }));
                               }
                             },

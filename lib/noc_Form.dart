@@ -13,7 +13,12 @@ class NocForm extends StatefulWidget {
   String userEmail;
   int userId;
 
-  NocForm({this.sessionToken, this.userName, this.userEmail, this.userId});
+  NocForm(
+      {super.key,
+      required this.sessionToken,
+      required this.userName,
+      required this.userEmail,
+      required this.userId});
   @override
   _NocFormState createState() =>
       _NocFormState(sessionToken, userName, userEmail, userId);
@@ -36,7 +41,7 @@ class _NocFormState extends State<NocForm> {
   TextEditingController District = TextEditingController();
   TextEditingController Pincode = TextEditingController();
 
-  String dropdownValue;
+  String dropdownValue = '';
   String range_holder = '';
   List<String> range = [
     'Paruthippally',
@@ -50,7 +55,7 @@ class _NocFormState extends State<NocForm> {
     print(range_holder);
   }
 
-  String dropdownValue1;
+  String dropdownValue1 = '';
   String division_holder = '';
   List<String> Division = [
     'Trivandrum',
@@ -59,7 +64,7 @@ class _NocFormState extends State<NocForm> {
     setState(() {
       division_holder = dropdownValue1;
     });
-    print("------------" + division_holder);
+    print("------------$division_holder");
   }
 
   @override
@@ -73,13 +78,13 @@ class _NocFormState extends State<NocForm> {
   }
 
   //------------------------------Taluka & Distric------------------------------
-  String selectedTaluka;
-  String selectedDistrict;
+  String selectedTaluka = '';
+  String selectedDistrict = '';
   //----------------------------District----------------------------------
   List<String> district = [];
   LoadDistric() async {
     int RL = 0;
-    const String url = 'http://13.234.208.246/api/auth/ListDistrict';
+    const String url = 'http://192.168.54.114:8000/api/auth/ListDistrict';
     var response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -100,7 +105,7 @@ class _NocFormState extends State<NocForm> {
   LoadTaluka() async {
     // taluka.clear();
     int RL = 0;
-    const String url = 'http://13.234.208.246/api/auth/LoadTaluka';
+    const String url = 'http://192.168.54.114:8000/api/auth/LoadTaluka';
     Map data = {
       "district": selectedDistrict,
     };
@@ -123,11 +128,11 @@ class _NocFormState extends State<NocForm> {
   }
 
   //----------------------------------Village--------------------------------
-  String SelectedVillage;
+  String SelectedVillage = '';
   List<String> Village = [];
   LoadVillage() async {
     int RL = 0;
-    const String url = 'http://13.234.208.246/api/auth/LoadVillage';
+    const String url = 'http://192.168.54.114:8000/api/auth/LoadVillage';
     Map data = {"taluka": selectedTaluka};
     print(data);
     var body = json.encode(data);
@@ -154,7 +159,7 @@ class _NocFormState extends State<NocForm> {
   List<String> Rname = [];
   int RL = 0;
   ListRange() async {
-    const String url = 'http://13.234.208.246/api/auth/ListRange';
+    const String url = 'http://192.168.54.114:8000/api/auth/ListRange';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -171,12 +176,12 @@ class _NocFormState extends State<NocForm> {
     print(Rname);
   }
 
-  String DD;
+  String DD = '';
   List<String> Dname = [];
 
   int DL = 0;
   ListDivision() async {
-    const String url = 'http://13.234.208.246/api/auth/LoadDivision';
+    const String url = 'http://192.168.54.114:8000/api/auth/LoadDivision';
     Map data = {
       "range_area": dropdownValue,
     };
@@ -209,32 +214,31 @@ class _NocFormState extends State<NocForm> {
     final text = Pincode.value.text;
     // Note: you can do your own custom validation here
     // Move this logic this outside the widget for more testable code
-    if (text.length == 0) {
+    if (text.isEmpty) {
       return '';
     } else if (text.length < 6) {
       return 'Please input valid pincode';
     }
     // return null if the text is valid
-    return null;
+    return '';
   }
 //--------------------------------End DropDown Api Connection-------------------
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: NewGradientAppBar(
-        title: Text(
+      appBar: AppBar(
+        title: const Text(
           "NOC Form",
           style: TextStyle(
             fontSize: 20,
             color: Colors.white,
           ),
         ),
-        gradient:
-            LinearGradient(colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -247,8 +251,8 @@ class _NocFormState extends State<NocForm> {
             Container(
               width: double.infinity,
               margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-              decoration: new BoxDecoration(
-                  border: new Border.all(
+              decoration: BoxDecoration(
+                  border: Border.all(
                     color: Colors.grey,
                     width: 1,
                   ),
@@ -258,14 +262,14 @@ class _NocFormState extends State<NocForm> {
               child: Row(children: <Widget>[
                 DropdownButton<String>(
                   value: dropdownValue,
-                  icon: Icon(Icons.arrow_drop_down),
+                  icon: const Icon(Icons.arrow_drop_down),
                   iconSize: 24,
                   elevation: 16,
-                  style: TextStyle(color: Colors.black, fontSize: 18),
+                  style: const TextStyle(color: Colors.black, fontSize: 18),
                   hint: RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(children: <TextSpan>[
-                      TextSpan(
+                      const TextSpan(
                           text: "Select Division*",
                           style: TextStyle(
                               color: Colors.black,
@@ -278,9 +282,9 @@ class _NocFormState extends State<NocForm> {
                           )),
                     ]),
                   ),
-                  onChanged: (String data) {
+                  onChanged: (String? data) {
                     setState(() {
-                      dropdownValue = data;
+                      dropdownValue = data!;
                       ListDivision();
                     });
                     print(dropdownValue);
@@ -292,23 +296,23 @@ class _NocFormState extends State<NocForm> {
                       value: value,
                       child: Text(
                         value,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                     );
                   }).toList(),
                 ),
-                Spacer(),
+                const Spacer(),
                 DropdownButton<String>(
                   value: dropdownValue1,
-                  icon: Icon(Icons.arrow_drop_down),
+                  icon: const Icon(Icons.arrow_drop_down),
                   iconSize: 24,
                   elevation: 16,
-                  style: TextStyle(color: Colors.black, fontSize: 18),
+                  style: const TextStyle(color: Colors.black, fontSize: 18),
                   hint: RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(children: <TextSpan>[
-                      TextSpan(
+                      const TextSpan(
                           text: "Select Range*",
                           style: TextStyle(
                               color: Colors.black,
@@ -321,9 +325,9 @@ class _NocFormState extends State<NocForm> {
                           )),
                     ]),
                   ),
-                  onChanged: (String data) {
+                  onChanged: (String? data) {
                     setState(() {
-                      dropdownValue1 = data;
+                      dropdownValue1 = data!;
                     });
                     print(dropdownValue1);
                   },
@@ -334,7 +338,7 @@ class _NocFormState extends State<NocForm> {
                       value: value,
                       child: Text(
                         value,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                     );
@@ -347,16 +351,15 @@ class _NocFormState extends State<NocForm> {
                   left: 15.0, right: 15.0, top: 15, bottom: 0),
               child: TextField(
                   controller: Name,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       border: OutlineInputBorder(
                         borderSide: BorderSide(width: 2),
-                        borderRadius:
-                            const BorderRadius.all(const Radius.circular(14.0)),
+                        borderRadius: BorderRadius.all(Radius.circular(14.0)),
                       ),
                       // border: OutlineInputBorder(),
-                      labelText: 'Name \*',
+                      labelText: 'Name *',
                       hintText: 'Enter Your Name'),
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.bold, color: Colors.blue)),
             ),
             Padding(
@@ -365,16 +368,15 @@ class _NocFormState extends State<NocForm> {
               //padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
                 controller: Address,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderSide: BorderSide(width: 2),
-                      borderRadius:
-                          const BorderRadius.all(const Radius.circular(14.0)),
+                      borderRadius: BorderRadius.all(Radius.circular(14.0)),
                     ),
                     labelText: 'Address *',
                     hintText: 'Enter Your Address'),
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.blue),
               ),
             ),
             Padding(
@@ -383,16 +385,15 @@ class _NocFormState extends State<NocForm> {
               //padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
                 controller: survey_no,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderSide: BorderSide(width: 2),
-                      borderRadius:
-                          const BorderRadius.all(const Radius.circular(14.0)),
+                      borderRadius: BorderRadius.all(Radius.circular(14.0)),
                     ),
                     labelText: 'Survey Number *',
                     hintText: 'Enter Survey Number'),
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.blue),
               ),
             ),
             Padding(
@@ -401,24 +402,23 @@ class _NocFormState extends State<NocForm> {
               //padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
                 controller: Tree_Proposed_to_cut,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderSide: BorderSide(width: 2),
-                      borderRadius:
-                          const BorderRadius.all(const Radius.circular(14.0)),
+                      borderRadius: BorderRadius.all(Radius.circular(14.0)),
                     ),
                     labelText: 'Trees Proposed to be cut *',
                     hintText: 'Enter Number of Trees'),
                 keyboardType: TextInputType.number,
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.blue),
               ),
             ),
             Container(
               width: double.infinity,
               margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-              decoration: new BoxDecoration(
-                  border: new Border.all(
+              decoration: BoxDecoration(
+                  border: Border.all(
                     color: Colors.grey,
                     width: 1,
                   ),
@@ -428,14 +428,14 @@ class _NocFormState extends State<NocForm> {
               child: Row(children: <Widget>[
                 DropdownButton<String>(
                   value: selectedDistrict,
-                  icon: Icon(Icons.arrow_drop_down),
+                  icon: const Icon(Icons.arrow_drop_down),
                   iconSize: 24,
                   elevation: 16,
-                  style: TextStyle(color: Colors.black, fontSize: 18),
+                  style: const TextStyle(color: Colors.black, fontSize: 18),
                   hint: RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(children: <TextSpan>[
-                      TextSpan(
+                      const TextSpan(
                           text: "Select District *",
                           style: TextStyle(
                               color: Colors.black,
@@ -448,9 +448,9 @@ class _NocFormState extends State<NocForm> {
                           )),
                     ]),
                   ),
-                  onChanged: (String data) {
+                  onChanged: (String? data) {
                     setState(() {
-                      selectedDistrict = data;
+                      selectedDistrict = data!;
                       LoadTaluka();
                     });
                     print(selectedDistrict);
@@ -460,23 +460,23 @@ class _NocFormState extends State<NocForm> {
                       value: value,
                       child: Text(
                         value,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                     );
                   }).toList(),
                 ),
-                Spacer(),
+                const Spacer(),
                 DropdownButton<String>(
                   value: selectedTaluka,
-                  icon: Icon(Icons.arrow_drop_down),
+                  icon: const Icon(Icons.arrow_drop_down),
                   iconSize: 24,
                   elevation: 16,
-                  style: TextStyle(color: Colors.black, fontSize: 18),
+                  style: const TextStyle(color: Colors.black, fontSize: 18),
                   hint: RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(children: <TextSpan>[
-                      TextSpan(
+                      const TextSpan(
                           text: "Select Taluka *",
                           style: TextStyle(
                               color: Colors.black,
@@ -489,9 +489,9 @@ class _NocFormState extends State<NocForm> {
                           )),
                     ]),
                   ),
-                  onChanged: (String data) {
+                  onChanged: (String? data) {
                     setState(() {
-                      selectedTaluka = data;
+                      selectedTaluka = data!;
                       LoadVillage();
                     });
                     print(selectedTaluka);
@@ -501,7 +501,7 @@ class _NocFormState extends State<NocForm> {
                       value: value,
                       child: Text(
                         value,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                     );
@@ -512,8 +512,8 @@ class _NocFormState extends State<NocForm> {
             Container(
               width: double.infinity,
               margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-              decoration: new BoxDecoration(
-                  border: new Border.all(
+              decoration: BoxDecoration(
+                  border: Border.all(
                     color: Colors.grey,
                     width: 1,
                   ),
@@ -522,14 +522,14 @@ class _NocFormState extends State<NocForm> {
                   left: 10.0, right: 10, top: 10, bottom: 0),
               child: DropdownButton<String>(
                 value: SelectedVillage,
-                icon: Icon(Icons.arrow_drop_down),
+                icon: const Icon(Icons.arrow_drop_down),
                 iconSize: 24,
                 elevation: 16,
-                style: TextStyle(color: Colors.black, fontSize: 18),
+                style: const TextStyle(color: Colors.black, fontSize: 18),
                 hint: RichText(
                   textAlign: TextAlign.left,
                   text: TextSpan(children: <TextSpan>[
-                    TextSpan(
+                    const TextSpan(
                         text: "Select Village *",
                         style: TextStyle(
                             color: Colors.black, fontWeight: FontWeight.bold)),
@@ -545,9 +545,9 @@ class _NocFormState extends State<NocForm> {
                         height: 2,
                         color: Colors.grey,
                       ),*/
-                onChanged: (String data) {
+                onChanged: (String? data) {
                   setState(() {
-                    SelectedVillage = data;
+                    SelectedVillage = data!;
                   });
                   print(SelectedVillage);
                 },
@@ -556,8 +556,8 @@ class _NocFormState extends State<NocForm> {
                     value: value,
                     child: Text(
                       value,
-                      style:
-                          TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 13, fontWeight: FontWeight.bold),
                     ),
                   );
                 }).toList(),
@@ -569,15 +569,14 @@ class _NocFormState extends State<NocForm> {
               //padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
                   controller: block,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       border: OutlineInputBorder(
                         borderSide: BorderSide(width: 2),
-                        borderRadius:
-                            const BorderRadius.all(const Radius.circular(14.0)),
+                        borderRadius: BorderRadius.all(Radius.circular(14.0)),
                       ),
                       labelText: 'Block *',
                       hintText: 'Enter Your Block'),
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.bold, color: Colors.blue)),
             ),
             Padding(
@@ -589,15 +588,14 @@ class _NocFormState extends State<NocForm> {
                   keyboardType: TextInputType.number,
                   maxLength: 6,
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(
+                      border: const OutlineInputBorder(
                         borderSide: BorderSide(width: 2),
-                        borderRadius:
-                            const BorderRadius.all(const Radius.circular(14.0)),
+                        borderRadius: BorderRadius.all(Radius.circular(14.0)),
                       ),
                       labelText: 'Pincode *',
                       hintText: 'Enter Your Pincode',
                       errorText: _errorText),
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.bold, color: Colors.blue)),
             ),
           ],
@@ -606,28 +604,9 @@ class _NocFormState extends State<NocForm> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         isExtended: true,
-        child: Icon(Icons.navigate_next),
         backgroundColor: HexColor("#0499f2"),
         onPressed: () async {
-          if (dropdownValue == null) {
-            Fluttertoast.showToast(
-                msg: "Please add Division ",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.red,
-                textColor: Colors.white,
-                fontSize: 18.0);
-          } else if (dropdownValue1 == null) {
-            Fluttertoast.showToast(
-                msg: "Please add Range ",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.red,
-                textColor: Colors.white,
-                fontSize: 18.0);
-          } else if (Name.text.length == 0) {
+          if (Name.text.isEmpty) {
             Fluttertoast.showToast(
                 msg: "Please add name ",
                 toastLength: Toast.LENGTH_SHORT,
@@ -636,7 +615,7 @@ class _NocFormState extends State<NocForm> {
                 backgroundColor: Colors.red,
                 textColor: Colors.white,
                 fontSize: 18.0);
-          } else if (Address.text.length == 0) {
+          } else if (Address.text.isEmpty) {
             Fluttertoast.showToast(
                 msg: "Please add Address ",
                 toastLength: Toast.LENGTH_SHORT,
@@ -645,7 +624,7 @@ class _NocFormState extends State<NocForm> {
                 backgroundColor: Colors.red,
                 textColor: Colors.white,
                 fontSize: 18.0);
-          } else if (survey_no.text.length == 0) {
+          } else if (survey_no.text.isEmpty) {
             Fluttertoast.showToast(
                 msg: "Please add survay number ",
                 toastLength: Toast.LENGTH_SHORT,
@@ -654,7 +633,7 @@ class _NocFormState extends State<NocForm> {
                 backgroundColor: Colors.red,
                 textColor: Colors.white,
                 fontSize: 18.0);
-          } else if (Tree_Proposed_to_cut.text.length == 0) {
+          } else if (Tree_Proposed_to_cut.text.isEmpty) {
             Fluttertoast.showToast(
                 msg: "Please add Tree Proposed to cut ",
                 toastLength: Toast.LENGTH_SHORT,
@@ -663,16 +642,7 @@ class _NocFormState extends State<NocForm> {
                 backgroundColor: Colors.red,
                 textColor: Colors.white,
                 fontSize: 18.0);
-          } else if (SelectedVillage == null) {
-            Fluttertoast.showToast(
-                msg: "Please add Village ",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.red,
-                textColor: Colors.white,
-                fontSize: 18.0);
-          } else if (block.text.length == 0) {
+          } else if (block.text.isEmpty) {
             Fluttertoast.showToast(
                 msg: "Please add Block ",
                 toastLength: Toast.LENGTH_SHORT,
@@ -712,7 +682,7 @@ class _NocFormState extends State<NocForm> {
             Navigator.pushReplacement(
                 context,
                 PageRouteBuilder(
-                    transitionDuration: Duration(milliseconds: 400),
+                    transitionDuration: const Duration(milliseconds: 400),
                     transitionsBuilder:
                         (context, animation, animationTime, child) {
                       return ScaleTransition(
@@ -743,6 +713,7 @@ class _NocFormState extends State<NocForm> {
             setState(() {});
           }
         },
+        child: const Icon(Icons.navigate_next),
       ),
     );
   }

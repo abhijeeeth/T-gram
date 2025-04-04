@@ -21,11 +21,12 @@ class woodBuyerForm extends StatefulWidget {
   String userEmail;
   String userCato;
   woodBuyerForm(
-      {this.userId,
-      this.sessionToken,
-      this.userName,
-      this.userEmail,
-      this.userCato});
+      {super.key,
+      required this.userId,
+      required this.sessionToken,
+      required this.userName,
+      required this.userEmail,
+      required this.userCato});
   @override
   State<woodBuyerForm> createState() =>
       _woodBuyerFormState(userId, sessionToken, userName, userEmail, userCato);
@@ -39,7 +40,7 @@ class _woodBuyerFormState extends State<woodBuyerForm> {
   String userCato;
   _woodBuyerFormState(this.userId, this.sessionToken, this.userName,
       this.userEmail, this.userCato);
-  String dropdownValue2;
+  String? dropdownValue2;
   String holder = '';
   List<String> IdProof = [
     'Individual',
@@ -57,10 +58,9 @@ class _woodBuyerFormState extends State<woodBuyerForm> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: NewGradientAppBar(
-          title: Text("Buyer Form"),
-          gradient: LinearGradient(
-              colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+        appBar: AppBar(
+          title: const Text("Buyer Form"),
+
           //backgroundColor: Colors.blueGrey,
           elevation: 0,
         ),
@@ -85,8 +85,8 @@ class _woodBuyerFormState extends State<woodBuyerForm> {
               ),
               Container(
                 margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                decoration: new BoxDecoration(
-                    border: new Border.all(
+                decoration: BoxDecoration(
+                    border: Border.all(
                       color: Colors.grey,
                       width: 1,
                     ),
@@ -96,18 +96,18 @@ class _woodBuyerFormState extends State<woodBuyerForm> {
                 child: DropdownButton<String>(
                   value: dropdownValue2,
                   isExpanded: true,
-                  icon: Icon(Icons.arrow_drop_down),
+                  icon: const Icon(Icons.arrow_drop_down),
                   iconSize: 24,
                   elevation: 16,
-                  style: TextStyle(color: Colors.black, fontSize: 18),
-                  hint: Text("Select User Type"),
+                  style: const TextStyle(color: Colors.black, fontSize: 18),
+                  hint: const Text("Select User Type"),
                   /*underline: Container(
                            height: 2,
                            color: Colors.grey,
                          ),*/
-                  onChanged: (String data) {
+                  onChanged: (String? data) {
                     setState(() {
-                      dropdownValue2 = data;
+                      dropdownValue2 = data!;
                     });
                     print(dropdownValue2);
                   },
@@ -126,16 +126,16 @@ class _woodBuyerFormState extends State<woodBuyerForm> {
                       left: 15.0, right: 15.0, top: 15, bottom: 0),
                   child: TextField(
                       controller: orgName,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           border: OutlineInputBorder(
                             borderSide: BorderSide(width: 2),
-                            borderRadius: const BorderRadius.all(
-                                const Radius.circular(14.0)),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(14.0)),
                           ),
                           // border: OutlineInputBorder(),
                           labelText: 'Organization Name',
                           hintText: 'Enter Organization Name'),
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontWeight: FontWeight.bold, color: Colors.blue)),
                 ),
               ),
@@ -146,16 +146,16 @@ class _woodBuyerFormState extends State<woodBuyerForm> {
                       left: 15.0, right: 15.0, top: 15, bottom: 0),
                   child: TextField(
                       controller: panNo,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           border: OutlineInputBorder(
                             borderSide: BorderSide(width: 2),
-                            borderRadius: const BorderRadius.all(
-                                const Radius.circular(14.0)),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(14.0)),
                           ),
                           // border: OutlineInputBorder(),
                           labelText: 'PAN',
                           hintText: 'Enter PAN Number'),
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontWeight: FontWeight.bold, color: Colors.blue)),
                 ),
               ),
@@ -166,16 +166,16 @@ class _woodBuyerFormState extends State<woodBuyerForm> {
                       left: 15.0, right: 15.0, top: 15, bottom: 0),
                   child: TextField(
                       controller: gstNo,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           border: OutlineInputBorder(
                             borderSide: BorderSide(width: 2),
-                            borderRadius: const BorderRadius.all(
-                                const Radius.circular(14.0)),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(14.0)),
                           ),
                           // border: OutlineInputBorder(),
                           labelText: 'GST No(if any)',
                           hintText: 'GST No(if any)'),
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontWeight: FontWeight.bold, color: Colors.blue)),
                 ),
               ),
@@ -186,16 +186,16 @@ class _woodBuyerFormState extends State<woodBuyerForm> {
                       left: 15.0, right: 15.0, top: 15, bottom: 0),
                   child: TextField(
                       controller: cinNo,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           border: OutlineInputBorder(
                             borderSide: BorderSide(width: 2),
-                            borderRadius: const BorderRadius.all(
-                                const Radius.circular(14.0)),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(14.0)),
                           ),
                           // border: OutlineInputBorder(),
                           labelText: 'CIN No(if any)',
                           hintText: 'CIN No(if any)'),
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontWeight: FontWeight.bold, color: Colors.blue)),
                 ),
               ),
@@ -206,16 +206,16 @@ class _woodBuyerFormState extends State<woodBuyerForm> {
                       left: 15.0, right: 15.0, top: 15, bottom: 0),
                   child: TextField(
                       controller: tanNo,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           border: OutlineInputBorder(
                             borderSide: BorderSide(width: 2),
-                            borderRadius: const BorderRadius.all(
-                                const Radius.circular(14.0)),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(14.0)),
                           ),
                           // border: OutlineInputBorder(),
                           labelText: 'TAN No(if any)',
                           hintText: 'TAN No(if any)'),
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontWeight: FontWeight.bold, color: Colors.blue)),
                 ),
               ),
@@ -226,16 +226,16 @@ class _woodBuyerFormState extends State<woodBuyerForm> {
                       left: 15.0, right: 15.0, top: 15, bottom: 0),
                   child: TextField(
                       controller: serviceTax,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           border: OutlineInputBorder(
                             borderSide: BorderSide(width: 2),
-                            borderRadius: const BorderRadius.all(
-                                const Radius.circular(14.0)),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(14.0)),
                           ),
                           // border: OutlineInputBorder(),
                           labelText: 'Service Tax (if any)',
                           hintText: 'Service Tax(if any)'),
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontWeight: FontWeight.bold, color: Colors.blue)),
                 ),
               ),
@@ -246,28 +246,28 @@ class _woodBuyerFormState extends State<woodBuyerForm> {
                       left: 15.0, right: 15.0, top: 15, bottom: 0),
                   child: TextField(
                       controller: webSite,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           border: OutlineInputBorder(
                             borderSide: BorderSide(width: 2),
-                            borderRadius: const BorderRadius.all(
-                                const Radius.circular(14.0)),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(14.0)),
                           ),
                           // border: OutlineInputBorder(),
                           labelText: 'Website (if any)',
                           hintText: 'Website (if any)'),
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontWeight: FontWeight.bold, color: Colors.blue)),
                 ),
               ),
               Visibility(
                 visible: isShow,
-                child: CircularProgressIndicator(
+                child: const CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
                   strokeWidth: 8,
                 ),
               ),
               Row(children: <Widget>[
-                Spacer(),
+                const Spacer(),
                 Container(
                   margin: const EdgeInsets.only(
                     top: 30.0,
@@ -296,7 +296,7 @@ class _woodBuyerFormState extends State<woodBuyerForm> {
                           isShow = true;
                         });
                         const String url =
-                            'http://13.234.208.246/api/auth/Firm_Registration';
+                            'http://192.168.54.114:8000/api/auth/Firm_Registration';
                         Map data = {
                           "id": userId,
                           "organization": orgName.text,
@@ -345,13 +345,14 @@ class _woodBuyerFormState extends State<woodBuyerForm> {
                             fontSize: 18.0);
                         setState(() {
                           isShow = false;
-                          userCato = dropdownValue2;
+                          userCato = dropdownValue2!;
                           print(userCato);
                         });
                         Navigator.pushReplacement(
                             context,
                             PageRouteBuilder(
-                                transitionDuration: Duration(milliseconds: 250),
+                                transitionDuration:
+                                    const Duration(milliseconds: 250),
                                 transitionsBuilder:
                                     (context, animation, animationTime, child) {
                                   return ScaleTransition(
@@ -371,7 +372,7 @@ class _woodBuyerFormState extends State<woodBuyerForm> {
                                 }));
                       }
                     },
-                    child: Text(
+                    child: const Text(
                       'Submit',
                       style: TextStyle(
                         color: Colors.black,
@@ -382,7 +383,7 @@ class _woodBuyerFormState extends State<woodBuyerForm> {
                     ),
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
               ])
             ])));
   }

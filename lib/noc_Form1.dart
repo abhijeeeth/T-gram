@@ -22,21 +22,22 @@ class noc_Form1 extends StatefulWidget {
   String Pincode;
 
   noc_Form1(
-      {this.sessionToken,
-      this.dropdownValue,
-      this.dropdownValue1,
-      this.userName,
-      this.userEmail,
-      this.userId,
-      this.Name,
-      this.Address,
-      this.survey_no,
-      this.Tree_Proposed_to_cut,
-      this.village,
-      this.Taluka,
-      this.block,
-      this.District,
-      this.Pincode});
+      {super.key,
+      required this.sessionToken,
+      required this.dropdownValue,
+      required this.dropdownValue1,
+      required this.userName,
+      required this.userEmail,
+      required this.userId,
+      required this.Name,
+      required this.Address,
+      required this.survey_no,
+      required this.Tree_Proposed_to_cut,
+      required this.village,
+      required this.Taluka,
+      required this.block,
+      required this.District,
+      required this.Pincode});
   @override
   _noc_Form1State createState() => _noc_Form1State(
       sessionToken,
@@ -138,10 +139,10 @@ class _noc_Form1State extends State<noc_Form1> {
 
   int _radioValue = 0;
   int _radioValue1 = 0;
-  String maintenance;
-  String maintenance1;
-  int maintenance_cost;
-  int estimatedMaintenanceCost;
+  String maintenance = '';
+  String maintenance1 = '';
+  int maintenance_cost = 0;
+  int estimatedMaintenanceCost = 0;
 
   bool flag = false;
   bool flag1 = false;
@@ -184,7 +185,7 @@ class _noc_Form1State extends State<noc_Form1> {
 
   AddHolder() {
     setState(() {
-      if (Species.text.length != 0 && isother_Species == false) {
+      if (Species.text.isNotEmpty && isother_Species == false) {
         if (holder_1.length < int.parse(Tree_Proposed_to_cut)) {
           // if(isother_Species==false){
           isother_Species = true;
@@ -192,7 +193,7 @@ class _noc_Form1State extends State<noc_Form1> {
           // }
         } else {
           Fluttertoast.showToast(
-              msg: "You can select only  " + Tree_Proposed_to_cut + " Species",
+              msg: "You can select only  $Tree_Proposed_to_cut Species",
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
               timeInSecForIosWeb: 1,
@@ -200,7 +201,7 @@ class _noc_Form1State extends State<noc_Form1> {
               textColor: Colors.white,
               fontSize: 18.0);
           Species.clear();
-          return false;
+          return;
         }
       } else {
         if (isother_Species == true) {
@@ -214,17 +215,16 @@ class _noc_Form1State extends State<noc_Form1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: NewGradientAppBar(
+      appBar: AppBar(
         //backgroundColor:Colors.blueGrey,
-        title: Text(
+        title: const Text(
           "NOC Form",
           style: TextStyle(
             color: Colors.white,
             fontSize: 20,
           ),
         ),
-        gradient:
-            LinearGradient(colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+
         elevation: 0,
         //automaticallyImplyLeading: false,
       ),
@@ -233,7 +233,7 @@ class _noc_Form1State extends State<noc_Form1> {
         Row(children: <Widget>[
           Container(
             margin: const EdgeInsets.only(left: 13, top: 15),
-            child: Text(
+            child: const Text(
               'Species of tree or trees proposed to be cut:',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               textAlign: TextAlign.left,
@@ -244,7 +244,7 @@ class _noc_Form1State extends State<noc_Form1> {
           margin: const EdgeInsets.only(top: 10, left: 15, right: 15),
           height: MediaQuery.of(context).size.height * 0.39,
           decoration: BoxDecoration(
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
                 color: Colors.black,
                 blurRadius: 2.0,
@@ -258,14 +258,14 @@ class _noc_Form1State extends State<noc_Form1> {
           child: ListView(
             scrollDirection: Axis.vertical,
             children: List.keys.map((String key) {
-              return new CheckboxListTile(
-                title: new Text(key),
+              return CheckboxListTile(
+                title: Text(key),
                 value: List[key],
                 activeColor: Colors.green,
                 checkColor: Colors.white,
-                onChanged: (bool value) {
+                onChanged: (bool? value) {
                   setState(() {
-                    List[key] = value;
+                    List[key] = value!;
                   });
                   if (value == true) {
                     holder_1.add(key);
@@ -286,11 +286,10 @@ class _noc_Form1State extends State<noc_Form1> {
             controller: Species,
             //  obscAddHolderureText: true,
             onChanged: AddHolder(),
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 border: OutlineInputBorder(
                   borderSide: BorderSide(width: 2),
-                  borderRadius:
-                      const BorderRadius.all(const Radius.circular(14.0)),
+                  borderRadius: BorderRadius.all(Radius.circular(14.0)),
                 ),
                 labelText: 'Other Species',
                 hintText: 'Enter Other Species'),
@@ -303,11 +302,10 @@ class _noc_Form1State extends State<noc_Form1> {
           child: TextField(
             controller: Purpose,
             //  obscureText: true,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 border: OutlineInputBorder(
                   borderSide: BorderSide(width: 2),
-                  borderRadius:
-                      const BorderRadius.all(const Radius.circular(14.0)),
+                  borderRadius: BorderRadius.all(Radius.circular(14.0)),
                 ),
                 labelText: 'Purpose *',
                 hintText:
@@ -319,7 +317,7 @@ class _noc_Form1State extends State<noc_Form1> {
             child: Column(children: <Widget>[
               Container(
                 margin: const EdgeInsets.only(top: 10, left: 0, right: 0),
-                child: new Text(
+                child: const Text(
                   'Trees have been cut or yet to be cut? *',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
@@ -327,24 +325,24 @@ class _noc_Form1State extends State<noc_Form1> {
               Row(children: <Widget>[
                 Expanded(
                   child: RadioListTile(
-                    title: Text(
+                    title: const Text(
                       'Yes',
                       style: TextStyle(fontFamily: 'Lato'),
                     ),
                     value: 1,
                     groupValue: _radioValue,
-                    onChanged: _handleRadioValueChange,
+                    onChanged: (int? value) => _handleRadioValueChange(value!),
                   ),
                 ),
                 Expanded(
                   child: RadioListTile(
-                    title: Text(
+                    title: const Text(
                       'No',
                       style: TextStyle(fontFamily: 'Lato'),
                     ),
                     value: 2,
                     groupValue: _radioValue,
-                    onChanged: _handleRadioValueChange,
+                    onChanged: (int? value) => _handleRadioValueChange(value!),
                   ),
                 ),
               ]),
@@ -355,7 +353,7 @@ class _noc_Form1State extends State<noc_Form1> {
                       margin: const EdgeInsets.only(top: 15, left: 8, right: 8),
                       child: Column(children: <Widget>[
                         Container(
-                          child: new Text(
+                          child: const Text(
                             'Would you like to enter the log details?',
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold),
@@ -364,24 +362,26 @@ class _noc_Form1State extends State<noc_Form1> {
                         Row(children: <Widget>[
                           Expanded(
                             child: RadioListTile(
-                              title: Text(
+                              title: const Text(
                                 'Yes',
                                 style: TextStyle(fontFamily: 'Lato'),
                               ),
                               value: 1,
                               groupValue: _radioValue1,
-                              onChanged: _handleRadioValueChange1,
+                              onChanged: (int? value) =>
+                                  _handleRadioValueChange1(value!),
                             ),
                           ),
                           Expanded(
                             child: RadioListTile(
-                              title: Text(
+                              title: const Text(
                                 'No',
                                 style: TextStyle(fontFamily: 'Lato'),
                               ),
                               value: 2,
                               groupValue: _radioValue1,
-                              onChanged: _handleRadioValueChange1,
+                              onChanged: (int? value) =>
+                                  _handleRadioValueChange1(value!),
                             ),
                           ),
                         ]),
@@ -392,13 +392,13 @@ class _noc_Form1State extends State<noc_Form1> {
                     color: Colors.white,
                   );
                 }
+                return Container(); // Ensure a widget is always returned
               }),
             ]))
       ])),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
           // isExtended: true,
-          child: Icon(Icons.navigate_next),
           backgroundColor: HexColor("#0499f2"),
           onPressed: () {
             setState(() {
@@ -417,7 +417,7 @@ class _noc_Form1State extends State<noc_Form1> {
                     backgroundColor: Colors.red,
                     textColor: Colors.white,
                     fontSize: 18.0);
-              } else if (holder_1.length == 0) {
+              } else if (holder_1.isEmpty) {
                 Fluttertoast.showToast(
                     msg: "Please select Timber type",
                     toastLength: Toast.LENGTH_SHORT,
@@ -437,9 +437,7 @@ class _noc_Form1State extends State<noc_Form1> {
                     fontSize: 18.0);
               } else if (holder_1.length > int.parse(Tree_Proposed_to_cut)) {
                 Fluttertoast.showToast(
-                    msg: "You can select only  " +
-                        Tree_Proposed_to_cut +
-                        " Species",
+                    msg: "You can select only  $Tree_Proposed_to_cut Species",
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.CENTER,
                     timeInSecForIosWeb: 1,
@@ -450,7 +448,7 @@ class _noc_Form1State extends State<noc_Form1> {
                 Navigator.pushReplacement(
                     context,
                     PageRouteBuilder(
-                        transitionDuration: Duration(milliseconds: 400),
+                        transitionDuration: const Duration(milliseconds: 400),
                         transitionsBuilder:
                             (context, animation, animationTime, child) {
                           return ScaleTransition(
@@ -483,7 +481,9 @@ class _noc_Form1State extends State<noc_Form1> {
                         }));
               }
             });
-          }),
+          },
+          // isExtended: true,
+          child: const Icon(Icons.navigate_next)),
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import "package:flutter/cupertino.dart";
 import 'package:http/http.dart' as http;
+import 'package:jailbreak_root_detection/jailbreak_root_detection.dart';
 
 import 'package:tigramnks/DivisionDashboard.dart';
 import 'package:tigramnks/FieldOfficerDashboard.dart';
@@ -19,7 +20,6 @@ import 'package:marquee/marquee.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'checkPostDash.dart';
 import 'main.dart';
-import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
 
 void main() {
   runApp(login());
@@ -48,20 +48,20 @@ class _LoginDemoState extends State<LoginDemo> {
   TextEditingController loginPassword = TextEditingController();
 
   bool validateEmail(String value) {
-    Pattern pattern =
+    String pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern);
+    RegExp regex = RegExp(pattern);
     return (!regex.hasMatch(value)) ? false : true;
   }
 
   int _radioValue = 0;
-  String maintenance;
-  int maintenance_cost;
-  int estimatedMaintenanceCost;
+  String? maintenance;
+  int? maintenance_cost;
+  int? estimatedMaintenanceCost;
 
   bool flag = true;
-  bool _jailbroken;
-  bool _developerMode;
+  bool? _jailbroken;
+  bool? _developerMode;
 
   @override
   void initState() {
@@ -75,11 +75,11 @@ class _LoginDemoState extends State<LoginDemo> {
     bool developerMode;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      jailbroken = await FlutterJailbreakDetection.jailbroken;
-      developerMode = await FlutterJailbreakDetection.developerMode;
+      final jailbreakRootDetection = JailbreakRootDetection();
+      jailbroken = await jailbreakRootDetection.isJailBroken;
     } on PlatformException {
       jailbroken = true;
-      developerMode = true;
+      developerMode = false;
     }
 
     // If the widget was removed from the tree while the asynchronous platform
@@ -89,14 +89,13 @@ class _LoginDemoState extends State<LoginDemo> {
 
     setState(() {
       _jailbroken = jailbroken;
-      _developerMode = developerMode;
     });
   }
 
   @override
-  void _handleRadioValueChange(int value) {
+  void _handleRadioValueChange(int? value) {
     setState(() {
-      _radioValue = value;
+      _radioValue = value ?? 0;
       if (_radioValue == 0) {
         maintenance = 'Yes';
         setState(() {
@@ -175,7 +174,7 @@ class _LoginDemoState extends State<LoginDemo> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(13.5),
                   color: Colors.white,
-                  border: Border.all(color: Colors.blue[700], width: 1),
+                  border: Border.all(color: Colors.blue[700]!, width: 1),
                 ),
                 margin: const EdgeInsets.only(top: 50, bottom: 15),
                 child: ToggleSwitch(
@@ -201,6 +200,7 @@ class _LoginDemoState extends State<LoginDemo> {
                 } else if (flag == false) {
                   return OfficerLogin();
                 }
+                return Container(); // Default return for type safety
               }),
               Container(
                 width: double.infinity,
@@ -261,7 +261,7 @@ class UserLogin extends StatefulWidget {
 class _UserState extends State<UserLogin> {
   bool isHiddenPassword = true;
   String sessionToken = '';
-  int userId;
+  int? userId;
   String userName = '';
   String userEmail = '';
   String userMobile = '';
@@ -275,9 +275,9 @@ class _UserState extends State<UserLogin> {
   TextEditingController loginPassword = TextEditingController();
 
   bool validateEmail(String value) {
-    Pattern pattern =
+    String pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern);
+    RegExp regex = RegExp(pattern);
     return (!regex.hasMatch(value)) ? false : true;
   }
 
@@ -289,24 +289,26 @@ class _UserState extends State<UserLogin> {
   }
 
   //-------------------------------------Shared-Preferences---------------------
-  SharedPreferences prefs;
-  bool newuser;
+  SharedPreferences? prefs;
+  bool? newuser;
+
+  get dropdownValue => null;
 
   void getLogin() async {
     List userRange;
     List<String> URange = [];
-    List Dist_Range;
+    List Dist_Range = [];
     List<String> Dist = [];
     List Range = [];
     prefs = await SharedPreferences.getInstance();
     setState(() {
-      newuser = (prefs.getBool('isLoggedIn') ?? true);
+      newuser = (prefs?.getBool('isLoggedIn') ?? true);
     });
     if (newuser == false) {
-      const String url = 'http://13.234.208.246/api/auth/NewLogin';
+      const String url = 'http://192.168.54.114:8000/api/auth/NewLogin';
       Map data = {
-        "email_or_phone": prefs.getString('LoginUser').trim(),
-        "password": prefs.getString('LoginPass').trim(),
+        "email_or_phone": (prefs?.getString('LoginUser') ?? '').trim(),
+        "password": (prefs?.getString('LoginPass') ?? '').trim(),
       };
 
       var body = json.encode(data);
@@ -352,7 +354,7 @@ class _UserState extends State<UserLogin> {
                   },
                   pageBuilder: (context, animation, animationTime) {
                     return HomePage(
-                      userId: userId,
+                      userId: userId!,
                       userName: userName,
                       userEmail: userEmail,
                       userMobile: userMobile,
@@ -409,7 +411,7 @@ class _UserState extends State<UserLogin> {
           setState(() {
             Dist_Range = responseJson['data']['division_range_list'];
 
-            for (int i = 0; i < Dist_Range.length; i++) {
+            for (int i = 0; i < Dist_Range!.length; i++) {
               Dist.add(
                   responseJson['data']['division_range_list'][i]['division']);
               Range.add(
@@ -443,12 +445,13 @@ class _UserState extends State<UserLogin> {
                   },
                   pageBuilder: (context, animation, animationTime) {
                     return SFDashboard(
-                      userId: userId,
+                      Dist_Range: Dist_Range ?? [],
+                      userId: userId!,
                       userName: userName,
                       userEmail: userEmail,
                       sessionToken: sessionToken,
                       userGroup: userGroup,
-                      //dropdownValue: dropdownValue,
+                      dropdownValue: dropdownValue,
                       userMobile: userMobile,
                       userProfile: userProfile,
                       userAddress: userAddress,
@@ -482,12 +485,12 @@ class _UserState extends State<UserLogin> {
                   },
                   pageBuilder: (context, animation, animationTime) {
                     return FieldOfficerDashboard(
-                        userId: userId,
+                        userId: userId!,
                         userName: userName,
                         userEmail: userEmail,
                         sessionToken: sessionToken,
                         userGroup: userGroup,
-                        //dropdownValue: dropdownValue,
+                        dropdownValue: 'Field Officer',
                         userMobile: userMobile,
                         userProfile: userProfile,
                         userAddress: userAddress);
@@ -550,13 +553,13 @@ class _UserState extends State<UserLogin> {
                   },
                   pageBuilder: (context, animation, animationTime) {
                     return OfficerDashboard(
-                      userId: userId,
+                      userId: userId!,
                       userName: userName,
                       userEmail: userEmail,
                       sessionToken: sessionToken,
                       userGroup: userGroup,
+                      dropdownValue: dropdownValue ?? '',
                       Range: Range,
-                      //dropdownValue: dropdownValue,
                       //  userMobile:userMobile,
                       //  userImage:userImage,
                     );
@@ -587,7 +590,7 @@ class _UserState extends State<UserLogin> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.0),
           color: Colors.white,
-          border: Border.all(color: Colors.red[600], width: 1.2),
+          border: Border.all(color: Colors.red[600]!, width: 1.2),
           boxShadow: [
             const BoxShadow(
               color: Colors.black,
@@ -682,8 +685,8 @@ class _UserState extends State<UserLogin> {
                   ),
                 ),
                 onPressed: () async {
-                  if ((loginEmail.text.length == 0) ||
-                      (loginPassword.text.length == 0)) {
+                  if ((loginEmail.text.isEmpty) ||
+                      (loginPassword.text.isEmpty)) {
                     Fluttertoast.showToast(
                         msg: "Either User Name or password field is empty",
                         toastLength: Toast.LENGTH_SHORT,
@@ -693,9 +696,9 @@ class _UserState extends State<UserLogin> {
                         textColor: Colors.white,
                         fontSize: 18.0);
                   } else {
-                    print("----login--");
+                    print("----login----");
                     const String url =
-                        'http://13.234.208.246/api/auth/NewLogin';
+                        'http://192.168.54.114:8000/api/auth/NewLogin';
                     Map data = {
                       "email_or_phone": loginEmail.text.trim(),
                       "password": loginPassword.text.trim()
@@ -727,9 +730,9 @@ class _UserState extends State<UserLogin> {
                         userCato = responseJson['data']['usr_category'];
                       });
                       if (responseJson['data']['user_group'][0] == 'user') {
-                        prefs.setString('LoginUser', loginEmail.text);
-                        prefs.setString('LoginPass', loginPassword.text);
-                        prefs.setBool('isLoggedIn', false);
+                        prefs?.setString('LoginUser', loginEmail.text);
+                        prefs?.setString('LoginPass', loginPassword.text);
+                        prefs?.setBool('isLoggedIn', false);
                         Fluttertoast.showToast(
                             msg: 'Login Sucessfully',
                             toastLength: Toast.LENGTH_SHORT,
@@ -754,7 +757,7 @@ class _UserState extends State<UserLogin> {
                                 pageBuilder:
                                     (context, animation, animationTime) {
                                   return HomePage(
-                                    userId: userId,
+                                    userId: userId!,
                                     userName: userName,
                                     userEmail: userEmail,
                                     userMobile: userMobile,
@@ -835,24 +838,24 @@ class OfficerLogin extends StatefulWidget {
 
 class _OfficerState extends State<OfficerLogin> {
   //-------------------------------------Shared-Preferences---------------------
-  SharedPreferences prefs;
-  bool newuser;
+  SharedPreferences? prefs;
+  bool? newuser;
 
   void getLogin() async {
     List userRange;
     List<String> URange = [];
-    List Dist_Range;
+    List Dist_Range = [];
     List<String> Dist = [];
     List Range = [];
     prefs = await SharedPreferences.getInstance();
     setState(() {
-      newuser = (prefs.getBool('isLoggedIn') ?? true);
+      newuser = (prefs?.getBool('isLoggedIn') ?? true);
     });
     if (newuser == false) {
       const String url = 'http://www.gisfy.co.in:86/app/auth/NewLogin';
       Map data = {
-        "email_or_phone": prefs.getString('LoginUser'),
-        "password": prefs.getString('LoginPass'),
+        "email_or_phone": prefs?.getString('LoginUser') ?? '',
+        "password": prefs?.getString('LoginPass') ?? '',
       };
 
       var body = json.encode(data);
@@ -897,7 +900,7 @@ class _OfficerState extends State<OfficerLogin> {
                   },
                   pageBuilder: (context, animation, animationTime) {
                     return HomePage(
-                      userId: userId,
+                      userId: userId!,
                       userName: userName,
                       userEmail: userEmail,
                       userMobile: userMobile,
@@ -905,6 +908,7 @@ class _OfficerState extends State<OfficerLogin> {
                       userProfile: userProfile,
                       sessionToken: sessionToken,
                       userGroup: userGroup,
+                      userCato: '',
                     );
                   }));
         } else if (responseJson['data']['user_group'][0]
@@ -989,17 +993,18 @@ class _OfficerState extends State<OfficerLogin> {
                   },
                   pageBuilder: (context, animation, animationTime) {
                     return SFDashboard(
-                      userId: userId,
+                      userId: userId!,
                       userName: userName,
                       userEmail: userEmail,
                       sessionToken: sessionToken,
                       userGroup: userGroup,
-                      //dropdownValue: dropdownValue,
+                      dropdownValue: dropdownValue!,
                       userMobile: userMobile,
                       userProfile: userProfile,
                       userAddress: userAddress,
                       Dist: Dist,
                       Range: URange,
+                      Dist_Range: Dist_Range ?? [],
                     );
                   }));
         } else if (responseJson['data']['user_group'][0]
@@ -1028,11 +1033,12 @@ class _OfficerState extends State<OfficerLogin> {
                   },
                   pageBuilder: (context, animation, animationTime) {
                     return FieldOfficerDashboard(
-                        userId: userId,
+                        userId: userId!,
                         userName: userName,
                         userEmail: userEmail,
                         sessionToken: sessionToken,
                         userGroup: userGroup,
+                        dropdownValue: dropdownValue!,
                         userMobile: userMobile,
                         userProfile: userProfile,
                         userAddress: userAddress);
@@ -1095,13 +1101,13 @@ class _OfficerState extends State<OfficerLogin> {
                   },
                   pageBuilder: (context, animation, animationTime) {
                     return OfficerDashboard(
-                      userId: userId,
+                      userId: userId!,
                       userName: userName,
                       userEmail: userEmail,
                       sessionToken: sessionToken,
                       userGroup: userGroup,
                       Range: Range,
-                      //dropdownValue: dropdownValue,
+                      dropdownValue: dropdownValue!,
                       //  userMobile:userMobile,
                       //  userImage:userImage,
                     );
@@ -1128,16 +1134,16 @@ class _OfficerState extends State<OfficerLogin> {
   bool isHiddenPassword = true;
 
   String sessionToken = '';
-  int userId;
+  int? userId;
   String userName = '';
   String userEmail = '';
   String userGroup = '';
   String userMobile = '';
   String userAddress = '';
   String userProfile = '';
-  List userRange;
+  List? userRange;
   List<String> URange = [];
-  List Dist_Range;
+  List? Dist_Range;
   List<String> Dist = [];
   List Range = [];
   TextEditingController loginMobile = TextEditingController();
@@ -1147,12 +1153,12 @@ class _OfficerState extends State<OfficerLogin> {
   bool validateEmail(String value) {
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern);
+    RegExp regex = new RegExp(pattern.toString());
     return (!regex.hasMatch(value)) ? false : true;
   }
 
-  String dropdownValue;
-  String login_holder = '';
+  String? dropdownValue;
+  String? login_holder = '';
   List<String> Officer_login = [
     'Revenue Officer',
     'Deputy Range Officer',
@@ -1185,7 +1191,7 @@ class _OfficerState extends State<OfficerLogin> {
           borderRadius: BorderRadius.circular(12),
           color: Colors.white,
           border: Border.all(
-            color: Colors.red[700],
+            color: Colors.red[700]!,
             width: 1.2,
           ), //<---- Insert Gradient Here
           boxShadow: [
@@ -1222,7 +1228,7 @@ class _OfficerState extends State<OfficerLogin> {
                 height: 2,
                 color: Colors.grey,
               ),*/
-              onChanged: (String data) {
+              onChanged: (String? data) {
                 setState(() {
                   dropdownValue = data;
                   if (dropdownValue == data) {
@@ -1324,7 +1330,7 @@ class _OfficerState extends State<OfficerLogin> {
                   } else {
                     print("----login--");
                     const String url =
-                        'http://13.234.208.246/api/auth/NewLogin';
+                        'http://192.168.54.114:8000/api/auth/NewLogin';
                     Map data = {
                       "email_or_phone": loginEmail.text.trim(),
                       "password": loginPassword.text.trim()
@@ -1352,20 +1358,21 @@ class _OfficerState extends State<OfficerLogin> {
                         userProfile = responseJson["data"]["photo_proof_img"];
                       });
 
-                      if (responseJson['data']['user_group'][0]
-                              .toString()
-                              .toLowerCase() ==
-                          dropdownValue.toLowerCase()) {
+                      if (dropdownValue != null &&
+                          responseJson['data']['user_group'][0]
+                                  .toString()
+                                  .toLowerCase() ==
+                              dropdownValue!.toLowerCase()) {
                         if (responseJson['data']['user_group'][0]
                                 .toString()
                                 .toLowerCase() ==
                             'division officer') {
-                          prefs.setBool('isLoggedIn', false);
-                          prefs.setString('LoginUser', loginEmail.text);
-                          prefs.setString('LoginPass', loginPassword.text);
+                          prefs?.setBool('isLoggedIn', false);
+                          prefs?.setString('LoginUser', loginEmail.text);
+                          prefs?.setString('LoginPass', loginPassword.text);
                           setState(() {
                             userRange = responseJson['data']['range'];
-                            URange = List<String>.from(userRange);
+                            URange = List<String>.from(userRange ?? []);
                           });
                           Fluttertoast.showToast(
                               msg: 'Login Successful',
@@ -1404,14 +1411,14 @@ class _OfficerState extends State<OfficerLogin> {
                                 .toString()
                                 .toLowerCase() ==
                             'state officer') {
-                          prefs.setBool('isLoggedIn', false);
-                          prefs.setString('LoginUser', loginEmail.text);
-                          prefs.setString('LoginPass', loginPassword.text);
+                          prefs?.setBool('isLoggedIn', false);
+                          prefs?.setString('LoginUser', loginEmail.text);
+                          prefs?.setString('LoginPass', loginPassword.text);
                           setState(() {
                             Dist_Range =
                                 responseJson['data']['division_range_list'];
 
-                            for (int i = 0; i < Dist_Range.length; i++) {
+                            for (int i = 0; i < Dist_Range!.length; i++) {
                               Dist.add(responseJson['data']
                                   ['division_range_list'][i]['division']);
                               Range.add(responseJson['data']
@@ -1445,26 +1452,27 @@ class _OfficerState extends State<OfficerLogin> {
                                   pageBuilder:
                                       (context, animation, animationTime) {
                                     return SFDashboard(
-                                      userId: userId,
+                                      userId: userId!,
                                       userName: userName,
                                       userEmail: userEmail,
                                       sessionToken: sessionToken,
                                       userGroup: userGroup,
-                                      dropdownValue: dropdownValue,
+                                      dropdownValue: dropdownValue!,
                                       userMobile: userMobile,
                                       userProfile: userProfile,
                                       userAddress: userAddress,
                                       Dist: Dist,
                                       Range: URange,
+                                      Dist_Range: Dist_Range ?? [],
                                     );
                                   }));
                         } else if (responseJson['data']['user_group'][0]
                                 .toString()
                                 .toLowerCase() ==
                             'field officer') {
-                          prefs.setBool('isLoggedIn', false);
-                          prefs.setString('LoginUser', loginEmail.text);
-                          prefs.setString('LoginPass', loginPassword.text);
+                          prefs!.setBool('isLoggedIn', false);
+                          prefs!.setString('LoginUser', loginEmail.text);
+                          prefs!.setString('LoginPass', loginPassword.text);
                           Fluttertoast.showToast(
                               msg: 'Login Successful',
                               toastLength: Toast.LENGTH_SHORT,
@@ -1489,12 +1497,12 @@ class _OfficerState extends State<OfficerLogin> {
                                   pageBuilder:
                                       (context, animation, animationTime) {
                                     return FieldOfficerDashboard(
-                                        userId: userId,
+                                        userId: userId!,
                                         userName: userName,
                                         userEmail: userEmail,
                                         sessionToken: sessionToken,
                                         userGroup: userGroup,
-                                        dropdownValue: dropdownValue,
+                                        dropdownValue: dropdownValue!,
                                         userMobile: userMobile,
                                         userProfile: userProfile,
                                         userAddress: userAddress);
@@ -1537,9 +1545,9 @@ class _OfficerState extends State<OfficerLogin> {
                           if (userGroup == 'forest range officer') {
                             Range = responseJson['data']['range'];
                           }
-                          prefs.setBool('isLoggedIn', false);
-                          prefs.setString('LoginUser', loginEmail.text);
-                          prefs.setString('LoginPass', loginPassword.text);
+                          prefs!.setBool('isLoggedIn', false);
+                          prefs!.setString('LoginUser', loginEmail.text);
+                          prefs!.setString('LoginPass', loginPassword.text);
                           Fluttertoast.showToast(
                               msg: 'Login Successful',
                               toastLength: Toast.LENGTH_SHORT,
@@ -1564,12 +1572,12 @@ class _OfficerState extends State<OfficerLogin> {
                                   pageBuilder:
                                       (context, animation, animationTime) {
                                     return OfficerDashboard(
-                                      userId: userId,
+                                      userId: userId!,
                                       userName: userName,
                                       userEmail: userEmail,
                                       sessionToken: sessionToken,
                                       userGroup: userGroup,
-                                      dropdownValue: dropdownValue,
+                                      dropdownValue: dropdownValue!,
                                       Range: Range,
                                       //  userMobile:userMobile,
                                       //  userImage:userImage,

@@ -8,8 +8,6 @@ import 'package:tigramnks/OfficerDashboard.dart';
 
 import 'main.dart';
 
-
-
 class OfficerLogin extends StatefulWidget {
   @override
   _OfficerLoginState createState() => _OfficerLoginState();
@@ -29,11 +27,9 @@ class _OfficerLoginState extends State<OfficerLogin> {
   bool validateEmail(String value) {
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern);
+    RegExp regex = new RegExp(pattern as String);
     return (!regex.hasMatch(value)) ? false : true;
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -83,31 +79,30 @@ class _OfficerLoginState extends State<OfficerLogin> {
                             isHiddenPassword = !isHiddenPassword;
                           });
                         },
-                        child: Icon(Icons.visibility,
-                            color: Colors.black54)),
+                        child: Icon(Icons.visibility, color: Colors.black54)),
                     border: OutlineInputBorder(),
                     labelText: 'Password',
                     hintText: 'Enter secure password'),
               ),
             ),
-
             Container(
               height: 50,
               width: 250,
-              decoration: BoxDecoration(color: Colors.green, borderRadius: BorderRadius.circular(20)),
-              margin: const EdgeInsets.only(top:20.0),
+              decoration: BoxDecoration(
+                  color: Colors.green, borderRadius: BorderRadius.circular(20)),
+              margin: const EdgeInsets.only(top: 20.0),
               child: TextButton(
                 onPressed: () {
-                  if((loginEmail.text.length == 0) || (loginPassword.text.length == 0)){
+                  if ((loginEmail.text.length == 0) ||
+                      (loginPassword.text.length == 0)) {
                     Fluttertoast.showToast(
-                        msg:
-                        "Either email or password field is empty",
+                        msg: "Either email or password field is empty",
                         toastLength: Toast.LENGTH_SHORT,
                         timeInSecForIosWeb: 1,
                         backgroundColor: Colors.red,
                         textColor: Colors.white,
                         fontSize: 18.0);
-                  }else if (!validateEmail(loginEmail.text)) {
+                  } else if (!validateEmail(loginEmail.text)) {
                     Fluttertoast.showToast(
                         msg: "Invalid email address",
                         toastLength: Toast.LENGTH_SHORT,
@@ -116,17 +111,27 @@ class _OfficerLoginState extends State<OfficerLogin> {
                         backgroundColor: Colors.red,
                         textColor: Colors.white,
                         fontSize: 18.0);
-                  }
-                  else {
+                  } else {
                     Navigator.push(
-                        context, MaterialPageRoute(builder: (_) => OfficerDashboard()));
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => OfficerDashboard(
+                                    userId: 123, // example integer value
+                                    userName: userName,
+                                    userEmail: userEmail,
+                                    sessionToken: sessionToken,
+                                    userGroup: 'someUserGroup',
+                                    dropdownValue: 'someDropdownValue',
+                                    Range: [
+                                      'someRange'
+                                    ] // example list of dynamic values
+                                    )));
                   }
                 },
                 child: Text(
                   'Login',
                   style: TextStyle(color: Colors.white, fontSize: 25),
                 ),
-
               ),
             ),
           ],

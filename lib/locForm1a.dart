@@ -64,54 +64,55 @@ class locForm1a extends StatefulWidget {
   String logData;
 
   locForm1a(
-      {this.sessionToken,
-      this.userId,
-      this.id,
-      this.Type,
-      this.userName,
-      this.userEmail,
-      this.App_no,
-      this.Division,
-      this.Range,
-      this.District,
-      this.Taluk,
-      this.Village,
-      this.address,
-      this.survay,
-      this.treePCut,
-      this.blockL,
-      this.pin,
-      this.imageA,
-      this.imageB,
-      this.imageC,
-      this.imageD,
-      this.image1lat,
-      this.image2lat,
-      this.image3lat,
-      this.image4lat,
-      this.image1log,
-      this.image2log,
-      this.image3log,
-      this.image4log,
-      this.treespecies,
-      this.purposecut,
-      this.drivername,
-      this.vechclereg,
-      this.mode,
-      this.phone,
-      this.destAddress,
-      this.destState,
-      this.licenceImg,
-      this.ownerProof,
-      this.revenApplication,
-      this.revenApprove,
-      this.declaration,
-      this.locationSkch,
-      this.treeOwnership,
-      this.aadarcard,
-      this.signatureImg,
-      this.selectProof,
-      this.logData});
+      {super.key,
+      required this.sessionToken,
+      required this.userId,
+      required this.id,
+      required this.Type,
+      required this.userName,
+      required this.userEmail,
+      required this.App_no,
+      required this.Division,
+      required this.Range,
+      required this.District,
+      required this.Taluk,
+      required this.Village,
+      required this.address,
+      required this.survay,
+      required this.treePCut,
+      required this.blockL,
+      required this.pin,
+      required this.imageA,
+      required this.imageB,
+      required this.imageC,
+      required this.imageD,
+      required this.image1lat,
+      required this.image2lat,
+      required this.image3lat,
+      required this.image4lat,
+      required this.image1log,
+      required this.image2log,
+      required this.image3log,
+      required this.image4log,
+      required this.treespecies,
+      required this.purposecut,
+      required this.drivername,
+      required this.vechclereg,
+      required this.mode,
+      required this.phone,
+      required this.destAddress,
+      required this.destState,
+      required this.licenceImg,
+      required this.ownerProof,
+      required this.revenApplication,
+      required this.revenApprove,
+      required this.declaration,
+      required this.locationSkch,
+      required this.treeOwnership,
+      required this.aadarcard,
+      required this.signatureImg,
+      required this.selectProof,
+      required this.logData});
   @override
   State<locForm1a> createState() => _locForm1aState(
       sessionToken,
@@ -165,6 +166,7 @@ class locForm1a extends StatefulWidget {
 }
 
 class _locForm1aState extends State<locForm1a> {
+  @override
   void initState() {
     super.initState();
     ListRange();
@@ -281,16 +283,16 @@ class _locForm1aState extends State<locForm1a> {
   TextEditingController block = TextEditingController();
   TextEditingController DistrictC = TextEditingController();
   TextEditingController Pincode = TextEditingController();
-  String IMG1;
-  String IMG2;
-  String IMG3;
-  String IMG4;
-  String _selectedDiv;
-  String _selectedRange;
-  String _selectedDistrict;
-  String _selectedTaluke;
-  String _selectedVillage;
-  List<String> _values;
+  String IMG1 = '';
+  String IMG2 = '';
+  String IMG3 = '';
+  String IMG4 = '';
+  String _selectedDiv = '';
+  String _selectedRange = '';
+  String _selectedDistrict = '';
+  String _selectedTaluke = '';
+  String _selectedVillage = '';
+  final List<String> _values = [];
   List<String> Dname = [];
 
   _locForm1aState(
@@ -346,7 +348,7 @@ class _locForm1aState extends State<locForm1a> {
   List<String> Rname = [];
   int RL = 0;
   void ListRange() async {
-    const String url = 'http://13.234.208.246/api/auth/ListRange';
+    const String url = 'http://192.168.54.114:8000/api/auth/ListRange';
     final response = await http.get(Uri.parse(url), headers: {
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -366,7 +368,7 @@ class _locForm1aState extends State<locForm1a> {
 
   ListDivision() async {
     int DL = 0;
-    const String url = 'http://13.234.208.246/api/auth/LoadDivision';
+    const String url = 'http://192.168.54.114:8000/api/auth/LoadDivision';
     Map data = {
       "range_area": _selectedDiv ?? "",
     };
@@ -394,7 +396,7 @@ class _locForm1aState extends State<locForm1a> {
   LoadDistric() async {
     int RL = 0;
 
-    String url = 'http://13.234.208.246/api/auth/ListDistrict';
+    String url = 'http://192.168.54.114:8000/api/auth/ListDistrict';
 
     var response = await http.get(
       Uri.parse(url),
@@ -418,7 +420,7 @@ class _locForm1aState extends State<locForm1a> {
   List<String> taluka = [];
   LoadTaluka() async {
     int RL = 0;
-    const String url = 'http://13.234.208.246/api/auth/LoadTaluka';
+    const String url = 'http://192.168.54.114:8000/api/auth/LoadTaluka';
 
     Map data = {
       "district": _selectedDistrict ?? "",
@@ -446,7 +448,7 @@ class _locForm1aState extends State<locForm1a> {
   List<String> VillageL = [];
   LoadVillage() async {
     int RL = 0;
-    const String url = 'http://13.234.208.246/api/auth/LoadVillage';
+    const String url = 'http://192.168.54.114:8000/api/auth/LoadVillage';
     Map data = {"taluka": _selectedTaluke ?? ""};
     print(data);
     var body = json.encode(data);
@@ -470,10 +472,8 @@ class _locForm1aState extends State<locForm1a> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: NewGradientAppBar(
-        title: Text("Form 1"),
-        gradient:
-            LinearGradient(colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+      appBar: AppBar(
+        title: const Text("Form 1"),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -485,7 +485,7 @@ class _locForm1aState extends State<locForm1a> {
                   left: 15.0, right: 15.0, top: 10, bottom: 0),
               child: RichText(
                 textAlign: TextAlign.right,
-                text: TextSpan(children: <TextSpan>[
+                text: const TextSpan(children: <TextSpan>[
                   TextSpan(
                       text: "Division                                Range",
                       style: TextStyle(
@@ -499,8 +499,8 @@ class _locForm1aState extends State<locForm1a> {
             Container(
               width: double.infinity,
               margin: const EdgeInsets.only(top: 8, left: 15, right: 15),
-              decoration: new BoxDecoration(
-                  border: new Border.all(
+              decoration: BoxDecoration(
+                  border: Border.all(
                     color: Colors.grey,
                     width: 1,
                   ),
@@ -510,14 +510,14 @@ class _locForm1aState extends State<locForm1a> {
               child: Row(children: <Widget>[
                 DropdownButton<String>(
                   value: _selectedDiv,
-                  icon: Icon(Icons.arrow_drop_down),
+                  icon: const Icon(Icons.arrow_drop_down),
                   iconSize: 24,
                   elevation: 16,
-                  style: TextStyle(color: Colors.black, fontSize: 18),
+                  style: const TextStyle(color: Colors.black, fontSize: 18),
                   hint: RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(children: <TextSpan>[
-                      TextSpan(
+                      const TextSpan(
                           text: "Select Division",
                           style: TextStyle(
                               color: Colors.black,
@@ -534,12 +534,10 @@ class _locForm1aState extends State<locForm1a> {
                           height: 2,
                           color: Colors.grey,
                         ),*/
-                  onChanged: (String data) {
+                  onChanged: (String? data) {
                     setState(() {
-                      _selectedDiv = data;
-                      if (_selectedRange != null) {
-                        _selectedRange == null;
-                      }
+                      _selectedDiv = data!;
+                      _selectedRange == null;
                       ListDivision();
                     });
                     print(_selectedDiv);
@@ -551,23 +549,23 @@ class _locForm1aState extends State<locForm1a> {
                       value: value,
                       child: Text(
                         value,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                     );
                   }).toList(),
                 ),
-                Spacer(),
+                const Spacer(),
                 DropdownButton<String>(
                   value: _selectedRange,
-                  icon: Icon(Icons.arrow_drop_down),
+                  icon: const Icon(Icons.arrow_drop_down),
                   iconSize: 24,
                   elevation: 16,
-                  style: TextStyle(color: Colors.black, fontSize: 18),
+                  style: const TextStyle(color: Colors.black, fontSize: 18),
                   hint: RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(children: <TextSpan>[
-                      TextSpan(
+                      const TextSpan(
                           text: "Select Range",
                           style: TextStyle(
                               color: Colors.black,
@@ -584,9 +582,9 @@ class _locForm1aState extends State<locForm1a> {
                         height: 2,
                         color: Colors.grey,
                       ),*/
-                  onChanged: (String data) {
+                  onChanged: (String? data) {
                     setState(() {
-                      _selectedRange = data;
+                      _selectedRange = data!;
                     });
                     print(_selectedRange);
                   },
@@ -597,7 +595,7 @@ class _locForm1aState extends State<locForm1a> {
                       value: value,
                       child: Text(
                         value,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                     );
@@ -610,16 +608,15 @@ class _locForm1aState extends State<locForm1a> {
                   left: 15.0, right: 15.0, top: 15, bottom: 0),
               child: TextField(
                   controller: Name,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       border: OutlineInputBorder(
                         borderSide: BorderSide(width: 2),
-                        borderRadius:
-                            const BorderRadius.all(const Radius.circular(14.0)),
+                        borderRadius: BorderRadius.all(Radius.circular(14.0)),
                       ),
                       // border: OutlineInputBorder(),
                       labelText: 'Name',
                       hintText: 'Enter Your Name'),
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.bold, color: Colors.blue)),
             ),
             Padding(
@@ -635,8 +632,8 @@ class _locForm1aState extends State<locForm1a> {
                     ),
                     labelText: 'Address',
                     hintText: 'Enter Your Address'),
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.blue),
               ),
             ),
             Padding(
@@ -652,8 +649,8 @@ class _locForm1aState extends State<locForm1a> {
                     ),
                     labelText: 'Survey Number',
                     hintText: 'Enter Survey Number'),
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.blue),
               ),
             ),
             Visibility(
@@ -672,7 +669,7 @@ class _locForm1aState extends State<locForm1a> {
                       labelText: 'Trees Proposed to be cut',
                       hintText: 'Enter Number of Trees'),
                   keyboardType: TextInputType.number,
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.bold, color: Colors.blue),
                 ),
               ),
@@ -696,8 +693,8 @@ class _locForm1aState extends State<locForm1a> {
             Container(
               width: double.infinity,
               margin: const EdgeInsets.only(top: 8, left: 15, right: 15),
-              decoration: new BoxDecoration(
-                  border: new Border.all(
+              decoration: BoxDecoration(
+                  border: Border.all(
                     color: Colors.grey,
                     width: 1,
                   ),
@@ -707,14 +704,14 @@ class _locForm1aState extends State<locForm1a> {
               child: Row(children: <Widget>[
                 DropdownButton<String>(
                   value: _selectedDistrict,
-                  icon: Icon(Icons.arrow_drop_down),
+                  icon: const Icon(Icons.arrow_drop_down),
                   iconSize: 24,
                   elevation: 16,
-                  style: TextStyle(color: Colors.black, fontSize: 18),
+                  style: const TextStyle(color: Colors.black, fontSize: 18),
                   hint: RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(children: <TextSpan>[
-                      TextSpan(
+                      const TextSpan(
                           text: "Select District",
                           style: TextStyle(
                               color: Colors.black,
@@ -731,12 +728,10 @@ class _locForm1aState extends State<locForm1a> {
                         height: 2,
                         color: Colors.grey,
                       ),*/
-                  onChanged: (String data) {
+                  onChanged: (String? data) {
                     setState(() {
-                      _selectedDistrict = data;
-                      if (_selectedTaluke != null) {
-                        _selectedTaluke == null;
-                      }
+                      _selectedDistrict = data!;
+                      _selectedTaluke == null;
                       LoadTaluka();
                     });
                     print(_selectedDistrict);
@@ -746,7 +741,7 @@ class _locForm1aState extends State<locForm1a> {
                       value: value,
                       child: Text(
                         value,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                     );
@@ -755,10 +750,10 @@ class _locForm1aState extends State<locForm1a> {
                 const Spacer(),
                 DropdownButton<String>(
                   value: _selectedTaluke,
-                  icon: Icon(Icons.arrow_drop_down),
+                  icon: const Icon(Icons.arrow_drop_down),
                   iconSize: 24,
                   elevation: 16,
-                  style: TextStyle(color: Colors.black, fontSize: 18),
+                  style: const TextStyle(color: Colors.black, fontSize: 18),
                   hint: RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(children: <TextSpan>[
@@ -779,12 +774,10 @@ class _locForm1aState extends State<locForm1a> {
                         height: 2,
                         color: Colors.grey,
                       ),*/
-                  onChanged: (String data) {
+                  onChanged: (String? data) {
                     setState(() {
-                      _selectedTaluke = data;
-                      if (_selectedVillage != null) {
-                        _selectedVillage == null;
-                      }
+                      _selectedTaluke = data!;
+                      _selectedVillage == null;
                       LoadVillage();
                     });
                     print(_selectedTaluke);
@@ -794,7 +787,7 @@ class _locForm1aState extends State<locForm1a> {
                       value: value,
                       child: Text(
                         value,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                     );
@@ -807,7 +800,7 @@ class _locForm1aState extends State<locForm1a> {
                   left: 15.0, right: 15.0, top: 10, bottom: 0),
               child: RichText(
                 textAlign: TextAlign.right,
-                text: TextSpan(children: <TextSpan>[
+                text: const TextSpan(children: <TextSpan>[
                   TextSpan(
                       text: "Village",
                       style: TextStyle(
@@ -821,8 +814,8 @@ class _locForm1aState extends State<locForm1a> {
             Container(
               width: double.infinity,
               margin: const EdgeInsets.only(top: 8, left: 15, right: 15),
-              decoration: new BoxDecoration(
-                  border: new Border.all(
+              decoration: BoxDecoration(
+                  border: Border.all(
                     color: Colors.grey,
                     width: 1,
                   ),
@@ -831,14 +824,14 @@ class _locForm1aState extends State<locForm1a> {
                   left: 10.0, right: 10, top: 10, bottom: 0),
               child: DropdownButton<String>(
                 value: _selectedVillage,
-                icon: Icon(Icons.arrow_drop_down),
+                icon: const Icon(Icons.arrow_drop_down),
                 iconSize: 24,
                 elevation: 16,
-                style: TextStyle(color: Colors.black, fontSize: 18),
+                style: const TextStyle(color: Colors.black, fontSize: 18),
                 hint: RichText(
                   textAlign: TextAlign.left,
                   text: TextSpan(children: <TextSpan>[
-                    TextSpan(
+                    const TextSpan(
                         text: "Select Village",
                         style: TextStyle(
                             color: Colors.black, fontWeight: FontWeight.bold)),
@@ -850,9 +843,9 @@ class _locForm1aState extends State<locForm1a> {
                         )),
                   ]),
                 ),
-                onChanged: (String data) {
+                onChanged: (String? data) {
                   setState(() {
-                    _selectedVillage = data;
+                    _selectedVillage = data!;
                   });
                   print(_selectedVillage);
                 },
@@ -861,8 +854,8 @@ class _locForm1aState extends State<locForm1a> {
                     value: value,
                     child: Text(
                       value,
-                      style:
-                          TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 13, fontWeight: FontWeight.bold),
                     ),
                   );
                 }).toList(),
@@ -874,15 +867,14 @@ class _locForm1aState extends State<locForm1a> {
               //padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
                   controller: block,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       border: OutlineInputBorder(
                         borderSide: BorderSide(width: 2),
-                        borderRadius:
-                            const BorderRadius.all(const Radius.circular(14.0)),
+                        borderRadius: BorderRadius.all(Radius.circular(14.0)),
                       ),
                       labelText: 'Block',
                       hintText: 'Enter Your Block'),
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.bold, color: Colors.blue)),
             ),
             Padding(
@@ -896,22 +888,21 @@ class _locForm1aState extends State<locForm1a> {
                   ],
                   keyboardType: TextInputType.number,
                   maxLength: 6,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       border: OutlineInputBorder(
                         borderSide: BorderSide(width: 2),
-                        borderRadius:
-                            const BorderRadius.all(const Radius.circular(14.0)),
+                        borderRadius: BorderRadius.all(Radius.circular(14.0)),
                       ),
                       labelText: 'Pincode',
                       hintText: 'Enter Your Pincode'),
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.bold, color: Colors.blue)),
             ),
             Container(
               width: double.infinity,
               margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-              decoration: new BoxDecoration(
-                  border: new Border.all(
+              decoration: BoxDecoration(
+                  border: Border.all(
                     color: Colors.grey,
                     width: 1,
                   ),
@@ -920,7 +911,7 @@ class _locForm1aState extends State<locForm1a> {
                   left: 10.0, right: 0, top: 10, bottom: 0),
               child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
                 TextButton.icon(
-                  icon: Icon(Icons.image),
+                  icon: const Icon(Icons.image),
                   onPressed: () {
                     setState(() {
                       // getCurrentLocation1();
@@ -929,7 +920,7 @@ class _locForm1aState extends State<locForm1a> {
                   },
                   label: const Text("Location site photograph 1"),
                 ),
-                Spacer(),
+                const Spacer(),
                 Icon(
                   Icons.check_circle,
                   color: (IMG1) == null ? Colors.red : Colors.green,
@@ -940,8 +931,8 @@ class _locForm1aState extends State<locForm1a> {
             Container(
               width: double.infinity,
               margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-              decoration: new BoxDecoration(
-                  border: new Border.all(
+              decoration: BoxDecoration(
+                  border: Border.all(
                     color: Colors.grey,
                     width: 1,
                   ),
@@ -950,7 +941,7 @@ class _locForm1aState extends State<locForm1a> {
                   left: 10.0, right: 0, top: 10, bottom: 0),
               child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
                 TextButton.icon(
-                  icon: Icon(Icons.image),
+                  icon: const Icon(Icons.image),
                   onPressed: () {
                     setState(() {
                       // getCurrentLocation2();
@@ -959,7 +950,7 @@ class _locForm1aState extends State<locForm1a> {
                   },
                   label: const Text("Location site photograph 2"),
                 ),
-                Spacer(),
+                const Spacer(),
                 Icon(
                   Icons.check_circle,
                   color: IMG2 == null ? Colors.red : Colors.green,
@@ -970,8 +961,8 @@ class _locForm1aState extends State<locForm1a> {
             Container(
               width: double.infinity,
               margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-              decoration: new BoxDecoration(
-                  border: new Border.all(
+              decoration: BoxDecoration(
+                  border: Border.all(
                     color: Colors.grey,
                     width: 1,
                   ),
@@ -980,7 +971,7 @@ class _locForm1aState extends State<locForm1a> {
                   left: 10.0, right: 0, top: 10, bottom: 0),
               child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
                 TextButton.icon(
-                  icon: Icon(Icons.image),
+                  icon: const Icon(Icons.image),
                   onPressed: () {
                     setState(() {
                       // getCurrentLocation3();
@@ -989,7 +980,7 @@ class _locForm1aState extends State<locForm1a> {
                   },
                   label: const Text("Location site photograph 3"),
                 ),
-                Spacer(),
+                const Spacer(),
                 Icon(
                   Icons.check_circle,
                   color: (IMG3) == null ? Colors.red : Colors.green,
@@ -1000,8 +991,8 @@ class _locForm1aState extends State<locForm1a> {
             Container(
               width: double.infinity,
               margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-              decoration: new BoxDecoration(
-                  border: new Border.all(
+              decoration: BoxDecoration(
+                  border: Border.all(
                     color: Colors.grey,
                     width: 1,
                   ),
@@ -1010,7 +1001,7 @@ class _locForm1aState extends State<locForm1a> {
                   left: 10.0, right: 0, top: 10, bottom: 0),
               child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
                 TextButton.icon(
-                  icon: Icon(Icons.image),
+                  icon: const Icon(Icons.image),
                   onPressed: () {
                     setState(() {
                       // getCurrentLocation4();
@@ -1019,7 +1010,7 @@ class _locForm1aState extends State<locForm1a> {
                   },
                   label: const Text("Location site photograph 4"),
                 ),
-                Spacer(),
+                const Spacer(),
                 Icon(
                   Icons.check_circle,
                   color: (IMG4) == null ? Colors.red : Colors.green,
@@ -1033,7 +1024,6 @@ class _locForm1aState extends State<locForm1a> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         isExtended: true,
-        child: Icon(Icons.navigate_next),
         backgroundColor: HexColor("#0499f2"),
         onPressed: () async {
           // if ((dropdownValue == null)
@@ -1076,7 +1066,7 @@ class _locForm1aState extends State<locForm1a> {
           Navigator.pushReplacement(
               context,
               PageRouteBuilder(
-                  transitionDuration: Duration(milliseconds: 400),
+                  transitionDuration: const Duration(milliseconds: 400),
                   transitionsBuilder:
                       (context, animation, animationTime, child) {
                     return ScaleTransition(
@@ -1086,9 +1076,7 @@ class _locForm1aState extends State<locForm1a> {
                     );
                   },
                   pageBuilder: (context, animation, animationTime) {
-                    if (logData != null) {
-                      print("LOGGGLOC$logData");
-                    }
+                    print("LOGGGLOC$logData");
                     return locForm1b(
                         sessionToken: sessionToken,
                         userId: userId,
@@ -1144,6 +1132,7 @@ class _locForm1aState extends State<locForm1a> {
           // print(sessionToken + dropdownValue1 + userName);
           // }
         },
+        child: const Icon(Icons.navigate_next),
       ),
     );
   }

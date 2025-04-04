@@ -37,33 +37,34 @@ class FormPage extends StatefulWidget {
   String imagelongfour;
 
   FormPage(
-      {this.sessionToken,
-      this.dropdownValue,
-      this.dropdownValue1,
-      this.userName,
-      this.userEmail,
-      this.userId,
-      this.Name,
-      this.Address,
-      this.survey_no,
-      this.Tree_Proposed_to_cut,
-      this.village,
-      this.Taluka,
-      this.block,
-      this.District,
-      this.Pincode,
-      this.imageone,
-      this.imagetwo,
-      this.imagethree,
-      this.imagefour,
-      this.imagelatone,
-      this.imagelattwo,
-      this.imagelatthree,
-      this.imagelatfour,
-      this.imagelongone,
-      this.imagelongtwo,
-      this.imagelongthree,
-      this.imagelongfour});
+      {super.key,
+      required this.sessionToken,
+      required this.dropdownValue,
+      required this.dropdownValue1,
+      required this.userName,
+      required this.userEmail,
+      required this.userId,
+      required this.Name,
+      required this.Address,
+      required this.survey_no,
+      required this.Tree_Proposed_to_cut,
+      required this.village,
+      required this.Taluka,
+      required this.block,
+      required this.District,
+      required this.Pincode,
+      required this.imageone,
+      required this.imagetwo,
+      required this.imagethree,
+      required this.imagefour,
+      required this.imagelatone,
+      required this.imagelattwo,
+      required this.imagelatthree,
+      required this.imagelatfour,
+      required this.imagelongone,
+      required this.imagelongtwo,
+      required this.imagelongthree,
+      required this.imagelongfour});
   @override
   _FormPageState createState() => _FormPageState(
       sessionToken,
@@ -183,20 +184,20 @@ class _FormPageState extends State<FormPage> {
 
   int _radioValue = 0;
   int _radioValue1 = 0;
-  String maintenance;
-  String maintenance1;
-  int maintenance_cost;
-  int estimatedMaintenanceCost;
+  String maintenance = '';
+  String maintenance1 = '';
+  int maintenance_cost = 0;
+  int estimatedMaintenanceCost = 0;
 
   bool flag = false;
   bool flag1 = false;
   TextEditingController Purpose = TextEditingController();
 
   @override
-  void _handleRadioValueChange(int value) {
+  void _handleRadioValueChange(int? value) {
     // print(Name+" "+Address+" "+District+" "+Ownership);
     setState(() {
-      _radioValue = value;
+      _radioValue = value!;
       if (_radioValue == 1) {
         maintenance = 'Yes';
         setState(() {
@@ -211,10 +212,10 @@ class _FormPageState extends State<FormPage> {
     });
   }
 
-  void _handleRadioValueChange1(int value) {
+  void _handleRadioValueChange1(int? value) {
     // print(Name + " " + Address + " " + District);
     setState(() {
-      _radioValue1 = value;
+      _radioValue1 = value!;
       if (_radioValue1 == 1) {
         setState(() {
           flag1 = true;
@@ -228,25 +229,24 @@ class _FormPageState extends State<FormPage> {
   }
 
   Future<bool> _onBackPressed() {
-    return showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: new Text('Do you want to go previous page'),
-            content: new Text('Changes you made may not be saved.'),
-            actions: <Widget>[
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(false),
-                child: Text("NO"),
-              ),
-              SizedBox(height: 16),
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(true),
-                child: Text("YES"),
-              ),
-            ],
+    return showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Do you want to go previous page'),
+        content: const Text('Changes you made may not be saved.'),
+        actions: <Widget>[
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(false),
+            child: const Text("NO"),
           ),
-        ) ??
-        false;
+          const SizedBox(height: 16),
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(true),
+            child: const Text("YES"),
+          ),
+        ],
+      ),
+    ).then((value) => value ?? false);
   }
   //-- File- Picker
 
@@ -266,17 +266,16 @@ class _FormPageState extends State<FormPage> {
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
-        appBar: NewGradientAppBar(
+        appBar: AppBar(
           //backgroundColor:Colors.blueGrey,
-          title: Text(
+          title: const Text(
             "FORM - I",
             style: TextStyle(
               color: Colors.white,
               fontSize: 20,
             ),
           ),
-          gradient: LinearGradient(
-              colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+
           elevation: 0,
           // automaticallyImplyLeading: false,
         ),
@@ -285,7 +284,7 @@ class _FormPageState extends State<FormPage> {
           Row(children: <Widget>[
             Container(
               margin: const EdgeInsets.only(left: 13, top: 15),
-              child: Text(
+              child: const Text(
                 'Species of tree or trees proposed to be cut:',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.left,
@@ -296,7 +295,7 @@ class _FormPageState extends State<FormPage> {
             margin: const EdgeInsets.only(top: 10, left: 15, right: 15),
             height: MediaQuery.of(context).size.height * 0.39,
             decoration: BoxDecoration(
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                   color: Colors.black,
                   blurRadius: 2.0,
@@ -310,14 +309,14 @@ class _FormPageState extends State<FormPage> {
             child: ListView(
               scrollDirection: Axis.vertical,
               children: List.keys.map((String key) {
-                return new CheckboxListTile(
-                  title: new Text(key),
+                return CheckboxListTile(
+                  title: Text(key),
                   value: List[key],
                   activeColor: Colors.green,
                   checkColor: Colors.white,
-                  onChanged: (bool value) {
+                  onChanged: (bool? value) {
                     setState(() {
-                      List[key] = value;
+                      List[key] = value!;
                     });
                     if (value == true) {
                       holder_1.add(key);
@@ -336,11 +335,10 @@ class _FormPageState extends State<FormPage> {
             child: TextField(
               controller: Purpose,
               //  obscureText: true,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   border: OutlineInputBorder(
                     borderSide: BorderSide(width: 2),
-                    borderRadius:
-                        const BorderRadius.all(const Radius.circular(14.0)),
+                    borderRadius: BorderRadius.all(Radius.circular(14.0)),
                   ),
                   labelText: 'Purpose',
                   hintText:
@@ -352,7 +350,7 @@ class _FormPageState extends State<FormPage> {
               child: Column(children: <Widget>[
                 Container(
                   margin: const EdgeInsets.only(top: 10, left: 0, right: 0),
-                  child: new Text(
+                  child: const Text(
                     'Trees have been cut or yet to be cut?',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
@@ -360,7 +358,7 @@ class _FormPageState extends State<FormPage> {
                 Row(children: <Widget>[
                   Expanded(
                     child: RadioListTile(
-                      title: Text(
+                      title: const Text(
                         'Yes',
                         style: TextStyle(fontFamily: 'Lato'),
                       ),
@@ -371,7 +369,7 @@ class _FormPageState extends State<FormPage> {
                   ),
                   Expanded(
                     child: RadioListTile(
-                      title: Text(
+                      title: const Text(
                         'No',
                         style: TextStyle(fontFamily: 'Lato'),
                       ),
@@ -381,64 +379,80 @@ class _FormPageState extends State<FormPage> {
                     ),
                   ),
                 ]),
-                LayoutBuilder(builder: (context, constraints) {
-                  if (flag == true) {
-                    flag1 == true;
-                    return Container(
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    if (flag) {
+                      setState(() {
+                        flag1 = true; // Correct assignment
+                      });
+
+                      return Container(
                         margin:
                             const EdgeInsets.only(top: 15, left: 8, right: 8),
-                        child: Column(children: <Widget>[
-                          Container(
-                            child: new Text(
+                        child: Column(
+                          children: <Widget>[
+                            const Text(
                               'Would you like to enter the log details?',
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold),
                             ),
-                          ),
-                          Row(children: <Widget>[
-                            Expanded(
-                              child: RadioListTile(
-                                title: Text(
-                                  'Yes',
-                                  style: TextStyle(fontFamily: 'Lato'),
+                            Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: RadioListTile<int>(
+                                    title: const Text(
+                                      'Yes',
+                                      style: TextStyle(fontFamily: 'Lato'),
+                                    ),
+                                    value: 1,
+                                    groupValue: _radioValue1,
+                                    onChanged: (int? value) {
+                                      setState(() {
+                                        _radioValue1 = value!;
+                                      });
+                                    },
+                                  ),
                                 ),
-                                value: 1,
-                                groupValue: _radioValue1,
-                                onChanged: _handleRadioValueChange1,
-                              ),
-                            ),
-                            Expanded(
-                              child: RadioListTile(
-                                title: Text(
-                                  'No',
-                                  style: TextStyle(fontFamily: 'Lato'),
+                                Expanded(
+                                  child: RadioListTile<int>(
+                                    title: const Text(
+                                      'No',
+                                      style: TextStyle(fontFamily: 'Lato'),
+                                    ),
+                                    value: 2,
+                                    groupValue: _radioValue1,
+                                    onChanged: (int? value) {
+                                      setState(() {
+                                        _radioValue1 = value!;
+                                      });
+                                    },
+                                  ),
                                 ),
-                                value: 2,
-                                groupValue: _radioValue1,
-                                onChanged: _handleRadioValueChange1,
-                              ),
+                              ],
                             ),
-                          ]),
-                        ]));
-                  } else if (flag == false) {
-                    flag1 = false;
-                    return Container(
-                      color: Colors.white,
-                    );
-                  }
-                }),
+                          ],
+                        ),
+                      );
+                    } else {
+                      setState(() {
+                        flag1 = false;
+                      });
+
+                      return Container(color: Colors.white);
+                    }
+                  },
+                ),
               ]))
         ])),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: FloatingActionButton(
             // isExtended: true,
-            child: Icon(Icons.navigate_next),
             backgroundColor: HexColor("#0499f2"),
             onPressed: () {
               print(holder_1);
               if (
                   // (Purpose.text == 0) ||
-                  (holder_1.length == 0)
+                  (holder_1.isEmpty)
                   //   (_radioValue.bitLength == 0)
                   ) {
                 Fluttertoast.showToast(
@@ -465,9 +479,7 @@ class _FormPageState extends State<FormPage> {
                     fontSize: 18.0);
               } else if (holder_1.length > int.parse(Tree_Proposed_to_cut)) {
                 Fluttertoast.showToast(
-                    msg: "You can select only  " +
-                        Tree_Proposed_to_cut +
-                        " Species",
+                    msg: "You can select only  $Tree_Proposed_to_cut Species",
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.CENTER,
                     timeInSecForIosWeb: 1,
@@ -478,7 +490,7 @@ class _FormPageState extends State<FormPage> {
                 Navigator.pushReplacement(
                     context,
                     PageRouteBuilder(
-                        transitionDuration: Duration(milliseconds: 400),
+                        transitionDuration: const Duration(milliseconds: 400),
                         transitionsBuilder:
                             (context, animation, animationTime, child) {
                           return ScaleTransition(
@@ -520,11 +532,14 @@ class _FormPageState extends State<FormPage> {
                             Purpose: Purpose.text,
                             holder_1: holder_1,
                             flag1: flag1,
+                            values: const [],
                           );
                         }));
                 setState(() {});
               }
-            }),
+            },
+            // isExtended: true,
+            child: const Icon(Icons.navigate_next)),
       ),
     );
   }

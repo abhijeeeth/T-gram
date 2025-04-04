@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_const_literals_to_create_immutables, unnecessary_new
+
 import 'dart:convert';
 import 'dart:math';
 
@@ -45,20 +47,26 @@ import 'package:flutter/foundation.dart';
 import 'Images.dart';
 
 class tigramWoodBuy extends StatefulWidget {
-  int userId;
-  String sessionToken;
-  String userName;
-  String userEmail;
-  String userCato;
-  tigramWoodBuy(
-      {this.userId,
-      this.sessionToken,
-      this.userName,
-      this.userEmail,
-      this.userCato});
+  final int userId;
+  final String sessionToken;
+  final String userName;
+  final String userEmail;
+  final String userCato;
+  const tigramWoodBuy(
+      {super.key,
+      required this.userId,
+      required this.sessionToken,
+      required this.userName,
+      required this.userEmail,
+      required this.userCato});
   @override
-  State<tigramWoodBuy> createState() =>
-      _tigramWoodBuyState(userId, sessionToken, userName, userEmail, userCato);
+  State<tigramWoodBuy> createState() => _tigramWoodBuyState(
+        userId: userId,
+        sessionToken: sessionToken,
+        userName: userName,
+        userEmail: userEmail,
+        userCato: userCato,
+      );
 }
 
 class _tigramWoodBuyState extends State<tigramWoodBuy> {
@@ -67,8 +75,15 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
   String userName;
   String userEmail;
   String userCato;
-  _tigramWoodBuyState(this.userId, this.sessionToken, this.userName,
-      this.userEmail, this.userCato);
+  _tigramWoodBuyState({
+    required this.userId,
+    required this.sessionToken,
+    required this.userName,
+    required this.userEmail,
+    required this.userCato,
+  })  : DD = '',
+        dropdownValue = '',
+        selectedDistrict = '';
   Future<bool> loginAction() async {
     await Future.delayed(const Duration(seconds: 2));
     return true;
@@ -78,14 +93,14 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
   bool flag = true;
   var tab = 0;
   bool isShow = false;
-  var _sortAscending = true;
-  var _sortColumnIndex = 0;
-  int _currentSortColumn = 9;
-  bool _isAscending = true;
+  final _sortAscending = true;
+  final _sortColumnIndex = 0;
+  final int _currentSortColumn = 9;
+  final bool _isAscending = true;
   @override
-  void _handleRadioValueChange(int value) async {
+  void _handleRadioValueChange(int? value) {
     setState(() {
-      _radioValue = value;
+      _radioValue = value!;
       if (_radioValue == 0) {
         setState(() {
           tab = 0;
@@ -157,7 +172,8 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
     quntity1.clear();
     division1.clear();
     dist1.clear();
-    const String url = 'http://13.234.208.246/api/auth/Buyer_Seller_All_Data';
+    const String url =
+        'http://192.168.54.114:8000/api/auth/Buyer_Seller_All_Data';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -215,7 +231,8 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
     division.clear();
     disti.clear();
     status.clear();
-    const String url = 'http://13.234.208.246/api/auth/View_Buyer_Requirement';
+    const String url =
+        'http://192.168.54.114:8000/api/auth/View_Buyer_Requirement';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -274,7 +291,7 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
     division2.clear();
     disti2.clear();
     status2.clear();
-    const String url = 'http://13.234.208.246/api/auth/Buyer_SelectedDta';
+    const String url = 'http://192.168.54.114:8000/api/auth/Buyer_SelectedDta';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -315,12 +332,8 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
   LoadDistric() async {
     int RL = 0;
 
-    String url = 'http://13.234.208.246/api/auth/ListDistrict';
+    String url = 'http://192.168.54.114:8000/api/auth/ListDistrict';
 
-    //  Map<String, String> headers = {
-    //  'Content-Type': 'application/json',
-    //  'Authorization': 'token $sessionToken'
-    //  };
     var response = await http.get(
       Uri.parse(url),
       headers: {
@@ -334,14 +347,16 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
     print(responseJSON);
     setState(() {
       RL = responseJSON["data"].length;
+      district.clear(); // Clear the list before adding items
       for (int i = 0; i < RL; i++) {
         district.add(responseJSON["data"][i]['district_name']);
       }
+      district = district.toSet().toList(); // Remove duplicates
     });
   }
 
   ListRange() async {
-    const String url = 'http://13.234.208.246/api/auth/LoadTreeSpecies';
+    const String url = 'http://192.168.54.114:8000/api/auth/LoadTreeSpecies';
     final response = await http.post(Uri.parse(url), headers: {
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -352,10 +367,12 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
     print(responseJSON);
     setState(() {
       RL = responseJSON["data"].length;
+      Rname.clear(); // Clear the list before adding items
     });
     for (int i = 0; i < RL; i++) {
       Rname.add(responseJSON["data"][i]['name']);
     }
+    Rname = Rname.toSet().toList(); // Remove duplicates
     print(Rname);
   }
 
@@ -375,7 +392,7 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
       dist1.clear();
 
       const String url =
-          'http://13.234.208.246/api/auth/addtimber_district_species_filtration';
+          'http://192.168.54.114:8000/api/auth/addtimber_district_species_filtration';
       Map data = {
         "district": selectedDistrict ?? "",
         "species": dropdownValue ?? ""
@@ -426,7 +443,7 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
       division1.clear();
       dist1.clear();
       const String url =
-          'http://13.234.208.246/api/auth/requirement_district_species_filtration';
+          'http://192.168.54.114:8000/api/auth/requirement_district_species_filtration';
 
       Map data = {
         "district": selectedDistrict ?? "",
@@ -469,10 +486,9 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: NewGradientAppBar(
+      appBar: AppBar(
         title: Text("Tigram WoodShed"),
-        gradient:
-            LinearGradient(colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+
         //backgroundColor: Colors.blueGrey,
         elevation: 0,
       ),
@@ -494,12 +510,12 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
                 },
                 child: Text("ADD Requirement"),
               )),
-          Container(
+          SizedBox(
               height: 25,
               width: double.infinity,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.orangeAccent,
+                  backgroundColor: Colors.orangeAccent,
                 ),
                 onPressed: () {
                   setState(() {
@@ -521,7 +537,7 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
                   const EdgeInsets.only(left: 2, right: 2, top: 0, bottom: 0),
               child: Row(children: <Widget>[
                 DropdownButton<String>(
-                  value: dropdownValue,
+                  value: dropdownValue == "" ? null : dropdownValue,
                   icon: Icon(Icons.arrow_drop_down),
                   iconSize: 20,
                   style: TextStyle(color: Colors.black, fontSize: 18),
@@ -541,19 +557,13 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
                           )),
                     ]),
                   ),
-                  /*underline: Container(
-                                height: 2,
-                                color: Colors.grey,
-                              ),*/
-                  onChanged: (String data) {
+                  onChanged: (String? data) {
                     setState(() {
-                      dropdownValue = data;
+                      dropdownValue = data!;
                     });
                     print(dropdownValue);
                   },
-                  items: Rname.toSet()
-                      .toList()
-                      .map<DropdownMenuItem<String>>((String value) {
+                  items: Rname.map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(
@@ -568,7 +578,7 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
 
                 // Spacer(),
                 DropdownButton<String>(
-                  value: selectedDistrict,
+                  value: selectedDistrict == "" ? null : selectedDistrict,
                   icon: Icon(Icons.arrow_drop_down),
                   iconSize: 20,
                   style: TextStyle(color: Colors.black, fontSize: 18),
@@ -588,17 +598,16 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
                           )),
                     ]),
                   ),
-                  /*underline: Container(
-                                height: 2,
-                                color: Colors.grey,
-                              ),*/
-                  onChanged: (String data) {
+                  onChanged: (String? data) {
                     setState(() {
-                      selectedDistrict = data;
+                      selectedDistrict = data!;
                     });
                     print(selectedDistrict);
                   },
-                  items: district.map<DropdownMenuItem<String>>((String value) {
+                  items: district
+                      .toSet()
+                      .toList()
+                      .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(
@@ -636,7 +645,7 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
               color: Colors.grey,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.grey,
+                  backgroundColor: Colors.grey,
                 ),
                 onPressed: () {
                   filterall();
@@ -664,7 +673,7 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
                 [Colors.green],
                 [Colors.orange]
               ],
-              onToggle: _handleRadioValueChange,
+              onToggle: (index) => _handleRadioValueChange(index),
             ),
           ),
           LayoutBuilder(builder: (context, constraints) {
@@ -689,13 +698,13 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
                   padding: const EdgeInsets.only(
                       left: 2, right: 2, top: 2, bottom: 2),
                   child: Scrollbar(
-                      isAlwaysShown: true,
+                      thumbVisibility: true,
                       thickness: 15,
                       child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           padding: const EdgeInsets.only(bottom: 15),
                           child: Scrollbar(
-                            isAlwaysShown: true,
+                            thumbVisibility: true,
                             thickness: 15,
                             child: SingleChildScrollView(
                               scrollDirection: Axis.vertical,
@@ -705,7 +714,7 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
                                 dividerThickness: 2,
                                 columnSpacing: 20,
                                 showBottomBorder: true,
-                                headingRowColor: MaterialStateColor.resolveWith(
+                                headingRowColor: WidgetStateColor.resolveWith(
                                     (states) => Colors.orange),
                                 columns: [
                                   DataColumn(
@@ -805,7 +814,7 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
                                                             int.parse(value)] !=
                                                         null) {
                                                       const String url =
-                                                          "http://13.234.208.246/api/auth/Select_Data";
+                                                          "http://192.168.54.114:8000/api/auth/Select_Data";
                                                       Map data = {
                                                         "id": Ids1[
                                                             int.parse(value)]
@@ -871,7 +880,6 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
                                                         isShow = false;
                                                       });
                                                     }
-                                                    ;
                                                   }),
                                             ),
                                           ),
@@ -961,7 +969,7 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
                                           //                   int.parse(value)] !=
                                           //               null) {
                                           //             const String url =
-                                          //                 "http://13.234.208.246/api/auth/Delete_Timber_Data";
+                                          //                 "http://192.168.54.114:8000/api/auth/Delete_Timber_Data";
                                           //             Map data = {
                                           //               "id": Ids1[
                                           //                   int.parse(value)]
@@ -1057,13 +1065,13 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
                   padding: const EdgeInsets.only(
                       left: 2, right: 2, top: 2, bottom: 2),
                   child: Scrollbar(
-                      isAlwaysShown: true,
+                      thumbVisibility: true,
                       thickness: 15,
                       child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           padding: const EdgeInsets.only(bottom: 15),
                           child: Scrollbar(
-                            isAlwaysShown: true,
+                            thumbVisibility: true,
                             thickness: 15,
                             child: SingleChildScrollView(
                               scrollDirection: Axis.vertical,
@@ -1073,7 +1081,7 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
                                 dividerThickness: 2,
                                 columnSpacing: 20,
                                 showBottomBorder: true,
-                                headingRowColor: MaterialStateColor.resolveWith(
+                                headingRowColor: WidgetStateColor.resolveWith(
                                     (states) => Colors.orange),
                                 columns: [
                                   DataColumn(
@@ -1204,13 +1212,13 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
                   padding: const EdgeInsets.only(
                       left: 2, right: 2, top: 2, bottom: 2),
                   child: Scrollbar(
-                      isAlwaysShown: true,
+                      thumbVisibility: true,
                       thickness: 15,
                       child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           padding: const EdgeInsets.only(bottom: 15),
                           child: Scrollbar(
-                            isAlwaysShown: true,
+                            thumbVisibility: true,
                             thickness: 15,
                             child: SingleChildScrollView(
                               scrollDirection: Axis.vertical,
@@ -1220,7 +1228,7 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
                                 dividerThickness: 2,
                                 columnSpacing: 20,
                                 showBottomBorder: true,
-                                headingRowColor: MaterialStateColor.resolveWith(
+                                headingRowColor: WidgetStateColor.resolveWith(
                                     (states) => Colors.orange),
                                 columns: [
                                   DataColumn(
@@ -1317,7 +1325,7 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
                                           //           if (Ids[int.parse(value)] !=
                                           //               null) {
                                           //             const String url =
-                                          //                 "http://13.234.208.246/api/auth/Select_Data";
+                                          //                 "http://192.168.54.114:8000/api/auth/Select_Data";
                                           //             Map data = {
                                           //               "id": Ids[
                                           //                   int.parse(value)]
@@ -1451,6 +1459,7 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
                             ),
                           ))));
             }
+            return Container(); // Add this line
           })
         ]),
       ),

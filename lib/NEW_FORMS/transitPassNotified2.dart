@@ -37,26 +37,27 @@ class transitPassNotified2 extends StatefulWidget {
   List log_details;
 
   transitPassNotified2(
-      {this.formOneIndex,
-      this.sessionToken,
-      this.userName,
-      this.userEmail,
-      this.userId,
-      this.userGroup,
-      this.Name_,
-      this.Division_,
-      this.range_,
-      this.address_,
-      this.survey_no_,
-      this.tree_no_cut,
-      this.district_,
-      this.taluke_,
-      this.block_,
-      this.village_,
-      this.pincode_,
-      this.holder_1,
-      this.purpose_,
-      this.log_details});
+      {super.key,
+      required this.formOneIndex,
+      required this.sessionToken,
+      required this.userName,
+      required this.userEmail,
+      required this.userId,
+      required this.userGroup,
+      required this.Name_,
+      required this.Division_,
+      required this.range_,
+      required this.address_,
+      required this.survey_no_,
+      required this.tree_no_cut,
+      required this.district_,
+      required this.taluke_,
+      required this.block_,
+      required this.village_,
+      required this.pincode_,
+      required this.holder_1,
+      required this.purpose_,
+      required this.log_details});
 
   @override
   State<transitPassNotified2> createState() => _transitPassNotified2State(
@@ -105,8 +106,18 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
   List log_details;
   bool isDeclarationChecked = false;
   TextEditingController id_no = TextEditingController();
-  String dropdownValue2;
+  String? dropdownValue2;
   String holder = '';
+  File? _imageIDProof;
+  File? _pdfIDProof;
+  File? _imglandTax;
+  File? _pdfLandTax;
+  File? _imgDigiSignature;
+  File? _pdfDigiSignature;
+  File? _imgProofOwner;
+  File? _pdfProofOwner;
+  File? _imgPossession;
+  File? _pdfPossession;
   List<String> IdProof = [
     'Aadhar Card',
     'Driving License',
@@ -114,7 +125,7 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
     'Government ID',
     'Voter ID',
   ];
-  String selectedPRoof;
+  String? selectedPRoof;
   bool isShow = false;
   String mimeID = "";
   String mimeLand = "";
@@ -180,11 +191,10 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
     return WillPopScope(
         onWillPop: _onBackPressed,
         child: Scaffold(
-            appBar: NewGradientAppBar(
+            appBar: AppBar(
               // backgroundColor: Colors.blueGrey,
-              title: Text("Form II - Notified"),
-              gradient: LinearGradient(
-                  colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+              title: const Text("Form II - Notified"),
+
               elevation: 0,
               // automaticallyImplyLeading: false,
             ),
@@ -199,8 +209,8 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
                             Container(
                               margin: const EdgeInsets.only(
                                   top: 15, left: 15, right: 15),
-                              decoration: new BoxDecoration(
-                                  border: new Border.all(
+                              decoration: BoxDecoration(
+                                  border: Border.all(
                                     color: Colors.grey,
                                     width: 1,
                                   ),
@@ -210,15 +220,15 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
                               child: DropdownButton<String>(
                                 value: dropdownValue2,
                                 isExpanded: true,
-                                icon: Icon(Icons.arrow_drop_down),
+                                icon: const Icon(Icons.arrow_drop_down),
                                 iconSize: 24,
                                 elevation: 16,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: Colors.black, fontSize: 18),
-                                hint: Text("Select Photo Identity Proof"),
-                                onChanged: (String data) {
+                                hint: const Text("Select Photo Identity Proof"),
+                                onChanged: (String? data) {
                                   setState(() {
-                                    dropdownValue2 = data;
+                                    dropdownValue2 = data!;
                                     selectedPRoof = dropdownValue2;
                                   });
                                 },
@@ -256,7 +266,7 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
                                 mainAxisSize: MainAxisSize.max,
                                 children: <Widget>[
                                   TextButton.icon(
-                                    icon: Icon(Icons.image),
+                                    icon: const Icon(Icons.image),
                                     onPressed: (() {
                                       flag1 = true;
                                       flag2 = false;
@@ -267,9 +277,10 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
                                         _pickImageOrPDF();
                                       }
                                     }),
-                                    label: Text("Upload Photo ID Proof or PDF"),
+                                    label: const Text(
+                                        "Upload Photo ID Proof or PDF"),
                                   ),
-                                  Spacer(),
+                                  const Spacer(),
                                   Icon(
                                     Icons.check_circle,
                                     color: (_imageIDProof != null ||
@@ -288,11 +299,11 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
                               child: TextField(
                                 controller: id_no,
                                 //  obscureText: true,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                     border: OutlineInputBorder(
                                       borderSide: BorderSide(width: 2),
-                                      borderRadius: const BorderRadius.all(
-                                          const Radius.circular(14.0)),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(14.0)),
                                     ),
                                     labelText: 'ID Number',
                                     hintText: ' Enter ID Number '),
@@ -323,7 +334,7 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
                                 mainAxisSize: MainAxisSize.max,
                                 children: <Widget>[
                                   TextButton.icon(
-                                    icon: Icon(Icons.image),
+                                    icon: const Icon(Icons.image),
                                     onPressed: (() {
                                       flag1 = false;
                                       flag2 = true;
@@ -334,9 +345,9 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
                                         _pickImageOrPDF();
                                       }
                                     }),
-                                    label: Text("Upload Land Tax Proof"),
+                                    label: const Text("Upload Land Tax Proof"),
                                   ),
-                                  Spacer(),
+                                  const Spacer(),
                                   Icon(
                                     Icons.check_circle,
                                     color: (_imglandTax != null ||
@@ -423,7 +434,7 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
                                 mainAxisSize: MainAxisSize.max,
                                 children: <Widget>[
                                   TextButton.icon(
-                                    icon: Icon(Icons.image),
+                                    icon: const Icon(Icons.image),
                                     onPressed: (() {
                                       flag1 = false;
                                       flag2 = false;
@@ -434,9 +445,10 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
                                         _pickImageOrPDF();
                                       }
                                     }),
-                                    label: Text("Upload Proof of Ownership"),
+                                    label:
+                                        const Text("Upload Proof of Ownership"),
                                   ),
-                                  Spacer(),
+                                  const Spacer(),
                                   Icon(
                                     Icons.check_circle,
                                     color: (_imgProofOwner != null ||
@@ -473,7 +485,7 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
                                 mainAxisSize: MainAxisSize.max,
                                 children: <Widget>[
                                   TextButton.icon(
-                                    icon: Icon(Icons.image),
+                                    icon: const Icon(Icons.image),
                                     onPressed: (() {
                                       flag1 = false;
                                       flag2 = false;
@@ -484,10 +496,10 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
                                         _pickImageOrPDF();
                                       }
                                     }),
-                                    label:
-                                        Text("Upload Possession certificate"),
+                                    label: const Text(
+                                        "Upload Possession certificate"),
                                   ),
-                                  Spacer(),
+                                  const Spacer(),
                                   Icon(
                                     Icons.check_circle,
                                     color: (_imgPossession != null ||
@@ -510,10 +522,10 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
                                 children: <Widget>[
                                   Checkbox(
                                     value: isDeclarationChecked,
-                                    onChanged: (bool value) {
+                                    onChanged: (bool? value) {
                                       setState(() {
-                                        isDeclarationChecked = value;
-                                        if (value) {
+                                        isDeclarationChecked = value ?? false;
+                                        if (value == true) {
                                           _showDeclarationPopup(); // Show the popup when the checkbox is checked
                                         }
                                       });
@@ -525,7 +537,7 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
                             ),
                             Visibility(
                               visible: isShow,
-                              child: CircularProgressIndicator(
+                              child: const CircularProgressIndicator(
                                 valueColor:
                                     AlwaysStoppedAnimation<Color>(Colors.green),
                                 strokeWidth: 8,
@@ -559,19 +571,20 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
                                         backgroundColor: Colors.red,
                                         textColor: Colors.white,
                                         fontSize: 18.0);
-                                  } else if (OWNER_PROOF == "" ||
-                                      POSSESSION == "" ||
-                                      ID_PROOF == "" ||
-                                      LAND_PROOF == "") {
+                                  } else if (OWNER_PROOF.isEmpty ||
+                                      LAND_PROOF.isEmpty ||
+                                      ID_PROOF.isEmpty ||
+                                      POSSESSION.isEmpty) {
                                     Fluttertoast.showToast(
                                         msg:
-                                            "Please select and fill all Documents",
+                                            "Please upload all required documents",
                                         toastLength: Toast.LENGTH_SHORT,
                                         gravity: ToastGravity.CENTER,
                                         timeInSecForIosWeb: 1,
                                         backgroundColor: Colors.red,
                                         textColor: Colors.white,
                                         fontSize: 18.0);
+                                    return;
                                   } else if (isDeclarationChecked == false) {
                                     Fluttertoast.showToast(
                                         msg:
@@ -615,7 +628,7 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
                                       mimePos = "application/pdf";
                                     }
                                     const String url =
-                                        'http://13.234.208.246/api/auth/new_application_form/';
+                                        'http://192.168.54.114:8000/api/auth/new_application_form/';
                                     Map data = {
                                       "name": Name_,
                                       "lat": latImage,
@@ -637,8 +650,7 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
                                       "purpose_cut": purpose_,
                                       "ownership_proof_img": {
                                         "mime": mimeOwn,
-                                        "data": ""
-                                        //"data": OWNER_PROOF
+                                        "data": OWNER_PROOF
                                       },
                                       "revenue_application_img": {
                                         "mime": "image/jpeg",
@@ -646,14 +658,11 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
                                       },
                                       "revenue_approval_img": {
                                         "mime": mimeLand,
-
-                                        "data": ""
-                                        // "data": LAND_PROOF
+                                        "data": LAND_PROOF
                                       },
                                       "declaration_img": {
                                         "mime": mimePos,
-                                        // "data": ""
-                                        "data": "POSSESSION"
+                                        "data": POSSESSION
                                       },
                                       "tree_ownership_img": {
                                         "mime": "image/jpeg",
@@ -665,13 +674,11 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
                                       },
                                       "aadhar_card_img": {
                                         "mime": mimeID,
-                                        // "data": ""
-                                        "data": "ID_PROOF"
+                                        "data": ID_PROOF
                                       },
                                       "signature_img": {
                                         "mime": mimeSign,
-                                        // "data": ""
-                                        "data": "DIGI_SIGN"
+                                        "data": DIGI_SIGN
                                       },
                                       "log_details": log_details ?? ""
                                     };
@@ -715,8 +722,8 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
                                     Navigator.pushReplacement(
                                         context,
                                         PageRouteBuilder(
-                                            transitionDuration:
-                                                Duration(milliseconds: 250),
+                                            transitionDuration: const Duration(
+                                                milliseconds: 250),
                                             transitionsBuilder: (context,
                                                 animation,
                                                 animationTime,
@@ -734,11 +741,15 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
                                                   userName: userName,
                                                   userEmail: userEmail,
                                                   userId: userId,
-                                                  userGroup: userGroup);
+                                                  userGroup: userGroup,
+                                                  userMobile: '',
+                                                  userAddress: '',
+                                                  userProfile: '',
+                                                  userCato: '');
                                             }));
                                   }
                                 },
-                                child: Text(
+                                child: const Text(
                                   ' APPLY FOR CUTTING ',
                                   style: TextStyle(
                                     color: Colors.black,
@@ -752,7 +763,7 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
                           ],
                         ),
                       ),
-                    ),
+                    )
                   ],
                 ),
               ),
@@ -770,8 +781,8 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Terms & Conditions'),
-          content: Text(
+          title: const Text('Terms & Conditions'),
+          content: const Text(
               'I hereby declare that the information furnished above is true to the best of my knowledge and belief. I also undertake to comply with the conditions subject to which the permission may be granted by the Authorised officer'),
           actions: <Widget>[
             TextButton(
@@ -782,7 +793,7 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
                 });
                 Navigator.of(context).pop(); // Close the dialog
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
@@ -792,7 +803,7 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
                 });
                 Navigator.of(context).pop(); // Close the dialog
               },
-              child: Text('Agree'),
+              child: const Text('Agree'),
             ),
           ],
         );
@@ -800,38 +811,27 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
     );
   }
 
-  Future<bool> _onBackPressed() {
-    return showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: new Text('Do you want to go Home page'),
-            content: new Text('Changes you made may not be saved.'),
-            actions: <Widget>[
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(false),
-                child: Text("NO"),
-              ),
-              SizedBox(height: 16),
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(true),
-                child: Text("YES"),
-              ),
-            ],
+  Future<bool> _onBackPressed() async {
+    final shouldPop = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Do you want to go Home page'),
+        content: const Text('Changes you made may not be saved.'),
+        actions: <Widget>[
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(false),
+            child: const Text("NO"),
           ),
-        ) ??
-        false;
+          const SizedBox(height: 16),
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(true),
+            child: const Text("YES"),
+          ),
+        ],
+      ),
+    );
+    return shouldPop ?? false;
   }
-
-  File _imageIDProof;
-  File _pdfIDProof;
-  File _imglandTax;
-  File _pdfLandTax;
-  File _imgDigiSignature;
-  File _pdfDigiSignature;
-  File _imgProofOwner;
-  File _pdfProofOwner;
-  File _imgPossession;
-  File _pdfPossession;
 
   String ID_PROOF = "";
   String LAND_PROOF = "";
@@ -881,7 +881,7 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
 
       return pdfBase64;
     } else {
-      return null;
+      return '';
     }
   }
 
@@ -904,31 +904,34 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
                           final filePath = result.files.single.path;
                           setState(() {
                             if (flag1) {
-                              _pdfIDProof = File(filePath);
+                              _pdfIDProof = File(filePath!);
                               convertPdfToBase64(filePath).then((pdfBase64) {
                                 ID_PROOF = pdfBase64;
                                 ID_proof_type = "PDF";
                               });
                             } else if (flag2) {
-                              _pdfLandTax = File(filePath);
+                              _pdfLandTax = File(filePath!);
                               convertPdfToBase64(filePath).then((pdfBase64) {
                                 LAND_PROOF = pdfBase64;
                                 land_proof_type = "PDF";
                               });
                             } else if (flag3) {
-                              _pdfDigiSignature = File(filePath);
+                              _pdfDigiSignature = File(filePath!);
                               convertPdfToBase64(filePath).then((pdfBase64) {
                                 DIGI_SIGN = pdfBase64;
                                 sign_type = "PDF";
                               });
                             } else if (flag4) {
-                              _pdfProofOwner = File(filePath);
+                              _pdfProofOwner = File(filePath!);
                               convertPdfToBase64(filePath).then((pdfBase64) {
                                 OWNER_PROOF = pdfBase64;
                                 owner_proof_type = "PDF";
                               });
+                              print("Image data length: ${OWNER_PROOF.length}");
+                              print(
+                                  "First 100 chars: ${OWNER_PROOF.substring(0, 100)}");
                             } else if (flag5) {
-                              _pdfPossession = File(filePath);
+                              _pdfPossession = File(filePath!);
                               convertPdfToBase64(filePath).then((pdfBase64) {
                                 POSSESSION = pdfBase64;
                                 poss_type = "PDF";
@@ -938,10 +941,10 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
                         }
                       },
                       splashColor: Colors.blueAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.picture_as_pdf_sharp,
                               color: Colors.blueAccent,
@@ -991,10 +994,10 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
                         }
                       },
                       splashColor: Colors.greenAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.image,
                               color: Colors.blueAccent,

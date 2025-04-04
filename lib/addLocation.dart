@@ -27,12 +27,13 @@ class addLoc extends StatefulWidget {
   int userId;
   final String Ids;
   addLoc(
-      {this.sessionToken,
-      this.userId,
-      this.userGroup,
-      this.Ids,
-      this.userName,
-      this.userEmail});
+      {super.key,
+      required this.sessionToken,
+      required this.userId,
+      required this.userGroup,
+      required this.Ids,
+      required this.userName,
+      required this.userEmail});
 
   @override
   State<addLoc> createState() =>
@@ -255,10 +256,10 @@ class _addLocState extends State<addLoc> {
                         await setfilepiccam();
                       },
                       splashColor: Colors.blueAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.camera,
                               color: Colors.blueAccent,
@@ -340,10 +341,10 @@ class _addLocState extends State<addLoc> {
                         await setfilepiccampic2();
                       },
                       splashColor: Colors.blueAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.camera,
                               color: Colors.blueAccent,
@@ -425,10 +426,10 @@ class _addLocState extends State<addLoc> {
                         await setfilepiccampic3();
                       },
                       splashColor: Colors.blueAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.camera,
                               color: Colors.blueAccent,
@@ -510,8 +511,8 @@ class _addLocState extends State<addLoc> {
                         await setfilepiccampic4();
                       },
                       splashColor: Colors.blueAccent,
-                      child: Row(
-                        children: const [
+                      child: const Row(
+                        children: [
                           Padding(
                             padding: EdgeInsets.all(8.0),
                             child: Icon(
@@ -586,18 +587,17 @@ class _addLocState extends State<addLoc> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
+        onWillPop: () async => true,
         child: Scaffold(
             backgroundColor: Colors.white,
-            appBar: NewGradientAppBar(
-              title: Text(
+            appBar: AppBar(
+              title: const Text(
                 "Update Location Images",
                 style: TextStyle(
                   fontSize: 20,
                   color: Colors.white,
                 ),
               ),
-              gradient: LinearGradient(
-                  colors: [HexColor("#26f596"), HexColor("#0499f2")]),
               elevation: 0,
             ),
             body: SingleChildScrollView(
@@ -606,8 +606,8 @@ class _addLocState extends State<addLoc> {
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                  decoration: new BoxDecoration(
-                      border: new Border.all(
+                  decoration: BoxDecoration(
+                      border: Border.all(
                         color: Colors.grey,
                         width: 1,
                       ),
@@ -616,7 +616,7 @@ class _addLocState extends State<addLoc> {
                       left: 10.0, right: 0, top: 10, bottom: 0),
                   child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
                     TextButton.icon(
-                      icon: Icon(Icons.image),
+                      icon: const Icon(Icons.image),
                       onPressed: () {
                         setState(() {
                           getCurrentLocation1();
@@ -635,8 +635,8 @@ class _addLocState extends State<addLoc> {
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                  decoration: new BoxDecoration(
-                      border: new Border.all(
+                  decoration: BoxDecoration(
+                      border: Border.all(
                         color: Colors.grey,
                         width: 1,
                       ),
@@ -645,7 +645,7 @@ class _addLocState extends State<addLoc> {
                       left: 10.0, right: 0, top: 10, bottom: 0),
                   child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
                     TextButton.icon(
-                      icon: Icon(Icons.image),
+                      icon: const Icon(Icons.image),
                       onPressed: () {
                         setState(() {
                           getCurrentLocation2();
@@ -664,8 +664,8 @@ class _addLocState extends State<addLoc> {
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                  decoration: new BoxDecoration(
-                      border: new Border.all(
+                  decoration: BoxDecoration(
+                      border: Border.all(
                         color: Colors.grey,
                         width: 1,
                       ),
@@ -674,7 +674,7 @@ class _addLocState extends State<addLoc> {
                       left: 10.0, right: 0, top: 10, bottom: 0),
                   child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
                     TextButton.icon(
-                      icon: Icon(Icons.image),
+                      icon: const Icon(Icons.image),
                       onPressed: () {
                         setState(() {
                           getCurrentLocation3();
@@ -693,8 +693,8 @@ class _addLocState extends State<addLoc> {
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                  decoration: new BoxDecoration(
-                      border: new Border.all(
+                  decoration: BoxDecoration(
+                      border: Border.all(
                         color: Colors.grey,
                         width: 1,
                       ),
@@ -703,7 +703,7 @@ class _addLocState extends State<addLoc> {
                       left: 10.0, right: 0, top: 10, bottom: 0),
                   child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
                     TextButton.icon(
-                      icon: Icon(Icons.image),
+                      icon: const Icon(Icons.image),
                       onPressed: () {
                         setState(() {
                           getCurrentLocation4();
@@ -750,7 +750,7 @@ class _addLocState extends State<addLoc> {
                             isShow = true;
                           });
                           const String url =
-                              'http://13.234.208.246/api/auth/UpdateLocationImage';
+                              'http://192.168.54.114:8000/api/auth/UpdateLocationImage';
                           Map data = {
                             "app_id": Ids,
                             "location_img1": {
@@ -828,7 +828,7 @@ class _addLocState extends State<addLoc> {
                               context,
                               PageRouteBuilder(
                                   transitionDuration:
-                                      Duration(milliseconds: 250),
+                                      const Duration(milliseconds: 250),
                                   transitionsBuilder: (context, animation,
                                       animationTime, child) {
                                     return ScaleTransition(
@@ -843,11 +843,12 @@ class _addLocState extends State<addLoc> {
                                         sessionToken: sessionToken,
                                         userName: userName,
                                         userEmail: userEmail,
-                                        userGroup: userGroup);
+                                        userGroup: userGroup,
+                                        userId: userId);
                                   }));
                         }
                       },
-                      child: Text(
+                      child: const Text(
                         'Submit',
                         style: TextStyle(
                           color: Colors.black,

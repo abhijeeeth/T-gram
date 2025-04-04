@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,12 +11,14 @@ import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 import 'package:tigramnks/newPassword.dart';
 
 class forgetPassword extends StatefulWidget {
+  const forgetPassword({super.key});
+
   @override
   _forgetPasswordState createState() => _forgetPasswordState();
 }
 
 class _forgetPasswordState extends State<forgetPassword> {
-  int userId;
+  late int userId;
   bool flag = false;
   bool NewPage = false;
   TextEditingController f_Email = TextEditingController();
@@ -25,13 +29,12 @@ class _forgetPasswordState extends State<forgetPassword> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: NewGradientAppBar(
+        appBar: AppBar(
           title: const Text(
             "Forget Password",
             textAlign: TextAlign.left,
           ),
-          gradient: LinearGradient(
-              colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+
           // backgroundColor: Colors.blueGrey,
         ),
         body: SingleChildScrollView(
@@ -53,7 +56,7 @@ class _forgetPasswordState extends State<forgetPassword> {
                     color: Colors.white,
                     border:
                         Border.all(color: Colors.lightGreenAccent, width: 2),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         color: Colors.black,
                         blurRadius: 2.0,
@@ -69,7 +72,6 @@ class _forgetPasswordState extends State<forgetPassword> {
                       left: 15, right: 15, top: 25, bottom: 10),
                   child: Column(
                     children: <Widget>[
-       
                       Padding(
                         padding: const EdgeInsets.only(
                             left: 15.0, right: 15.0, top: 15, bottom: 0),
@@ -80,7 +82,7 @@ class _forgetPasswordState extends State<forgetPassword> {
                               border: OutlineInputBorder(
                                 borderSide: BorderSide(width: 2),
                                 borderRadius: const BorderRadius.all(
-                                    const Radius.circular(20.0)),
+                                    Radius.circular(20.0)),
                               ),
                               prefixIcon:
                                   Icon(Icons.supervised_user_circle_outlined),
@@ -98,7 +100,7 @@ class _forgetPasswordState extends State<forgetPassword> {
                               border: OutlineInputBorder(
                                 borderSide: BorderSide(width: 2),
                                 borderRadius: const BorderRadius.all(
-                                    const Radius.circular(20.0)),
+                                    Radius.circular(20.0)),
                               ),
                               prefixIcon: Icon(Icons.mobile_friendly_outlined),
                               labelText: 'Mobile',
@@ -124,7 +126,7 @@ class _forgetPasswordState extends State<forgetPassword> {
                               ),
                             ),
                             onPressed: () async {
-                              if (f_Mobile.text.length == 0) {
+                              if (f_Mobile.text.isEmpty) {
                                 Fluttertoast.showToast(
                                     msg: 'Please fill feild',
                                     toastLength: Toast.LENGTH_SHORT,
@@ -136,7 +138,7 @@ class _forgetPasswordState extends State<forgetPassword> {
                               } else {
                                 NewPage = true;
                                 const String url =
-                                    'http://13.234.208.246/api/auth/forgotpassword';
+                                    'http://192.168.54.114:8000/api/auth/forgotpassword';
                                 Map data = {
                                   "username":
                                       f_userName.text.replaceAll(' ', ''),
@@ -214,8 +216,7 @@ class _forgetPasswordState extends State<forgetPassword> {
                                     bottom: 0),
                                 //padding: EdgeInsets.symmetric(horizontal: 15),
                                 child: Text(
-                                  'OTP Send on Email OR Mobile Number: ' +
-                                      f_Mobile.text,
+                                  'OTP Send on Email OR Mobile Number: ${f_Mobile.text}',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -244,7 +245,7 @@ class _forgetPasswordState extends State<forgetPassword> {
                                       border: OutlineInputBorder(
                                         borderSide: BorderSide(width: 2),
                                         borderRadius: const BorderRadius.all(
-                                            const Radius.circular(20.0)),
+                                            Radius.circular(20.0)),
                                       ),
                                       prefixIcon:
                                           Icon(Icons.mobile_friendly_outlined),
@@ -272,7 +273,7 @@ class _forgetPasswordState extends State<forgetPassword> {
                                       ),
                                     ),
                                     onPressed: () async {
-                                      if (otp.text.length == 0) {
+                                      if (otp.text.isEmpty) {
                                         Fluttertoast.showToast(
                                             msg: 'Please Enter OTP',
                                             toastLength: Toast.LENGTH_LONG,
@@ -283,7 +284,7 @@ class _forgetPasswordState extends State<forgetPassword> {
                                             fontSize: 18.0);
                                       } else {
                                         const String url =
-                                            'http://13.234.208.246/api/auth/forgotverifyotp';
+                                            'http://192.168.54.114:8000/api/auth/forgotverifyotp';
                                         Map data = {
                                           "phone":
                                               f_Mobile.text.replaceAll(' ', ''),
@@ -350,6 +351,7 @@ class _forgetPasswordState extends State<forgetPassword> {
                             color: Colors.white,
                           );
                         }
+                        return Container(); // Add this line
                       }),
                     ],
                   ))

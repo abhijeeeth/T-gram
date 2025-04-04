@@ -22,14 +22,15 @@ class transiView extends StatefulWidget {
   String Ids;
 
   transiView(
-      {this.sessionToken,
-      this.userName,
-      this.userEmail,
-      this.userId,
-      this.formOneIndex,
-      this.village_,
-      this.userGroup,
-      this.Ids});
+      {super.key,
+      required this.sessionToken,
+      required this.userName,
+      required this.userEmail,
+      required this.userId,
+      required this.formOneIndex,
+      required this.village_,
+      required this.userGroup,
+      required this.Ids});
 
   @override
   State<transiView> createState() => _transiViewState(formOneIndex,
@@ -59,7 +60,7 @@ class _transiViewState extends State<transiView> {
   TextEditingController lengthController = TextEditingController();
   TextEditingController breadthController = TextEditingController();
 
-  List<bool> tableVisibility;
+  late List<bool> tableVisibility;
   List<CardData> cardDataList = [];
   List<String> generatedStrings = [];
 
@@ -97,7 +98,7 @@ class _transiViewState extends State<transiView> {
   Future<void> fetchData() async {
     await View_Record();
     setState(() {
-      if (responseJSON_O != null && responseJSON_O.containsKey("timber")) {
+      if (responseJSON_O.containsKey("timber")) {
         tableVisibility =
             List.generate(responseJSON_O['timber'].length, (index) => false);
       }
@@ -141,11 +142,11 @@ class _transiViewState extends State<transiView> {
   String ID_num = "";
   String Transit_Id = "";
   var timber;
-  String districtData;
+  late String districtData;
   List<String> districts = [];
   bool isShow = false;
   List<Widget> additionalInfoContainers = [];
-  Map<String, dynamic> responseJSON_O;
+  late Map<String, dynamic> responseJSON_O;
   _transiViewState(this.formOneIndex, this.sessionToken, this.userName,
       this.userEmail, this.userId, this.village__, this.userGroup, this.Ids);
 
@@ -170,7 +171,7 @@ class _transiViewState extends State<transiView> {
   // }
 
   View_Record() async {
-    String url = 'http://13.234.208.246/api/auth/CheckTransit/';
+    String url = 'http://192.168.54.114:8000/api/auth/CheckTransit/';
     Map data = {"app_id": Ids};
 
     var body = json.encode(data);
@@ -190,7 +191,7 @@ class _transiViewState extends State<transiView> {
 
       COUNT = responseJSON_O['timber'].length;
 
-      if (responseJSON_O != null && responseJSON_O.containsKey('timber')) {
+      if (responseJSON_O.containsKey('timber')) {
         // Access 'timber' here
         timber = responseJSON_O['timber'];
 
@@ -235,7 +236,7 @@ class _transiViewState extends State<transiView> {
       jsonList = parseJsonList(generatedStrings);
 
       // tableVisibility[index] = !tableVisibility[index];
-      if (cardDataList.length == 0) {
+      if (cardDataList.isEmpty) {
         visibleC = false;
       } else if (cardDataList.isNotEmpty) {
         visibleC = true;
@@ -243,7 +244,7 @@ class _transiViewState extends State<transiView> {
     });
   }
 
-  List<Map<String, dynamic>> jsonDataList;
+  late List<Map<String, dynamic>> jsonDataList;
 
   List<Map<String, dynamic>> convertCardDataListToJsonList(
       List<CardData> cardDataList) {
@@ -288,7 +289,7 @@ class _transiViewState extends State<transiView> {
       onWillPop: _onBackPressed,
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: NewGradientAppBar(
+        appBar: AppBar(
           title: const Text(
             "TRANSIT PASS ",
             style: TextStyle(
@@ -296,12 +297,10 @@ class _transiViewState extends State<transiView> {
               color: Colors.white,
             ),
           ),
-          gradient: LinearGradient(
-              colors: [HexColor("#26f596"), HexColor("#0499f2")]),
           elevation: 0,
         ),
         body: responseJSON_O == null
-            ? CircularProgressIndicator() // Display loading indicator while fetching data
+            ? const CircularProgressIndicator() // Display loading indicator while fetching data
             : SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
@@ -311,7 +310,7 @@ class _transiViewState extends State<transiView> {
                         borderRadius: BorderRadius.circular(12.0),
                         color: Colors.white,
                         border: Border.all(color: Colors.blueGrey, width: 1),
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             color: Colors.black,
                             blurRadius: 2.0,
@@ -325,49 +324,49 @@ class _transiViewState extends State<transiView> {
                       child: Column(
                         children: <Widget>[
                           Card(
+                            elevation: 2,
                             child: ListTile(
-                              title: Text(
+                              title: const Text(
                                 'Transit Pass ID',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black),
                               ),
                               trailing: Text(Transit_Id,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.blue)),
                             ),
-                            elevation: 2,
                           ),
                           Card(
+                            elevation: 2,
                             child: ListTile(
-                              title: Text(
+                              title: const Text(
                                 'Applicant Name',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black),
                               ),
                               trailing: Text(Name,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.blue)),
                             ),
-                            elevation: 2,
                           ),
                           Card(
+                            elevation: 2,
                             child: ListTile(
-                              title: Text(
+                              title: const Text(
                                 "ID Number",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black),
                               ),
                               trailing: Text(ID_num,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.blue)),
                             ),
-                            elevation: 2,
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
@@ -388,8 +387,7 @@ class _transiViewState extends State<transiView> {
                           SingleChildScrollView(
                             child: Column(
                               children: List.generate(
-                                responseJSON_O != null &&
-                                        responseJSON_O.containsKey("timber")
+                                responseJSON_O.containsKey("timber")
                                     ? responseJSON_O['timber'].length
                                     : 0,
                                 (index) {
@@ -408,7 +406,7 @@ class _transiViewState extends State<transiView> {
                                                 BorderRadius.circular(10),
                                           ),
                                           child: DataTable(
-                                            columns: [
+                                            columns: const [
                                               DataColumn(
                                                   label: Text('Specias Name')),
                                               DataColumn(label: Text('Length')),
@@ -451,27 +449,26 @@ class _transiViewState extends State<transiView> {
                                                               builder: (context,
                                                                   setState) {
                                                                 return AlertDialog(
-                                                                  title: Text(
+                                                                  title: const Text(
                                                                       'ADD LOG'),
                                                                   content:
                                                                       Column(
                                                                     mainAxisSize:
                                                                         MainAxisSize
                                                                             .min,
-                                                                    children: <
-                                                                        Widget>[
+                                                                    children: <Widget>[
                                                                       DropdownButton<
                                                                           String>(
                                                                         value:
                                                                             selectedValue,
-                                                                        items: <
-                                                                            String>[
+                                                                        items:
+                                                                            <String>[
                                                                           'Select Product Type',
                                                                           'Round Log',
                                                                           'Firewood',
                                                                           'Sawn Size',
                                                                         ].map((String
-                                                                            value) {
+                                                                                value) {
                                                                           return DropdownMenuItem<
                                                                               String>(
                                                                             value:
@@ -481,12 +478,12 @@ class _transiViewState extends State<transiView> {
                                                                           );
                                                                         }).toList(),
                                                                         onChanged:
-                                                                            (String
+                                                                            (String?
                                                                                 newValue) {
                                                                           setState(
                                                                               () {
                                                                             selectedValue =
-                                                                                newValue;
+                                                                                newValue ?? 'Select Product Type';
                                                                             if (selectedValue ==
                                                                                 'Round Log') {
                                                                               round = true;
@@ -520,7 +517,7 @@ class _transiViewState extends State<transiView> {
                                                                           controller:
                                                                               heightController,
                                                                           decoration:
-                                                                              InputDecoration(labelText: 'Height (M)'),
+                                                                              const InputDecoration(labelText: 'Height (M)'),
                                                                         ),
                                                                       ),
                                                                       Visibility(
@@ -531,7 +528,7 @@ class _transiViewState extends State<transiView> {
                                                                           controller:
                                                                               mdhController,
                                                                           decoration:
-                                                                              InputDecoration(labelText: 'MDH (cm)'),
+                                                                              const InputDecoration(labelText: 'MDH (cm)'),
                                                                         ),
                                                                       ),
                                                                       Visibility(
@@ -542,7 +539,7 @@ class _transiViewState extends State<transiView> {
                                                                           controller:
                                                                               weightController,
                                                                           decoration:
-                                                                              InputDecoration(labelText: 'Weight (MT)'),
+                                                                              const InputDecoration(labelText: 'Weight (MT)'),
                                                                         ),
                                                                       ),
                                                                       Visibility(
@@ -553,7 +550,7 @@ class _transiViewState extends State<transiView> {
                                                                           controller:
                                                                               lengthController,
                                                                           decoration:
-                                                                              InputDecoration(labelText: 'Length (M)'),
+                                                                              const InputDecoration(labelText: 'Length (M)'),
                                                                         ),
                                                                       ),
                                                                       Visibility(
@@ -564,7 +561,7 @@ class _transiViewState extends State<transiView> {
                                                                           controller:
                                                                               breadthController,
                                                                           decoration:
-                                                                              InputDecoration(labelText: 'Breadth (M)'),
+                                                                              const InputDecoration(labelText: 'Breadth (M)'),
                                                                         ),
                                                                       ),
                                                                       Visibility(
@@ -575,15 +572,14 @@ class _transiViewState extends State<transiView> {
                                                                           controller:
                                                                               heightController2,
                                                                           decoration:
-                                                                              InputDecoration(labelText: 'Height (M)'),
+                                                                              const InputDecoration(labelText: 'Height (M)'),
                                                                         ),
                                                                       ),
                                                                     ],
                                                                   ),
-                                                                  actions: <
-                                                                      Widget>[
+                                                                  actions: <Widget>[
                                                                     TextButton(
-                                                                      child: Text(
+                                                                      child: const Text(
                                                                           'SAVE'),
                                                                       onPressed:
                                                                           () {
@@ -700,7 +696,7 @@ class _transiViewState extends State<transiView> {
                                                                       },
                                                                     ),
                                                                     TextButton(
-                                                                      child: Text(
+                                                                      child: const Text(
                                                                           'CLOSE'),
                                                                       onPressed:
                                                                           () {
@@ -717,7 +713,8 @@ class _transiViewState extends State<transiView> {
                                                           },
                                                         );
                                                       },
-                                                      child: Text('Add Log'),
+                                                      child:
+                                                          const Text('Add Log'),
                                                     ),
                                                   ),
                                                 ],
@@ -726,14 +723,14 @@ class _transiViewState extends State<transiView> {
                                           ),
                                         ),
                                       ),
-                                      SizedBox(height: 20),
+                                      const SizedBox(height: 20),
                                     ],
                                   );
                                 },
                               ),
                             ),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Padding(
                             padding: const EdgeInsets.only(
                                 left: 15.0, right: 15.0, top: 10, bottom: 0),
@@ -750,13 +747,13 @@ class _transiViewState extends State<transiView> {
                               ]),
                             ),
                           ),
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
                           Visibility(
                             visible: visibleC,
                             // Update this as needed
                             child: Container(
                               height: 200, // Adjust the height as needed
-                              padding: EdgeInsets.only(
+                              padding: const EdgeInsets.only(
                                   right: 10,
                                   left: 10,
                                   top: 20,
@@ -771,7 +768,7 @@ class _transiViewState extends State<transiView> {
                               child: Row(
                                 children: [
                                   if (cardDataList.length > 1)
-                                    Icon(
+                                    const Icon(
                                       Icons.arrow_downward,
                                       size: 22,
                                       color:
@@ -812,7 +809,7 @@ class _transiViewState extends State<transiView> {
                                                     Expanded(
                                                       child: Text(
                                                         '    $label:',
-                                                        style: TextStyle(
+                                                        style: const TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold,
                                                         ),
@@ -850,7 +847,7 @@ class _transiViewState extends State<transiView> {
                                                       });
                                                     }
                                                   },
-                                                  child: Text('Delete'),
+                                                  child: const Text('Delete'),
                                                 ),
                                               ],
                                             ),
@@ -863,7 +860,6 @@ class _transiViewState extends State<transiView> {
                               ),
                             ),
                           ),
-
                           Padding(
                             padding: const EdgeInsets.only(
                                 left: 15.0, right: 15.0, top: 15, bottom: 0),
@@ -882,7 +878,6 @@ class _transiViewState extends State<transiView> {
                                     fontWeight: FontWeight.bold,
                                     color: Colors.blue)),
                           ),
-                         
                           Container(
                             margin:
                                 const EdgeInsets.only(top: 10.0, bottom: 30.0),
@@ -898,8 +893,7 @@ class _transiViewState extends State<transiView> {
                                 });
                                 jsonDataList =
                                     convertCardDataListToJsonList(cardDataList);
-                                if (cardDataList == null ||
-                                    cardDataList.isEmpty) {
+                                if (cardDataList.isEmpty) {
                                   Fluttertoast.showToast(
                                       msg: "Please add Transit Logs",
                                       toastLength: Toast.LENGTH_SHORT,
@@ -919,7 +913,7 @@ class _transiViewState extends State<transiView> {
                                       fontSize: 18.0);
                                 } else {
                                   const String url =
-                                      'http://13.234.208.246/api/auth/apply_orign_transit/';
+                                      'http://192.168.54.114:8000/api/auth/apply_orign_transit/';
                                   Map data = {
                                     "app_id": Ids,
                                     "dest_state": "Kerala",
@@ -968,7 +962,7 @@ class _transiViewState extends State<transiView> {
                                       context,
                                       PageRouteBuilder(
                                           transitionDuration:
-                                              Duration(milliseconds: 250),
+                                              const Duration(milliseconds: 250),
                                           transitionsBuilder: (context,
                                               animation, animationTime, child) {
                                             return ScaleTransition(
@@ -984,11 +978,15 @@ class _transiViewState extends State<transiView> {
                                                 userName: userName,
                                                 userEmail: userEmail,
                                                 userId: userId,
-                                                userGroup: userGroup);
+                                                userGroup: userGroup,
+                                                userMobile: '',
+                                                userAddress: '',
+                                                userProfile: '',
+                                                userCato: '');
                                           }));
                                 }
                               },
-                              child: Text(
+                              child: const Text(
                                 '   APPLY FOR \nTRANSIT PASS',
                                 style: TextStyle(
                                   color: Colors.black,
@@ -1009,25 +1007,25 @@ class _transiViewState extends State<transiView> {
     );
   }
 
-  Future<bool> _onBackPressed() {
-    return showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: const Text('Do you want to go previous page'),
-            actions: <Widget>[
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(false),
-                child: const Text("NO"),
-              ),
-              const SizedBox(height: 16),
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(true),
-                child: const Text("YES"),
-              ),
-            ],
+  Future<bool> _onBackPressed() async {
+    final shouldPop = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Do you want to go previous page'),
+        actions: <Widget>[
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(false),
+            child: const Text("NO"),
           ),
-        ) ??
-        false;
+          const SizedBox(height: 16),
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(true),
+            child: const Text("YES"),
+          ),
+        ],
+      ),
+    );
+    return shouldPop ?? false;
   }
 }
 

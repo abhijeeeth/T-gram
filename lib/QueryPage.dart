@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'dart:io';
 import 'dart:developer';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,12 +17,12 @@ class QueryPage extends StatefulWidget {
   String userMobile;
   String userAddress;
   QueryPage(
-      {this.userId,
-      this.sessionToken,
-      this.userName,
-      this.userEmail,
-      this.userMobile,
-      this.userAddress});
+      {required this.userId,
+      required this.sessionToken,
+      required this.userName,
+      required this.userEmail,
+      required this.userMobile,
+      required this.userAddress});
 
   @override
   _QueryPageState createState() => _QueryPageState(
@@ -36,24 +36,35 @@ class _QueryPageState extends State<QueryPage> {
   String userEmail;
   String userMobile;
   String userAddress;
-  Barcode result;
-  QRViewController controller;
+  // Changed from late to nullable to prevent initialization error
+  Barcode? result;
+  late MobileScannerController controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   _QueryPageState(this.userId, this.sessionToken, this.userName, this.userEmail,
       this.userMobile, this.userAddress);
 
   @override
+  void initState() {
+    super.initState();
+    controller = MobileScannerController();
+  }
+
+  @override
   void reassemble() {
     super.reassemble();
     if (Platform.isAndroid) {
-      controller.pauseCamera();
+      controller.stop();
     }
-    controller.resumeCamera();
+    controller.start();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("QR Scanner"),
+        elevation: 0,
+      ),
       body: Column(
         children: <Widget>[
           Expanded(flex: 3, child: _buildQrView(context)),
@@ -64,17 +75,10 @@ class _QueryPageState extends State<QueryPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
+                  // Modified to handle null result
                   if (result != null)
-                    // Row(children: <Widget>[
-                    //   Container(
-                    //       child: new ElevatedButton(
-                    //     onPressed: _launchURL,
-                    //     child: new Text('Show Flutter homepage'),
-                    //   ))
-                    // ])
-
                     Text(
-                        'Barcode Type: ${describeEnum(result.format)}   Data: ${result.code}')
+                        'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.rawValue}')
                   else
                     const Text('Scan a code'),
                   Row(
@@ -84,49 +88,25 @@ class _QueryPageState extends State<QueryPage> {
                       Container(
                         margin: const EdgeInsets.only(top: 4, right: 50),
                         child: ElevatedButton(
-                            onPressed: () async {
-                              await controller?.toggleFlash();
-                              setState(() {});
-                            },
-                            child: FutureBuilder(
-                              future: controller?.getFlashStatus(),
-                              builder: (context, snapshot) {
-                                return Text('Flash',
-                                    // return Text('Flash: ${snapshot.data}',
-                                    style: TextStyle(fontSize: 20));
-                              },
-                            )),
+                          onPressed: () async {
+                            await controller.toggleTorch();
+                            setState(() {});
+                          },
+                          // Replace FutureBuilder with a simple Text widget
+                          child: const Text('Flash',
+                              style: TextStyle(fontSize: 20)),
+                        ),
                       ),
                       Container(
                         margin: const EdgeInsets.only(top: 4),
                         child: ElevatedButton(
                           onPressed: () async {
-                            Navigator.of(context).pop(true);
+                            Navigator.of(context).pop();
                           },
                           child: const Text('Back',
                               style: TextStyle(fontSize: 20)),
                         ),
                       )
-
-                      // Container(
-                      //   margin: const EdgeInsets.all(8),
-                      //   child: ElevatedButton(
-                      //       onPressed: () async {
-                      //         await controller?.flipCamera();
-                      //         setState(() {});
-                      //       },
-                      //       child: FutureBuilder(
-                      //         future: controller?.getCameraInfo(),
-                      //         builder: (context, snapshot) {
-                      //           if (snapshot.data != null) {
-                      //             return Text(
-                      //                 'Camera facing ${describeEnum(snapshot.data)}');
-                      //           } else {
-                      //             return const Text('loading');
-                      //           }
-                      //         },
-                      //       )),
-                      // )
                     ],
                   ),
                   Row(
@@ -136,9 +116,9 @@ class _QueryPageState extends State<QueryPage> {
                             const EdgeInsets.only(top: 4, right: 50, left: 5),
                         child: ElevatedButton(
                           onPressed: () async {
-                            await controller?.pauseCamera();
+                            await controller.stop();
                           },
-                          child: const Text('pause',
+                          child: const Text('Pause',
                               style: TextStyle(fontSize: 20)),
                         ),
                       ),
@@ -146,9 +126,9 @@ class _QueryPageState extends State<QueryPage> {
                         margin: const EdgeInsets.only(top: 4, right: 14),
                         child: ElevatedButton(
                           onPressed: () async {
-                            await controller?.resumeCamera();
+                            await controller.start();
                           },
-                          child: const Text('start',
+                          child: const Text('Start',
                               style: TextStyle(fontSize: 20)),
                         ),
                       )
@@ -160,23 +140,44 @@ class _QueryPageState extends State<QueryPage> {
                         margin: const EdgeInsets.only(top: 8),
                         child: ElevatedButton(
                             onPressed: () async {
-                              String requestCode = result.code;
-                              String modifiedCode =
-                                  requestCode.replaceAll(":8000", "");
-                              await launch(modifiedCode);
-                              print("----QRURI----");
-                              print(result.code);
-                              String newString = result.code.substring(39, 42);
-                              print(userId);
-                              //String newString = result.code.substring(0, result.code.indexOf('/SA'));
-                              //    var newString = result.code.substring((result.code.length - 5).clamp(0, result.code.length));
-                              print(newString);
+                              // Add null check before accessing result
+                              if (result != null && result!.rawValue != null) {
+                                String requestCode = result!.rawValue!;
+                                String modifiedCode =
+                                    requestCode.replaceAll(":8000", "");
+
+                                // Use launchUrl with correct Uri parsing
+                                if (await canLaunchUrl(
+                                    Uri.parse(modifiedCode))) {
+                                  await launchUrl(Uri.parse(modifiedCode));
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                            'Could not launch URL: $modifiedCode')),
+                                  );
+                                }
+
+                                print("----QRURI----");
+                                print(result!.rawValue);
+
+                                // Safely extract substring if possible
+                                if (result!.rawValue!.length >= 42) {
+                                  String newString =
+                                      result!.rawValue!.substring(39, 42);
+                                  print(newString);
+                                }
+                                print(userId);
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('No QR code scanned yet')),
+                                );
+                              }
                             },
-                            child: Icon(
+                            child: const Icon(
                               Icons.camera,
-                            )
-                            // child: Text('Scan', style: TextStyle(fontSize: 20)),
-                            ),
+                            )),
                       ),
                     ],
                   )
@@ -189,58 +190,33 @@ class _QueryPageState extends State<QueryPage> {
     );
   }
 
-  // _launchURL() async {
-  //   if (await canLaunchUrl(Uri.parse(result.code))) {
-  //     await launchUrl (Uri.parse(result.code));
-  //   } else {
-  //     throw 'Could not launch ${result.code}';
-  //   }
-  // }
-
   Widget _buildQrView(BuildContext context) {
-    // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
-    var scanArea = (MediaQuery.of(context).size.width < 400 ||
-            MediaQuery.of(context).size.height < 400)
-        ? 150.0
-        : 300.0;
-    // To ensure the Scanner view is properly sizes after rotation
-    // we need to listen for Flutter SizeChanged notification and update controller
-    return QRView(
-      key: qrKey,
-      onQRViewCreated: _onQRViewCreated,
-      overlay: QrScannerOverlayShape(
-          borderColor: Colors.red,
-          borderRadius: 10,
-          borderLength: 30,
-          borderWidth: 10,
-          cutOutSize: scanArea),
-      onPermissionSet: (ctrl, p) => _onPermissionSet(context, ctrl, p),
+    return MobileScanner(
+      controller: controller,
+      onDetect: (capture) {
+        final List<Barcode> barcodes = capture.barcodes;
+        if (barcodes.isNotEmpty) {
+          setState(() {
+            result = barcodes.first;
+          });
+        }
+      },
     );
   }
 
-  void _onQRViewCreated(QRViewController controller) {
-    setState(() {
-      this.controller = controller;
-    });
-    controller.scannedDataStream.listen((scanData) {
-      setState(() {
-        result = scanData;
-      });
-    });
-  }
-
-  void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
+  void _onPermissionSet(
+      BuildContext context, MobileScannerController ctrl, bool p) {
     log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
     if (!p) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('no Permission')),
+        const SnackBar(content: Text('No Permission')),
       );
     }
   }
 
   @override
   void dispose() {
-    controller?.dispose();
+    controller.dispose();
     super.dispose();
   }
 }

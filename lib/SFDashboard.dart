@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'dart:convert';
 import 'dart:convert';
 
@@ -31,18 +33,18 @@ class SFDashboard extends StatefulWidget {
   List<String> Dist;
   List<String> Range;
   SFDashboard(
-      {this.userId,
-      this.userName,
-      this.userEmail,
-      this.sessionToken,
-      this.userGroup,
-      this.dropdownValue,
-      this.userMobile,
-      this.userProfile,
-      this.userAddress,
-      this.Dist_Range,
-      this.Dist,
-      this.Range});
+      {required this.userId,
+      required this.userName,
+      required this.userEmail,
+      required this.sessionToken,
+      required this.userGroup,
+      required this.dropdownValue,
+      required this.userMobile,
+      required this.userProfile,
+      required this.userAddress,
+      required this.Dist_Range,
+      required this.Dist,
+      required this.Range});
   @override
   _SFDashboardState createState() => _SFDashboardState(
       userId,
@@ -115,7 +117,7 @@ class _SFDashboardState extends State<SFDashboard> {
 
 //---------------------Pie-chart------------------
   void pie_chart() async {
-    const String url = 'http://13.234.208.246/api/auth/dashbord_chart';
+    const String url = 'http://192.168.54.114:8000/api/auth/dashbord_chart';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -134,7 +136,7 @@ class _SFDashboardState extends State<SFDashboard> {
 
 //------------------End--Pie--Chart--------------
 
-  String url = " http://13.234.208.246/api/auth/new_transit_pass_pdf/90/";
+  String url = " http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/90/";
 
   //---------------Table ----------------------
 
@@ -269,7 +271,7 @@ class _SFDashboardState extends State<SFDashboard> {
     is_form_two.clear();
     //---------------clear---------------
     const String url =
-        'http://13.234.208.246/api/auth/sfdPendingListViewApplication';
+        'http://192.168.54.114:8000/api/auth/sfdPendingListViewApplication';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -377,7 +379,7 @@ class _SFDashboardState extends State<SFDashboard> {
     is_form_two1.clear();
     //----------clear-----------
     const String url =
-        'http://13.234.208.246/api/auth/sfdApprovedListViewApplication';
+        'http://192.168.54.114:8000/api/auth/sfdApprovedListViewApplication';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -488,7 +490,8 @@ class _SFDashboardState extends State<SFDashboard> {
   void DeemedApp() async {
     print("Deemed Application");
     sr2.clear();
-    const String url = ' http://13.234.208.246/api/auth/DeemedApprovedList';
+    const String url =
+        ' http://192.168.54.114:8000/api/auth/DeemedApprovedList';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -554,7 +557,8 @@ class _SFDashboardState extends State<SFDashboard> {
   void NocForm() async {
     print("Noc Application");
     sr3.clear();
-    const String url = 'http://13.234.208.246/api/auth/NocListApplication/';
+    const String url =
+        'http://192.168.54.114:8000/api/auth/NocListApplication/';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -746,6 +750,7 @@ class _SFDashboardState extends State<SFDashboard> {
         return 'Yet to Assign for Stage 1';
       }
     }
+    return 'N/A';
   }
 
   int daysBetween(DateTime from) {
@@ -763,17 +768,15 @@ class _SFDashboardState extends State<SFDashboard> {
   int _currentSortColumn = 0;
   bool _isAscending = true;
 
-  String SelectedRange;
-  String SelectedRange1;
+  String SelectedRange = '';
+  String SelectedRange1 = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: NewGradientAppBar(
+      appBar: AppBar(
         title: Text("State Dashboard"),
-        gradient:
-            LinearGradient(colors: [HexColor("#26f596"), HexColor("#0499f2")]),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -802,7 +805,7 @@ class _SFDashboardState extends State<SFDashboard> {
                   [Colors.cyan],
                   [Colors.blue]
                 ],
-                onToggle: _handleRadioValueChange,
+                onToggle: (index) => _handleRadioValueChange(index!),
               ),
             ),
             Container(
@@ -845,9 +848,9 @@ class _SFDashboardState extends State<SFDashboard> {
                         height: 2,
                         color: Colors.grey,
                       ),*/
-                    onChanged: (String data) {
+                    onChanged: (String? data) {
                       setState(() {
-                        SelectedRange = data;
+                        SelectedRange = data!;
                         PendingApp();
                         ApprovedApp();
                         //getRange();
@@ -892,9 +895,9 @@ class _SFDashboardState extends State<SFDashboard> {
                         height: 2,
                         color: Colors.grey,
                       ),*/
-                    onChanged: (String data) {
+                    onChanged: (String? data) {
                       setState(() {
-                        SelectedRange1 = data;
+                        SelectedRange1 = data!;
                         PendingApp();
                         ApprovedApp();
                       });
@@ -971,7 +974,7 @@ class _SFDashboardState extends State<SFDashboard> {
                           icon: Icon(Icons.file_download),
                           onPressed: () async {
                             await launch(
-                                " http://13.234.208.246/api/auth/summary_report/");
+                                " http://192.168.54.114:8000/api/auth/summary_report/");
                           },
                           label: Text("Download"),
                         ),
@@ -998,13 +1001,13 @@ class _SFDashboardState extends State<SFDashboard> {
                     padding: const EdgeInsets.only(
                         left: 2, right: 2, top: 2, bottom: 2),
                     child: Scrollbar(
-                        isAlwaysShown: true,
+                        thumbVisibility: true,
                         thickness: 15,
                         child: SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             padding: const EdgeInsets.only(bottom: 15),
                             child: Scrollbar(
-                                isAlwaysShown: true,
+                                thumbVisibility: true,
                                 thickness: 15,
                                 child: SingleChildScrollView(
                                     scrollDirection: Axis.vertical,
@@ -1246,6 +1249,10 @@ class _SFDashboardState extends State<SFDashboard> {
                                                                                 sessionToken: sessionToken,
                                                                                 userGroup: userGroup,
                                                                                 Ids: IDS,
+                                                                                userId: userId,
+                                                                                Range: Range,
+                                                                                userName: userName,
+                                                                                userEmail: userEmail,
                                                                               )));
                                                                 }
                                                               },
@@ -1268,14 +1275,14 @@ class _SFDashboardState extends State<SFDashboard> {
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    " http://13.234.208.246/api/auth/new_transit_pass_pdf/" +
+                                                                    " http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/" +
                                                                         Ids[int.parse(
                                                                             value)] +
                                                                         "/");
                                                                 // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                               },
                                                               // onPressed: ()async{
-                                                              //  await launch(" http://13.234.208.246/api/auth/new_transit_pass_pdf/"+Ids[int.parse(value)]+"/");
+                                                              //  await launch(" http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/"+Ids[int.parse(value)]+"/");
                                                               //   // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                               // },
                                                             ),
@@ -1289,7 +1296,7 @@ class _SFDashboardState extends State<SFDashboard> {
                                                             onPressed:
                                                                 () async {
                                                               await launch(
-                                                                  "http://13.234.208.246/api/auth/new_user_report/" +
+                                                                  "http://192.168.54.114:8000/api/auth/new_user_report/" +
                                                                       Ids[int.parse(
                                                                           value)] +
                                                                       "/");
@@ -1313,7 +1320,7 @@ class _SFDashboardState extends State<SFDashboard> {
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    " http://13.234.208.246/api/auth/qr_code_pdf/" +
+                                                                    " http://192.168.54.114:8000/api/auth/qr_code_pdf/" +
                                                                         Ids[int.parse(
                                                                             value)] +
                                                                         "/");
@@ -1385,13 +1392,13 @@ class _SFDashboardState extends State<SFDashboard> {
                     padding: const EdgeInsets.only(
                         left: 2, right: 2, top: 2, bottom: 2),
                     child: Scrollbar(
-                        isAlwaysShown: true,
+                        thumbVisibility: true,
                         thickness: 15,
                         child: SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             padding: const EdgeInsets.only(bottom: 15),
                             child: Scrollbar(
-                                isAlwaysShown: true,
+                                thumbVisibility: true,
                                 thickness: 15,
                                 child: SingleChildScrollView(
                                     scrollDirection: Axis.vertical,
@@ -1621,6 +1628,10 @@ class _SFDashboardState extends State<SFDashboard> {
                                                                                 sessionToken: sessionToken,
                                                                                 userGroup: userGroup,
                                                                                 Ids: IDS,
+                                                                                userId: userId,
+                                                                                Range: Range,
+                                                                                userName: userName,
+                                                                                userEmail: userEmail,
                                                                               )));
                                                                 }
                                                               },
@@ -1643,7 +1654,7 @@ class _SFDashboardState extends State<SFDashboard> {
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    "http://13.234.208.246/api/auth/new_transit_pass_pdf/" +
+                                                                    "http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/" +
                                                                         Ids1[int.parse(
                                                                             value)] +
                                                                         "/");
@@ -1660,7 +1671,7 @@ class _SFDashboardState extends State<SFDashboard> {
                                                             onPressed:
                                                                 () async {
                                                               await launch(
-                                                                  "http://13.234.208.246/api/auth/new_user_report/" +
+                                                                  "http://192.168.54.114:8000/api/auth/new_user_report/" +
                                                                       Ids1[int.parse(
                                                                           value)] +
                                                                       "/");
@@ -1684,7 +1695,7 @@ class _SFDashboardState extends State<SFDashboard> {
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    "http://13.234.208.246/api/auth/qr_code_pdf/" +
+                                                                    "http://192.168.54.114:8000/api/auth/qr_code_pdf/" +
                                                                         Ids1[int.parse(
                                                                             value)] +
                                                                         "/");
@@ -1756,13 +1767,13 @@ class _SFDashboardState extends State<SFDashboard> {
                     padding: const EdgeInsets.only(
                         left: 2, right: 2, top: 2, bottom: 2),
                     child: Scrollbar(
-                        isAlwaysShown: true,
+                        thumbVisibility: true,
                         thickness: 15,
                         child: SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             padding: const EdgeInsets.only(bottom: 15),
                             child: Scrollbar(
-                                isAlwaysShown: true,
+                                thumbVisibility: true,
                                 thickness: 15,
                                 child: SingleChildScrollView(
                                     scrollDirection: Axis.vertical,
@@ -1916,6 +1927,10 @@ class _SFDashboardState extends State<SFDashboard> {
                                                                                 sessionToken: sessionToken,
                                                                                 userGroup: userGroup,
                                                                                 Ids: IDS,
+                                                                                userId: 0,
+                                                                                Range: [],
+                                                                                userEmail: '',
+                                                                                userName: '',
                                                                               )));
                                                                 }
                                                               },
@@ -1938,7 +1953,7 @@ class _SFDashboardState extends State<SFDashboard> {
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    " http://13.234.208.246/api/auth/new_transit_pass_pdf/" +
+                                                                    " http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/" +
                                                                         Ids[int.parse(
                                                                             value)] +
                                                                         "/");
@@ -1955,7 +1970,7 @@ class _SFDashboardState extends State<SFDashboard> {
                                                             onPressed:
                                                                 () async {
                                                               await launch(
-                                                                  " http://13.234.208.246/api/auth/new_user_report/" +
+                                                                  " http://192.168.54.114:8000/api/auth/new_user_report/" +
                                                                       Ids2[int.parse(
                                                                           value)] +
                                                                       "/");
@@ -1979,7 +1994,7 @@ class _SFDashboardState extends State<SFDashboard> {
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    " http://13.234.208.246/api/auth/qr_code_pdf/" +
+                                                                    " http://192.168.54.114:8000/api/auth/qr_code_pdf/" +
                                                                         Ids[int.parse(
                                                                             value)] +
                                                                         "/");
@@ -2051,13 +2066,13 @@ class _SFDashboardState extends State<SFDashboard> {
                     padding: const EdgeInsets.only(
                         left: 2, right: 2, top: 2, bottom: 2),
                     child: Scrollbar(
-                        isAlwaysShown: true,
+                        thumbVisibility: true,
                         thickness: 15,
                         child: SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             padding: const EdgeInsets.only(bottom: 15),
                             child: Scrollbar(
-                                isAlwaysShown: true,
+                                thumbVisibility: true,
                                 thickness: 15,
                                 child: SingleChildScrollView(
                                     scrollDirection: Axis.vertical,
@@ -2179,7 +2194,7 @@ class _SFDashboardState extends State<SFDashboard> {
                                                             onPressed:
                                                                 () async {
                                                               await launch(
-                                                                  "http://13.234.208.246/api/auth/new_noc_pdf/" +
+                                                                  "http://192.168.54.114:8000/api/auth/new_noc_pdf/" +
                                                                       Ids3[int.parse(
                                                                           value)] +
                                                                       "/");
@@ -2218,6 +2233,7 @@ class _SFDashboardState extends State<SFDashboard> {
                                               .toList(),
                                     ))))));
               }
+              return Container(); // Add this line
             }),
           ],
         ),
@@ -2310,6 +2326,9 @@ class _SFDashboardState extends State<SFDashboard> {
                                     userAddress: userAddress,
                                     Dist: Dist,
                                     Range: Range,
+                                    userId: userId,
+                                    dropdownValue: dropdownValue,
+                                    Dist_Range: Dist_Range,
                                   )));
                     }),
                 ListTile(
@@ -2323,8 +2342,16 @@ class _SFDashboardState extends State<SFDashboard> {
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     ),
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => QueryPage()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => QueryPage(
+                                  userId: userId,
+                                  sessionToken: sessionToken,
+                                  userName: userName,
+                                  userEmail: userEmail,
+                                  userMobile: userMobile,
+                                  userAddress: userAddress)));
                     }),
                 ListTile(
                     leading: Icon(
@@ -2337,7 +2364,8 @@ class _SFDashboardState extends State<SFDashboard> {
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     ),
                     onTap: () async {
-                      const String url = 'http://13.234.208.246/api/auth/logout/';
+                      const String url =
+                          'http://192.168.54.114:8000/api/auth/logout/';
                       await http.post(
                         Uri.parse(url),
                         headers: <String, String>{

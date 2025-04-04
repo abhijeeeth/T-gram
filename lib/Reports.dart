@@ -1,25 +1,26 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 import 'package:tigramnks/ViewReports.dart';
 
 class Reports extends StatefulWidget {
-  String sessionToken;
-  Reports({this.sessionToken});
+  String? sessionToken; // Made nullable
+  Reports({super.key, this.sessionToken});
   @override
   _ReportsState createState() => _ReportsState(sessionToken);
 }
 
 class _ReportsState extends State<Reports> {
-  String sessionToken;
+  String? sessionToken; // Made nullable
   _ReportsState(this.sessionToken);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: NewGradientAppBar(
+        appBar: AppBar(
           title: Text('List of Reports'),
-          gradient: LinearGradient(
-              colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+
           // backgroundColor: Colors.blueGrey,
           elevation: 0,
           //automaticallyImplyLeading: false,
@@ -47,6 +48,7 @@ class _ReportsState extends State<Reports> {
             child: ListView(
               children: <Widget>[
                 Card(
+                  elevation: 3,
                   child: ListTile(
                       title: Text('Application Received/Approved/Rejected'),
                       onTap: () {
@@ -55,13 +57,23 @@ class _ReportsState extends State<Reports> {
                             context,
                             MaterialPageRoute(
                                 builder: (_) => ViewReports(
-                                      sessionToken: sessionToken,
+                                      sessionToken: sessionToken ?? '',
                                       R1: R1,
+                                      R2: 0,
+                                      R3: 0,
+                                      R4: 0,
+                                      R5: 0,
+                                      R6: 0,
+                                      R7: 0,
+                                      R8: 0,
+                                      R9: 0,
+                                      R10: 0,
+                                      R11: 0,
                                     )));
                       }),
-                  elevation: 3,
                 ),
                 Card(
+                  elevation: 3,
                   child: ListTile(
                       title: Text('Reason For Rejection'),
                       onTap: () {
@@ -70,13 +82,23 @@ class _ReportsState extends State<Reports> {
                             context,
                             MaterialPageRoute(
                                 builder: (_) => ViewReports(
-                                      sessionToken: sessionToken,
+                                      sessionToken: sessionToken ?? '',
+                                      R1: 0,
                                       R2: R2,
+                                      R3: 0,
+                                      R4: 0,
+                                      R5: 0,
+                                      R6: 0,
+                                      R7: 0,
+                                      R8: 0,
+                                      R9: 0,
+                                      R10: 0,
+                                      R11: 0,
                                     )));
                       }),
-                  elevation: 3,
                 ),
                 Card(
+                  elevation: 3,
                   child: ListTile(
                       title: Text('Species-wise Volume & Tree Transport'),
                       onTap: () {
@@ -85,13 +107,23 @@ class _ReportsState extends State<Reports> {
                             context,
                             MaterialPageRoute(
                                 builder: (_) => ViewReports(
-                                      sessionToken: sessionToken,
+                                      sessionToken: sessionToken ?? '',
+                                      R1: 0,
+                                      R2: 0,
                                       R3: R3,
+                                      R4: 0,
+                                      R5: 0,
+                                      R6: 0,
+                                      R7: 0,
+                                      R8: 0,
+                                      R9: 0,
+                                      R10: 0,
+                                      R11: 0,
                                     )));
                       }),
-                  elevation: 3,
                 ),
                 Card(
+                  elevation: 3,
                   child: ListTile(
                       title: Text('Volume & No. of tree Transported'),
                       onTap: () {
@@ -100,13 +132,23 @@ class _ReportsState extends State<Reports> {
                             context,
                             MaterialPageRoute(
                                 builder: (_) => ViewReports(
-                                      sessionToken: sessionToken,
+                                      sessionToken: sessionToken ?? '',
+                                      R1: 0,
+                                      R2: 0,
+                                      R3: 0,
                                       R4: R4,
+                                      R5: 0,
+                                      R6: 0,
+                                      R7: 0,
+                                      R8: 0,
+                                      R9: 0,
+                                      R10: 0,
+                                      R11: 0,
                                     )));
                       }),
-                  elevation: 3,
                 ),
                 Card(
+                  elevation: 3,
                   child: ListTile(
                       title: Text(
                           'Species wise Total volume transported & Total  No of trees transported to each destination'),
@@ -116,13 +158,23 @@ class _ReportsState extends State<Reports> {
                             context,
                             MaterialPageRoute(
                                 builder: (_) => ViewReports(
-                                      sessionToken: sessionToken,
+                                      sessionToken: sessionToken ?? '',
+                                      R1: 0,
+                                      R2: 0,
+                                      R3: 0,
+                                      R4: 0,
                                       R5: R5,
+                                      R6: 0,
+                                      R7: 0,
+                                      R8: 0,
+                                      R9: 0,
+                                      R10: 0,
+                                      R11: 0,
                                     )));
                       }),
-                  elevation: 3,
                 ),
                 Card(
+                  elevation: 3,
                   child: ListTile(
                       title:
                           Text('Total volume transported to each destination'),
@@ -132,13 +184,23 @@ class _ReportsState extends State<Reports> {
                             context,
                             MaterialPageRoute(
                                 builder: (_) => ViewReports(
-                                      sessionToken: sessionToken,
+                                      sessionToken: sessionToken ?? '',
+                                      R1: 0,
+                                      R2: 0,
+                                      R3: 0,
+                                      R4: 0,
+                                      R5: 0,
                                       R6: R6,
+                                      R7: 0,
+                                      R8: 0,
+                                      R9: 0,
+                                      R10: 0,
+                                      R11: 0,
                                     )));
                       }),
-                  elevation: 3,
                 ),
                 Card(
+                  elevation: 3,
                   child: ListTile(
                       title: Text('Time takes for application'),
                       onTap: () {
@@ -147,13 +209,23 @@ class _ReportsState extends State<Reports> {
                             context,
                             MaterialPageRoute(
                                 builder: (_) => ViewReports(
-                                      sessionToken: sessionToken,
+                                      sessionToken: sessionToken ?? '',
+                                      R1: 0,
+                                      R2: 0,
+                                      R3: 0,
+                                      R4: 0,
+                                      R5: 0,
+                                      R6: 0,
                                       R7: R7,
+                                      R8: 0,
+                                      R9: 0,
+                                      R10: 0,
+                                      R11: 0,
                                     )));
                       }),
-                  elevation: 3,
                 ),
                 Card(
+                  elevation: 3,
                   child: ListTile(
                       title: Text('Reason for cutting'),
                       onTap: () {
@@ -162,13 +234,23 @@ class _ReportsState extends State<Reports> {
                             context,
                             MaterialPageRoute(
                                 builder: (_) => ViewReports(
-                                      sessionToken: sessionToken,
+                                      sessionToken: sessionToken ?? '',
+                                      R1: 0,
+                                      R2: 0,
+                                      R3: 0,
+                                      R4: 0,
+                                      R5: 0,
+                                      R6: 0,
+                                      R7: 0,
                                       R8: R8,
+                                      R9: 0,
+                                      R10: 0,
+                                      R11: 0,
                                     )));
                       }),
-                  elevation: 3,
                 ),
                 Card(
+                  elevation: 3,
                   child: ListTile(
                       title: Text(
                           'Number of Application received before & after cutting the tree'),
@@ -178,13 +260,23 @@ class _ReportsState extends State<Reports> {
                             context,
                             MaterialPageRoute(
                                 builder: (_) => ViewReports(
-                                      sessionToken: sessionToken,
+                                      sessionToken: sessionToken ?? '',
+                                      R1: 0,
+                                      R2: 0,
+                                      R3: 0,
+                                      R4: 0,
+                                      R5: 0,
+                                      R6: 0,
+                                      R7: 0,
+                                      R8: 0,
                                       R9: R9,
+                                      R10: 0,
+                                      R11: 0,
                                     )));
                       }),
-                  elevation: 3,
                 ),
                 Card(
+                  elevation: 3,
                   child: ListTile(
                       title: Text('NOC Report'),
                       onTap: () {
@@ -193,13 +285,23 @@ class _ReportsState extends State<Reports> {
                             context,
                             MaterialPageRoute(
                                 builder: (_) => ViewReports(
-                                      sessionToken: sessionToken,
+                                      sessionToken: sessionToken ?? '',
+                                      R1: 0,
+                                      R2: 0,
+                                      R3: 0,
+                                      R4: 0,
+                                      R5: 0,
+                                      R6: 0,
+                                      R7: 0,
+                                      R8: 0,
+                                      R9: 0,
                                       R10: R10,
+                                      R11: 0,
                                     )));
                       }),
-                  elevation: 3,
                 ),
                 Card(
+                  elevation: 3,
                   child: ListTile(
                       title: Text('Timber Tracking'),
                       onTap: () {
@@ -208,11 +310,20 @@ class _ReportsState extends State<Reports> {
                             context,
                             MaterialPageRoute(
                                 builder: (_) => ViewReports(
-                                      sessionToken: sessionToken,
+                                      sessionToken: sessionToken ?? '',
+                                      R1: 0,
+                                      R2: 0,
+                                      R3: 0,
+                                      R4: 0,
+                                      R5: 0,
+                                      R6: 0,
+                                      R7: 0,
+                                      R8: 0,
+                                      R9: 0,
+                                      R10: 0,
                                       R11: R11,
                                     )));
                       }),
-                  elevation: 3,
                 ),
               ],
             )));

@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:convert';
 import 'dart:ffi';
 import 'dart:math';
@@ -52,37 +54,38 @@ class FormPage1 extends StatefulWidget {
   bool flag1;
   List values;
   FormPage1(
-      {this.sessionToken,
-      this.dropdownValue,
-      this.dropdownValue1,
-      this.userName,
-      this.userEmail,
-      this.userId,
-      this.Name,
-      this.Address,
-      this.survey_no,
-      this.Tree_Proposed_to_cut,
-      this.village,
-      this.Taluka,
-      this.block,
-      this.District,
-      this.Pincode,
-      this.imageone,
-      this.imagetwo,
-      this.imagethree,
-      this.imagefour,
-      this.imagelatone,
-      this.imagelattwo,
-      this.imagelatthree,
-      this.imagelatfour,
-      this.imagelongone,
-      this.imagelongtwo,
-      this.imagelongthree,
-      this.imagelongfour,
-      this.Purpose,
-      this.holder_1,
-      this.flag1,
-      this.values});
+      {super.key,
+      required this.sessionToken,
+      required this.dropdownValue,
+      required this.dropdownValue1,
+      required this.userName,
+      required this.userEmail,
+      required this.userId,
+      required this.Name,
+      required this.Address,
+      required this.survey_no,
+      required this.Tree_Proposed_to_cut,
+      required this.village,
+      required this.Taluka,
+      required this.block,
+      required this.District,
+      required this.Pincode,
+      required this.imageone,
+      required this.imagetwo,
+      required this.imagethree,
+      required this.imagefour,
+      required this.imagelatone,
+      required this.imagelattwo,
+      required this.imagelatthree,
+      required this.imagelatfour,
+      required this.imagelongone,
+      required this.imagelongtwo,
+      required this.imagelongthree,
+      required this.imagelongfour,
+      required this.Purpose,
+      required this.holder_1,
+      required this.flag1,
+      required this.values});
   @override
   _FormPage1State createState() => _FormPage1State(
       sessionToken,
@@ -202,7 +205,7 @@ class _FormPage1State extends State<FormPage1> {
       this.flag1);
 
   //----------------------
-  GoogleMapController mapController;
+  late GoogleMapController mapController;
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   List values = [];
   Future<Widget> AddMap(BuildContext context) async {
@@ -215,7 +218,7 @@ class _FormPage1State extends State<FormPage1> {
                     EdgeInsets.only(bottom: 30, top: 30, left: 10, right: 10),
                 contentPadding: EdgeInsets.all(5),
                 clipBehavior: Clip.antiAlias,
-                content: Container(
+                content: SizedBox(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
                   child: GoogleMap(
@@ -229,9 +232,7 @@ class _FormPage1State extends State<FormPage1> {
                         target: LatLng(10.8505, 76.2711), zoom: 14),
                     //polygons: myPolygon(),
                     onMapCreated: onMapCreated,
-                    markers: Set<Marker>.of(markers.values) == null
-                        ? LatLng(10.8505, 76.2711)
-                        : Set<Marker>.of(markers.values),
+                    markers: Set<Marker>.of(markers.values),
                     onTap: (latlang) {
                       setState(() {
                         values.clear();
@@ -244,11 +245,8 @@ class _FormPage1State extends State<FormPage1> {
                           infoWindow: InfoWindow(
                             title:
                                 "Tree Location", //+(values.length +1).toString(),
-                            snippet: "( Latitude : " +
-                                latlang.latitude.toStringAsPrecision(8) +
-                                " , Longitude : " +
-                                latlang.longitude.toStringAsPrecision(8) +
-                                ")",
+                            snippet:
+                                "( Latitude : ${latlang.latitude.toStringAsPrecision(8)} , Longitude : ${latlang.longitude.toStringAsPrecision(8)})",
                           ),
                           icon: BitmapDescriptor.defaultMarker,
                         );
@@ -491,9 +489,9 @@ class _FormPage1State extends State<FormPage1> {
                       },
                       splashColor: Colors.greenAccent,
                       child: Row(
-                        children: [
+                        children: const [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.image,
                               color: Colors.blueAccent,
@@ -576,9 +574,9 @@ class _FormPage1State extends State<FormPage1> {
                       },
                       splashColor: Colors.greenAccent,
                       child: Row(
-                        children: [
+                        children: const [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.image,
                               color: Colors.blueAccent,
@@ -661,9 +659,9 @@ class _FormPage1State extends State<FormPage1> {
                       },
                       splashColor: Colors.greenAccent,
                       child: Row(
-                        children: [
+                        children: const [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.image,
                               color: Colors.blueAccent,
@@ -746,9 +744,9 @@ class _FormPage1State extends State<FormPage1> {
                       },
                       splashColor: Colors.greenAccent,
                       child: Row(
-                        children: [
+                        children: const [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.image,
                               color: Colors.blueAccent,
@@ -831,9 +829,9 @@ class _FormPage1State extends State<FormPage1> {
                       },
                       splashColor: Colors.greenAccent,
                       child: Row(
-                        children: [
+                        children: const [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.image,
                               color: Colors.blueAccent,
@@ -916,9 +914,9 @@ class _FormPage1State extends State<FormPage1> {
                       },
                       splashColor: Colors.greenAccent,
                       child: Row(
-                        children: [
+                        children: const [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.image,
                               color: Colors.blueAccent,
@@ -1001,9 +999,9 @@ class _FormPage1State extends State<FormPage1> {
                       },
                       splashColor: Colors.greenAccent,
                       child: Row(
-                        children: [
+                        children: const [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.image,
                               color: Colors.blueAccent,
@@ -1141,7 +1139,7 @@ class _FormPage1State extends State<FormPage1> {
             text: "Latitude : ",
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
         TextSpan(
-            text: values.length == 0 ? '' : values[0].toString(),
+            text: values.isEmpty ? '' : values[0].toString(),
             style: TextStyle(
               color: Colors.blueAccent[700],
               fontSize: 14,
@@ -1154,7 +1152,7 @@ class _FormPage1State extends State<FormPage1> {
     return  Text((_getVolume(girth, length).toString()).toString());
   }*/
   //-----------------------------------End-GeoLocator---------------------------
-  String dropdownValue2;
+  String dropdownValue2 = '';
   String holder = '';
   List<String> IdProof = [
     'Aadhar Card',
@@ -1168,23 +1166,23 @@ class _FormPage1State extends State<FormPage1> {
     setState(() {
       holder = dropdownValue;
     });
-    print("-----------------------" + holder);
+    print("-----------------------$holder");
   }
 
-  String dropdownValue3;
+  String dropdownValue3 = '';
   String spacies_holder = '';
 
   void getDropDownItem1() {
     setState(() {
       spacies_holder = dropdownValue1;
     });
-    print("-----------------------" + holder);
+    print("-----------------------$holder");
   }
 
   bool flag = true;
   var b = 1;
   int a = 0;
-  String selectedPRoof;
+  String selectedPRoof = '';
   List log_details = [];
   List d = [];
   List Species = [];
@@ -1196,8 +1194,8 @@ class _FormPage1State extends State<FormPage1> {
   List n_list = [];
 
   Map<String, String> logs = {};
-  final List<TextEditingController> _controllers = List();
-  double v;
+  final List<TextEditingController> _controllers = [];
+  late double v;
   // double _getVolume(double girth, double length) {
   //   v = ((girth * 0.01) / 4) * ((girth * 0.01) / 4) * length;
   //   return v;
@@ -1266,7 +1264,9 @@ class _FormPage1State extends State<FormPage1> {
                         keyboardType: TextInputType.number,
                         controller: length,
                         validator: (value) {
-                          return value.isNotEmpty ? null : "Enter Height(M)";
+                          return value != null && value.isNotEmpty
+                              ? null
+                              : "Enter Height(M)";
                         },
                         decoration:
                             InputDecoration(hintText: "Please Enter Height(M)"),
@@ -1275,7 +1275,9 @@ class _FormPage1State extends State<FormPage1> {
                         keyboardType: TextInputType.number,
                         controller: girth,
                         validator: (value) {
-                          return value.isNotEmpty ? null : "Enter Girth(cm)";
+                          return value != null && value.isNotEmpty
+                              ? null
+                              : "Enter Girth(cm)";
                         },
                         decoration:
                             InputDecoration(hintText: "Please Enter Girth(cm)"),
@@ -1347,8 +1349,8 @@ class _FormPage1State extends State<FormPage1> {
                   ),
                   onTap: () {
                     if ((dropdownValue3 == null) ||
-                        (length.text.length == 0) ||
-                        (girth.text.length == 0)) {
+                        (length.text.isEmpty) ||
+                        (girth.text.isEmpty)) {
                       Fluttertoast.showToast(
                           msg: "Please add all details ",
                           toastLength: Toast.LENGTH_SHORT,
@@ -1381,7 +1383,7 @@ class _FormPage1State extends State<FormPage1> {
                         n_list.add(i);
                       }
                       print("----n_list--");
-                      print("$n_list" + "NLIST");
+                      print("$n_list" "NLIST");
                       print(Species);
                       print(d);
                       length.clear();
@@ -1451,7 +1453,9 @@ class _FormPage1State extends State<FormPage1> {
                         //initialValue: log_details[index]['length'],
                         controller: length,
                         validator: (value) {
-                          return value.isNotEmpty ? null : "Enter height";
+                          return value != null && value.isNotEmpty
+                              ? null
+                              : "Enter height";
                         },
                         decoration:
                             InputDecoration(hintText: "Please Enter height"),
@@ -1460,7 +1464,9 @@ class _FormPage1State extends State<FormPage1> {
                         keyboardType: TextInputType.number,
                         controller: girth,
                         validator: (value) {
-                          return value.isNotEmpty ? null : "Enter Girth";
+                          return value != null && value.isNotEmpty
+                              ? null
+                              : "Enter Girth";
                         },
                         decoration:
                             InputDecoration(hintText: "Please Enter Girth"),
@@ -1546,8 +1552,8 @@ class _FormPage1State extends State<FormPage1> {
                   ),
                   onTap: () {
                     if ((dropdownValue3 == null) ||
-                        (length.text.length == 0) ||
-                        (girth.text.length == 0)) {
+                        (length.text.isEmpty) ||
+                        (girth.text.isEmpty)) {
                       Fluttertoast.showToast(
                           msg: "Please add all details ",
                           toastLength: Toast.LENGTH_SHORT,
@@ -1588,7 +1594,7 @@ class _FormPage1State extends State<FormPage1> {
                       print(n_list);
                       print(Species);
                       print(d);
-                      if (_formKey.currentState.validate()) {
+                      if (_formKey.currentState?.validate() ?? false) {
                         // Do something like updating SharedPreferences or User Settings etc.
                         length.clear();
                         girth.clear();
@@ -1634,25 +1640,24 @@ class _FormPage1State extends State<FormPage1> {
   Row()
    */
   Future<bool> _onBackPressed() {
-    return showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: new Text('Do you want to go previous page'),
-            content: new Text('Changes you made may not be saved.'),
-            actions: <Widget>[
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(false),
-                child: Text("NO"),
-              ),
-              SizedBox(height: 16),
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(true),
-                child: Text("YES"),
-              ),
-            ],
+    return showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Do you want to go previous page'),
+        content: Text('Changes you made may not be saved.'),
+        actions: <Widget>[
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(false),
+            child: Text("NO"),
           ),
-        ) ??
-        false;
+          SizedBox(height: 16),
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(true),
+            child: Text("YES"),
+          ),
+        ],
+      ),
+    ).then((value) => value ?? false);
   }
 
   @override
@@ -1661,11 +1666,10 @@ class _FormPage1State extends State<FormPage1> {
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
-        appBar: NewGradientAppBar(
+        appBar: AppBar(
           // backgroundColor: Colors.blueGrey,
           title: Text("FORM - I"),
-          gradient: LinearGradient(
-              colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+
           elevation: 0,
           // automaticallyImplyLeading: false,
         ),
@@ -1675,277 +1679,229 @@ class _FormPage1State extends State<FormPage1> {
           Container(
             child: Container(
               child: Column(children: <Widget>[
-                LayoutBuilder(builder: (context, constraints) {
-                  if (flag1 == true) {
-                    return Column(
-                      children: [
-                        Column(children: [
-                          LayoutBuilder(builder: (context, constraints) {
-                            print(int.parse(Tree_Proposed_to_cut));
-                            print(n_list.length);
-                            //  if(n_list.length ==0){
-                            //   return Text("");
-                            //  }else{return Text("");}
-                            if ((n_list.length != 0) &&
-                                (int.parse(Tree_Proposed_to_cut)) >
-                                    n_list.length) {
-                              return Text(
-                                "Add log details for all trees",
-                                style:
-                                    TextStyle(color: Colors.red, fontSize: 16),
-                              );
-                            } else {
-                              return Text(
-                                "",
-                                style: TextStyle(fontSize: 1),
-                              );
-                            }
-                          })
-                        ]),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 15.0, right: 15.0, top: 10, bottom: 0),
-                          child: RichText(
-                            textAlign: TextAlign.center,
-                            text: TextSpan(children: <TextSpan>[
-                              TextSpan(
-                                  text:
-                                      "Please add Log details now, you can update from submitted forms",
-                                  style: TextStyle(
-                                    color: Colors.redAccent,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                  )),
-                            ]),
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    if (flag1) {
+                      int treeCount = int.tryParse(Tree_Proposed_to_cut) ?? 0;
+
+                      return Column(
+                        children: [
+                          Column(
+                            children: [
+                              LayoutBuilder(
+                                builder: (context, constraints) {
+                                  print(treeCount);
+                                  print(n_list.length);
+
+                                  if (n_list.isNotEmpty &&
+                                      treeCount > n_list.length) {
+                                    return Text(
+                                      "Add log details for all trees",
+                                      style: TextStyle(
+                                          color: Colors.red, fontSize: 16),
+                                    );
+                                  } else {
+                                    return SizedBox.shrink();
+                                  }
+                                },
+                              ),
+                            ],
                           ),
-                        ),
-                        Container(
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 15.0, right: 15.0, top: 10, bottom: 0),
+                            child: RichText(
+                              textAlign: TextAlign.center,
+                              text: TextSpan(
+                                children: const <TextSpan>[
+                                  TextSpan(
+                                    text:
+                                        "Please add Log details now, you can update from submitted forms",
+                                    style: TextStyle(
+                                      color: Colors.redAccent,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Container(
                             margin: const EdgeInsets.all(10),
                             height: MediaQuery.of(context).size.height * 0.39,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
                               color: Colors.white,
-                              boxShadow: [
+                              boxShadow: const [
                                 BoxShadow(
                                   color: Colors.black,
                                   blurRadius: 2.0,
                                   spreadRadius: 0.0,
-                                  offset: Offset(2.0,
-                                      2.0), // shadow direction: bottom right
+                                  offset: Offset(2.0, 2.0),
                                 )
                               ],
                             ),
                             child: Scrollbar(
-                                isAlwaysShown: true,
-                                thickness: 15,
+                              thumbVisibility: true,
+                              thickness: 15,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
                                 child: SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: SingleChildScrollView(
-                                      scrollDirection: Axis.vertical,
-                                      child: Column(
-                                        children: <Widget>[
-                                          DataTable(
-                                            columns: [
-                                              DataColumn(
-                                                  label: Text(
-                                                'S.No',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.blue),
-                                              )),
-                                              DataColumn(
-                                                  label: Text(
-                                                'Species  ',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.blue),
-                                              )),
-                                              DataColumn(
-                                                  label: Text(
-                                                ' Height(M)   ',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.blue),
-                                              )),
-                                              DataColumn(
-                                                  label: Text(
-                                                '  Girth(cm)  ',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.blue),
-                                              )),
-                                              DataColumn(
-                                                  label: Text(
-                                                ' Volume (Sq m)  ',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.blue),
-                                              )),
-                                              // DataColumn(
-                                              //     label: Text(
-                                              //   'Latitude ',
-                                              //   style: TextStyle(
-                                              //       fontWeight: FontWeight.bold,
-                                              //       color: Colors.blue),
-                                              // )),
-                                              // DataColumn(
-                                              //     label: Text(
-                                              //   'longitude',
-                                              //   style: TextStyle(
-                                              //       fontWeight: FontWeight.bold,
-                                              //       color: Colors.blue),
-                                              // )),
-
-                                              DataColumn(
-                                                label: Row(
-                                                  children: <Widget>[
-                                                    Text(
-                                                      "Add log",
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Colors.blue),
-                                                    ),
-                                                    IconButton(
-                                                      icon: Icon(
-                                                        Icons.add_circle,
-                                                        color: Colors.blue,
-                                                      ),
-                                                      onPressed: () async {
-                                                        await showInformationDialog(
-                                                            context);
-                                                        print(
-                                                            "-------------Total-log------------");
-                                                        print(log_details);
-                                                        setState(() {
-                                                          DataRow;
-                                                          exindex = exindex + 1;
-                                                        });
-                                                      },
-                                                    ),
-                                                  ],
+                                  scrollDirection: Axis.vertical,
+                                  child: Column(
+                                    children: <Widget>[
+                                      DataTable(
+                                        columns: [
+                                          DataColumn(
+                                            label: Text(
+                                              'S.No',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.blue),
+                                            ),
+                                          ),
+                                          DataColumn(
+                                            label: Text(
+                                              'Species',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.blue),
+                                            ),
+                                          ),
+                                          DataColumn(
+                                            label: Text(
+                                              'Height (M)',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.blue),
+                                            ),
+                                          ),
+                                          DataColumn(
+                                            label: Text(
+                                              'Girth (cm)',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.blue),
+                                            ),
+                                          ),
+                                          DataColumn(
+                                            label: Text(
+                                              'Volume (Sq m)',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.blue),
+                                            ),
+                                          ),
+                                          DataColumn(
+                                            label: Row(
+                                              children: <Widget>[
+                                                Text(
+                                                  "Add log",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.blue),
                                                 ),
-                                              ),
-                                            ],
-                                            rows: n_list
-                                                .map(((index) =>
-                                                    DataRow(cells: [
-                                                      DataCell(Text((index + 1)
-                                                          .toString())),
-                                                      DataCell(Container(
-                                                          width: 180,
-                                                          child: Text(
-                                                            log_details[index][
-                                                                    'species_of_tree']
-                                                                .toString(),
-                                                          ))),
-                                                      DataCell(Container(
-                                                          width: 100,
-                                                          child: Text(
-                                                            log_details[index]
-                                                                    ['length']
-                                                                .toString(),
-                                                          ))),
-                                                      DataCell(Container(
-                                                          width: 100,
-                                                          child: Text(
-                                                            log_details[index]
-                                                                    ['breadth']
-                                                                .toString(),
-                                                          ))),
-                                                      DataCell(Container(
-                                                          width: 100,
-                                                          child: Text(
-                                                            log_details[index]
-                                                                    ['volume']
-                                                                .toString(),
-                                                          ))),
-                                                      // DataCell(Container(
-                                                      //     width: 100,
-                                                      //     child: Text(
-                                                      //       log_details[index]
-                                                      //               ['latitude']
-                                                      //           .toString(),
-                                                      //     ))),
-                                                      // DataCell(Container(
-                                                      //     width: 100,
-                                                      //     child: Text(
-                                                      //       log_details[index]
-                                                      //               ['longitude']
-                                                      //           .toString(),
-                                                      //     ))),
-                                                      DataCell(Row(
-                                                        children: <Widget>[
-                                                          Text("remove"),
-                                                          IconButton(
-                                                            icon: Icon(
-                                                              Icons
-                                                                  .remove_circle,
-                                                              color: Colors.red,
-                                                            ),
-                                                            onPressed: () {
-                                                              print(
-                                                                  "-------------Remove--Total-log------------");
-                                                              print(index);
-                                                              print(
-                                                                  log_details);
-                                                              log_details
-                                                                  .removeAt(
-                                                                      index);
-                                                              n_list
-                                                                  .removeLast();
-                                                              print(
-                                                                  log_details);
-                                                              setState(() {
-                                                                DataRow;
-                                                              });
-                                                            },
-                                                          ), //--------------Remove Button
-                                                          Text("edit"),
-                                                          IconButton(
-                                                            icon: Icon(
-                                                              Icons
-                                                                  .edit_rounded,
-                                                              color:
-                                                                  Colors.blue,
-                                                            ),
-                                                            onPressed:
-                                                                () async {
-                                                              print(
-                                                                  "-------------Edit--Total-log------------");
-                                                              print(index);
-
-                                                              print(
-                                                                  log_details);
-                                                              await EditInformationDialog(
-                                                                  context,
-                                                                  index);
-                                                              setState(() {
-                                                                DataRow;
-                                                              });
-                                                            },
-                                                          )
-                                                        ],
-                                                      )),
-                                                    ])))
-                                                .toList(),
+                                                IconButton(
+                                                  icon: Icon(
+                                                    Icons.add_circle,
+                                                    color: Colors.blue,
+                                                  ),
+                                                  onPressed: () async {
+                                                    await showInformationDialog(
+                                                        context);
+                                                    setState(() {
+                                                      exindex++;
+                                                    });
+                                                  },
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ],
+                                        rows: List.generate(n_list.length,
+                                            (index) {
+                                          return DataRow(
+                                            cells: [
+                                              DataCell(
+                                                  Text((index + 1).toString())),
+                                              DataCell(SizedBox(
+                                                width: 180,
+                                                child: Text(log_details[index]
+                                                        ['species_of_tree']
+                                                    .toString()),
+                                              )),
+                                              DataCell(SizedBox(
+                                                width: 100,
+                                                child: Text(log_details[index]
+                                                        ['length']
+                                                    .toString()),
+                                              )),
+                                              DataCell(SizedBox(
+                                                width: 100,
+                                                child: Text(log_details[index]
+                                                        ['breadth']
+                                                    .toString()),
+                                              )),
+                                              DataCell(SizedBox(
+                                                width: 100,
+                                                child: Text(log_details[index]
+                                                        ['volume']
+                                                    .toString()),
+                                              )),
+                                              DataCell(Row(
+                                                children: <Widget>[
+                                                  Text("Remove"),
+                                                  IconButton(
+                                                    icon: Icon(
+                                                      Icons.remove_circle,
+                                                      color: Colors.red,
+                                                    ),
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        log_details
+                                                            .removeAt(index);
+                                                        n_list.removeLast();
+                                                      });
+                                                    },
+                                                  ),
+                                                  Text("Edit"),
+                                                  IconButton(
+                                                    icon: Icon(
+                                                      Icons.edit_rounded,
+                                                      color: Colors.blue,
+                                                    ),
+                                                    onPressed: () async {
+                                                      await EditInformationDialog(
+                                                          context, index);
+                                                      setState(() {});
+                                                    },
+                                                  )
+                                                ],
+                                              )),
+                                            ],
+                                          );
+                                        }),
                                       ),
-                                    )))),
-                      ],
-                    );
-                  } else if (flag1 == false) {
-                    return Container(
-                      color: Colors.white,
-                    );
-                  }
-                }),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return Container(color: Colors.white);
+                    }
+                  },
+                ),
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                  decoration: new BoxDecoration(
-                      border: new Border.all(
+                  decoration: BoxDecoration(
+                      border: Border.all(
                         color: Colors.grey,
                         width: 1,
                       ),
@@ -1974,8 +1930,8 @@ class _FormPage1State extends State<FormPage1> {
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.only(top: 5, left: 15, right: 15),
-                  decoration: new BoxDecoration(
-                      border: new Border.all(
+                  decoration: BoxDecoration(
+                      border: Border.all(
                         color: Colors.grey,
                         width: 1,
                       ),
@@ -2005,8 +1961,8 @@ class _FormPage1State extends State<FormPage1> {
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                  decoration: new BoxDecoration(
-                      border: new Border.all(
+                  decoration: BoxDecoration(
+                      border: Border.all(
                         color: Colors.grey,
                         width: 1,
                       ),
@@ -2037,8 +1993,8 @@ class _FormPage1State extends State<FormPage1> {
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                  decoration: new BoxDecoration(
-                      border: new Border.all(
+                  decoration: BoxDecoration(
+                      border: Border.all(
                         color: Colors.grey,
                         width: 1,
                       ),
@@ -2070,8 +2026,8 @@ class _FormPage1State extends State<FormPage1> {
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                  decoration: new BoxDecoration(
-                      border: new Border.all(
+                  decoration: BoxDecoration(
+                      border: Border.all(
                         color: Colors.grey,
                         width: 1,
                       ),
@@ -2102,8 +2058,8 @@ class _FormPage1State extends State<FormPage1> {
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                  decoration: new BoxDecoration(
-                      border: new Border.all(
+                  decoration: BoxDecoration(
+                      border: Border.all(
                         color: Colors.grey,
                         width: 1,
                       ),
@@ -2134,8 +2090,8 @@ class _FormPage1State extends State<FormPage1> {
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                  decoration: new BoxDecoration(
-                      border: new Border.all(
+                  decoration: BoxDecoration(
+                      border: Border.all(
                         color: Colors.grey,
                         width: 1,
                       ),
@@ -2154,9 +2110,9 @@ class _FormPage1State extends State<FormPage1> {
                              height: 2,
                              color: Colors.grey,
                            ),*/
-                    onChanged: (String data) {
+                    onChanged: (String? data) {
                       setState(() {
-                        dropdownValue2 = data;
+                        dropdownValue2 = data!;
                         selectedPRoof = dropdownValue2;
                       });
                       print(selectedPRoof);
@@ -2174,8 +2130,8 @@ class _FormPage1State extends State<FormPage1> {
                   width: double.infinity,
                   margin: const EdgeInsets.only(
                       top: 15, left: 15, right: 15, bottom: 20),
-                  decoration: new BoxDecoration(
-                      border: new Border.all(
+                  decoration: BoxDecoration(
+                      border: Border.all(
                         color: Colors.grey,
                         width: 1,
                       ),
@@ -2211,7 +2167,6 @@ class _FormPage1State extends State<FormPage1> {
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: FloatingActionButton(
           // isExtended: true,
-          child: Icon(Icons.navigate_next),
           backgroundColor: HexColor("#0499f2"),
           onPressed: () {
             if (base64ImageOwn == "") {
@@ -2357,6 +2312,8 @@ class _FormPage1State extends State<FormPage1> {
               setState(() {});
             }
           },
+          // isExtended: true,
+          child: Icon(Icons.navigate_next),
         ),
       ),
     );
@@ -2364,6 +2321,8 @@ class _FormPage1State extends State<FormPage1> {
 }
 
 class table extends StatefulWidget {
+  const table({super.key});
+
   @override
   _tableState createState() => _tableState();
 }
@@ -2371,7 +2330,7 @@ class table extends StatefulWidget {
 class _tableState extends State<table> {
   bool flag = true;
   List tcount = [1];
-  List b;
+  late List b;
 
   @override
   Widget build(BuildContext context) {
@@ -2381,7 +2340,7 @@ class _tableState extends State<table> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: Colors.white,
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.black,
               blurRadius: 2.0,
@@ -2395,7 +2354,7 @@ class _tableState extends State<table> {
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: DataTable(
-              columns: [
+              columns: const [
                 DataColumn(
                     label: Text(
                   'S.No',

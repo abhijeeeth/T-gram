@@ -11,47 +11,44 @@ import 'package:tigramnks/userScann.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'ViewApplication.dart';
 
-class acknowUser extends StatefulWidget {
-  int userId;
-  String userName;
-  String userEmail;
-  String sessionToken;
-  String userGroup;
-  acknowUser({
-    this.userId,
-    this.userName,
-    this.userEmail,
-    this.sessionToken,
-    this.userGroup,
+class AcknowUser extends StatefulWidget {
+  final int userId;
+  final String userName;
+  final String userEmail;
+  final String sessionToken;
+  final String userGroup;
+
+  const AcknowUser({
+    super.key, // Always include key in a StatefulWidget
+    required this.userId,
+    required this.userName,
+    required this.userEmail,
+    required this.sessionToken,
+    required this.userGroup,
   });
+
   @override
-  State<acknowUser> createState() => _acknowUserState(
-        userId,
-        userName,
-        userEmail,
-        sessionToken,
-        userGroup,
-      );
+  State<AcknowUser> createState() => _AcknowUserState();
 }
 
-class _acknowUserState extends State<acknowUser> {
+class _AcknowUserState extends State<AcknowUser> {
+  late int userId;
+  late String userName;
+  late String userEmail;
+  late String sessionToken;
+  late String userGroup;
+
+  @override
   void initState() {
     super.initState();
+    userId = widget.userId;
+    userName = widget.userName;
+    userEmail = widget.userEmail;
+    sessionToken = widget.sessionToken;
+    userGroup = widget.userGroup;
     ScanApp();
   }
 
-  int userId;
-  String userName;
-  String userEmail;
-  String sessionToken;
-  String userGroup;
-  _acknowUserState(
-    this.userId,
-    this.userName,
-    this.userEmail,
-    this.sessionToken,
-    this.userGroup,
-  );
   final List sr = [];
   final List Ids = [];
   final List Check_officer_id = [];
@@ -64,7 +61,8 @@ class _acknowUserState extends State<acknowUser> {
     sr.clear();
     Check_officer_id.clear();
     App_no.clear();
-    const String url = 'http://13.234.208.246/api/auth/ScanedListApplication';
+    const String url =
+        'http://192.168.54.114:8000/api/auth/ScanedListApplication';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -86,14 +84,13 @@ class _acknowUserState extends State<acknowUser> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: NewGradientAppBar(
-        title: Text("Acknowledge Dashboard"),
-        gradient:
-            LinearGradient(colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+      appBar: AppBar(
+        title: const Text("Acknowledge Dashboard"),
+
         //backgroundColor: Colors.blueGrey,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -124,7 +121,7 @@ class _acknowUserState extends State<acknowUser> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
                 color: Colors.white,
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     color: Colors.deepOrangeAccent,
                     blurRadius: 2.0,
@@ -138,20 +135,20 @@ class _acknowUserState extends State<acknowUser> {
               padding:
                   const EdgeInsets.only(left: 2, right: 2, top: 2, bottom: 2),
               child: Scrollbar(
-                  isAlwaysShown: true,
+                  thumbVisibility: true,
                   thickness: 15,
                   child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       padding: const EdgeInsets.only(bottom: 15),
                       child: Scrollbar(
-                          isAlwaysShown: true,
+                          thumbVisibility: true,
                           thickness: 15,
                           child: SingleChildScrollView(
                               scrollDirection: Axis.vertical,
                               child: DataTable(
                                 columnSpacing: 20,
                                 dividerThickness: 2,
-                                headingRowColor: MaterialStateColor.resolveWith(
+                                headingRowColor: WidgetStateColor.resolveWith(
                                     (states) => Colors.orange),
                                 columns: const [
                                   DataColumn(
@@ -205,10 +202,10 @@ class _acknowUserState extends State<acknowUser> {
                                                           .toString())),
 
                                                   DataCell(
-                                                    new Visibility(
+                                                    Visibility(
                                                       visible: true,
                                                       child: IconButton(
-                                                        icon: new Icon(
+                                                        icon: const Icon(
                                                             Icons.visibility),
                                                         color: Colors.blue,
                                                         onPressed: () {
@@ -231,6 +228,11 @@ class _acknowUserState extends State<acknowUser> {
                                                                               userId,
                                                                           Ids:
                                                                               IDS,
+                                                                          userName:
+                                                                              userName,
+                                                                          userEmail:
+                                                                              userEmail,
+                                                                          Range: const [],
                                                                         )));
                                                           }
                                                         },
@@ -238,18 +240,15 @@ class _acknowUserState extends State<acknowUser> {
                                                     ),
                                                   ),
                                                   DataCell(
-                                                    new Visibility(
+                                                    Visibility(
                                                       visible: true,
                                                       child: IconButton(
-                                                        icon: new Icon(Icons
+                                                        icon: const Icon(Icons
                                                             .file_download),
                                                         color: Colors.blue,
                                                         onPressed: () async {
                                                           await launch(
-                                                              "http://13.234.208.246/api/auth/new_transit_pass_pdf/" +
-                                                                  App_no[int.parse(
-                                                                      value)] +
-                                                                  "/");
+                                                              "${"http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/" + App_no[int.parse(value)]}/");
                                                           // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                         },
                                                       ),
@@ -262,7 +261,7 @@ class _acknowUserState extends State<acknowUser> {
                                                   //     color: Colors.blue,
                                                   //     onPressed: () async {
                                                   //       await launch(
-                                                  //           "http://13.234.208.246/api/auth/new_user_report/" +
+                                                  //           "http://192.168.54.114:8000/api/auth/new_user_report/" +
                                                   //               Ids[int.parse(
                                                   //                   value)] +
                                                   //               "/");
@@ -272,18 +271,15 @@ class _acknowUserState extends State<acknowUser> {
                                                   // ),
 
                                                   DataCell(
-                                                    new Visibility(
+                                                    Visibility(
                                                       visible: true,
                                                       child: IconButton(
-                                                        icon: new Icon(Icons
+                                                        icon: const Icon(Icons
                                                             .qr_code_outlined),
                                                         color: Colors.blue,
                                                         onPressed: () async {
                                                           await launch(
-                                                              "http://13.234.208.246/api/auth/qr_code_pdf/" +
-                                                                  App_no[int.parse(
-                                                                      value)] +
-                                                                  "/");
+                                                              "${"http://192.168.54.114:8000/api/auth/qr_code_pdf/" + App_no[int.parse(value)]}/");
                                                           // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                         },
                                                       ),

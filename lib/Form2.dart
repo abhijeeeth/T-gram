@@ -60,44 +60,45 @@ class Form2 extends StatefulWidget {
   List log_details;
   String selectedPRoof;
   Form2(
-      {this.sessionToken,
-      this.dropdownValue,
-      this.dropdownValue1,
-      this.userName,
-      this.userEmail,
-      this.userId,
-      this.Name,
-      this.Address,
-      this.survey_no,
-      this.Tree_Proposed_to_cut,
-      this.village,
-      this.Taluka,
-      this.block,
-      this.District,
-      this.Pincode,
-      this.Ownership,
-      this.imageone,
-      this.imagetwo,
-      this.imagethree,
-      this.imagefour,
-      this.imagelatone,
-      this.imagelattwo,
-      this.imagelatthree,
-      this.imagelatfour,
-      this.imagelongone,
-      this.imagelongtwo,
-      this.imagelongthree,
-      this.imagelongfour,
-      this.Purpose,
-      this.holder_1,
-      this.Application,
-      this.Approval,
-      this.Declaration,
-      this.Location,
-      this.TreeOwnership,
-      this.IdProof,
-      this.log_details,
-      this.selectedPRoof});
+      {super.key,
+      required this.sessionToken,
+      required this.dropdownValue,
+      required this.dropdownValue1,
+      required this.userName,
+      required this.userEmail,
+      required this.userId,
+      required this.Name,
+      required this.Address,
+      required this.survey_no,
+      required this.Tree_Proposed_to_cut,
+      required this.village,
+      required this.Taluka,
+      required this.block,
+      required this.District,
+      required this.Pincode,
+      required this.Ownership,
+      required this.imageone,
+      required this.imagetwo,
+      required this.imagethree,
+      required this.imagefour,
+      required this.imagelatone,
+      required this.imagelattwo,
+      required this.imagelatthree,
+      required this.imagelatfour,
+      required this.imagelongone,
+      required this.imagelongtwo,
+      required this.imagelongthree,
+      required this.imagelongfour,
+      required this.Purpose,
+      required this.holder_1,
+      required this.Application,
+      required this.Approval,
+      required this.Declaration,
+      required this.Location,
+      required this.TreeOwnership,
+      required this.IdProof,
+      required this.log_details,
+      required this.selectedPRoof});
   @override
   _Form2State createState() => _Form2State(
       sessionToken,
@@ -143,7 +144,7 @@ class Form2 extends StatefulWidget {
 class _Form2State extends State<Form2> {
   final dbHelper = DatabaseHelper.instance;
 
-  formOneFields _formOneFields;
+  late formOneFields _formOneFields;
   String sessionToken;
   String dropdownValue;
   String dropdownValue1;
@@ -188,7 +189,7 @@ class _Form2State extends State<Form2> {
   String base64ImageLisence = '';
 
   bool isEditing = false;
-  formOneFields _user;
+  late formOneFields _user;
 
   _Form2State(
     this.sessionToken,
@@ -230,7 +231,7 @@ class _Form2State extends State<Form2> {
     this.log_details,
     this.selectedPRoof,
   );
-  String log;
+  String log = '';
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   // File _License;
@@ -287,10 +288,10 @@ class _Form2State extends State<Form2> {
                         await setSignaturepicgallery();
                       },
                       splashColor: Colors.greenAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.image,
                               color: Colors.blueAccent,
@@ -348,10 +349,10 @@ class _Form2State extends State<Form2> {
                         await setLisencepicgallery();
                       },
                       splashColor: Colors.greenAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.image,
                               color: Colors.blueAccent,
@@ -423,15 +424,15 @@ class _Form2State extends State<Form2> {
   TextEditingController mode_transport = TextEditingController();
   //--Code For radio button--
   int _radioValue = 0;
-  String maintenance;
-  int maintenance_cost;
-  int estimatedMaintenanceCost;
-  bool isEnabled;
+  String maintenance = '';
+  int maintenance_cost = 0;
+  int estimatedMaintenanceCost = 0;
+  bool isEnabled = false;
   bool flag = false;
   @override
-  void _handleRadioValueChange(int value) {
+  void _handleRadioValueChange(int? value) {
     setState(() {
-      _radioValue = value;
+      _radioValue = value!;
       if (_radioValue == 1) {
         maintenance = 'YES';
         setState(() {
@@ -458,78 +459,78 @@ class _Form2State extends State<Form2> {
 
   String ImageOwnership() {
     final bytes = Io.File(Ownership).readAsBytesSync();
-    String ownership_base =
-        Ownership != null ? 'data:image/png;base64,' + base64Encode(bytes) : '';
+    String ownershipBase =
+        Ownership != null ? 'data:image/png;base64,${base64Encode(bytes)}' : '';
     print('------------2--------------');
-    print(ownership_base);
-    return ownership_base;
+    print(ownershipBase);
+    return ownershipBase;
   }
 
   String ImageRevenueApp() {
     final bytes1 = Io.File(Application).readAsBytesSync();
-    String application_base = Application != null
-        ? 'data:image/png;base64,' + base64Encode(bytes1)
+    String applicationBase = Application != null
+        ? 'data:image/png;base64,${base64Encode(bytes1)}'
         : '';
     print('------------3--------------');
-    print(application_base);
-    return application_base;
+    print(applicationBase);
+    return applicationBase;
   }
 
   String ImageRevenueApproval() {
     final bytes2 = Io.File(Approval).readAsBytesSync();
-    String approval_base =
-        Approval != null ? 'data:image/png;base64,' + base64Encode(bytes2) : '';
+    String approvalBase =
+        Approval != null ? 'data:image/png;base64,${base64Encode(bytes2)}' : '';
     print('------------4--------------');
-    print(approval_base);
-    return approval_base;
+    print(approvalBase);
+    return approvalBase;
   }
 
   String ImageDecleration() {
     final bytes5 = Io.File(Declaration).readAsBytesSync();
-    String declaration_base = Declaration != null
-        ? 'data:image/png;base64,' + base64Encode(bytes5)
+    String declarationBase = Declaration != null
+        ? 'data:image/png;base64,${base64Encode(bytes5)}'
         : '';
     print('------------5--------------');
-    print(declaration_base);
-    return declaration_base;
+    print(declarationBase);
+    return declarationBase;
   }
 
   String ImageLocation() {
     final bytes4 = Io.File(Location).readAsBytesSync();
-    String Location_base =
-        Location != null ? 'data:image/png;base64,' + base64Encode(bytes4) : '';
+    String locationBase =
+        Location != null ? 'data:image/png;base64,${base64Encode(bytes4)}' : '';
     print('------------6--------------');
-    print(Location_base);
-    return Location_base;
+    print(locationBase);
+    return locationBase;
   }
 
   String ImageTreeOwnership() {
     final bytes3 = Io.File(TreeOwnership).readAsBytesSync();
-    String TreeOwnership_base = TreeOwnership != null
-        ? 'data:image/png;base64,' + base64Encode(bytes3)
+    String treeownershipBase = TreeOwnership != null
+        ? 'data:image/png;base64,${base64Encode(bytes3)}'
         : '';
     print('------------7--------------');
-    print(TreeOwnership_base);
-    return TreeOwnership_base;
+    print(treeownershipBase);
+    return treeownershipBase;
   }
 
   String ImageAadhar() {
     final bytes6 = Io.File(IdProof).readAsBytesSync();
-    String aadhar_base =
-        IdProof != null ? 'data:image/png;base64,' + base64Encode(bytes6) : '';
+    String aadharBase =
+        IdProof != null ? 'data:image/png;base64,${base64Encode(bytes6)}' : '';
     print('------------8--------------');
-    print(aadhar_base);
-    return aadhar_base;
+    print(aadharBase);
+    return aadharBase;
   }
 
   String ImageSignature() {
     final bytes7 = Io.File(base64ImageSignature).readAsBytesSync();
-    String sign_base = base64ImageSignature != null
-        ? 'data:image/png;base64,' + base64Encode(bytes7)
+    String signBase = base64ImageSignature != null
+        ? 'data:image/png;base64,${base64Encode(bytes7)}'
         : '';
     print('------------8--------------');
-    print(sign_base);
-    return sign_base;
+    print(signBase);
+    return signBase;
   }
   //--------------------------------End-Image-Base64----------------------------
 
@@ -542,7 +543,7 @@ class _Form2State extends State<Form2> {
 
   //------------------------------End-Progress-Bar------------------------------
   //----------------------------------Other-State-------------------------------
-  String selectedState;
+  String selectedState = '';
   List<String> State = [
     "Andhra Pradesh",
     "Andaman and Nicobar Islands",
@@ -583,28 +584,27 @@ class _Form2State extends State<Form2> {
 
   bool isShow = false;
   Future<bool> _onBackPressed() {
-    return showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: new Text('Do you want to go previous page'),
-            content: new Text('Changes you made may not be saved.'),
-            actions: <Widget>[
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(false),
-                child: Text("NO"),
-              ),
-              SizedBox(height: 16),
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(true),
-                child: Text("YES"),
-              ),
-            ],
+    return showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Do you want to go previous page'),
+        content: const Text('Changes you made may not be saved.'),
+        actions: <Widget>[
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(false),
+            child: const Text("NO"),
           ),
-        ) ??
-        false;
+          const SizedBox(height: 16),
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(true),
+            child: const Text("YES"),
+          ),
+        ],
+      ),
+    ).then((value) => value ?? false);
   }
 
-  String get _errorText {
+  String? get _errorText {
     // at any time, we can get the text from _controller.value.text
     final text = driver_phone.value.text;
     // Note: you can do your own custom validation here
@@ -625,10 +625,9 @@ class _Form2State extends State<Form2> {
       child: Scaffold(
 
           // backgroundColor: Colors.white,
-          appBar: NewGradientAppBar(
-            title: Text("FORM - I"),
-            gradient: LinearGradient(
-                colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+          appBar: AppBar(
+            title: const Text("FORM - I"),
+
             //backgroundColor: Colors.blueGrey,
             elevation: 0,
             //automaticallyImplyLeading: false,
@@ -658,8 +657,8 @@ class _Form2State extends State<Form2> {
                       width: double.infinity,
                       margin:
                           const EdgeInsets.only(top: 7, left: 15, right: 15),
-                      decoration: new BoxDecoration(
-                          border: new Border.all(
+                      decoration: BoxDecoration(
+                          border: Border.all(
                             color: Colors.grey,
                             width: 1,
                           ),
@@ -668,10 +667,11 @@ class _Form2State extends State<Form2> {
                           left: 10.0, right: 10, top: 10, bottom: 0),
                       child: DropdownButton<String>(
                         value: selectedState,
-                        icon: Icon(Icons.arrow_drop_down),
+                        icon: const Icon(Icons.arrow_drop_down),
                         iconSize: 24,
                         elevation: 16,
-                        style: TextStyle(color: Colors.black, fontSize: 18),
+                        style:
+                            const TextStyle(color: Colors.black, fontSize: 18),
                         hint: RichText(
                           textAlign: TextAlign.center,
                           text: TextSpan(children: <TextSpan>[
@@ -692,9 +692,9 @@ class _Form2State extends State<Form2> {
                           height: 2,
                           color: Colors.grey,
                         ),*/
-                        onChanged: (String data) {
+                        onChanged: (String? data) {
                           setState(() {
-                            selectedState = data;
+                            selectedState = data ?? '';
                           });
 
                           print(selectedState);
@@ -714,11 +714,11 @@ class _Form2State extends State<Form2> {
                       //padding: EdgeInsets.symmetric(horizontal: 15),
                       child: TextField(
                         controller: destination_add,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(
                             borderSide: BorderSide(width: 2),
-                            borderRadius: const BorderRadius.all(
-                                const Radius.circular(14.0)),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(14.0)),
                           ),
                           labelText: 'Destination Address',
                           hintText: 'Destination Address',
@@ -730,8 +730,8 @@ class _Form2State extends State<Form2> {
                       child: Column(
                         children: <Widget>[
                           Row(children: <Widget>[
-                            Expanded(
-                              child: new Text(
+                            const Expanded(
+                              child: Text(
                                 'Enter Vehicle Details',
                                 style: TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.bold),
@@ -739,7 +739,7 @@ class _Form2State extends State<Form2> {
                             ),
                             Expanded(
                               child: RadioListTile(
-                                title: Text(
+                                title: const Text(
                                   'Yes',
                                   style: TextStyle(fontFamily: 'Lato'),
                                 ),
@@ -750,7 +750,7 @@ class _Form2State extends State<Form2> {
                             ),
                             Expanded(
                               child: RadioListTile(
-                                title: Text(
+                                title: const Text(
                                   'No',
                                   style: TextStyle(fontFamily: 'Lato'),
                                 ),
@@ -760,125 +760,123 @@ class _Form2State extends State<Form2> {
                               ),
                             ),
                           ]),
-                          LayoutBuilder(builder: (context, constraints) {
-                            if (flag == true) {
-                              return Container(
-                                  child: Column(children: <Widget>[
-                                Padding(
-                                    padding: const EdgeInsets.only(
-                                        right: 15.0, top: 10, bottom: 0),
-                                    child: TextField(
-                                      controller: vehical_reg_no,
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(
-                                          borderSide: BorderSide(width: 2),
-                                          borderRadius: const BorderRadius.all(
-                                              const Radius.circular(14.0)),
+                          LayoutBuilder(
+                            builder: (context, constraints) {
+                              if (flag) {
+                                return Column(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 15.0, top: 10, bottom: 0),
+                                      child: TextField(
+                                        controller: vehical_reg_no,
+                                        decoration: const InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide(width: 2),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(14.0)),
+                                          ),
+                                          labelText:
+                                              "Vehicle Registration Number",
                                         ),
-                                        labelText:
-                                            "Vehicle Registration Number",
                                       ),
-                                    )),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 15.0, top: 15, bottom: 0),
-                                  //padding: EdgeInsets.symmetric(horizontal: 15),
-                                  child: TextField(
-                                    controller: driver_name,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderSide: BorderSide(width: 2),
-                                        borderRadius: const BorderRadius.all(
-                                            const Radius.circular(14.0)),
-                                      ),
-                                      labelText: 'Name of the driver',
                                     ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 15.0, top: 15, bottom: 0),
-                                  //padding: EdgeInsets.symmetric(horizontal: 15),
-                                  child: TextField(
-                                    controller: driver_phone,
-                                    maxLength: 10,
-                                    keyboardType: TextInputType.number,
-                                    decoration: InputDecoration(
-                                        border: OutlineInputBorder(
-                                          borderSide: BorderSide(width: 2),
-                                          borderRadius: const BorderRadius.all(
-                                              const Radius.circular(14.0)),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 15.0, top: 15, bottom: 0),
+                                      child: TextField(
+                                        controller: driver_name,
+                                        decoration: const InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide(width: 2),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(14.0)),
+                                          ),
+                                          labelText: 'Name of the driver',
                                         ),
-                                        labelText: 'Phone Number of the Driver',
-                                        errorText: _errorText),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 15.0,
-                                      top: 15,
-                                      bottom:
-                                          0), //padding: EdgeInsets.symmetric(horizontal: 15),
-                                  child: TextField(
-                                    controller: mode_transport,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderSide: BorderSide(width: 2),
-                                        borderRadius: const BorderRadius.all(
-                                            const Radius.circular(14.0)),
                                       ),
-                                      labelText: 'Vehicle Used',
                                     ),
-                                  ),
-                                ),
-                                Container(
-                                  width: double.infinity,
-                                  margin:
-                                      const EdgeInsets.only(top: 15, right: 15),
-                                  decoration: new BoxDecoration(
-                                      border: new Border.all(
-                                        color: Colors.grey,
-                                        width: 1,
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 15.0, top: 15, bottom: 0),
+                                      child: TextField(
+                                        controller: driver_phone,
+                                        maxLength: 10,
+                                        keyboardType: TextInputType.number,
+                                        decoration: InputDecoration(
+                                          border: const OutlineInputBorder(
+                                            borderSide: BorderSide(width: 2),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(14.0)),
+                                          ),
+                                          labelText:
+                                              'Phone Number of the Driver',
+                                          errorText:
+                                              _errorText, // Ensure _errorText is handled correctly
+                                        ),
                                       ),
-                                      borderRadius: BorderRadius.circular(14)),
-                                  padding: const EdgeInsets.only(
-                                      left: 10.0, right: 0, top: 10, bottom: 0),
-                                  child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: <Widget>[
-                                        TextButton.icon(
-                                          icon: Icon(Icons.image),
-                                          onPressed: () {
-                                            setState(() {
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 15.0, top: 15, bottom: 0),
+                                      child: TextField(
+                                        controller: mode_transport,
+                                        decoration: const InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide(width: 2),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(14.0)),
+                                          ),
+                                          labelText: 'Vehicle Used',
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      width: double.infinity,
+                                      margin: const EdgeInsets.only(
+                                          top: 15, right: 15),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.grey, width: 1),
+                                        borderRadius: BorderRadius.circular(14),
+                                      ),
+                                      padding: const EdgeInsets.only(
+                                          left: 10.0, top: 10, bottom: 0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          TextButton.icon(
+                                            icon: const Icon(Icons.image),
+                                            onPressed: () {
                                               _showpickoptiondialogLisence(
                                                   context);
-                                            });
-                                            // License(ImageSource.gallery);
-                                          },
-                                          label: Text("Driver License"),
-                                        ),
-                                        Spacer(),
-                                        Icon(
-                                          Icons.check_circle,
-                                          color: (_imageLisence) == null
-                                              ? Colors.red
-                                              : Colors.green,
-                                          size: 28.0,
-                                        ),
-                                      ]),
-                                ),
-                              ]));
-                            } else if (flag == false) {
-                              return Container(
-                                color: Colors.white,
-                              );
-                            }
-                          }),
+                                            },
+                                            label: const Text("Driver License"),
+                                          ),
+                                          const Spacer(),
+                                          Icon(
+                                            Icons.check_circle,
+                                            color: (_imageLisence != null)
+                                                ? Colors.green
+                                                : Colors.red,
+                                            size: 28.0,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              } else {
+                                return Container(color: Colors.white);
+                              }
+                            },
+                          ),
+
                           Container(
                             width: double.infinity,
                             margin: const EdgeInsets.only(top: 15, right: 15),
-                            decoration: new BoxDecoration(
-                                border: new Border.all(
+                            decoration: BoxDecoration(
+                                border: Border.all(
                                   color: Colors.grey,
                                   width: 1,
                                 ),
@@ -889,7 +887,7 @@ class _Form2State extends State<Form2> {
                                 mainAxisSize: MainAxisSize.max,
                                 children: <Widget>[
                                   TextButton.icon(
-                                    icon: Icon(Icons.image),
+                                    icon: const Icon(Icons.image),
                                     onPressed: () {
                                       setState(() {
                                         _showpickoptiondialogSignature(context);
@@ -897,9 +895,9 @@ class _Form2State extends State<Form2> {
                                       // Signature(ImageSource.gallery);
                                       // print(_Signature.path);
                                     },
-                                    label: Text("Digital Signature"),
+                                    label: const Text("Digital Signature"),
                                   ),
-                                  Spacer(),
+                                  const Spacer(),
                                   Icon(
                                     Icons.check_circle,
                                     color: (_imageSignature) == null
@@ -921,7 +919,7 @@ class _Form2State extends State<Form2> {
                           // ),
                           Visibility(
                             visible: isShow,
-                            child: CircularProgressIndicator(
+                            child: const CircularProgressIndicator(
                               valueColor:
                                   AlwaysStoppedAnimation<Color>(Colors.green),
                               strokeWidth: 8,
@@ -954,34 +952,34 @@ class _Form2State extends State<Form2> {
                                 String locImageB = imagetwo;
                                 String locImageC = imagethree;
                                 String locImageD = imagefour;
-                                String image1_lat = imagelatone;
-                                String image2_lat = imagelattwo;
-                                String image3_lat = imagelatthree;
-                                String image4_lat = imagelatfour;
-                                String image1_log = imagelongone;
-                                String image2_log = imagelongtwo;
-                                String image3_log = imagelongthree;
-                                String image4_log = imagelongfour;
-                                String tree_species = holder_1.toString();
-                                String purpose_cut = Purpose;
-                                String driver_nameLoc = driver_name.text;
-                                String vehicel_reg = vehical_reg_no.text;
+                                String image1Lat = imagelatone;
+                                String image2Lat = imagelattwo;
+                                String image3Lat = imagelatthree;
+                                String image4Lat = imagelatfour;
+                                String image1Log = imagelongone;
+                                String image2Log = imagelongtwo;
+                                String image3Log = imagelongthree;
+                                String image4Log = imagelongfour;
+                                String treeSpecies = holder_1.toString();
+                                String purposeCut = Purpose;
+                                String driverNameloc = driver_name.text;
+                                String vehicelReg = vehical_reg_no.text;
                                 String phone = driver_phone.text;
                                 String mode = mode_transport.text;
-                                String destination_address =
+                                String destinationAddress =
                                     destination_add.text;
-                                String destination_state = selectedState;
+                                String destinationState = selectedState;
                                 String licenceImg = base64ImageLisence;
-                                String ownership_proof_img = Ownership;
-                                String revenue_application_img = Application;
-                                String revenue_approval_img = Approval;
-                                String declaration_img = Declaration;
-                                String location_sketch_img = Location;
-                                String tree_ownership_img = TreeOwnership;
-                                String aadhar_card_img = IdProof;
-                                String signature_img = base64ImageSignature;
+                                String ownershipProofImg = Ownership;
+                                String revenueApplicationImg = Application;
+                                String revenueApprovalImg = Approval;
+                                String declarationImg = Declaration;
+                                String locationSketchImg = Location;
+                                String treeOwnershipImg = TreeOwnership;
+                                String aadharCardImg = IdProof;
+                                String signatureImg = base64ImageSignature;
                                 String selectProof = selectedPRoof;
-                                if (log_details.length != 0) {
+                                if (log_details.isNotEmpty) {
                                   log = json.encode(log_details);
                                   print("LOOOGGG$log");
                                 }
@@ -1006,57 +1004,55 @@ class _Form2State extends State<Form2> {
                                     (locImageB == null) ? "" : locImageB,
                                     (locImageC == null) ? "" : locImageC,
                                     (locImageD == null) ? "" : locImageD,
-                                    (image1_lat == null) ? "" : image1_lat,
-                                    (image2_lat == null) ? "" : image2_lat,
-                                    (image3_lat == null) ? "" : image3_lat,
-                                    (image4_lat == null) ? "" : image4_lat,
-                                    (image1_log == null) ? "" : image1_log,
-                                    (image2_log == null) ? "" : image2_log,
-                                    (image3_log == null) ? "" : image3_log,
-                                    (image4_log == null) ? "" : image4_log,
-                                    (tree_species == null) ? "" : tree_species,
-                                    (purpose_cut == null) ? "" : purpose_cut,
-                                    (driver_nameLoc == null)
+                                    (image1Lat == null) ? "" : image1Lat,
+                                    (image2Lat == null) ? "" : image2Lat,
+                                    (image3Lat == null) ? "" : image3Lat,
+                                    (image4Lat == null) ? "" : image4Lat,
+                                    (image1Log == null) ? "" : image1Log,
+                                    (image2Log == null) ? "" : image2Log,
+                                    (image3Log == null) ? "" : image3Log,
+                                    (image4Log == null) ? "" : image4Log,
+                                    (treeSpecies == null) ? "" : treeSpecies,
+                                    (purposeCut == null) ? "" : purposeCut,
+                                    (driverNameloc == null)
                                         ? ""
-                                        : driver_nameLoc,
-                                    (vehicel_reg == null) ? "" : vehicel_reg,
+                                        : driverNameloc,
+                                    (vehicelReg == null) ? "" : vehicelReg,
                                     (phone == null) ? "" : phone,
                                     (mode == null) ? "" : mode,
-                                    (destination_address == null)
+                                    (destinationAddress == null)
                                         ? ""
-                                        : destination_address,
-                                    (destination_state == null)
+                                        : destinationAddress,
+                                    (destinationState == null)
                                         ? ""
-                                        : destination_state,
+                                        : destinationState,
                                     (licenceImg == null) ? "" : licenceImg,
-                                    (ownership_proof_img == null)
+                                    (ownershipProofImg == null)
                                         ? ""
-                                        : ownership_proof_img,
-                                    (revenue_application_img == null)
+                                        : ownershipProofImg,
+                                    (revenueApplicationImg == null)
                                         ? ""
-                                        : revenue_application_img,
-                                    (revenue_approval_img == null)
+                                        : revenueApplicationImg,
+                                    (revenueApprovalImg == null)
                                         ? ""
-                                        : revenue_approval_img,
-                                    (declaration_img == null)
+                                        : revenueApprovalImg,
+                                    (declarationImg == null)
                                         ? ""
-                                        : declaration_img,
-                                    (location_sketch_img == null)
+                                        : declarationImg,
+                                    (locationSketchImg == null)
                                         ? ""
-                                        : location_sketch_img,
-                                    (tree_ownership_img == null)
+                                        : locationSketchImg,
+                                    (treeOwnershipImg == null)
                                         ? ""
-                                        : tree_ownership_img,
-                                    (aadhar_card_img == null)
+                                        : treeOwnershipImg,
+                                    (aadharCardImg == null)
                                         ? ""
-                                        : aadhar_card_img,
-                                    (signature_img == null)
-                                        ? ""
-                                        : signature_img,
+                                        : aadharCardImg,
+                                    (signatureImg == null) ? "" : signatureImg,
                                     (selectProof == null) ? "" : selectProof,
                                     (logData == null) ? "" : logData);
                               },
-                              child: Text('SAVE FORM'),
+                              child: const Text('SAVE FORM'),
                             ),
                           ),
 
@@ -1172,7 +1168,7 @@ class _Form2State extends State<Form2> {
                                   });
 
                                   const String url =
-                                      'http://13.234.208.246/api/auth/InsertRecord';
+                                      'http://192.168.54.114:8000/api/auth/InsertRecord';
                                   Map data = {
                                     "name": Name,
                                     "address": Address,
@@ -1336,7 +1332,7 @@ class _Form2State extends State<Form2> {
                                       context,
                                       PageRouteBuilder(
                                           transitionDuration:
-                                              Duration(milliseconds: 250),
+                                              const Duration(milliseconds: 250),
                                           transitionsBuilder: (context,
                                               animation, animationTime, child) {
                                             return ScaleTransition(
@@ -1351,12 +1347,22 @@ class _Form2State extends State<Form2> {
                                                 sessionToken: sessionToken,
                                                 userName: userName,
                                                 userEmail: userEmail,
-                                                userId: userId);
+                                                userId: userId,
+                                                userMobile:
+                                                    '', // Add appropriate value
+                                                userAddress:
+                                                    '', // Add appropriate value
+                                                userProfile:
+                                                    '', // Add appropriate value
+                                                userGroup:
+                                                    '', // Add appropriate value
+                                                userCato:
+                                                    ''); // Add appropriate value
                                           }));
                                 }
                               },
 
-                              child: Text(
+                              child: const Text(
                                 'Submit',
                                 style: TextStyle(
                                   color: Colors.black,
@@ -1485,7 +1491,7 @@ class _Form2State extends State<Form2> {
     Navigator.pushReplacement(
         context,
         PageRouteBuilder(
-            transitionDuration: Duration(milliseconds: 250),
+            transitionDuration: const Duration(milliseconds: 250),
             transitionsBuilder: (context, animation, animationTime, child) {
               return ScaleTransition(
                 alignment: Alignment.topCenter,
@@ -1495,11 +1501,16 @@ class _Form2State extends State<Form2> {
             },
             pageBuilder: (context, animation, animationTime) {
               return HomePage(
-                sessionToken: sessionToken,
-                userName: userName,
-                userEmail: userEmail,
-                userId: userId,
-              );
+                  sessionToken: sessionToken,
+                  userName: userName,
+                  userEmail: userEmail,
+                  userId: userId,
+                  userMobile: '', // Add appropriate value
+                  userAddress: '', // Add appropriate value
+                  userProfile: '', // Add appropriate value
+                  userGroup: '', // Add appropriate value
+                  userCato: '' // Add appropriate value
+                  );
             }));
   }
 }

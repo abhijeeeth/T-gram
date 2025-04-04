@@ -24,23 +24,22 @@ class transitPassNonNotified extends StatefulWidget {
   String userGroup;
 
   transitPassNonNotified(
-      {this.sessionToken,
-      this.userName,
-      this.userEmail,
-      this.userId,
-      this.formOneIndex,
-      this.village_,
-      this.userGroup});
+      {super.key,
+      required this.sessionToken,
+      required this.userName,
+      required this.userEmail,
+      required this.userId,
+      required this.formOneIndex,
+      required this.village_,
+      required this.userGroup});
 
   @override
-  State<transitPassNonNotified> createState() => _transitPassNonNotifiedState(
-      formOneIndex,
-      sessionToken,
-      userName,
-      userEmail,
-      userId,
-      village_,
-      userGroup);
+  State<transitPassNonNotified> createState() =>
+      _transitPassNonNotifiedState(formOneIndex, sessionToken, userName,
+          userEmail: userEmail,
+          userId: userId,
+          village__: village_,
+          userGroup: userGroup);
 }
 
 class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
@@ -51,15 +50,24 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
   int userId;
   String village__;
   String userGroup;
+  String divisionData;
+  String selectedPurpose;
+  String rangeData;
+  String dropdownValue3 = ""; // Initialize with empty string
+  bool holder_check = false;
+  double v = 0.0;
+  double Len = 0.0;
 
   _transitPassNonNotifiedState(
-      this.formOneIndex,
-      this.sessionToken,
-      this.userName,
-      this.userEmail,
-      this.userId,
-      this.village__,
-      this.userGroup);
+      this.formOneIndex, this.sessionToken, this.userName,
+      {required this.userEmail,
+      required this.userId,
+      required this.village__,
+      required this.userGroup,
+      this.divisionData = "",
+      this.selectedPurpose = "",
+      this.rangeData = "",
+      this.dropdownValue3 = ""});
 
   TextEditingController Name = TextEditingController();
   TextEditingController Address = TextEditingController();
@@ -96,8 +104,6 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
     return int.parse(no_Tree) > 0;
   }
 
-  bool holder_check;
-  double v;
   // double _getVolume(double girth, double length) {
   //   v = ((girth * 0.01) / 4) * ((girth * 0.01) / 4) * length;
   //   return v;
@@ -119,7 +125,6 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
     return Text((_getVolume(girth, length).toString()).toString());
   }
 
-  double Len;
   List log_details = [];
   List d = [];
   List Species = [];
@@ -140,7 +145,8 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
     print(holder_1);
   }
 
-  final Location location = Location();
+  final Location location =
+      Location(latitude: 0.0, longitude: 0.0, timestamp: DateTime.now());
   int num1 = 0;
 
   void getCurrentLocation3() async {
@@ -172,11 +178,19 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
 
   @override
   Widget build(BuildContext context) {
+    // Check if divisionData exists in the divisions list
+    bool divisionExists = divisionData.isNotEmpty &&
+        divisions.where((division) => division == divisionData).isNotEmpty;
+
+    // Check if rangeData exists in the ranges list
+    bool rangeExists = rangeData.isNotEmpty &&
+        ranges.where((range) => range == rangeData).isNotEmpty;
+
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: NewGradientAppBar(
+        appBar: AppBar(
           title: const Text(
             "Form I - Non-Notified",
             style: TextStyle(
@@ -184,8 +198,6 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
               color: Colors.white,
             ),
           ),
-          gradient: LinearGradient(
-              colors: [HexColor("#26f596"), HexColor("#0499f2")]),
           elevation: 0,
         ),
         body: SingleChildScrollView(
@@ -221,7 +233,7 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
               child: Row(
                 children: <Widget>[
                   DropdownButton<String>(
-                    value: divisionData,
+                    value: divisionExists ? divisionData : null,
                     icon: const Icon(Icons.arrow_drop_down),
                     iconSize: 24,
                     elevation: 16,
@@ -236,10 +248,12 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                                 fontWeight: FontWeight.bold)),
                       ]),
                     ),
-                    onChanged: (String data) {
-                      setState(() {
-                        divisionData = data;
-                      });
+                    onChanged: (String? data) {
+                      if (data != null) {
+                        setState(() {
+                          divisionData = data;
+                        });
+                      }
                     },
                     items: divisions
                         .toSet()
@@ -255,9 +269,9 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                       );
                     }).toList(),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   DropdownButton<String>(
-                    value: rangeData,
+                    value: rangeExists ? rangeData : null,
                     icon: const Icon(Icons.arrow_drop_down),
                     iconSize: 24,
                     elevation: 16,
@@ -272,10 +286,12 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                                 fontWeight: FontWeight.bold)),
                       ]),
                     ),
-                    onChanged: (String data) {
-                      setState(() {
-                        rangeData = data;
-                      });
+                    onChanged: (String? data) {
+                      if (data != null) {
+                        setState(() {
+                          rangeData = data;
+                        });
+                      }
                     },
                     items: ranges
                         .toSet()
@@ -300,7 +316,7 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
               child: TextField(
                   controller: Name,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(
+                    border: const OutlineInputBorder(
                       borderSide: BorderSide(width: 2),
                       borderRadius: BorderRadius.all(Radius.circular(14.0)),
                     ),
@@ -308,7 +324,7 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                     labelText: 'Name ',
                     hintText: 'Enter Your Name',
                     suffixIcon: RichText(
-                      text: TextSpan(
+                      text: const TextSpan(
                         text: '*',
                         style: TextStyle(
                           color: Colors.red,
@@ -326,14 +342,14 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
               child: TextField(
                 controller: Address,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(
+                  border: const OutlineInputBorder(
                     borderSide: BorderSide(width: 2),
                     borderRadius: BorderRadius.all(Radius.circular(14.0)),
                   ),
                   labelText: 'Address',
                   hintText: 'Enter Your Address',
                   suffixIcon: RichText(
-                    text: TextSpan(
+                    text: const TextSpan(
                       text: '*',
                       style: TextStyle(
                         color: Colors.red,
@@ -352,14 +368,14 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
               child: TextField(
                 controller: survey_no,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(
+                  border: const OutlineInputBorder(
                     borderSide: BorderSide(width: 2),
                     borderRadius: BorderRadius.all(Radius.circular(14.0)),
                   ),
                   labelText: 'Survey Number',
                   hintText: 'Enter Survey Number',
                   suffixIcon: RichText(
-                    text: TextSpan(
+                    text: const TextSpan(
                       text: '*',
                       style: TextStyle(
                         color: Colors.red,
@@ -367,8 +383,8 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                     ),
                   ),
                 ),
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.blue),
               ),
             ),
             Padding(
@@ -378,14 +394,14 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
               child: TextField(
                 controller: Tree_Proposed_to_cut,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(
+                  border: const OutlineInputBorder(
                     borderSide: BorderSide(width: 2),
                     borderRadius: BorderRadius.all(Radius.circular(14.0)),
                   ),
                   labelText: 'Number of trees proposed to be cut.',
                   hintText: 'Enter Number of Trees',
                   suffixIcon: RichText(
-                    text: TextSpan(
+                    text: const TextSpan(
                       text: '*',
                       style: TextStyle(
                         color: Colors.red,
@@ -407,16 +423,15 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
               child: TextField(
                   controller: DistrictCo,
                   enabled: false, // Make the TextField non-editable
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       border: OutlineInputBorder(
                         borderSide: BorderSide(width: 2),
-                        borderRadius:
-                            const BorderRadius.all(const Radius.circular(14.0)),
+                        borderRadius: BorderRadius.all(Radius.circular(14.0)),
                       ),
                       // border: OutlineInputBorder(),
                       labelText: 'District ',
                       hintText: 'Enter Your District'),
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.bold, color: Colors.blue)),
             ),
             Padding(
@@ -425,16 +440,15 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
               child: TextField(
                   controller: TalukCo,
                   enabled: false, // Make the TextField non-editable
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       border: OutlineInputBorder(
                         borderSide: BorderSide(width: 2),
-                        borderRadius:
-                            const BorderRadius.all(const Radius.circular(14.0)),
+                        borderRadius: BorderRadius.all(Radius.circular(14.0)),
                       ),
                       // border: OutlineInputBorder(),
                       labelText: 'Taluk ',
                       hintText: 'Enter Your Taluk'),
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.bold, color: Colors.blue)),
             ),
             Padding(
@@ -443,16 +457,15 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
               child: TextField(
                   controller: blockCo,
                   enabled: true, // Make the TextField non-editable
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       border: OutlineInputBorder(
                         borderSide: BorderSide(width: 2),
-                        borderRadius:
-                            const BorderRadius.all(const Radius.circular(14.0)),
+                        borderRadius: BorderRadius.all(Radius.circular(14.0)),
                       ),
                       labelText: 'Block (optional)',
                       hintText: 'Enter Your Block'),
                   keyboardType: TextInputType.text,
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.bold, color: Colors.blue)),
             ),
             Padding(
@@ -461,16 +474,15 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
               child: TextField(
                   controller: villageCo,
                   enabled: false, // Make the TextField non-editable
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       border: OutlineInputBorder(
                         borderSide: BorderSide(width: 2),
-                        borderRadius:
-                            const BorderRadius.all(const Radius.circular(14.0)),
+                        borderRadius: BorderRadius.all(Radius.circular(14.0)),
                       ),
                       // border: OutlineInputBorder(),
                       labelText: 'Village ',
                       hintText: 'Enter Your Village'),
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.bold, color: Colors.blue)),
             ),
             Padding(
@@ -480,16 +492,15 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                   controller: pincodeCo,
                   enabled: true, // Make the TextField non-editable
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(
+                    border: const OutlineInputBorder(
                       borderSide: BorderSide(width: 2),
-                      borderRadius:
-                          const BorderRadius.all(const Radius.circular(14.0)),
+                      borderRadius: BorderRadius.all(Radius.circular(14.0)),
                     ),
                     // border: OutlineInputBorder(),
                     labelText: 'Pincode ',
                     hintText: 'Enter Your Pincode',
                     suffixIcon: RichText(
-                      text: TextSpan(
+                      text: const TextSpan(
                         text: '*',
                         style: TextStyle(
                           color: Colors.red,
@@ -498,13 +509,13 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                     ),
                   ),
                   keyboardType: TextInputType.number,
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.bold, color: Colors.blue)),
             ),
             Row(children: <Widget>[
               Container(
                 margin: const EdgeInsets.only(left: 13, top: 15),
-                child: Text(
+                child: const Text(
                   'Species of tree or trees proposed to be cut:',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.left,
@@ -514,12 +525,12 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
             Container(
               margin: const EdgeInsets.only(top: 10, left: 15, right: 15),
               height: MediaQuery.of(context).size.height * 0.25,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   // Your decoration properties
                   ),
               child: Scrollbar(
                 // Wrap your ListView with Scrollbar
-                isAlwaysShown: true, // Show the scrollbar always
+                thumbVisibility: true, // Show the scrollbar always
                 child: ListView(
                   scrollDirection: Axis.vertical,
                   children: SpeciasList.keys.map((String key) {
@@ -528,11 +539,11 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                       value: SpeciasList[key],
                       activeColor: Colors.green,
                       checkColor: Colors.white,
-                      onChanged: (bool value) {
+                      onChanged: (bool? value) {
                         holder_check = _getHolderCheck();
 
                         if (int.parse(no_Tree) > 0 && holder_check) {
-                          if (value) {
+                          if (value == true) {
                             if (holder_1.length < int.parse(no_Tree)) {
                               holder_1.add(key);
                             } else {
@@ -551,7 +562,7 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                             holder_1.remove(key);
                           }
                           setState(() {
-                            SpeciasList[key] = value;
+                            SpeciasList[key] = value ?? false;
                           });
                         }
                       },
@@ -566,7 +577,7 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
               child: DropdownButton<String>(
                 isExpanded: true,
                 icon: const Icon(Icons.arrow_drop_down),
-                value: selectedPurpose,
+                value: selectedPurpose.isEmpty ? null : selectedPurpose,
                 style: const TextStyle(color: Colors.black, fontSize: 18),
                 hint: RichText(
                   textAlign: TextAlign.center,
@@ -577,12 +588,14 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                             color: Colors.black, fontWeight: FontWeight.bold)),
                   ]),
                 ), // Initially selected value (can be null)
-                onChanged: (String newValue) {
-                  setState(() {
-                    selectedPurpose = newValue; // Update the selected value
-                  });
+                onChanged: (String? newValue) {
+                  if (newValue != null) {
+                    setState(() {
+                      selectedPurpose = newValue;
+                    });
+                  }
                 },
-                items: <String>['Personal', 'Commercial']
+                items: const <String>['Personal', 'Commercial']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
@@ -603,8 +616,7 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                               LayoutBuilder(builder: (context, constraints) {
                                 print(n_list.length);
                                 int textValue = 0;
-                                if (Tree_Proposed_to_cut.text == null ||
-                                    Tree_Proposed_to_cut.text == "") {
+                                if (Tree_Proposed_to_cut.text == "") {
                                   textValue = 0;
                                 } else {
                                   textValue =
@@ -617,7 +629,7 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                                       flag_Log = true;
 
                                       print("Flag_No $flag_no");
-                                      return Text(
+                                      return const Text(
                                         "Add log details for all trees",
                                         style: TextStyle(
                                             color: Colors.red, fontSize: 16),
@@ -625,7 +637,7 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                                     } else {
                                       flag_no = false;
                                       print("Flag_No F $flag_no");
-                                      return Text(
+                                      return const Text(
                                         "",
                                         style: TextStyle(fontSize: 1),
                                       );
@@ -643,7 +655,7 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12),
                                     color: Colors.white,
-                                    boxShadow: [
+                                    boxShadow: const [
                                       BoxShadow(
                                         color: Colors.black,
                                         blurRadius: 2.0,
@@ -664,7 +676,7 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                                               children: <Widget>[
                                                 DataTable(
                                                   columns: [
-                                                    DataColumn(
+                                                    const DataColumn(
                                                         label: Text(
                                                       'S.No',
                                                       style: TextStyle(
@@ -672,7 +684,7 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                                                               FontWeight.bold,
                                                           color: Colors.blue),
                                                     )),
-                                                    DataColumn(
+                                                    const DataColumn(
                                                         label: Text(
                                                       'Species  ',
                                                       style: TextStyle(
@@ -683,7 +695,7 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                                                     DataColumn(
                                                       label: Row(
                                                         children: <Widget>[
-                                                          Text(
+                                                          const Text(
                                                             'GBH (cm)',
                                                             style: TextStyle(
                                                               fontWeight:
@@ -694,7 +706,7 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                                                             ),
                                                           ),
                                                           IconButton(
-                                                            icon: Icon(
+                                                            icon: const Icon(
                                                                 Icons.info),
                                                             onPressed: () {
                                                               // Show a dialog or tooltip with the additional information
@@ -704,21 +716,20 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                                                                 builder:
                                                                     (context) {
                                                                   return AlertDialog(
-                                                                    title: Text(
+                                                                    title: const Text(
                                                                         'Information'),
                                                                     content:
-                                                                        Text(
+                                                                        const Text(
                                                                       'Measured at a height of 1.4 meters above the ground.',
                                                                     ),
-                                                                    actions: <
-                                                                        Widget>[
+                                                                    actions: <Widget>[
                                                                       TextButton(
                                                                         onPressed:
                                                                             () {
                                                                           Navigator.of(context)
                                                                               .pop();
                                                                         },
-                                                                        child: Text(
+                                                                        child: const Text(
                                                                             'OK'),
                                                                       ),
                                                                     ],
@@ -730,7 +741,7 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                                                         ],
                                                       ),
                                                     ),
-                                                    DataColumn(
+                                                    const DataColumn(
                                                         label: Text(
                                                       ' Height(M)   ',
                                                       style: TextStyle(
@@ -738,7 +749,7 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                                                               FontWeight.bold,
                                                           color: Colors.blue),
                                                     )),
-                                                    DataColumn(
+                                                    const DataColumn(
                                                         label: Text(
                                                       ' Volume(m³) ',
                                                       style: TextStyle(
@@ -749,7 +760,7 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                                                     DataColumn(
                                                       label: Row(
                                                         children: <Widget>[
-                                                          Text(
+                                                          const Text(
                                                             "Add log",
                                                             style: TextStyle(
                                                                 fontWeight:
@@ -762,7 +773,7 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                                                             visible:
                                                                 flag_no == true,
                                                             child: IconButton(
-                                                              icon: Icon(
+                                                              icon: const Icon(
                                                                 Icons
                                                                     .add_circle,
                                                                 color:
@@ -792,7 +803,7 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                                                             DataCell(Text(
                                                                 (index + 1)
                                                                     .toString())),
-                                                            DataCell(Container(
+                                                            DataCell(SizedBox(
                                                                 width: 180,
                                                                 child: Text(
                                                                   log_details[index]
@@ -800,7 +811,7 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                                                                           'species_of_tree']
                                                                       .toString(),
                                                                 ))),
-                                                            DataCell(Container(
+                                                            DataCell(SizedBox(
                                                                 width: 100,
                                                                 child: Text(
                                                                   log_details[index]
@@ -808,7 +819,7 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                                                                           'breadth']
                                                                       .toString(),
                                                                 ))),
-                                                            DataCell(Container(
+                                                            DataCell(SizedBox(
                                                                 width: 100,
                                                                 child: Text(
                                                                   log_details[index]
@@ -816,7 +827,7 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                                                                           'length']
                                                                       .toString(),
                                                                 ))),
-                                                            DataCell(Container(
+                                                            DataCell(SizedBox(
                                                                 width: 100,
                                                                 child: Text(
                                                                   log_details[index]
@@ -825,11 +836,12 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                                                                       .toString(),
                                                                 ))),
                                                             DataCell(Row(
-                                                              children: <
-                                                                  Widget>[
-                                                                Text("remove"),
+                                                              children: <Widget>[
+                                                                const Text(
+                                                                    "remove"),
                                                                 IconButton(
-                                                                  icon: Icon(
+                                                                  icon:
+                                                                      const Icon(
                                                                     Icons
                                                                         .remove_circle,
                                                                     color: Colors
@@ -852,9 +864,11 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                                                                     });
                                                                   },
                                                                 ), //--------------Remove Button
-                                                                Text("edit"),
+                                                                const Text(
+                                                                    "edit"),
                                                                 IconButton(
-                                                                  icon: Icon(
+                                                                  icon:
+                                                                      const Icon(
                                                                     Icons
                                                                         .edit_rounded,
                                                                     color: Colors
@@ -887,40 +901,22 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                           color: Colors.white,
                         );
                       }
+                      return Container(); // Add this line
                     }),
                   ],
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Container(
               child: ElevatedButton(
-                child: Text(" NEXT "),
                 style: ElevatedButton.styleFrom(
                   shadowColor: Colors.green,
                 ),
                 onPressed: () {
-                  if (divisionData == null) {
-                    Fluttertoast.showToast(
-                        msg: "Please select Division ",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Colors.red,
-                        textColor: Colors.white,
-                        fontSize: 18.0);
-                  } else if (rangeData == null) {
-                    Fluttertoast.showToast(
-                        msg: "Please select Range ",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Colors.red,
-                        textColor: Colors.white,
-                        fontSize: 18.0);
-                  } else if (Name.text.isEmpty) {
+                  if (Name.text.isEmpty) {
                     Fluttertoast.showToast(
                         msg: "Please add Applicant Name ",
                         toastLength: Toast.LENGTH_SHORT,
@@ -965,15 +961,6 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                         backgroundColor: Colors.red,
                         textColor: Colors.white,
                         fontSize: 18.0);
-                  } else if (selectedPurpose == null) {
-                    Fluttertoast.showToast(
-                        msg: "Please add Purpose ",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Colors.red,
-                        textColor: Colors.white,
-                        fontSize: 18.0);
                   } else if (log_details.isEmpty) {
                     Fluttertoast.showToast(
                         msg: "Please add Log details ",
@@ -995,12 +982,9 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                         backgroundColor: Colors.red,
                         textColor: Colors.white,
                         fontSize: 18.0);
-                  } else if (divisionData != null &&
-                      rangeData != null &&
-                      Name.text.isNotEmpty &&
+                  } else if (Name.text.isNotEmpty &&
                       Address.text.isNotEmpty &&
                       survey_no.text.isNotEmpty &&
-                      selectedPurpose != null &&
                       pincodeCo.text.isNotEmpty &&
                       holder_1.isNotEmpty &&
                       log_details.isNotEmpty &&
@@ -1035,9 +1019,10 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
 
                   setState(() {});
                 },
+                child: const Text(" NEXT "),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
           ]),
         ),
         // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -1182,68 +1167,103 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
     );
   }
 
-  Future<bool> _onBackPressed() {
-    return showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: const Text('Do you want to go Home page'),
-            content: const Text('Changes you made may not be saved.'),
-            actions: <Widget>[
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(false),
-                child: const Text("NO"),
-              ),
-              const SizedBox(height: 16),
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(true),
-                child: const Text("YES"),
-              ),
-            ],
+  Future<bool> _onBackPressed() async {
+    final shouldPop = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Do you want to go Home page'),
+        content: const Text('Changes you made may not be saved.'),
+        actions: <Widget>[
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(false),
+            child: const Text("NO"),
           ),
-        ) ??
-        false;
+          const SizedBox(height: 16),
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(true),
+            child: const Text("YES"),
+          ),
+        ],
+      ),
+    );
+    return shouldPop ?? false;
   }
 
   String villageTaluka = "";
   String villageDist = "";
-  String divisionData;
-  String selectedPurpose;
-  String rangeData;
+
   List<String> ranges = [];
   List<String> divisions = [];
   LoadData() async {
-    int DL = 0;
-    const String url = 'http://13.234.208.246/api/auth/villages/';
-    Map data = {
-      "village": village__,
-    };
-    var body = json.encode(data);
-    final response = await http.post(Uri.parse(url),
-        headers: <String, String>{'Content-Type': 'application/json'},
-        body: body);
-    Map<String, dynamic> responseJson = json.decode(response.body);
-    villageTaluka = responseJson['data']['village_taluka'];
-    villageDist = responseJson['data']['village_dist'];
+    try {
+      int DL = 0;
+      const String url = 'http://192.168.54.114:8000/api/auth/villages/';
+      Map data = {
+        "village": village__,
+      };
+      var body = json.encode(data);
+      final response = await http.post(Uri.parse(url),
+          headers: <String, String>{'Content-Type': 'application/json'},
+          body: body);
 
-    List<dynamic> possibilityList = responseJson['data']['possibility'];
-    for (var possibility in possibilityList) {
-      String range = possibility['range'];
-      String divi = possibility['division'];
-      divisions.add(divi);
-      ranges.add(range);
+      if (response.statusCode != 200) {
+        Fluttertoast.showToast(
+            msg:
+                "Failed to load village data. Server returned status: ${response.statusCode}",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.CENTER,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        return;
+      }
+
+      Map<String, dynamic> responseJson = json.decode(response.body);
+
+      if (responseJson['data'] == null) {
+        Fluttertoast.showToast(
+            msg: "No data returned from server for village: $village__",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.CENTER,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        return;
+      }
+
+      villageTaluka = responseJson['data']['village_taluka'] ?? "";
+      villageDist = responseJson['data']['village_dist'] ?? "";
+
+      List<dynamic> possibilityList = responseJson['data']['possibility'] ?? [];
+      for (var possibility in possibilityList) {
+        String range = possibility['range'] ?? "";
+        String divi = possibility['division'] ?? "";
+        if (range.isNotEmpty) ranges.add(range);
+        if (divi.isNotEmpty) divisions.add(divi);
+      }
+
+      setState(() {
+        TalukCo.text = villageTaluka;
+        DistrictCo.text = villageDist;
+        villageCo.text = village__ ?? "";
+      });
+    } catch (e) {
+      print("Error in LoadData: $e");
+      Fluttertoast.showToast(
+          msg: "Error loading data: ${e.toString()}",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
     }
-
-    setState(() {
-      TalukCo.text = villageTaluka;
-      DistrictCo.text = villageDist;
-      villageCo.text = village__;
-    });
   }
 
-  String dropdownValue3;
   String spacies_holder = '';
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Future<void> showInformationDialog(BuildContext context) async {
+    // Reset dropdown value before showing dialog to avoid stale values
+    dropdownValue3 = "";
     return await showDialog(
         context: context,
         builder: (context) {
@@ -1255,30 +1275,33 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      DropdownButton<dynamic>(
-                        value: dropdownValue3,
+                      DropdownButton<String>(
+                        value: dropdownValue3.isEmpty ? null : dropdownValue3,
                         isExpanded: true,
-                        icon: Icon(Icons.arrow_drop_down),
+                        icon: const Icon(Icons.arrow_drop_down),
                         iconSize: 24,
                         elevation: 16,
-                        style: TextStyle(color: Colors.black, fontSize: 18),
-                        hint: Text("Species"),
+                        style:
+                            const TextStyle(color: Colors.black, fontSize: 18),
+                        hint: const Text("Species"),
                         underline: Container(
                           height: 2,
                           color: Colors.grey,
                         ),
-                        onChanged: (dynamic data) {
+                        onChanged: (String? data) {
                           setState(() {
-                            dropdownValue3 = data;
+                            dropdownValue3 = data ?? "";
                           });
                         },
                         items: holder_1
-                            .map<DropdownMenuItem<dynamic>>((dynamic value) {
-                          return DropdownMenuItem<dynamic>(
-                            value: value,
+                            .toSet()
+                            .toList() // Use toSet() to remove duplicates
+                            .map<DropdownMenuItem<String>>((dynamic value) {
+                          return DropdownMenuItem<String>(
+                            value: value.toString(),
                             child: Text(
-                              value,
-                              style: TextStyle(fontSize: 13),
+                              value.toString(),
+                              style: const TextStyle(fontSize: 13),
                             ),
                           );
                         }).toList(),
@@ -1287,23 +1310,23 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                         keyboardType: TextInputType.number,
                         controller: length,
                         validator: (value) {
-                          return value.isNotEmpty ? null : "Enter Height(M)";
+                          return value!.isNotEmpty ? null : "Enter Height(M)";
                         },
-                        decoration:
-                            InputDecoration(hintText: "Please Enter Height(M)"),
+                        decoration: const InputDecoration(
+                            hintText: "Please Enter Height(M)"),
                       ),
                       TextFormField(
                         keyboardType: TextInputType.number,
                         controller: girth,
                         validator: (value) {
-                          return value.isNotEmpty ? null : "Enter GBH(cm)";
+                          return value!.isNotEmpty ? null : "Enter GBH(cm)";
                         },
-                        decoration:
-                            InputDecoration(hintText: "Please Enter GBH(cm)"),
+                        decoration: const InputDecoration(
+                            hintText: "Please Enter GBH(cm)"),
                       ),
                     ],
                   )),
-              title: Text('Trees Logs'),
+              title: const Text('Trees Logs'),
               actions: <Widget>[
                 InkWell(
                   child: const Text(
@@ -1315,8 +1338,8 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                   ),
                   onTap: () {
                     if ((dropdownValue3 == null) ||
-                        (length.text.length == 0) ||
-                        (girth.text.length == 0)) {
+                        (length.text.isEmpty) ||
+                        (girth.text.isEmpty)) {
                       Fluttertoast.showToast(
                           msg: "Please add all details ",
                           toastLength: Toast.LENGTH_SHORT,
@@ -1462,10 +1485,11 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
         context: context,
         builder: (context) {
           bool isChecked = false;
-          dropdownValue3 = log_details[index]['species_of_tree'];
-          length.text = log_details[index]['length'];
-          girth.text = log_details[index]['breadth'];
-          volume.text = log_details[index]['volume'];
+          // Set the value from log_details
+          dropdownValue3 = log_details[index]['species_of_tree'].toString();
+          length.text = log_details[index]['length'].toString();
+          girth.text = log_details[index]['breadth'].toString();
+          volume.text = log_details[index]['volume'].toString();
 
           return StatefulBuilder(builder: (context, setState) {
             return AlertDialog(
@@ -1474,30 +1498,33 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      DropdownButton<dynamic>(
-                        value: dropdownValue3,
+                      DropdownButton<String>(
+                        value: dropdownValue3.isEmpty ? null : dropdownValue3,
                         isExpanded: true,
-                        icon: Icon(Icons.arrow_drop_down),
+                        icon: const Icon(Icons.arrow_drop_down),
                         iconSize: 24,
                         elevation: 16,
-                        style: TextStyle(color: Colors.black, fontSize: 18),
-                        hint: Text("Species"),
+                        style:
+                            const TextStyle(color: Colors.black, fontSize: 18),
+                        hint: const Text("Species"),
                         underline: Container(
                           height: 2,
                           color: Colors.grey,
                         ),
-                        onChanged: (dynamic data) {
+                        onChanged: (String? data) {
                           setState(() {
-                            dropdownValue3 = data;
+                            dropdownValue3 = data ?? "";
                           });
                         },
                         items: holder_1
-                            .map<DropdownMenuItem<dynamic>>((dynamic value) {
-                          return DropdownMenuItem<dynamic>(
-                            value: value,
+                            .toSet()
+                            .toList() // Use toSet() to remove duplicates
+                            .map<DropdownMenuItem<String>>((dynamic value) {
+                          return DropdownMenuItem<String>(
+                            value: value.toString(),
                             child: Text(
-                              value,
-                              style: TextStyle(fontSize: 13),
+                              value.toString(),
+                              style: const TextStyle(fontSize: 13),
                             ),
                           );
                         }).toList(),
@@ -1507,33 +1534,33 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                         //initialValue: log_details[index]['length'],
                         controller: length,
                         validator: (value) {
-                          return value.isNotEmpty ? null : "Enter height(M)";
+                          return value!.isNotEmpty ? null : "Enter height(M)";
                         },
-                        decoration:
-                            InputDecoration(hintText: "Please Enter height(M)"),
+                        decoration: const InputDecoration(
+                            hintText: "Please Enter height(M)"),
                       ),
                       TextFormField(
                         keyboardType: TextInputType.number,
                         controller: girth,
                         validator: (value) {
-                          return value.isNotEmpty ? null : "Enter GBH(cm)";
+                          return value!.isNotEmpty ? null : "Enter GBH(cm)";
                         },
-                        decoration:
-                            InputDecoration(hintText: "Please Enter GBH(cm)"),
+                        decoration: const InputDecoration(
+                            hintText: "Please Enter GBH(cm)"),
                       ),
                     ],
                   )),
-              title: Text('Trees Logs'),
+              title: const Text('Trees Logs'),
               actions: <Widget>[
                 InkWell(
-                  child: Text(
+                  child: const Text(
                     'OK ',
                     style: TextStyle(color: Colors.blue),
                   ),
                   onTap: () {
                     if ((dropdownValue3 == null) ||
-                        (length.text.length == 0) ||
-                        (girth.text.length == 0)) {
+                        (length.text.isEmpty) ||
+                        (girth.text.isEmpty)) {
                       Fluttertoast.showToast(
                           msg: "Please add all details ",
                           toastLength: Toast.LENGTH_SHORT,
@@ -1659,7 +1686,7 @@ class _transitPassNonNotifiedState extends State<transitPassNonNotified> {
                         n_list.add(i);
                       }
 
-                      if (_formKey.currentState.validate()) {
+                      if (_formKey.currentState!.validate()) {
                         length.clear();
                         girth.clear();
                         Navigator.of(context).pop();

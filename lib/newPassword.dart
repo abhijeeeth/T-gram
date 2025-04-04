@@ -8,7 +8,7 @@ import 'package:tigramnks/login.dart';
 
 class newPassword extends StatefulWidget {
   String userId;
-  newPassword({this.userId});
+  newPassword({super.key, required this.userId});
   @override
   _newPasswordState createState() => _newPasswordState(userId);
 }
@@ -23,12 +23,6 @@ class _newPasswordState extends State<newPassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: NewGradientAppBar(
-        title: Text("Set New Password"),
-        gradient:
-            LinearGradient(colors: [HexColor("#26f596"), HexColor("#0499f2")]),
-        elevation: 0,
-      ),
       body: SingleChildScrollView(
           child: Column(children: <Widget>[
         Container(
@@ -37,7 +31,7 @@ class _newPasswordState extends State<newPassword> {
           margin: const EdgeInsets.only(top: 20, bottom: 10),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12.0),
-              image: DecorationImage(
+              image: const DecorationImage(
                   image: AssetImage('assets/images/Logo.png'),
                   fit: BoxFit.cover)),
         ),
@@ -46,7 +40,7 @@ class _newPasswordState extends State<newPassword> {
             borderRadius: BorderRadius.circular(12.0),
             color: Colors.white,
             border: Border.all(color: Colors.lightGreenAccent, width: 2),
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
                 color: Colors.black,
                 blurRadius: 2.0,
@@ -63,7 +57,7 @@ class _newPasswordState extends State<newPassword> {
             children: <Widget>[
               Padding(
                 //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
-                padding: EdgeInsets.symmetric(horizontal: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: TextField(
                   controller: Password,
                   obscureText: isHiddenPassword,
@@ -74,11 +68,11 @@ class _newPasswordState extends State<newPassword> {
                               isHiddenPassword = !isHiddenPassword;
                             });
                           },
-                          child: Icon(Icons.visibility, color: Colors.black54)),
-                      border: OutlineInputBorder(
+                          child: const Icon(Icons.visibility,
+                              color: Colors.black54)),
+                      border: const OutlineInputBorder(
                         borderSide: BorderSide(width: 2),
-                        borderRadius:
-                            const BorderRadius.all(const Radius.circular(20.0)),
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
                       ),
                       labelText: 'Password',
                       hintText: 'Enter Password'),
@@ -99,11 +93,11 @@ class _newPasswordState extends State<newPassword> {
                               isHiddenPassword = !isHiddenPassword;
                             });
                           },
-                          child: Icon(Icons.visibility, color: Colors.black54)),
-                      border: OutlineInputBorder(
+                          child: const Icon(Icons.visibility,
+                              color: Colors.black54)),
+                      border: const OutlineInputBorder(
                         borderSide: BorderSide(width: 2),
-                        borderRadius:
-                            const BorderRadius.all(const Radius.circular(20.0)),
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
                       ),
                       labelText: 'Re-Password',
                       hintText: 'Repeat Password'),
@@ -118,7 +112,7 @@ class _newPasswordState extends State<newPassword> {
                     borderRadius: BorderRadius.circular(20)),
                 child: TextButton(
                     // color: Colors.amber,
-                    child: Text(
+                    child: const Text(
                       'Confirm',
                       style: TextStyle(
                         fontFamily: 'Cairo',
@@ -128,8 +122,8 @@ class _newPasswordState extends State<newPassword> {
                       ),
                     ),
                     onPressed: () async {
-                      if ((Password.text.length == 0) ||
-                          (Re_Password.text.length == 0)) {
+                      if ((Password.text.isEmpty) ||
+                          (Re_Password.text.isEmpty)) {
                         Fluttertoast.showToast(
                             msg: 'Password Feild is Empty',
                             toastLength: Toast.LENGTH_SHORT,
@@ -149,7 +143,7 @@ class _newPasswordState extends State<newPassword> {
                             fontSize: 18.0);
                       } else {
                         const String url =
-                            'http://13.234.208.246/api/auth/changepassword';
+                            'http://192.168.54.114:8000/api/auth/changepassword';
                         Map data = {
                           "phone": userId,
                           "passwd": Password.text,

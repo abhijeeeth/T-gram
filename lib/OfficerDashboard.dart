@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_interpolation_to_compose_strings
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -30,14 +32,18 @@ class OfficerDashboard extends StatefulWidget {
   String userGroup;
   String dropdownValue;
   List Range;
+
+  var userMobile;
+
+  var userAddress;
   OfficerDashboard(
-      {this.userId,
-      this.userName,
-      this.userEmail,
-      this.sessionToken,
-      this.userGroup,
-      this.dropdownValue,
-      this.Range});
+      {required this.userId,
+      required this.userName,
+      required this.userEmail,
+      required this.sessionToken,
+      required this.userGroup,
+      required this.dropdownValue,
+      required this.Range});
   @override
   _OfficerDashboardState createState() => _OfficerDashboardState(userId,
       userName, userEmail, sessionToken, userGroup, dropdownValue, Range);
@@ -70,7 +76,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
 
 //---------------------Pie-chart------------------
   void pie_chart() async {
-    const String url = 'http://13.234.208.246/api/auth/dashbord_chart'; 
+    const String url = 'http://192.168.54.114:8000/api/auth/dashbord_chart';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -235,7 +241,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
     field_status.clear();
     print("Pending Application");
     const String url =
-        'http://13.234.208.246/api/auth/PendingListViewApplication';
+        'http://192.168.54.114:8000/api/auth/PendingListViewApplication';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -331,7 +337,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
     verify_forest1_1.clear();
     print("Approved Application");
     const String url =
-        'http://13.234.208.246/api/auth/ApprovedListViewApplication';
+        'http://192.168.54.114:8000/api/auth/ApprovedListViewApplication';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -428,7 +434,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
   void DeemedApp() async {
     sr2.clear();
     print("Deemed Application");
-    const String url = 'http://13.234.208.246/api/auth/DeemedApprovedList';
+    const String url = 'http://192.168.54.114:8000/api/auth/DeemedApprovedList';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -490,7 +496,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
   void NocForm() async {
     sr3.clear();
     const String url =
-        'http://13.234.208.246/api/auth/GetOfficerTransitPasses/';
+        'http://192.168.54.114:8000/api/auth/GetOfficerTransitPasses/';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -577,64 +583,63 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
     }
   }
 
-  String OfficerDate(String AppStatus, String disapproved, String division,
-      String forest, String deputy, String revenue) {
+  String OfficerDate(String AppStatus, dynamic disapproved, dynamic division,
+      dynamic forest, dynamic deputy, dynamic revenue) {
     if (AppStatus == 'R') {
-      return disapproved;
+      return disapproved != null ? disapproved.toString() : "N/A";
     } else if (division != null) {
-      return division;
+      return division.toString();
     } else if (forest != null) {
-      return forest;
+      return forest.toString();
     } else if (deputy != null) {
-      return deputy;
+      return deputy.toString();
     } else if (revenue != null) {
-      return revenue;
+      return revenue.toString();
     } else {
       return "N/A";
     }
   }
 
-  // forest range officer
-  //deputy range officer
+  // Modify the OfficerStatus method to handle null values
   String OfficerStatus(
-      String user, String divisionno, String rangeApprove, String status) {
+      String user, dynamic divisionNo, String rangeApprove, String status) {
     if (user == "deputy range officer") {
       if (status == "false") {
         if (rangeApprove == "R") {
-          return ("Rejected by range officer ");
+          return "Rejected by range officer ";
         } else if (rangeApprove == "A") {
-          return ("Approved by range officer,\n deputy officer field varification pending");
+          return "Approved by range officer,\n deputy officer field varification pending";
         } else if (rangeApprove == "P") {
-          return ("deputy officer field varification pending");
+          return "deputy officer field varification pending";
         } else {
-          return ("");
+          return "";
         }
       } else {
-        return ("Recommended by Deputy Range Officer,\n Range Officer Recommendation pending");
+        return "Recommended by Deputy Range Officer,\n Range Officer Recommendation pending";
       }
     } else if (user == "forest range officer") {
       if (status == "false") {
         if (rangeApprove == "R") {
-          return ("Rejected by range officer ");
-        } else if (divisionno != null) {
-          return ("Approved by range officer,\n deputy officer field varification pending");
+          return "Rejected by range officer ";
+        } else if (divisionNo != null) {
+          return "Approved by range officer,\n deputy officer field varification pending";
         } else if (rangeApprove == "A") {
-          return ("Approved by range officer");
+          return "Approved by range officer";
         } else if (rangeApprove == "P") {
-          return ("Range officer Recomendation \n pending");
+          return "Range officer Recomendation \n pending";
         } else {
-          return ("");
+          return "";
         }
       } else {
-        return ("field varification pending");
+        return "field varification pending";
       }
     } else {
-      return ("");
+      return "";
     }
   }
 
-  String AssignOfficer(bool isForm2, String assign_deputy2,
-      String assign_deputy1, bool log_updated_by_user) {
+  String AssignOfficer(bool isForm2, String? assign_deputy2,
+      String? assign_deputy1, bool? log_updated_by_user) {
     if (isForm2 == true) {
       if (assign_deputy2 != null) {
         return assign_deputy2;
@@ -648,6 +653,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
         return 'Yet to Assign for Stage 1';
       }
     }
+    return 'N/A';
   }
 
   bool getForm(bool isform, bool other_State, bool division_officer,
@@ -673,6 +679,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
         }
       }
     }
+    return can_apply3;
   }
 
   int daysBetween(DateTime from) {
@@ -756,10 +763,9 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
       onWillPop: _onBackPressed,
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: NewGradientAppBar(
+        appBar: AppBar(
           title: const Text(" Officer Dashboard"),
-          gradient: LinearGradient(
-              colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+
           //backgroundColor: Colors.blueGrey,
           elevation: 0,
         ),
@@ -777,7 +783,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                   inactiveFgColor: Colors.blue,
                   labels: getLabels(userGroup),
                   activeBgColors: getActiveBgColors(userGroup),
-                  onToggle: _handleRadioValueChange,
+                  onToggle: (index) => _handleRadioValueChange(index!),
                 ),
               ),
               LayoutBuilder(builder: (context, constraints) {
@@ -840,7 +846,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                           //   icon: Icon(Icons.file_download),
                           //   onPressed: () async {
                           //     await launch(
-                          //         "http://13.234.208.246/api/auth/summary_report/");
+                          //         "http://192.168.54.114:8000/api/auth/summary_report/");
                           //   },
                           //   label: Text("Download"),
                           // ),
@@ -866,13 +872,13 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                       padding: const EdgeInsets.only(
                           left: 2, right: 2, top: 2, bottom: 2),
                       child: Scrollbar(
-                          isAlwaysShown: true,
+                          thumbVisibility: true,
                           thickness: 15,
                           child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               padding: const EdgeInsets.only(bottom: 15),
                               child: Scrollbar(
-                                isAlwaysShown: true,
+                                thumbVisibility: true,
                                 thickness: 15,
                                 child: SingleChildScrollView(
                                   scrollDirection: Axis.vertical,
@@ -1026,33 +1032,16 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                       value)]
                                                               .toString()))),
                                                       DataCell(Text(AssignOfficer(
-                                                                  is_form_two[
-                                                                      int.parse(
-                                                                          value)],
-                                                                  assigned_deputy2_by_id[
-                                                                      int.parse(
-                                                                          value)],
-                                                                  assigned_deputy1_by_id[
-                                                                      int.parse(
-                                                                          value)],
-                                                                  log_updated_by_use[
-                                                                      int.parse(
-                                                                          value)]) ==
-                                                              null
-                                                          ? "N/A"
-                                                          : AssignOfficer(
-                                                                  is_form_two[
-                                                                      int.parse(
-                                                                          value)],
-                                                                  assigned_deputy2_by_id[
-                                                                      int.parse(
-                                                                          value)],
-                                                                  assigned_deputy1_by_id[
-                                                                      int.parse(
-                                                                          value)],
-                                                                  log_updated_by_use[
-                                                                      int.parse(value)])
-                                                              .toString())),
+                                                          is_form_two[int.parse(
+                                                                  value)] ??
+                                                              false,
+                                                          assigned_deputy2_by_id[
+                                                              int.parse(value)],
+                                                          assigned_deputy1_by_id[
+                                                              int.parse(value)],
+                                                          log_updated_by_use[
+                                                              int.parse(
+                                                                  value)]))),
                                                       DataCell(Text(is_form_two[
                                                                   int.parse(
                                                                       value)] ==
@@ -1137,7 +1126,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                             color: Colors.blue,
                                                             onPressed:
                                                                 () async {
-                                                              await launch("http://13.234.208.246/api/auth/new_transit_pass_pdf/" +
+                                                              await launch("http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/" +
                                                                   replaceSlashesWithDashes(
                                                                       App_no[int
                                                                           .parse(
@@ -1154,7 +1143,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                               .file_download),
                                                           color: Colors.blue,
                                                           onPressed: () async {
-                                                            await launch("http://13.234.208.246/api/auth/new_user_report/" +
+                                                            await launch("http://192.168.54.114:8000/api/auth/new_user_report/" +
                                                                 replaceSlashesWithDashes(
                                                                     App_no[int
                                                                         .parse(
@@ -1180,7 +1169,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                             color: Colors.blue,
                                                             onPressed:
                                                                 () async {
-                                                              await launch("http://13.234.208.246/api/auth/qr_code_pdf/" +
+                                                              await launch("http://192.168.54.114:8000/api/auth/qr_code_pdf/" +
                                                                   replaceSlashesWithDashes(
                                                                       App_no[int
                                                                           .parse(
@@ -1239,7 +1228,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                             color: Colors.blue,
                                                             onPressed:
                                                                 () async {
-                                                              await launch("http://13.234.208.246/app/location_views/" +
+                                                              await launch("http://192.168.54.114:8000/app/location_views/" +
                                                                   replaceSlashesWithDashes(
                                                                       App_no[int
                                                                           .parse(
@@ -1276,13 +1265,13 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                       padding: const EdgeInsets.only(
                           left: 2, right: 2, top: 2, bottom: 2),
                       child: Scrollbar(
-                          isAlwaysShown: true,
+                          thumbVisibility: true,
                           thickness: 15,
                           child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               padding: const EdgeInsets.only(bottom: 15),
                               child: Scrollbar(
-                                  isAlwaysShown: true,
+                                  thumbVisibility: true,
                                   thickness: 15,
                                   child: SingleChildScrollView(
                                       scrollDirection: Axis.vertical,
@@ -1531,7 +1520,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                     Colors.blue,
                                                                 onPressed:
                                                                     () async {
-                                                                  await launch("http://13.234.208.246/api/auth/new_transit_pass_pdf/" +
+                                                                  await launch("http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/"  +
                                                                       replaceSlashesWithDashes(
                                                                           App_no1[
                                                                               int.parse(value)]) +
@@ -1549,7 +1538,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                   Colors.blue,
                                                               onPressed:
                                                                   () async {
-                                                                await launch("http://13.234.208.246/api/auth/new_user_report/" +
+                                                                await launch("http://192.168.54.114:8000/api/auth/new_user_report/" +
                                                                     replaceSlashesWithDashes(
                                                                         App_no1[
                                                                             int.parse(value)]) +
@@ -1573,7 +1562,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                     Colors.blue,
                                                                 onPressed:
                                                                     () async {
-                                                                  await launch("http://13.234.208.246/api/auth/qr_code_pdf/" +
+                                                                  await launch("http://192.168.54.114:8000/api/auth/qr_code_pdf/" +
                                                                       replaceSlashesWithDashes(
                                                                           App_no1[
                                                                               int.parse(value)]) +
@@ -1634,7 +1623,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                     Colors.blue,
                                                                 onPressed:
                                                                     () async {
-                                                                  await launch("http://13.234.208.246/app/location_views/" +
+                                                                  await launch("http://192.168.54.114:8000/app/location_views/" +
                                                                       replaceSlashesWithDashes(
                                                                           App_no1[
                                                                               int.parse(value)]) +
@@ -1725,13 +1714,13 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                       padding: const EdgeInsets.only(
                           left: 2, right: 2, top: 2, bottom: 2),
                       child: Scrollbar(
-                          isAlwaysShown: true,
+                          thumbVisibility: true,
                           thickness: 15,
                           child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               padding: const EdgeInsets.only(bottom: 15),
                               child: Scrollbar(
-                                  isAlwaysShown: true,
+                                  thumbVisibility: true,
                                   thickness: 15,
                                   child: SingleChildScrollView(
                                       scrollDirection: Axis.vertical,
@@ -1889,6 +1878,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                                   Ids: IDS,
                                                                                   userName: userName,
                                                                                   userEmail: userEmail,
+                                                                                  Range: [],
                                                                                 )));
                                                                   }
                                                                 },
@@ -1910,7 +1900,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                     Colors.blue,
                                                                 onPressed:
                                                                     () async {
-                                                                  await launch("http://13.234.208.246/api/auth/new_transit_pass_pdf/" +
+                                                                  await launch("http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/" +
                                                                       replaceSlashesWithDashes(
                                                                           App_no2[
                                                                               int.parse(value)]) +
@@ -1928,7 +1918,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                   Colors.blue,
                                                               onPressed:
                                                                   () async {
-                                                                await launch("http://13.234.208.246/api/auth/new_user_report/" +
+                                                                await launch("http://192.168.54.114:8000/api/auth/new_user_report/" +
                                                                     replaceSlashesWithDashes(
                                                                         App_no2[
                                                                             int.parse(value)]) +
@@ -1952,7 +1942,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                     Colors.blue,
                                                                 onPressed:
                                                                     () async {
-                                                                  await launch("http://13.234.208.246/api/auth/qr_code_pdf/" +
+                                                                  await launch("http://192.168.54.114:8000/api/auth/qr_code_pdf/" +
                                                                       replaceSlashesWithDashes(
                                                                           App_no2[
                                                                               int.parse(value)]) +
@@ -2028,13 +2018,13 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                         padding: const EdgeInsets.only(
                             left: 2, right: 2, top: 2, bottom: 2),
                         child: Scrollbar(
-                            isAlwaysShown: true,
+                            thumbVisibility: true,
                             thickness: 15,
                             child: SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 padding: const EdgeInsets.only(bottom: 15),
                                 child: Scrollbar(
-                                    isAlwaysShown: true,
+                                    thumbVisibility: true,
                                     thickness: 15,
                                     child: SingleChildScrollView(
                                         scrollDirection: Axis.vertical,
@@ -2180,7 +2170,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                       .blue,
                                                                   onPressed:
                                                                       () async {
-                                                                    await launch("http://13.234.208.246/app/location_views/" +
+                                                                    await launch("http://192.168.54.114:8000/app/location_views/" +
                                                                         replaceSlashesWithDashes(
                                                                             App_no3[int.parse(value)]) +
                                                                         "/");
@@ -2197,7 +2187,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                             //     onPressed:
                                                             //         () async {
                                                             //       await launch(
-                                                            //           " http://13.234.208.246/api/auth/new_noc_pdf/" +
+                                                            //           " http://192.168.54.114:8000/api/auth/new_noc_pdf/" +
                                                             //               Ids3[int.parse(
                                                             //                   value)] +
                                                             //               "/");
@@ -2213,6 +2203,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                     return Container();
                   }
                 }
+                return Container(); // Add this line
               }),
             ],
           ),
@@ -2275,6 +2266,9 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                       userName: userName,
                                       userEmail: userEmail,
                                       userGroup: userGroup,
+                                      userId: userId,
+                                      dropdownValue: dropdownValue,
+                                      Range: Range,
                                     )));
                       }),
                   ListTile(
@@ -2288,8 +2282,17 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                         style: TextStyle(color: Colors.black, fontSize: 20),
                       ),
                       onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (_) => QueryPage()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => QueryPage(
+                                      userId: userId,
+                                      sessionToken: sessionToken,
+                                      userName: userName,
+                                      userEmail: userEmail,
+                                      userMobile: widget.userMobile,
+                                      userAddress: widget.userAddress,
+                                    )));
                       }),
                   ListTile(
                       leading: Icon(
@@ -2303,7 +2306,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                       ),
                       onTap: () async {
                         const String url =
-                            'http://13.234.208.246/api/auth/logout/';
+                            'http://192.168.54.114:8000/api/auth/logout/';
                         await http.post(
                           Uri.parse(url),
                           headers: <String, String>{

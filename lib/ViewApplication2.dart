@@ -4,7 +4,6 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_document_picker/flutter_document_picker.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -43,26 +42,27 @@ class ViewApplication2 extends StatefulWidget {
   String field_requre;
   String field_status;
   ViewApplication2(
-      {this.sessionToken,
-      this.userId,
-      this.Ids,
-      this.Range,
-      this.userName,
-      this.userEmail,
-      this.img_signature,
-      this.userGroup,
-      this.verify_officer,
-      this.deputy_range_officer,
-      this.verify_range_officer,
-      this.is_form_two,
-      this.assigned_deputy2_id,
-      this.assigned_deputy1_id,
-      this.verify_deputy2,
-      this.division_officer,
-      this.other_state,
-      this.verify_forest1,
-      this.field_requre,
-      this.field_status});
+      {super.key,
+      required this.sessionToken,
+      required this.userId,
+      required this.Ids,
+      required this.Range,
+      required this.userName,
+      required this.userEmail,
+      required this.img_signature,
+      required this.userGroup,
+      required this.verify_officer,
+      required this.deputy_range_officer,
+      required this.verify_range_officer,
+      required this.is_form_two,
+      required this.assigned_deputy2_id,
+      required this.assigned_deputy1_id,
+      required this.verify_deputy2,
+      required this.division_officer,
+      required this.other_state,
+      required this.verify_forest1,
+      required this.field_requre,
+      required this.field_status});
   @override
   _ViewApplication2State createState() => _ViewApplication2State(
       sessionToken,
@@ -140,19 +140,20 @@ class _ViewApplication2State extends State<ViewApplication2> {
   TextEditingController Transport_mode = TextEditingController();
 
   //---vehical---------------
-  String vehical_reg_no;
-  String driver_name;
-  String driver_phone;
-  String mode_of_transport;
-  String license_image;
+  late String vehical_reg_no;
+  late String driver_name;
+  late String driver_phone;
+  late String mode_of_transport;
+  late String license_image;
 
   var _imageLicence;
-  String base64ImageLisence;
+  late String base64ImageLisence;
 
   //------pic file for remarkk----
-  var _remarkfile = null;
+  var _remarkfile;
   var filee;
 
+  @override
   void initState() {
     super.initState();
     setState(() {
@@ -162,11 +163,11 @@ class _ViewApplication2State extends State<ViewApplication2> {
     });
   }
 
-  int dropdownValue3; // Store the selected 'id'
+  late int dropdownValue3; // Store the selected 'id'
   List<Map<String, dynamic>> apiResponse = [];
 
   listDeputy() async {
-    String url = 'http://13.234.208.246/api/auth/get_deputies/';
+    String url = 'http://192.168.54.114:8000/api/auth/get_deputies/';
     Map data = {"range": 75};
     var body = json.encode(data);
     final response = await http.post(Uri.parse(url),
@@ -187,7 +188,7 @@ class _ViewApplication2State extends State<ViewApplication2> {
 
   //---end vehical-----------
   ViewVehical() async {
-    String url = 'http://13.234.208.246/api/auth/ViewApplication';
+    String url = 'http://192.168.54.114:8000/api/auth/ViewApplication';
     Map data = {"app_id": Ids};
     var body = json.encode(data);
     final response = await http.post(Uri.parse(url),
@@ -246,16 +247,15 @@ class _ViewApplication2State extends State<ViewApplication2> {
               content: SingleChildScrollView(
                 child: ListBody(
                   children: [
-                
                     InkWell(
                       onTap: () async {
                         await setfilepicgallery();
                       },
                       splashColor: Colors.greenAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.image,
                               color: Colors.blueAccent,
@@ -271,7 +271,6 @@ class _ViewApplication2State extends State<ViewApplication2> {
                         ],
                       ),
                     ),
-                  
                   ],
                 ),
               ),
@@ -294,11 +293,48 @@ class _ViewApplication2State extends State<ViewApplication2> {
     print(_remarkfile);
   }
 
-  Future<bool> _onBackPressed() {
+  Future<bool> _onBackPressed() async {
     Navigator.pop(
       context,
-      MaterialPageRoute(builder: (context) => ViewApplication1()),
+      MaterialPageRoute(
+          builder: (context) => ViewApplication1(
+                sessionToken: sessionToken,
+                userGroup: userGroup,
+                userId: userId,
+                Ids: Ids,
+                Range: Range,
+                userName: userName,
+                userEmail: userEmail,
+                img_signature: img_signature,
+                img_revenue_approval: "",
+                img_declaration: "",
+                img_revenue_application: "",
+                img_location_sktech: "",
+                img_tree_ownership_detail: "",
+                img_aadhar_detail: "",
+                verify_officer: verify_officer,
+                deputy_range_officer: deputy_range_officer,
+                verify_range_officer: verify_range_officer,
+                is_form_two: is_form_two,
+                assigned_deputy2_id: assigned_deputy2_id,
+                assigned_deputy1_id: assigned_deputy1_id,
+                assigned_range_id: 0,
+                verify_deputy2: verify_deputy2,
+                division_officer: division_officer,
+                other_state: other_state,
+                verify_forest1: verify_forest1,
+                field_requre: field_requre,
+                field_status: field_status == "success",
+                species: const [],
+                length: const [],
+                breadth: const [],
+                volume: const [],
+                log_details: const [],
+                // treeSpecies: [],
+                user_Loc: "", treeSpecies: '',
+              )),
     );
+    return true;
   }
 
   Future<void> AssignOfficerDialog(BuildContext context) async {
@@ -314,14 +350,14 @@ class _ViewApplication2State extends State<ViewApplication2> {
                 children: [
                   DropdownButton<int>(
                     value: dropdownValue3,
-                    icon: Icon(Icons.arrow_drop_down),
+                    icon: const Icon(Icons.arrow_drop_down),
                     iconSize: 24,
                     elevation: 16,
-                    style: TextStyle(color: Colors.black, fontSize: 18),
+                    style: const TextStyle(color: Colors.black, fontSize: 18),
                     hint: RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(children: <TextSpan>[
-                        TextSpan(
+                        const TextSpan(
                             text: "Select Officer",
                             style: TextStyle(
                                 color: Colors.black,
@@ -334,10 +370,12 @@ class _ViewApplication2State extends State<ViewApplication2> {
                             )),
                       ]),
                     ),
-                    onChanged: (int id) {
+                    onChanged: (int? id) {
                       setState(() {
-                        dropdownValue3 = id;
-                        print(dropdownValue3);
+                        if (id != null) {
+                          dropdownValue3 = id;
+                          print(dropdownValue3);
+                        }
                       });
                     },
                     items: apiResponse.map<DropdownMenuItem<int>>(
@@ -351,16 +389,16 @@ class _ViewApplication2State extends State<ViewApplication2> {
                   ),
                 ],
               ),
-              title: Text('Assign Deputy Range Officer'),
+              title: const Text('Assign Deputy Range Officer'),
               actions: <Widget>[
                 InkWell(
-                  child: Text(
+                  child: const Text(
                     'OK ',
                     style: TextStyle(color: Colors.blue),
                   ),
                   onTap: () async {
                     const String url =
-                        'http://13.234.208.246/api/auth/FormTwoAssignDeputy';
+                        'http://192.168.54.114:8000/api/auth/FormTwoAssignDeputy';
                     Map data = {"app_id": Ids, "deputy_id": dropdownValue3};
                     print(data);
                     var body = json.encode(data);
@@ -392,6 +430,9 @@ class _ViewApplication2State extends State<ViewApplication2> {
                                   userName: userName,
                                   userEmail: userEmail,
                                   userGroup: userGroup,
+                                  userId: userId,
+                                  dropdownValue: dropdownValue3.toString(),
+                                  Range: Range,
                                 )));
                   },
                 ),
@@ -402,341 +443,303 @@ class _ViewApplication2State extends State<ViewApplication2> {
   }
 
   //------------------------------End-Assign-Officer-----------------------
-  bool can_assign_officer;
+  late bool can_assign_officer;
   //----------------------------Button Disable------------------------------
   Map DisableButton(
       String userGroup,
-      bool verify_officer,
-      bool deputy_range_officer,
-      bool verify_range_officer,
-      bool is_form_two,
+      bool verifyOfficer,
+      bool deputyRangeOfficer,
+      bool verifyRangeOfficer,
+      bool isFormTwo,
       int userId,
-      int assigned_deputy2_id,
-      int assigned_deputy1_id,
-      bool verify_deputy2,
-      bool division_officer,
-      bool other_state,
-      bool verify_forest1,
-      String field_requre,
-      String field_status) {
+      int assignedDeputy2Id,
+      int assignedDeputy1Id,
+      bool verifyDeputy2,
+      bool divisionOfficer,
+      bool otherState,
+      bool verifyForest1,
+      String fieldRequre,
+      String fieldStatus) {
     can_assign_officer = false;
-    bool transit_pass_exist = true;
-    bool reject_visible = false;
-    bool feild_butt = true;
-    bool approve_othor = true;
-    bool field_resultp = true;
-    if (userGroup == 'revenue officer' && verify_officer == false) {
-      transit_pass_exist = false;
-      reject_visible = true;
-      feild_butt = true;
-      field_resultp = true;
+    bool transitPassExist = true;
+    bool rejectVisible = false;
+    bool feildButt = true;
+    bool approveOthor = true;
+    bool fieldResultp = true;
+    if (userGroup == 'revenue officer' && verifyOfficer == false) {
+      transitPassExist = false;
+      rejectVisible = true;
+      feildButt = true;
+      fieldResultp = true;
     } else if (userGroup == 'deputy range officer') {
-      feild_butt = true;
-      field_resultp = true;
-      if (deputy_range_officer == false) {
-        transit_pass_exist = false;
-        reject_visible = true;
-        feild_butt = true;
-        approve_othor = false;
-        field_resultp = true;
-      } else if (verify_officer == true && is_form_two == true) {
+      feildButt = true;
+      fieldResultp = true;
+      if (deputyRangeOfficer == false) {
+        transitPassExist = false;
+        rejectVisible = true;
+        feildButt = true;
+        approveOthor = false;
+        fieldResultp = true;
+      } else if (verifyOfficer == true && isFormTwo == true) {
         print(userId);
         print(Ids);
 
-        if (assigned_deputy2_id == userId) {
-          transit_pass_exist = false;
-        } else if (assigned_deputy1_id == userId && verify_deputy2 == false) {
-          transit_pass_exist = false;
+        if (assignedDeputy2Id == userId) {
+          transitPassExist = false;
+        } else if (assignedDeputy1Id == userId && verifyDeputy2 == false) {
+          transitPassExist = false;
         }
       }
     } else if (userGroup == 'forest range officer') {
-      if (is_form_two == true &&
+      if (isFormTwo == true &&
           // field_status == "no_field" &&
-          assigned_deputy1_id == null &&
-          verify_range_officer == false &&
-          assigned_deputy2_id == null &&
-          verify_forest1 == false) {
+          assignedDeputy1Id == null &&
+          verifyRangeOfficer == false &&
+          assignedDeputy2Id == null &&
+          verifyForest1 == false) {
         can_assign_officer = true;
-        transit_pass_exist = false;
-        reject_visible = true;
+        transitPassExist = false;
+        rejectVisible = true;
 
         //--assign
-
-      } else if (is_form_two == true &&
-          field_status == "no_field" &&
-          field_requre == "" &&
-          ((assigned_deputy1_id != null) || assigned_deputy1_id != "") &&
-          verify_range_officer == false &&
-          assigned_deputy2_id == null &&
-          verify_forest1 == false) {
+      } else if (isFormTwo == true &&
+          fieldStatus == "no_field" &&
+          fieldRequre == "" &&
+          ((assignedDeputy1Id != null) || assignedDeputy1Id != "") &&
+          verifyRangeOfficer == false &&
+          assignedDeputy2Id == null &&
+          verifyForest1 == false) {
         can_assign_officer = false;
-        feild_butt = false;
-        field_resultp = true;
-        reject_visible = false;
-        approve_othor = false;
-        transit_pass_exist = false;
-      }
-  
-
-      else if (is_form_two == true &&
-          field_status == "no_field" &&
-          field_requre == "True" &&
-          assigned_deputy1_id != null &&
-          verify_range_officer == false &&
-          assigned_deputy2_id == null &&
-          verify_forest1 == false) {
+        feildButt = false;
+        fieldResultp = true;
+        rejectVisible = false;
+        approveOthor = false;
+        transitPassExist = false;
+      } else if (isFormTwo == true &&
+          fieldStatus == "no_field" &&
+          fieldRequre == "True" &&
+          verifyRangeOfficer == false &&
+          assignedDeputy2Id == null &&
+          verifyForest1 == false) {
         can_assign_officer = false;
-        feild_butt = true;
-        field_resultp = false;
-        reject_visible = true;
-        approve_othor = true;
-        transit_pass_exist = false;
+        feildButt = true;
+        fieldResultp = false;
+        rejectVisible = true;
+        approveOthor = true;
+        transitPassExist = false;
 
         // field accept , reject
-
-      } else if (is_form_two == true &&
-          field_status == "success" &&
-          field_requre == "True" &&
-          assigned_deputy1_id != null &&
-          verify_range_officer == false &&
-          assigned_deputy2_id == null &&
-          verify_forest1 == false) {
+      } else if (isFormTwo == true &&
+          fieldStatus == "success" &&
+          fieldRequre == "True" &&
+          verifyRangeOfficer == false &&
+          assignedDeputy2Id == null &&
+          verifyForest1 == false) {
         can_assign_officer = false;
-        feild_butt = true;
-        field_resultp = true;
-        reject_visible = false;
-        approve_othor = false;
-        transit_pass_exist = false;
+        feildButt = true;
+        fieldResultp = true;
+        rejectVisible = false;
+        approveOthor = false;
+        transitPassExist = false;
 
         //approve ,reject ,remark
-
-      } else if (is_form_two == true &&
-          field_status == "failed" &&
-          field_requre == "True" &&
-          assigned_deputy1_id != null &&
-          verify_range_officer == false &&
-          assigned_deputy2_id == null &&
-          verify_forest1 == false) {
+      } else if (isFormTwo == true &&
+          fieldStatus == "failed" &&
+          fieldRequre == "True" &&
+          verifyRangeOfficer == false &&
+          assignedDeputy2Id == null &&
+          verifyForest1 == false) {
         can_assign_officer = false;
-        feild_butt = true;
-        field_resultp = true;
-        reject_visible = false;
-        approve_othor = false;
-        transit_pass_exist = false;
+        feildButt = true;
+        fieldResultp = true;
+        rejectVisible = false;
+        approveOthor = false;
+        transitPassExist = false;
 
         //reject ,remark
-
-      } else if (is_form_two == true &&
-          field_status == "no_field" &&
-          field_requre == "" &&
-          assigned_deputy1_id != null &&
-          verify_range_officer == false &&
-          assigned_deputy2_id == null &&
-          verify_forest1 == true) {
+      } else if (isFormTwo == true &&
+          fieldStatus == "no_field" &&
+          fieldRequre == "" &&
+          verifyRangeOfficer == false &&
+          assignedDeputy2Id == null &&
+          verifyForest1 == true) {
         can_assign_officer = true;
-        transit_pass_exist = false;
-        reject_visible = true;
+        transitPassExist = false;
+        rejectVisible = true;
         // assign ,--2
-
-      } else if (is_form_two == true &&
-          field_status != "no_field" &&
-          field_requre != "" &&
-          assigned_deputy1_id != null &&
-          verify_range_officer == false &&
-          assigned_deputy2_id == null &&
-          verify_forest1 == true) {
+      } else if (isFormTwo == true &&
+          fieldStatus != "no_field" &&
+          fieldRequre != "" &&
+          verifyRangeOfficer == false &&
+          assignedDeputy2Id == null &&
+          verifyForest1 == true) {
         can_assign_officer = true;
-        transit_pass_exist = false;
-        reject_visible = true;
+        transitPassExist = false;
+        rejectVisible = true;
 
         //assign--2
-      } else if (is_form_two == true &&
-          field_status == "success" &&
-          field_requre == "True" &&
-          assigned_deputy1_id != null &&
-          verify_range_officer == false &&
-          assigned_deputy2_id != null &&
-          verify_forest1 == true) {
+      } else if (isFormTwo == true &&
+          fieldStatus == "success" &&
+          fieldRequre == "True" &&
+          verifyRangeOfficer == false &&
+          verifyForest1 == true) {
         can_assign_officer = false;
-        feild_butt = true;
-        field_resultp = true;
-        reject_visible = false;
-        approve_othor = false;
-        transit_pass_exist = false;
+        feildButt = true;
+        fieldResultp = true;
+        rejectVisible = false;
+        approveOthor = false;
+        transitPassExist = false;
 
         //approve ,reject  ,remark--2
-      } else if (is_form_two == true &&
-          field_status == "no_field" &&
-          field_requre == "" &&
-          assigned_deputy1_id != null &&
-          verify_range_officer == false &&
-          assigned_deputy2_id != null &&
-          verify_forest1 == true) {
+      } else if (isFormTwo == true &&
+          fieldStatus == "no_field" &&
+          fieldRequre == "" &&
+          verifyRangeOfficer == false &&
+          verifyForest1 == true) {
         can_assign_officer = false;
-        feild_butt = false;
-        field_resultp = true;
-        reject_visible = false;
-        approve_othor = false;
-        transit_pass_exist = false;
+        feildButt = false;
+        fieldResultp = true;
+        rejectVisible = false;
+        approveOthor = false;
+        transitPassExist = false;
 
         //approve ,reject , field assign ,remark--2
-      } else if (is_form_two == true &&
-          field_status == "failed" &&
-          field_requre == "True" &&
-          assigned_deputy1_id != null &&
-          verify_range_officer == false &&
-          assigned_deputy2_id != null &&
-          verify_forest1 == true) {
+      } else if (isFormTwo == true &&
+          fieldStatus == "failed" &&
+          fieldRequre == "True" &&
+          verifyRangeOfficer == false &&
+          verifyForest1 == true) {
         can_assign_officer = false;
-        feild_butt = true;
-        field_resultp = true;
-        reject_visible = false;
-        approve_othor = false;
-        transit_pass_exist = false;
+        feildButt = true;
+        fieldResultp = true;
+        rejectVisible = false;
+        approveOthor = false;
+        transitPassExist = false;
 
         //approve ,reject , field assign ,remark--2
-      } else if (is_form_two == true &&
-          field_status == "no_field" &&
-          field_requre == "True" &&
-          assigned_deputy1_id != null &&
-          verify_range_officer == false &&
-          assigned_deputy2_id != null &&
-          verify_forest1 == true) {
+      } else if (isFormTwo == true &&
+          fieldStatus == "no_field" &&
+          fieldRequre == "True" &&
+          verifyRangeOfficer == false &&
+          verifyForest1 == true) {
         can_assign_officer = false;
-        feild_butt = true;
-        field_resultp = false;
-        reject_visible = true;
-        approve_othor = true;
-        transit_pass_exist = false;
+        feildButt = true;
+        fieldResultp = false;
+        rejectVisible = true;
+        approveOthor = true;
+        transitPassExist = false;
 
         // field accept , reject--2
-
-      } else if (is_form_two == true &&
-          assigned_deputy1_id != null &&
-          verify_range_officer == false &&
-          assigned_deputy2_id != null &&
-          verify_forest1 == true) {
+      } else if (isFormTwo == true &&
+          verifyRangeOfficer == false &&
+          verifyForest1 == true) {
         can_assign_officer = false;
-        feild_butt = true;
-        field_resultp = true;
-        reject_visible = false;
-        approve_othor = false;
-        transit_pass_exist = false;
+        feildButt = true;
+        fieldResultp = true;
+        rejectVisible = false;
+        approveOthor = false;
+        transitPassExist = false;
 
         //approve ,reject ,remark--2
-
-      } else if (is_form_two == true &&
-          field_status == "failed" &&
-          field_requre == "True" &&
-          assigned_deputy1_id != null &&
-          verify_range_officer == false &&
-          assigned_deputy2_id != null &&
-          verify_forest1 == true) {
+      } else if (isFormTwo == true &&
+          fieldStatus == "failed" &&
+          fieldRequre == "True" &&
+          verifyRangeOfficer == false &&
+          verifyForest1 == true) {
         can_assign_officer = false;
-        feild_butt = true;
-        field_resultp = true;
-        reject_visible = false;
-        approve_othor = true;
-        transit_pass_exist = false;
+        feildButt = true;
+        fieldResultp = true;
+        rejectVisible = false;
+        approveOthor = true;
+        transitPassExist = false;
 
         //reject ,remark--2
-
-      } else if (is_form_two == true &&
-          verify_range_officer == true &&
-          assigned_deputy2_id != null &&
-          verify_forest1 == true) {
+      } else if (isFormTwo == true &&
+          verifyRangeOfficer == true &&
+          verifyForest1 == true) {
         can_assign_officer = false;
-        feild_butt = true;
-        field_resultp = true;
-        reject_visible = true;
-        approve_othor = true;
-        transit_pass_exist = false;
+        feildButt = true;
+        fieldResultp = true;
+        rejectVisible = true;
+        approveOthor = true;
+        transitPassExist = false;
       }
 
       ///////----FORM ONE---------
 
-      if (is_form_two == false &&
-          assigned_deputy1_id == null &&
-          verify_range_officer == false &&
-          assigned_deputy2_id == null &&
-          verify_forest1 == false) {
+      if (isFormTwo == false &&
+          assignedDeputy1Id == null &&
+          verifyRangeOfficer == false &&
+          assignedDeputy2Id == null &&
+          verifyForest1 == false) {
         can_assign_officer = true;
-        transit_pass_exist = false;
-        reject_visible = true;
+        transitPassExist = false;
+        rejectVisible = true;
 
         //--assign
-
-      } else if (is_form_two != true &&
-          field_status == "no_field" &&
-          field_requre == "" &&
-          assigned_deputy1_id != null &&
-          verify_range_officer == false &&
-          assigned_deputy2_id == null &&
-          verify_forest1 == false) {
+      } else if (isFormTwo != true &&
+          fieldStatus == "no_field" &&
+          fieldRequre == "" &&
+          verifyRangeOfficer == false &&
+          assignedDeputy2Id == null &&
+          verifyForest1 == false) {
         can_assign_officer = false;
-        feild_butt = false;
-        field_resultp = true;
-        reject_visible = false;
-        approve_othor = false;
-        transit_pass_exist = false;
+        feildButt = false;
+        fieldResultp = true;
+        rejectVisible = false;
+        approveOthor = false;
+        transitPassExist = false;
 
         //approve ,reject , field assign ,remark
-
-      } else if (is_form_two != true &&
-          field_status == "no_field" &&
-          field_requre == "True" &&
-          assigned_deputy1_id != null &&
-          verify_range_officer == false &&
-          assigned_deputy2_id == null &&
-          verify_forest1 == false) {
+      } else if (isFormTwo != true &&
+          fieldStatus == "no_field" &&
+          fieldRequre == "True" &&
+          verifyRangeOfficer == false &&
+          assignedDeputy2Id == null &&
+          verifyForest1 == false) {
         can_assign_officer = false;
-        feild_butt = true;
-        field_resultp = false;
-        reject_visible = true;
-        approve_othor = true;
-        transit_pass_exist = false;
+        feildButt = true;
+        fieldResultp = false;
+        rejectVisible = true;
+        approveOthor = true;
+        transitPassExist = false;
 
         // field accept , reject
-
-      } else if (is_form_two != true &&
-          field_status == "success" &&
-          field_requre == "True" &&
-          assigned_deputy1_id != null &&
-          verify_range_officer == false &&
-          assigned_deputy2_id == null &&
-          verify_forest1 == false) {
+      } else if (isFormTwo != true &&
+          fieldStatus == "success" &&
+          fieldRequre == "True" &&
+          verifyRangeOfficer == false &&
+          assignedDeputy2Id == null &&
+          verifyForest1 == false) {
         can_assign_officer = false;
-        feild_butt = true;
-        field_resultp = true;
-        reject_visible = false;
-        approve_othor = false;
-        transit_pass_exist = false;
+        feildButt = true;
+        fieldResultp = true;
+        rejectVisible = false;
+        approveOthor = false;
+        transitPassExist = false;
 
         //approve ,reject ,remark
-
-      } else if (is_form_two != true &&
-          field_status == "failed" &&
-          field_requre == "True" &&
-          assigned_deputy1_id != null &&
-          verify_range_officer == false &&
-          assigned_deputy2_id == null &&
-          verify_forest1 == false) {
+      } else if (isFormTwo != true &&
+          fieldStatus == "failed" &&
+          fieldRequre == "True" &&
+          verifyRangeOfficer == false &&
+          assignedDeputy2Id == null &&
+          verifyForest1 == false) {
         can_assign_officer = false;
-        feild_butt = true;
-        field_resultp = true;
-        reject_visible = false;
-        approve_othor = false;
-        transit_pass_exist = false;
+        feildButt = true;
+        fieldResultp = true;
+        rejectVisible = false;
+        approveOthor = false;
+        transitPassExist = false;
 
         //reject ,remark
-
-      } else if (is_form_two != true && verify_range_officer == true) {
+      } else if (isFormTwo != true && verifyRangeOfficer == true) {
         can_assign_officer = false;
-        feild_butt = true;
-        field_resultp = true;
-        reject_visible = true;
-        approve_othor = true;
-        transit_pass_exist = false;
+        feildButt = true;
+        fieldResultp = true;
+        rejectVisible = true;
+        approveOthor = true;
+        transitPassExist = false;
       }
     }
     // else if(userGroup=='forest range officer') {
@@ -827,19 +830,19 @@ class _ViewApplication2State extends State<ViewApplication2> {
     //       approve_othor =false;
     //       }
     //  }
-    else if (userGroup == 'division officer' && division_officer == false) {
+    else if (userGroup == 'division officer' && divisionOfficer == false) {
       print("----------Gsrdrtd---------");
-      if (other_state == true) {
-        transit_pass_exist = true;
-        reject_visible = true;
-        feild_butt = true;
-        field_resultp = false;
+      if (otherState == true) {
+        transitPassExist = true;
+        rejectVisible = true;
+        feildButt = true;
+        fieldResultp = false;
       } else {
-        transit_pass_exist = true;
+        transitPassExist = true;
         can_assign_officer = false;
-        reject_visible = true;
-        feild_butt = true;
-        field_resultp = false;
+        rejectVisible = true;
+        feildButt = true;
+        fieldResultp = false;
       }
     }
     // else{
@@ -858,23 +861,23 @@ class _ViewApplication2State extends State<ViewApplication2> {
     //   feild_butt= false;
     // }
     print("----Testingoo----");
-    print(feild_butt);
+    print(feildButt);
     //  --false--range1
     //  --true--range1
     //  --false--range1
     //  --false--range1
-    print(field_resultp);
+    print(fieldResultp);
     print("ASSIGN $can_assign_officer");
-    print(reject_visible);
-    print(approve_othor);
-    print(transit_pass_exist);
+    print(rejectVisible);
+    print(approveOthor);
+    print(transitPassExist);
     return {
       'can_assign_officer': can_assign_officer,
-      'transit_pass_exist': transit_pass_exist,
-      'reject_visible': reject_visible,
-      'feild_butt': feild_butt,
-      'field_resultp': field_resultp,
-      'approve_othor': approve_othor
+      'transit_pass_exist': transitPassExist,
+      'reject_visible': rejectVisible,
+      'feild_butt': feildButt,
+      'field_resultp': fieldResultp,
+      'approve_othor': approveOthor
     };
   }
 
@@ -904,23 +907,22 @@ class _ViewApplication2State extends State<ViewApplication2> {
             field_requre,
             field_status)['can_assign_officer']
         .toString());
-    return new WillPopScope(
+    return WillPopScope(
         onWillPop: _onBackPressed,
         child: Scaffold(
-          appBar: NewGradientAppBar(
-            title: Text("View Application"),
-            gradient: LinearGradient(
-                colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+          appBar: AppBar(
+            title: const Text("View Application"),
+
             elevation: 0,
             actions: [
               Container(
-                padding: EdgeInsets.only(right: 15),
+                padding: const EdgeInsets.only(right: 15),
                 child: LayoutBuilder(builder: (context, constraints) {
                   if (flag == true) {
                     return Visibility(
                         visible: (userGroup == 'user') ? true : false,
                         child: IconButton(
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.edit_rounded,
                               color: Colors.white,
                             ),
@@ -931,7 +933,7 @@ class _ViewApplication2State extends State<ViewApplication2> {
                             }));
                   } else if (flag == false) {
                     return IconButton(
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.save_rounded,
                           color: Colors.white,
                         ),
@@ -940,7 +942,7 @@ class _ViewApplication2State extends State<ViewApplication2> {
                           // String license_Img_base= vehical_License_img.path != null ? 'data:image/png;base64,' + base64Encode(bytes) : '';
                           // print(license_Img_base);
                           const String url =
-                              'http://13.234.208.246/api/auth/UpdateVehicle';
+                              'http://192.168.54.114:8000/api/auth/UpdateVehicle';
                           // print (license_Img_base);
                           Map data = {
                             "app_id": int.parse(Ids),
@@ -958,7 +960,7 @@ class _ViewApplication2State extends State<ViewApplication2> {
                           print(data);
                           var body = json.encode(data);
                           print(body);
-                    
+
                           final response = await http.post(Uri.parse(url),
                               headers: <String, String>{
                                 'Content-Type': 'application/json',
@@ -976,6 +978,7 @@ class _ViewApplication2State extends State<ViewApplication2> {
                           });
                         });
                   }
+                  return Container();
                 }),
               )
             ],
@@ -992,7 +995,7 @@ class _ViewApplication2State extends State<ViewApplication2> {
                     borderRadius: BorderRadius.circular(8),
                     color: Colors.white,
                     border: Border.all(color: Colors.blueGrey, width: 2),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         color: Colors.black,
                         blurRadius: 2.0,
@@ -1272,14 +1275,13 @@ class _ViewApplication2State extends State<ViewApplication2> {
                 ),
                 Visibility(
                     visible: can_assign_officer,
-                   
                     child: ElevatedButton(
                       //  color: Colors.orange,
                       onPressed: () {
                         print(Range);
                         AssignOfficerDialog(context);
                       },
-                      child: Text(
+                      child: const Text(
                         'Assign Officer',
                         style: TextStyle(color: Colors.white),
                       ),
@@ -1304,7 +1306,7 @@ class _ViewApplication2State extends State<ViewApplication2> {
                           height: 120,
                         ),
                       ),
-                      Text('Signature')
+                      const Text('Signature')
                     ])),
                 LayoutBuilder(builder: (context, constraints) {
                   if (userGroup == 'user') {
@@ -1368,8 +1370,8 @@ class _ViewApplication2State extends State<ViewApplication2> {
                               width: double.infinity,
                               margin: const EdgeInsets.only(
                                   top: 15, left: 15, right: 15),
-                              decoration: new BoxDecoration(
-                                  border: new Border.all(
+                              decoration: BoxDecoration(
+                                  border: Border.all(
                                     color: Colors.grey,
                                     width: 1,
                                   ),
@@ -1380,11 +1382,11 @@ class _ViewApplication2State extends State<ViewApplication2> {
                                   mainAxisSize: MainAxisSize.max,
                                   children: <Widget>[
                                     TextButton.icon(
-                                      icon: Icon(Icons.file_upload_sharp),
+                                      icon: const Icon(Icons.file_upload_sharp),
                                       onPressed: () {
                                         _pickFile();
                                       },
-                                      label: Text("Add remarks"),
+                                      label: const Text("Add remarks"),
                                     ),
                                   ]),
                             ),
@@ -1414,7 +1416,7 @@ class _ViewApplication2State extends State<ViewApplication2> {
                                   ? true
                                   : false,
                               child: ElevatedButton(
-                                child: Text(
+                                child: const Text(
                                   'Approve',
                                   style: TextStyle(fontSize: 20),
                                 ),
@@ -1430,7 +1432,7 @@ class _ViewApplication2State extends State<ViewApplication2> {
                                         fontSize: 18.0);
                                   } else {
                                     const String url =
-                                        'http://13.234.208.246/api/auth/new_approve_transit_pass';
+                                        'http://192.168.54.114:8000/api/auth/new_approve_transit_pass';
                                     Map data = {
                                       "app_id": Ids,
                                       "type": "Approve",
@@ -1467,6 +1469,9 @@ class _ViewApplication2State extends State<ViewApplication2> {
                                                   userName: userName,
                                                   userEmail: userEmail,
                                                   userGroup: userGroup,
+                                                  userId: userId,
+                                                  dropdownValue: "",
+                                                  Range: Range,
                                                 )));
                                   }
                                 },
@@ -1475,7 +1480,7 @@ class _ViewApplication2State extends State<ViewApplication2> {
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           ),
                           Container(
@@ -1503,7 +1508,7 @@ class _ViewApplication2State extends State<ViewApplication2> {
                                   Padding(
                                     padding: const EdgeInsets.all(0),
                                     child: ElevatedButton(
-                                      child: Text(
+                                      child: const Text(
                                         'Reject',
                                         style: TextStyle(fontSize: 20),
                                       ),
@@ -1519,7 +1524,7 @@ class _ViewApplication2State extends State<ViewApplication2> {
                                               fontSize: 18.0);
                                         } else {
                                           const String url =
-                                              'http://13.234.208.246/api/auth/approve_transit_pass';
+                                              'http://192.168.54.114:8000/api/auth/approve_transit_pass';
                                           Map data = {
                                             "app_id": Ids,
                                             "type": "REJECT",
@@ -1561,6 +1566,9 @@ class _ViewApplication2State extends State<ViewApplication2> {
                                                         userName: userName,
                                                         userEmail: userEmail,
                                                         userGroup: userGroup,
+                                                        userId: userId,
+                                                        dropdownValue: "",
+                                                        Range: Range,
                                                       )));
                                         }
                                       },
@@ -1599,16 +1607,16 @@ class _ViewApplication2State extends State<ViewApplication2> {
                                     child: ElevatedButton(
                                       style: ButtonStyle(
                                           backgroundColor:
-                                              MaterialStateProperty.all<Color>(
+                                              WidgetStateProperty.all<Color>(
                                                   Colors.green)),
-                                      child: Text(
+                                      child: const Text(
                                         'Field officer approved',
                                         style: TextStyle(fontSize: 12),
                                       ),
                                       onPressed: () async {
                                         {
                                           const String url =
-                                              'http://13.234.208.246/api/auth/success_field_verification';
+                                              'http://192.168.54.114:8000/api/auth/success_field_verification';
                                           Map data = {
                                             "app_id": Ids,
                                             "type": "success",
@@ -1649,6 +1657,9 @@ class _ViewApplication2State extends State<ViewApplication2> {
                                                         userName: userName,
                                                         userEmail: userEmail,
                                                         userGroup: userGroup,
+                                                        userId: userId,
+                                                        dropdownValue: "",
+                                                        Range: Range,
                                                       )));
                                         }
                                       },
@@ -1660,7 +1671,7 @@ class _ViewApplication2State extends State<ViewApplication2> {
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           ),
                           Container(
@@ -1690,16 +1701,16 @@ class _ViewApplication2State extends State<ViewApplication2> {
                                     child: ElevatedButton(
                                       style: ButtonStyle(
                                           backgroundColor:
-                                              MaterialStateProperty.all<Color>(
+                                              WidgetStateProperty.all<Color>(
                                                   Colors.red)),
-                                      child: Text(
+                                      child: const Text(
                                         'Field officer reject',
                                         style: TextStyle(fontSize: 12),
                                       ),
                                       onPressed: () async {
                                         {
                                           const String url =
-                                              'http://13.234.208.246/api/auth/failed_field_verification';
+                                              'http://192.168.54.114:8000/api/auth/failed_field_verification';
                                           Map data = {
                                             "app_id": Ids,
                                             "type": "failed",
@@ -1740,6 +1751,9 @@ class _ViewApplication2State extends State<ViewApplication2> {
                                                         userName: userName,
                                                         userEmail: userEmail,
                                                         userGroup: userGroup,
+                                                        userId: userId,
+                                                        dropdownValue: "",
+                                                        Range: Range,
                                                       )));
                                         }
                                       },
@@ -1751,7 +1765,7 @@ class _ViewApplication2State extends State<ViewApplication2> {
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           ),
                           Container(
@@ -1779,14 +1793,14 @@ class _ViewApplication2State extends State<ViewApplication2> {
                                   Padding(
                                     padding: const EdgeInsets.all(0),
                                     child: ElevatedButton(
-                                      child: Text(
+                                      child: const Text(
                                         'Field enquiry',
                                         style: TextStyle(fontSize: 20),
                                       ),
                                       onPressed: () async {
                                         {
                                           const String url =
-                                              'http://13.234.208.246/api/auth/need_field_verification';
+                                              'http://192.168.54.114:8000/api/auth/need_field_verification';
                                           Map data = {
                                             "app_id": Ids,
                                             "type": "True",
@@ -1827,6 +1841,9 @@ class _ViewApplication2State extends State<ViewApplication2> {
                                                         userName: userName,
                                                         userEmail: userEmail,
                                                         userGroup: userGroup,
+                                                        userId: userId,
+                                                        dropdownValue: "",
+                                                        Range: Range,
                                                       )));
                                         }
                                       },
@@ -1838,7 +1855,7 @@ class _ViewApplication2State extends State<ViewApplication2> {
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           ),
                         ])),

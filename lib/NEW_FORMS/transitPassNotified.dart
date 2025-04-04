@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:convert';
 import 'dart:math';
 
@@ -24,13 +26,14 @@ class transitPassNotified extends StatefulWidget {
   String userGroup;
 
   transitPassNotified(
-      {this.sessionToken,
-      this.userName,
-      this.userEmail,
-      this.userId,
-      this.formOneIndex,
-      this.village_,
-      this.userGroup});
+      {super.key,
+      required this.sessionToken,
+      required this.userName,
+      required this.userEmail,
+      required this.userId,
+      required this.formOneIndex,
+      required this.village_,
+      required this.userGroup});
 
   @override
   State<transitPassNotified> createState() => _transitPassNotifiedState(
@@ -54,6 +57,14 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
 
   _transitPassNotifiedState(this.formOneIndex, this.sessionToken, this.userName,
       this.userEmail, this.userId, this.village__, this.userGroup);
+
+  String? divisionData;
+  String? rangeData;
+  String? selectedPurpose;
+  bool holder_check = false;
+  String maintenance = '';
+  double v = 0.0;
+  double Len = 0.0;
 
   TextEditingController Name = TextEditingController();
   TextEditingController Address = TextEditingController();
@@ -281,13 +292,11 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
     return int.parse(no_Tree) > 0;
   }
 
-  bool holder_check;
-  double v;
   // double _getVolume(double girth, double length) {
   //   v = ((girth * 0.01) / 4) * ((girth * 0.01) / 4) * length;
   //   return v;
   // }
- double _getVolume(double girth, double length) {
+  double _getVolume(double girth, double length) {
     // Convert girth from cm to meters
     double girthInMeters = girth * 0.01;
 
@@ -299,12 +308,11 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
 
     return volume;
   }
+
   Widget getTextV(BuildContext context, double girth, double length) {
     return Text((_getVolume(girth, length).toString()).toString());
   }
 
-  String selectedPurpose;
-  double Len;
   List log_details = [];
   List d = [];
   List Species = [];
@@ -319,7 +327,6 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
 
   int _radioValue = 0;
   int _radioValue2 = 0;
-  String maintenance;
   bool flag_land = false;
   bool flag_sp = false;
   void _handleRadioValueChange(int value) {
@@ -357,7 +364,7 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
     });
   }
 
-  bool _showSpecias = false;
+  final bool _showSpecias = false;
   final List<String> speciasTextList = [
     'Rosewood(Dalbergia latifolia)',
     'Teak(Tectona grandis) ',
@@ -457,7 +464,7 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
       onWillPop: _onBackPressed,
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: NewGradientAppBar(
+        appBar: AppBar(
           title: const Text(
             "Form II - Notified",
             style: TextStyle(
@@ -465,8 +472,6 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
               color: Colors.white,
             ),
           ),
-          gradient: LinearGradient(
-              colors: [HexColor("#26f596"), HexColor("#0499f2")]),
           elevation: 0,
         ),
         body: SingleChildScrollView(
@@ -498,7 +503,7 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                             groupValue: _radioValue,
                             // onChanged: _handleRadioValueChange,
                             onChanged: (value) {
-                              switchSpeciesList(value);
+                              switchSpeciesList(value!);
                               setState(() {
                                 _handleRadioValueChange(value);
                                 _showPopupMessage1(context);
@@ -515,7 +520,7 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                               value: 2,
                               groupValue: _radioValue,
                               onChanged: (value) {
-                                switchSpeciesList(value);
+                                switchSpeciesList(value!);
                                 _handleRadioValueChange(value);
                                 setState(() {
                                   _radioValue = value;
@@ -530,10 +535,10 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Container(
+                                  child: SizedBox(
                                     height: 200,
                                     child: Scrollbar(
-                                      isAlwaysShown:
+                                      thumbVisibility:
                                           true, // Show the scrollbar always
                                       child: SingleChildScrollView(
                                         child: Column(
@@ -549,11 +554,12 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                               ],
                             );
                           } else if (flag_land == false) {
-                            return Container(
+                            return SizedBox(
                               height: 0,
                               width: 0,
                             );
                           }
+                          return Container();
                         },
                       ),
                       LayoutBuilder(
@@ -584,7 +590,7 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                                       value: 11,
                                       groupValue: _radioValue2,
                                       onChanged: (value) {
-                                        switchSpeciesList(value);
+                                        switchSpeciesList(value!);
                                         _handleRadioValueChange2(value);
                                         setState(() {
                                           _radioValue2 = value;
@@ -601,7 +607,7 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                                     groupValue: _radioValue2,
                                     onChanged: (value) {
                                       setState(() {
-                                        _handleRadioValueChange2(value);
+                                        _handleRadioValueChange2(value!);
                                         _showPopupMessage(context);
                                       });
                                     },
@@ -610,11 +616,12 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                               ])
                             ]);
                           } else if (flag_land == false) {
-                            return Container(
+                            return SizedBox(
                               height: 0,
                               width: 0,
                             );
                           }
+                          return Container();
                         },
                       ),
                       Padding(
@@ -638,8 +645,8 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                         width: double.infinity,
                         margin:
                             const EdgeInsets.only(top: 8, left: 15, right: 15),
-                        decoration: new BoxDecoration(
-                            border: new Border.all(
+                        decoration: BoxDecoration(
+                            border: Border.all(
                               color: Colors.grey,
                               width: 1,
                             ),
@@ -665,9 +672,9 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                                           fontWeight: FontWeight.bold)),
                                 ]),
                               ),
-                              onChanged: (String data) {
+                              onChanged: (String? data) {
                                 setState(() {
-                                  divisionData = data;
+                                  divisionData = data!;
                                 });
                               },
                               items: divisions
@@ -704,9 +711,9 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                                           fontWeight: FontWeight.bold)),
                                 ]),
                               ),
-                              onChanged: (String data) {
+                              onChanged: (String? data) {
                                 setState(() {
-                                  rangeData = data;
+                                  rangeData = data ?? '';
                                 });
                               },
                               items: ranges
@@ -851,7 +858,7 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                                 border: OutlineInputBorder(
                                   borderSide: BorderSide(width: 2),
                                   borderRadius: const BorderRadius.all(
-                                      const Radius.circular(14.0)),
+                                      Radius.circular(14.0)),
                                 ),
                                 // border: OutlineInputBorder(),
                                 labelText: 'District',
@@ -870,7 +877,7 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                                 border: OutlineInputBorder(
                                   borderSide: BorderSide(width: 2),
                                   borderRadius: const BorderRadius.all(
-                                      const Radius.circular(14.0)),
+                                      Radius.circular(14.0)),
                                 ),
                                 // border: OutlineInputBorder(),
                                 labelText: 'Taluk',
@@ -889,7 +896,7 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                                 border: OutlineInputBorder(
                                   borderSide: BorderSide(width: 2),
                                   borderRadius: const BorderRadius.all(
-                                      const Radius.circular(14.0)),
+                                      Radius.circular(14.0)),
                                 ),
                                 labelText: 'Block (optional)',
                                 hintText: 'Enter Your Block'),
@@ -908,7 +915,7 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                                 border: OutlineInputBorder(
                                   borderSide: BorderSide(width: 2),
                                   borderRadius: const BorderRadius.all(
-                                      const Radius.circular(14.0)),
+                                      Radius.circular(14.0)),
                                 ),
                                 // border: OutlineInputBorder(),
                                 labelText: 'Village ',
@@ -927,7 +934,7 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                               border: OutlineInputBorder(
                                 borderSide: BorderSide(width: 2),
                                 borderRadius: const BorderRadius.all(
-                                    const Radius.circular(14.0)),
+                                    Radius.circular(14.0)),
                               ),
                               // border: OutlineInputBorder(),
                               labelText: 'Pincode ',
@@ -968,20 +975,20 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                               ),
                           child: Scrollbar(
                             // Wrap your ListView with Scrollbar
-                            isAlwaysShown: true, // Show the scrollbar always
+                            thumbVisibility: true, // Show the scrollbar always
                             child: ListView(
                               scrollDirection: Axis.vertical,
                               children: selectedList.keys.map((String key) {
-                                return new CheckboxListTile(
-                                  title: new Text(key),
+                                return CheckboxListTile(
+                                  title: Text(key),
                                   value: selectedList[key],
                                   activeColor: Colors.green,
                                   checkColor: Colors.white,
-                                  onChanged: (bool value) {
+                                  onChanged: (bool? value) {
                                     holder_check = _getHolderCheck();
                                     if (int.parse(no_Tree) > 0 &&
                                         holder_check) {
-                                      if (value) {
+                                      if (value == true) {
                                         if (holder_1.length <
                                             int.parse(no_Tree)) {
                                           holder_1.add(key);
@@ -1002,7 +1009,7 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                                         holder_1.remove(key);
                                       }
                                       setState(() {
-                                        selectedList[key] = value;
+                                        selectedList[key] = value!;
                                       });
                                     }
                                   },
@@ -1031,10 +1038,10 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                                       fontWeight: FontWeight.bold)),
                             ]),
                           ), // Initially selected value (can be null)
-                          onChanged: (String newValue) {
+                          onChanged: (String? newValue) {
                             setState(() {
                               selectedPurpose =
-                                  newValue; // Update the selected value
+                                  newValue; // Now accepts nullable String
                             });
                           },
                           items: <String>['Personal', 'Commercial']
@@ -1059,9 +1066,7 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                                             builder: (context, constraints) {
                                           print(n_list.length);
                                           int textValue = 0;
-                                          if (Tree_Proposed_to_cut.text ==
-                                                  null ||
-                                              Tree_Proposed_to_cut.text == "") {
+                                          if (Tree_Proposed_to_cut.text == "") {
                                             textValue = 0;
                                           } else {
                                             textValue = int.parse(
@@ -1104,7 +1109,7 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                                               borderRadius:
                                                   BorderRadius.circular(12),
                                               color: Colors.white,
-                                              boxShadow: [
+                                              boxShadow: const [
                                                 BoxShadow(
                                                   color: Colors.black,
                                                   blurRadius: 2.0,
@@ -1115,7 +1120,7 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                                               ],
                                             ),
                                             child: Scrollbar(
-                                                isAlwaysShown: true,
+                                                thumbVisibility: true,
                                                 thickness: 15,
                                                 child: SingleChildScrollView(
                                                     scrollDirection:
@@ -1150,8 +1155,7 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                                                               )),
                                                               DataColumn(
                                                                 label: Row(
-                                                                  children: <
-                                                                      Widget>[
+                                                                  children: <Widget>[
                                                                     Text(
                                                                       'GBH (cm)',
                                                                       style:
@@ -1217,8 +1221,7 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                                                               )),
                                                               DataColumn(
                                                                 label: Row(
-                                                                  children: <
-                                                                      Widget>[
+                                                                  children: <Widget>[
                                                                     Text(
                                                                       "Add log ",
                                                                       style: TextStyle(
@@ -1264,22 +1267,22 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                                                                         cells: [
                                                                           DataCell(
                                                                               Text((index + 1).toString())),
-                                                                          DataCell(Container(
+                                                                          DataCell(SizedBox(
                                                                               width: 180,
                                                                               child: Text(
                                                                                 log_details[index]['species_of_tree'].toString(),
                                                                               ))),
-                                                                          DataCell(Container(
+                                                                          DataCell(SizedBox(
                                                                               width: 100,
                                                                               child: Text(
                                                                                 log_details[index]['breadth'].toString(),
                                                                               ))),
-                                                                          DataCell(Container(
+                                                                          DataCell(SizedBox(
                                                                               width: 100,
                                                                               child: Text(
                                                                                 log_details[index]['length'].toString(),
                                                                               ))),
-                                                                          DataCell(Container(
+                                                                          DataCell(SizedBox(
                                                                               width: 100,
                                                                               child: Text(
                                                                                 log_details[index]['volume'].toString(),
@@ -1333,6 +1336,7 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                                     color: Colors.white,
                                   );
                                 }
+                                return Container();
                               }),
                             ],
                           ),
@@ -1343,7 +1347,6 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                       ),
                       Container(
                         child: ElevatedButton(
-                            child: Text(" NEXT "),
                             style: ElevatedButton.styleFrom(
                               shadowColor: Colors.green,
                             ),
@@ -1472,8 +1475,8 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                                         userId: userId,
                                         userGroup: userGroup,
                                         Name_: Name.text,
-                                        Division_: divisionData,
-                                        range_: rangeData,
+                                        Division_: divisionData!,
+                                        range_: rangeData!,
                                         address_: Address.text,
                                         survey_no_: survey_no.text,
                                         tree_no_cut: no_Tree,
@@ -1483,13 +1486,14 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                                         village_: villageCo.text,
                                         pincode_: pincodeCo.text,
                                         holder_1: holder_1,
-                                        purpose_: selectedPurpose,
+                                        purpose_: selectedPurpose!,
                                         log_details: log_details),
                                   ),
                                 );
                                 setState(() {});
                               }
-                            }),
+                            },
+                            child: Text(" NEXT ")),
                       ),
                       SizedBox(height: 20),
                     ],
@@ -1648,7 +1652,7 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
     );
   }
 
-  String dropdownValue3;
+  String? dropdownValue3;
   String spacies_holder = '';
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Future<void> showInformationDialog(BuildContext context) async {
@@ -1695,7 +1699,7 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                         keyboardType: TextInputType.number,
                         controller: length,
                         validator: (value) {
-                          return value.isNotEmpty ? null : "Enter Height(M)";
+                          return value!.isNotEmpty ? null : "Enter Height(M)";
                         },
                         decoration:
                             InputDecoration(hintText: "Please Enter Height(M)"),
@@ -1704,7 +1708,7 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                         keyboardType: TextInputType.number,
                         controller: girth,
                         validator: (value) {
-                          return value.isNotEmpty ? null : "Enter GBH(cm)";
+                          return value!.isNotEmpty ? null : "Enter GBH(cm)";
                         },
                         decoration:
                             InputDecoration(hintText: "Please Enter GBH(cm)"),
@@ -1723,8 +1727,8 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                   ),
                   onTap: () {
                     if ((dropdownValue3 == null) ||
-                        (length.text.length == 0) ||
-                        (girth.text.length == 0)) {
+                        (length.text.isEmpty) ||
+                        (girth.text.isEmpty)) {
                       Fluttertoast.showToast(
                           msg: "Please add all details ",
                           toastLength: Toast.LENGTH_SHORT,
@@ -1913,7 +1917,7 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                         //initialValue: log_details[index]['length'],
                         controller: length,
                         validator: (value) {
-                          return value.isNotEmpty ? null : "Enter height(M)";
+                          return value!.isNotEmpty ? null : "Enter height(M)";
                         },
                         decoration:
                             InputDecoration(hintText: "Please Enter height(M)"),
@@ -1922,7 +1926,7 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                         keyboardType: TextInputType.number,
                         controller: girth,
                         validator: (value) {
-                          return value.isNotEmpty ? null : "Enter GBH(cm)";
+                          return value!.isNotEmpty ? null : "Enter GBH(cm)";
                         },
                         decoration:
                             InputDecoration(hintText: "Please Enter GBH(cm)"),
@@ -1938,8 +1942,8 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                   ),
                   onTap: () {
                     if ((dropdownValue3 == null) ||
-                        (length.text.length == 0) ||
-                        (girth.text.length == 0)) {
+                        (length.text.isEmpty) ||
+                        (girth.text.isEmpty)) {
                       Fluttertoast.showToast(
                           msg: "Please add all details ",
                           toastLength: Toast.LENGTH_SHORT,
@@ -2066,7 +2070,7 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                         n_list.add(i);
                       }
 
-                      if (_formKey.currentState.validate()) {
+                      if (_formKey.currentState!.validate()) {
                         length.clear();
                         girth.clear();
                         Navigator.of(context).pop();
@@ -2080,37 +2084,36 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
         });
   }
 
-  Future<bool> _onBackPressed() {
-    return showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: const Text('Do you want to go previous page'),
-            content: const Text('Changes you made may not be saved.'),
-            actions: <Widget>[
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(false),
-                child: const Text("NO"),
-              ),
-              const SizedBox(height: 16),
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(true),
-                child: const Text("YES"),
-              ),
-            ],
+  Future<bool> _onBackPressed() async {
+    final shouldPop = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Do you want to go previous page'),
+        content: const Text('Changes you made may not be saved.'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text("NO"),
           ),
-        ) ??
-        false;
+          const SizedBox(height: 16),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text("YES"),
+          ),
+        ],
+      ),
+    );
+    return shouldPop ?? false;
   }
 
   String villageTaluka = "";
   String villageDist = "";
-  String divisionData;
-  String rangeData;
+
   List<String> ranges = [];
   List<String> divisions = [];
   LoadData() async {
     int DL = 0;
-    const String url = 'http://13.234.208.246/api/auth/villages/';
+    const String url = 'http://192.168.54.114:8000/api/auth/villages/';
     Map data = {
       "village": village__,
     };
@@ -2167,6 +2170,11 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
                         userName: userName,
                         userEmail: userEmail,
                         userId: userId,
+                        userMobile: '', // Add default value
+                        userAddress: '', // Add default value
+                        userProfile: '', // Add default value
+                        userGroup: '', // Add default value
+                        userCato: '', // Add default value
                       ),
                     ),
                   );

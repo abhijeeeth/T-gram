@@ -7,8 +7,7 @@ import '../model/formOneModel.dart';
 import '../events/formOneevent.dart';
 
 class formOneBlock extends Bloc<formOneEvent, List<formOneFields>> {
-  @override
-  List<formOneFields> get initialState => <formOneFields>[];
+  formOneBlock() : super(<formOneFields>[]);
 
   @override
   Stream<List<formOneFields>> mapEventToState(formOneEvent event) async* {

@@ -70,54 +70,55 @@ class locForm1d extends StatefulWidget {
   String selectProof;
   String logData;
   locForm1d(
-      {this.sessionToken,
-      this.userId,
-      this.id,
-      this.Type,
-      this.userName,
-      this.userEmail,
-      this.App_no,
-      this.Division,
-      this.Range,
-      this.District,
-      this.Taluke,
-      this.Village,
-      this.address,
-      this.survay,
-      this.treePCut,
-      this.blockL,
-      this.pin,
-      this.imageA,
-      this.imageB,
-      this.imageC,
-      this.imageD,
-      this.image1lat,
-      this.image2lat,
-      this.image3lat,
-      this.image4lat,
-      this.image1log,
-      this.image2log,
-      this.image3log,
-      this.image4log,
-      this.treespecies,
-      this.purposecut,
-      this.drivername,
-      this.vechclereg,
-      this.mode,
-      this.phone,
-      this.destAddress,
-      this.destState,
-      this.licenceImg,
-      this.ownerProof,
-      this.revenApplication,
-      this.revenApprove,
-      this.declaration,
-      this.locationSkch,
-      this.treeOwnership,
-      this.aadarcard,
-      this.signatureImg,
-      this.selectProof,
-      this.logData});
+      {super.key,
+      required this.sessionToken,
+      required this.userId,
+      required this.id,
+      required this.Type,
+      required this.userName,
+      required this.userEmail,
+      required this.App_no,
+      required this.Division,
+      required this.Range,
+      required this.District,
+      required this.Taluke,
+      required this.Village,
+      required this.address,
+      required this.survay,
+      required this.treePCut,
+      required this.blockL,
+      required this.pin,
+      required this.imageA,
+      required this.imageB,
+      required this.imageC,
+      required this.imageD,
+      required this.image1lat,
+      required this.image2lat,
+      required this.image3lat,
+      required this.image4lat,
+      required this.image1log,
+      required this.image2log,
+      required this.image3log,
+      required this.image4log,
+      required this.treespecies,
+      required this.purposecut,
+      required this.drivername,
+      required this.vechclereg,
+      required this.mode,
+      required this.phone,
+      required this.destAddress,
+      required this.destState,
+      required this.licenceImg,
+      required this.ownerProof,
+      required this.revenApplication,
+      required this.revenApprove,
+      required this.declaration,
+      required this.locationSkch,
+      required this.treeOwnership,
+      required this.aadarcard,
+      required this.signatureImg,
+      required this.selectProof,
+      required this.logData});
   @override
   State<locForm1d> createState() => _locForm1dState(
       sessionToken,
@@ -172,6 +173,7 @@ class locForm1d extends StatefulWidget {
 
 class _locForm1dState extends State<locForm1d> {
   final dbHelper = DatabaseHelper.instance;
+  @override
   void initState() {
     super.initState();
 
@@ -283,15 +285,19 @@ class _locForm1dState extends State<locForm1d> {
   TextEditingController mode_transport = TextEditingController();
   bool flag = false;
   int _radioValue = 0;
-  String maintenance;
+  late String maintenance;
   bool isShow = false;
   var _imageSignature;
   var _imageLisence;
+  late List log_details;
+  late String imgLIC;
+  late String IMGsig;
+  late String selectedState;
 
   @override
-  void _handleRadioValueChange(int value) {
+  void _handleRadioValueChange(int? value) {
     setState(() {
-      _radioValue = value;
+      _radioValue = value!;
       if (_radioValue == 1) {
         maintenance = 'YES';
         setState(() {
@@ -306,9 +312,6 @@ class _locForm1dState extends State<locForm1d> {
     });
   }
 
-  List log_details;
-  String imgLIC;
-  String IMGsig;
   void viewData() async {
     print(Type);
 
@@ -338,7 +341,7 @@ class _locForm1dState extends State<locForm1d> {
     }
   }
 
-  String selectedState;
+  // String selectedState; // Removed duplicate declaration
   List<String> State = [
     "Andhra Pradesh",
     "Andaman and Nicobar Islands",
@@ -388,10 +391,10 @@ class _locForm1dState extends State<locForm1d> {
                         await setSignaturepicgallery();
                       },
                       splashColor: Colors.greenAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.image,
                               color: Colors.blueAccent,
@@ -425,10 +428,10 @@ class _locForm1dState extends State<locForm1d> {
                         await setLisencepicgallery();
                       },
                       splashColor: Colors.greenAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.image,
                               color: Colors.blueAccent,
@@ -499,10 +502,9 @@ class _locForm1dState extends State<locForm1d> {
   Widget build(BuildContext context) {
     return Scaffold(
         // backgroundColor: Colors.white,
-        appBar: NewGradientAppBar(
-          title: Text("FORM - I"),
-          gradient: LinearGradient(
-              colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+        appBar: AppBar(
+          title: const Text("FORM - I"),
+
           //backgroundColor: Colors.blueGrey,
           elevation: 0,
           //automaticallyImplyLeading: false,
@@ -530,8 +532,8 @@ class _locForm1dState extends State<locForm1d> {
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.only(top: 7, left: 15, right: 15),
-                  decoration: new BoxDecoration(
-                      border: new Border.all(
+                  decoration: BoxDecoration(
+                      border: Border.all(
                         color: Colors.grey,
                         width: 1,
                       ),
@@ -540,10 +542,10 @@ class _locForm1dState extends State<locForm1d> {
                       left: 10.0, right: 10, top: 10, bottom: 0),
                   child: DropdownButton<String>(
                     value: selectedState,
-                    icon: Icon(Icons.arrow_drop_down),
+                    icon: const Icon(Icons.arrow_drop_down),
                     iconSize: 24,
                     elevation: 16,
-                    style: TextStyle(color: Colors.black, fontSize: 18),
+                    style: const TextStyle(color: Colors.black, fontSize: 18),
                     hint: RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(children: <TextSpan>[
@@ -564,9 +566,9 @@ class _locForm1dState extends State<locForm1d> {
                           height: 2,
                           color: Colors.grey,
                         ),*/
-                    onChanged: (String data) {
+                    onChanged: (String? data) {
                       setState(() {
-                        selectedState = data;
+                        selectedState = data!;
                       });
 
                       print(selectedState);
@@ -585,11 +587,10 @@ class _locForm1dState extends State<locForm1d> {
                   //padding: EdgeInsets.symmetric(horizontal: 15),
                   child: TextField(
                     controller: destination_add,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: OutlineInputBorder(
                         borderSide: BorderSide(width: 2),
-                        borderRadius:
-                            const BorderRadius.all(const Radius.circular(14.0)),
+                        borderRadius: BorderRadius.all(Radius.circular(14.0)),
                       ),
                       labelText: 'Destination Address',
                       hintText: 'Destination Address',
@@ -600,8 +601,8 @@ class _locForm1dState extends State<locForm1d> {
                     margin: const EdgeInsets.only(top: 10.0, left: 15),
                     child: Column(children: <Widget>[
                       Row(children: <Widget>[
-                        Expanded(
-                          child: new Text(
+                        const Expanded(
+                          child: Text(
                             'Enter Vehicle Details',
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold),
@@ -609,7 +610,7 @@ class _locForm1dState extends State<locForm1d> {
                         ),
                         Expanded(
                           child: RadioListTile(
-                            title: Text(
+                            title: const Text(
                               'Yes',
                               style: TextStyle(fontFamily: 'Lato'),
                             ),
@@ -620,7 +621,7 @@ class _locForm1dState extends State<locForm1d> {
                         ),
                         Expanded(
                           child: RadioListTile(
-                            title: Text(
+                            title: const Text(
                               'No',
                               style: TextStyle(fontFamily: 'Lato'),
                             ),
@@ -703,8 +704,8 @@ class _locForm1dState extends State<locForm1d> {
                             Container(
                               width: double.infinity,
                               margin: const EdgeInsets.only(top: 15, right: 15),
-                              decoration: new BoxDecoration(
-                                  border: new Border.all(
+                              decoration: BoxDecoration(
+                                  border: Border.all(
                                     color: Colors.grey,
                                     width: 1,
                                   ),
@@ -724,7 +725,7 @@ class _locForm1dState extends State<locForm1d> {
                                       },
                                       label: const Text("Driver License"),
                                     ),
-                                    Spacer(),
+                                    const Spacer(),
                                     Icon(
                                       Icons.check_circle,
                                       color: _licFunction() == "FALSE"
@@ -740,12 +741,13 @@ class _locForm1dState extends State<locForm1d> {
                             color: Colors.white,
                           );
                         }
+                        return Container(); // Default empty container
                       }),
                       Container(
                         width: double.infinity,
                         margin: const EdgeInsets.only(top: 15, right: 15),
-                        decoration: new BoxDecoration(
-                            border: new Border.all(
+                        decoration: BoxDecoration(
+                            border: Border.all(
                               color: Colors.grey,
                               width: 1,
                             ),
@@ -756,15 +758,15 @@ class _locForm1dState extends State<locForm1d> {
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
                               TextButton.icon(
-                                icon: Icon(Icons.image),
+                                icon: const Icon(Icons.image),
                                 onPressed: () {
                                   setState(() {
                                     _showpickoptiondialogSignature(context);
                                   });
                                 },
-                                label: Text("Digital Signature"),
+                                label: const Text("Digital Signature"),
                               ),
-                              Spacer(),
+                              const Spacer(),
                               Icon(
                                 Icons.check_circle,
                                 color: _sigFunction() == "FALSE"
@@ -776,7 +778,7 @@ class _locForm1dState extends State<locForm1d> {
                       ),
                       Visibility(
                         visible: isShow,
-                        child: CircularProgressIndicator(
+                        child: const CircularProgressIndicator(
                           valueColor:
                               AlwaysStoppedAnimation<Color>(Colors.green),
                           strokeWidth: 8,
@@ -803,17 +805,15 @@ class _locForm1dState extends State<locForm1d> {
                                     textColor: Colors.white,
                                     fontSize: 18.0);
                               } else {
-                                if (logData != null) {
-                                  log_details = json.decode(logData);
-                                  print("PPPPPPP$log_details");
-                                }
+                                log_details = json.decode(logData);
+                                print("PPPPPPP$log_details");
                                 print(imageA);
                                 setState(() {
                                   isShow = true;
                                 });
 
                                 const String url =
-                                    'http://13.234.208.246/api/auth/InsertRecord';
+                                    'http://192.168.54.114:8000/api/auth/InsertRecord';
                                 Map data = {
                                   "name": App_no,
                                   "address": address,
@@ -964,7 +964,7 @@ class _locForm1dState extends State<locForm1d> {
                                     context,
                                     PageRouteBuilder(
                                         transitionDuration:
-                                            Duration(milliseconds: 250),
+                                            const Duration(milliseconds: 250),
                                         transitionsBuilder: (context, animation,
                                             animationTime, child) {
                                           return ScaleTransition(
@@ -979,7 +979,12 @@ class _locForm1dState extends State<locForm1d> {
                                               sessionToken: sessionToken,
                                               userName: userName,
                                               userEmail: userEmail,
-                                              userId: userId);
+                                              userId: userId,
+                                              userMobile: '',
+                                              userAddress: '',
+                                              userProfile: '',
+                                              userGroup: '',
+                                              userCato: '');
                                         }));
                               }
                             },
@@ -1016,17 +1021,15 @@ class _locForm1dState extends State<locForm1d> {
                                     textColor: Colors.white,
                                     fontSize: 18.0);
                               } else {
-                                if (logData != null) {
-                                  log_details = json.decode(logData);
-                                  print("PPPPPPP$log_details");
-                                }
+                                log_details = json.decode(logData);
+                                print("PPPPPPP$log_details");
                                 print(imageA);
                                 setState(() {
                                   isShow = true;
                                 });
 
                                 const String url =
-                                    'http://13.234.208.246/api/auth/Formtwophaseone';
+                                    'http://192.168.54.114:8000/api/auth/Formtwophaseone';
                                 Map data = {
                                   "name": App_no,
                                   "address": address,
@@ -1177,7 +1180,7 @@ class _locForm1dState extends State<locForm1d> {
                                     context,
                                     PageRouteBuilder(
                                         transitionDuration:
-                                            Duration(milliseconds: 250),
+                                            const Duration(milliseconds: 250),
                                         transitionsBuilder: (context, animation,
                                             animationTime, child) {
                                           return ScaleTransition(
@@ -1192,7 +1195,12 @@ class _locForm1dState extends State<locForm1d> {
                                               sessionToken: sessionToken,
                                               userName: userName,
                                               userEmail: userEmail,
-                                              userId: userId);
+                                              userId: userId,
+                                              userMobile: '',
+                                              userAddress: '',
+                                              userProfile: '',
+                                              userGroup: '',
+                                              userCato: '');
                                         }));
                               }
                             },
@@ -1212,7 +1220,7 @@ class _locForm1dState extends State<locForm1d> {
               ]),
             ),
             Padding(
-              padding: EdgeInsets.only(left: 19, right: 15, top: 15),
+              padding: const EdgeInsets.only(left: 19, right: 15, top: 15),
               child: ElevatedButton(
                 child: const Text(
                   'Update form',
@@ -1241,31 +1249,31 @@ class _locForm1dState extends State<locForm1d> {
                   String locImageB = imageB;
                   String locImageC = imageC;
                   String locImageD = imageD;
-                  String image1_lat = image1lat;
-                  String image2_lat = image2lat;
-                  String image3_lat = image3lat;
-                  String image4_lat = image4lat;
-                  String image1_log = image1log;
-                  String image2_log = image2log;
-                  String image3_log = image3log;
-                  String image4_log = image4log;
-                  String tree_species = treespecies;
-                  String purpose_cut = purposecut;
-                  String driver_nameLoc = driver_name.text;
-                  String vehicel_reg = vehical_reg_no.text;
+                  String image1Lat = image1lat;
+                  String image2Lat = image2lat;
+                  String image3Lat = image3lat;
+                  String image4Lat = image4lat;
+                  String image1Log = image1log;
+                  String image2Log = image2log;
+                  String image3Log = image3log;
+                  String image4Log = image4log;
+                  String treeSpecies = treespecies;
+                  String purposeCut = purposecut;
+                  String driverNameloc = driver_name.text;
+                  String vehicelReg = vehical_reg_no.text;
                   String phone = driver_phone.text;
                   String mode = mode_transport.text;
-                  String destination_address = destination_add.text;
-                  String destination_state = selectedState;
+                  String destinationAddress = destination_add.text;
+                  String destinationState = selectedState;
                   String LicenceImg = licenceImg;
-                  String ownership_proof_img = ownerProof;
-                  String revenue_application_img = revenApplication;
-                  String revenue_approval_img = revenApprove;
-                  String declaration_img = declaration;
-                  String location_sketch_img = locationSkch;
-                  String tree_ownership_img = treeOwnership;
-                  String aadhar_card_img = aadarcard;
-                  String signature_img = signatureImg;
+                  String ownershipProofImg = ownerProof;
+                  String revenueApplicationImg = revenApplication;
+                  String revenueApprovalImg = revenApprove;
+                  String declarationImg = declaration;
+                  String locationSketchImg = locationSkch;
+                  String treeOwnershipImg = treeOwnership;
+                  String aadharCardImg = aadarcard;
+                  String signatureImgLocal = signatureImg;
                   String SelectProof = selectProof;
                   String LogData = logData;
                   _update(
@@ -1286,35 +1294,33 @@ class _locForm1dState extends State<locForm1d> {
                       (locImageB == null) ? "" : locImageB,
                       (locImageC == null) ? "" : locImageC,
                       (locImageD == null) ? "" : locImageD,
-                      (image1_lat == null) ? "" : image1_lat,
-                      (image2_lat == null) ? "" : image2_lat,
-                      (image3_lat == null) ? "" : image3_lat,
-                      (image4_lat == null) ? "" : image4_lat,
-                      (image1_log == null) ? "" : image1_log,
-                      (image2_log == null) ? "" : image2_log,
-                      (image3_log == null) ? "" : image3_log,
-                      (image4_log == null) ? "" : image4_log,
-                      (tree_species == null) ? "" : tree_species,
-                      (purpose_cut == null) ? "" : purpose_cut,
-                      (driver_nameLoc == null) ? "" : driver_nameLoc,
-                      (vehicel_reg == null) ? "" : vehicel_reg,
+                      (image1Lat == null) ? "" : image1Lat,
+                      (image2Lat == null) ? "" : image2Lat,
+                      (image3Lat == null) ? "" : image3Lat,
+                      (image4Lat == null) ? "" : image4Lat,
+                      (image1Log == null) ? "" : image1Log,
+                      (image2Log == null) ? "" : image2Log,
+                      (image3Log == null) ? "" : image3Log,
+                      (image4Log == null) ? "" : image4Log,
+                      (treeSpecies == null) ? "" : treeSpecies,
+                      (purposeCut == null) ? "" : purposeCut,
+                      (driverNameloc == null) ? "" : driverNameloc,
+                      (vehicelReg == null) ? "" : vehicelReg,
                       (phone == null) ? "" : phone,
                       (mode == null) ? "" : mode,
-                      (destination_address == null) ? "" : destination_address,
-                      (destination_state == null) ? "" : destination_state,
+                      (destinationAddress == null) ? "" : destinationAddress,
+                      (destinationState == null) ? "" : destinationState,
                       (LicenceImg == null) ? "" : LicenceImg,
-                      (ownership_proof_img == null) ? "" : ownership_proof_img,
-                      (revenue_application_img == null)
+                      (ownershipProofImg == null) ? "" : ownershipProofImg,
+                      (revenueApplicationImg == null)
                           ? ""
-                          : revenue_application_img,
-                      (revenue_approval_img == null)
-                          ? ""
-                          : revenue_approval_img,
-                      (declaration_img == null) ? "" : declaration_img,
-                      (location_sketch_img == null) ? "" : location_sketch_img,
-                      (tree_ownership_img == null) ? "" : tree_ownership_img,
-                      (aadhar_card_img == null) ? "" : aadhar_card_img,
-                      (signature_img == null) ? "" : signature_img,
+                          : revenueApplicationImg,
+                      (revenueApprovalImg == null) ? "" : revenueApprovalImg,
+                      (declarationImg == null) ? "" : declarationImg,
+                      (locationSketchImg == null) ? "" : locationSketchImg,
+                      (treeOwnershipImg == null) ? "" : treeOwnershipImg,
+                      (aadharCardImg == null) ? "" : aadharCardImg,
+                      (signatureImg == null) ? "" : signatureImg,
                       (SelectProof == null) ? "" : SelectProof,
                       (LogData == null) ? "" : LogData);
                 },
@@ -1433,7 +1439,7 @@ class _locForm1dState extends State<locForm1d> {
     Navigator.pushReplacement(
         context,
         PageRouteBuilder(
-            transitionDuration: Duration(milliseconds: 250),
+            transitionDuration: const Duration(milliseconds: 250),
             transitionsBuilder: (context, animation, animationTime, child) {
               return ScaleTransition(
                 alignment: Alignment.topCenter,
@@ -1447,6 +1453,11 @@ class _locForm1dState extends State<locForm1d> {
                 userName: userName,
                 userEmail: userEmail,
                 userId: userId,
+                userMobile: '',
+                userAddress: '',
+                userProfile: '',
+                userGroup: '',
+                userCato: '',
               );
             }));
   }

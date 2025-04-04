@@ -14,13 +14,18 @@ import '../homePage.dart';
 import 'formModel.dart';
 
 class localdataForms extends StatefulWidget {
-  int userId;
-  String userName;
-  String userEmail;
+  final int userId;
+  final String userName;
+  final String userEmail;
+  final String sessionToken;
 
-  String sessionToken;
-  localdataForms(
-      {this.sessionToken, this.userName, this.userEmail, this.userId});
+  const localdataForms({
+    super.key,
+    required this.sessionToken,
+    required this.userName,
+    required this.userEmail,
+    required this.userId,
+  });
 
   @override
   State<localdataForms> createState() => _localdataFormsState(
@@ -31,6 +36,7 @@ class localdataForms extends StatefulWidget {
 }
 
 class _localdataFormsState extends State<localdataForms> {
+  @override
   void initState() {
     super.initState();
     // viewData();
@@ -84,14 +90,14 @@ class _localdataFormsState extends State<localdataForms> {
   final List signatureImg = [];
   final List selectProof = [];
   final List logData = [];
-  int allApplication = 0;
+  final int userId;
+  final String sessionToken;
+  final String userName;
+  final String userEmail;
+  int allApplication = 0; // Added variable declaration
 
-  int userId;
-
-  String sessionToken;
-  String userName;
-  String userEmail;
-  _localdataFormsState(this.sessionToken, this.userName, this.userEmail);
+  _localdataFormsState(this.sessionToken, this.userName, this.userEmail)
+      : userId = 0; // Default value or get it from widget
   String hideB = "true";
   // viewData() {
   //   print(allApplication);
@@ -107,10 +113,9 @@ class _localdataFormsState extends State<localdataForms> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: NewGradientAppBar(
-          title: Text("Forms View Dashboard"),
-          gradient: LinearGradient(
-              colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+        appBar: AppBar(
+          title: const Text("Forms View Dashboard"),
+
           //backgroundColor: Colors.blueGrey,
           elevation: 0,
         ),
@@ -121,7 +126,7 @@ class _localdataFormsState extends State<localdataForms> {
             child: Container(
                 margin: const EdgeInsets.only(top: 8),
                 child: ElevatedButton(
-                  child: Text('Refresh'),
+                  child: const Text('Refresh'),
                   onPressed: () {
                     setState(() {
                       _queryAll();
@@ -135,7 +140,7 @@ class _localdataFormsState extends State<localdataForms> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
                   color: Colors.white,
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
                       color: Colors.deepOrangeAccent,
                       blurRadius: 2.0,
@@ -149,20 +154,20 @@ class _localdataFormsState extends State<localdataForms> {
                 padding:
                     const EdgeInsets.only(left: 2, right: 2, top: 2, bottom: 2),
                 child: Scrollbar(
-                    isAlwaysShown: true,
+                    thumbVisibility: true,
                     thickness: 15,
                     child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         padding: const EdgeInsets.only(bottom: 15),
                         child: Scrollbar(
-                            isAlwaysShown: true,
+                            thumbVisibility: true,
                             thickness: 15,
                             child: SingleChildScrollView(
                               scrollDirection: Axis.vertical,
                               child: DataTable(
                                 columnSpacing: 20,
                                 dividerThickness: 2,
-                                headingRowColor: MaterialStateColor.resolveWith(
+                                headingRowColor: WidgetStateColor.resolveWith(
                                     (states) => Colors.orange),
                                 columns: const [
                                   DataColumn(
@@ -467,10 +472,12 @@ class _localdataFormsState extends State<localdataForms> {
   void _queryAll() async {
     final allRows = await dbHelper.queryAllRows();
     cars.clear();
-    allRows.forEach((row) => cars.add(Car.fromMap(row)));
+    for (var row in allRows) {
+      cars.add(Car.fromMap(row));
+    }
 
     setState(() {
-      if (cars.length != 0) {
+      if (cars.isNotEmpty) {
         hideB = "false";
       }
       allApplication = cars.length;
@@ -538,7 +545,7 @@ class _localdataFormsState extends State<localdataForms> {
     Navigator.pushReplacement(
         context,
         PageRouteBuilder(
-            transitionDuration: Duration(milliseconds: 250),
+            transitionDuration: const Duration(milliseconds: 250),
             transitionsBuilder: (context, animation, animationTime, child) {
               return ScaleTransition(
                 alignment: Alignment.topCenter,
@@ -551,7 +558,12 @@ class _localdataFormsState extends State<localdataForms> {
                   sessionToken: sessionToken,
                   userName: userName,
                   userEmail: userEmail,
-                  userId: userId);
+                  userId: userId,
+                  userMobile: '',
+                  userAddress: '',
+                  userProfile: '',
+                  userGroup: '',
+                  userCato: '');
             }));
   }
 }

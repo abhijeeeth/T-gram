@@ -21,15 +21,16 @@ class FieldOfficerDashboard extends StatefulWidget {
   String userAddress;
   String userProfile;
   FieldOfficerDashboard(
-      {this.userId,
-      this.userName,
-      this.userEmail,
-      this.sessionToken,
-      this.userGroup,
-      this.dropdownValue,
-      this.userMobile,
-      this.userProfile,
-      this.userAddress});
+      {super.key,
+      required this.userId,
+      required this.userName,
+      required this.userEmail,
+      required this.sessionToken,
+      required this.userGroup,
+      required this.dropdownValue,
+      required this.userMobile,
+      required this.userProfile,
+      required this.userAddress});
 
   @override
   _FieldOfficerDashboardState createState() => _FieldOfficerDashboardState(
@@ -69,10 +70,9 @@ class _FieldOfficerDashboardState extends State<FieldOfficerDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: NewGradientAppBar(
-        title: Text("Dashboard"),
-        gradient:
-            LinearGradient(colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+      appBar: AppBar(
+        title: const Text("Dashboard"),
+
         //backgroundColor: Colors.blueGrey,
         elevation: 0,
       ),
@@ -81,19 +81,19 @@ class _FieldOfficerDashboardState extends State<FieldOfficerDashboard> {
         children: <Widget>[
           Container(
             width: MediaQuery.of(context).size.width * 0.85,
-            margin: EdgeInsets.only(top: 15, bottom: 10),
+            margin: const EdgeInsets.only(top: 15, bottom: 10),
             child: TextField(
               controller: Ids,
               textInputAction: TextInputAction.go,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   border: OutlineInputBorder(
                     borderSide: BorderSide(width: 1),
-                    borderRadius:
-                        const BorderRadius.all(const Radius.circular(20.0)),
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
                   ),
                   hintText: 'Enter Application ID'),
               keyboardType: TextInputType.number,
-              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.blue),
             ),
           ),
           Row(
@@ -102,9 +102,8 @@ class _FieldOfficerDashboardState extends State<FieldOfficerDashboard> {
               InkWell(
                 onTap: () async {
                   if (Ids.text.isNotEmpty) {
-                    await launch(" http://13.234.208.246/api/auth/qr_code_pdf/" +
-                        Ids.text +
-                        "/");
+                    await launch(
+                        " http://192.168.54.114:8000/api/auth/qr_code_pdf/${Ids.text}/");
                   } else {
                     Fluttertoast.showToast(
                         msg: 'Login Successful',
@@ -119,11 +118,11 @@ class _FieldOfficerDashboardState extends State<FieldOfficerDashboard> {
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.40,
                   height: MediaQuery.of(context).size.height * 0.20,
-                  margin: EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                       gradient: LinearGradient(
                           colors: [HexColor("#4e54c8"), HexColor("#8f94fb")])),
-                  child: Column(
+                  child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Icon(
@@ -144,18 +143,16 @@ class _FieldOfficerDashboardState extends State<FieldOfficerDashboard> {
               InkWell(
                 onTap: () async {
                   await launch(
-                      " http://13.234.208.246/api/auth/new_transit_pass_pdf/" +
-                          Ids.text +
-                          "/");
+                      " http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/${Ids.text}/");
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.40,
                   height: MediaQuery.of(context).size.height * 0.20,
-                  margin: EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                       gradient: LinearGradient(
                           colors: [HexColor("#ffb75e"), HexColor("#ed8f03")])),
-                  child: Column(
+                  child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Icon(
@@ -180,18 +177,17 @@ class _FieldOfficerDashboardState extends State<FieldOfficerDashboard> {
             children: <Widget>[
               InkWell(
                 onTap: () async {
-                  await launch(" http://13.234.208.246/api/auth/new_user_report/" +
-                      Ids.text +
-                      "/");
+                  await launch(
+                      " http://192.168.54.114:8000/api/auth/new_user_report/${Ids.text}/");
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.40,
                   height: MediaQuery.of(context).size.height * 0.20,
-                  margin: EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                       gradient: LinearGradient(
                           colors: [HexColor("#f85032"), HexColor("#e73827")])),
-                  child: Column(
+                  child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Icon(
@@ -211,18 +207,17 @@ class _FieldOfficerDashboardState extends State<FieldOfficerDashboard> {
               ),
               InkWell(
                 onTap: () async {
-                  await launch(" http://13.234.208.246/api/auth/qr_code_pdf/" +
-                      Ids.text +
-                      "/");
+                  await launch(
+                      " http://192.168.54.114:8000/api/auth/qr_code_pdf/${Ids.text}/");
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.40,
                   height: MediaQuery.of(context).size.height * 0.20,
-                  margin: EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                       gradient: LinearGradient(
                           colors: [HexColor("#2EB62C"), HexColor("#57C84D")])),
-                  child: Column(
+                  child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Icon(
@@ -249,30 +244,30 @@ class _FieldOfficerDashboardState extends State<FieldOfficerDashboard> {
           child: Container(
             color: Colors.white,
             child: ListView(
-              padding: EdgeInsets.all(0),
+              padding: const EdgeInsets.all(0),
               children: [
                 UserAccountsDrawerHeader(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                         colors: [HexColor("#26f596"), HexColor("#0499f2")]),
                   ),
-                  accountEmail: Text('$userEmail'),
-                  accountName: Text("$userName"),
+                  accountEmail: Text(userEmail),
+                  accountName: Text(userName),
                   currentAccountPicture: CircleAvatar(
                     backgroundColor: Colors.white,
                     child: Text(
                       userName[0].toUpperCase(),
-                      style: TextStyle(color: Colors.black, fontSize: 20),
+                      style: const TextStyle(color: Colors.black, fontSize: 20),
                     ),
                   ),
                 ),
                 ListTile(
-                    leading: Icon(
+                    leading: const Icon(
                       Icons.perm_identity,
                       color: Colors.black,
                       size: 25,
                     ),
-                    title: Text(
+                    title: const Text(
                       'Profile',
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     ),
@@ -289,31 +284,40 @@ class _FieldOfficerDashboardState extends State<FieldOfficerDashboard> {
                                   userProfile: userProfile)));
                     }),
                 ListTile(
-                    leading: Icon(
+                    leading: const Icon(
                       Icons.qr_code_scanner,
                       color: Colors.black,
                       size: 25,
                     ),
-                    title: Text(
+                    title: const Text(
                       'QR-Scanner',
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     ),
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => QueryPage()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => QueryPage(
+                                  userId: userId,
+                                  sessionToken: sessionToken,
+                                  userName: userName,
+                                  userEmail: userEmail,
+                                  userMobile: userMobile,
+                                  userAddress: userAddress)));
                     }),
                 ListTile(
-                    leading: Icon(
+                    leading: const Icon(
                       Icons.logout,
                       color: Colors.black,
                       size: 25,
                     ),
-                    title: Text(
+                    title: const Text(
                       'Logout',
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     ),
                     onTap: () async {
-                      const String url = 'http://13.234.208.246/api/auth/logout/';
+                      const String url =
+                          'http://192.168.54.114:8000/api/auth/logout/';
                       await http.post(
                         Uri.parse(url),
                         headers: <String, String>{

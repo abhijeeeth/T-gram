@@ -1,7 +1,5 @@
 import 'dart:async';
 
-
-
 import 'package:flutter/material.dart';
 //import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -9,10 +7,10 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 
 class TigramMap extends StatefulWidget {
-  String sessionToken ;
+  String sessionToken;
   String dropdownValue;
   String dropdownValue1;
-  String userName ;
+  String userName;
   String userEmail;
   String Name;
   String Address;
@@ -27,24 +25,61 @@ class TigramMap extends StatefulWidget {
   String Purpose;
   List holder_1;
   bool flag1;
-  TigramMap({this.sessionToken,this.dropdownValue,this.dropdownValue1,this.userName,this.userEmail,this.Name,this.Address,this.survey_no,this.Tree_Proposed_to_cut,this.village,this.Taluka,this.block,this.District,this.Pincode,this.Ownership,this.Purpose,this.holder_1,this.flag1});
+  TigramMap(
+      {super.key,
+      required this.sessionToken,
+      required this.dropdownValue,
+      required this.dropdownValue1,
+      required this.userName,
+      required this.userEmail,
+      required this.Name,
+      required this.Address,
+      required this.survey_no,
+      required this.Tree_Proposed_to_cut,
+      required this.village,
+      required this.Taluka,
+      required this.block,
+      required this.District,
+      required this.Pincode,
+      required this.Ownership,
+      required this.Purpose,
+      required this.holder_1,
+      required this.flag1});
   @override
-  _TigramMapState createState() => _TigramMapState(sessionToken,dropdownValue,dropdownValue1,userName,userEmail,Name,Address,survey_no,Tree_Proposed_to_cut,village,Taluka,block,District,Pincode,Ownership,Purpose,holder_1,flag1);
+  _TigramMapState createState() => _TigramMapState(
+      sessionToken,
+      dropdownValue,
+      dropdownValue1,
+      userName,
+      userEmail,
+      Name,
+      Address,
+      survey_no,
+      Tree_Proposed_to_cut,
+      village,
+      Taluka,
+      block,
+      District,
+      Pincode,
+      Ownership,
+      Purpose,
+      holder_1,
+      flag1);
 }
 
 class _TigramMapState extends State<TigramMap> {
-  String sessionToken ;
+  String sessionToken;
   String dropdownValue;
   String dropdownValue1;
-  String userName ;
+  String userName;
   String userEmail;
   String Name;
   String Address;
   String survey_no;
   String Tree_Proposed_to_cut;
-  String  village;
-  String  Taluka;
-  String  block;
+  String village;
+  String Taluka;
+  String block;
   String District;
   String Pincode;
   String Ownership;
@@ -52,43 +87,53 @@ class _TigramMapState extends State<TigramMap> {
   List holder_1;
   bool flag1;
 
-  _TigramMapState(this.sessionToken,this.dropdownValue,this.dropdownValue1,this.userName,this.userEmail,this.Name,this.Address,this.survey_no,this.Tree_Proposed_to_cut,this.village,this.Taluka,this.block,this.District,this.Pincode,this.Ownership,this.Purpose,this.holder_1,this.flag1);
-  GoogleMapController mapController;
+  _TigramMapState(
+      this.sessionToken,
+      this.dropdownValue,
+      this.dropdownValue1,
+      this.userName,
+      this.userEmail,
+      this.Name,
+      this.Address,
+      this.survey_no,
+      this.Tree_Proposed_to_cut,
+      this.village,
+      this.Taluka,
+      this.block,
+      this.District,
+      this.Pincode,
+      this.Ownership,
+      this.Purpose,
+      this.holder_1,
+      this.flag1);
+  late GoogleMapController mapController;
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   List values = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: NewGradientAppBar(
-        title: Text("Tree Location",
-          style: TextStyle(color: Colors.white,
-          fontSize: 20,
-         ) ,
-        ),
-          gradient: LinearGradient(colors: [HexColor("#26f596"),HexColor("#0499f2")]),
-          elevation: 0,
-          automaticallyImplyLeading: false,),
-      body:GoogleMap(
+      body: GoogleMap(
         zoomControlsEnabled: true,
         zoomGesturesEnabled: true,
         myLocationEnabled: true,
         mapType: MapType.hybrid,
-        padding: EdgeInsets.only(bottom: 75.0, top: 0, right: 0, left: 0),
-        initialCameraPosition: CameraPosition(target: LatLng(10.8505, 76.2711), zoom: 14),
+        padding: const EdgeInsets.only(bottom: 75.0, top: 0, right: 0, left: 0),
+        initialCameraPosition:
+            const CameraPosition(target: LatLng(10.8505, 76.2711), zoom: 14),
         //polygons: myPolygon(),
         onMapCreated: onMapCreated,
-        markers:Set<Marker>.of(markers.values)==null?LatLng(10.8505, 76.2711):Set<Marker>.of(markers.values),
-        onTap : (latlang) {
+        markers: markers.isEmpty ? {} : Set<Marker>.of(markers.values),
+        onTap: (latlang) {
           setState(() {
             _addMarkerLongPressed(latlang);
           });
           //we will call this function when pressed on the map
         },
       ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: (){
-           /* Navigator.pop(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          /* Navigator.pop(
                 context,MaterialPageRoute(builder: (_) => FormPage1(
                 sessionToken:sessionToken,
                 dropdownValue:dropdownValue,
@@ -110,25 +155,27 @@ class _TigramMapState extends State<TigramMap> {
 
             ))
             );*/
-            Navigator.of(context).pop(values);
-          },
-          tooltip: 'My Location',
-          child: Icon(Icons.navigate_next),
-        ),
+          Navigator.of(context).pop(values);
+        },
+        tooltip: 'My Location',
+        child: const Icon(Icons.navigate_next),
+      ),
     );
   }
 
   Future _addMarkerLongPressed(LatLng latlang) async {
     setState(() {
       values.clear();
-      final MarkerId markerId = MarkerId('101');
+      const MarkerId markerId = MarkerId('101');
       Marker marker = Marker(
         markerId: markerId,
         draggable: true,
-        position: latlang, //With this parameter you automatically obtain latitude and longitude
+        position:
+            latlang, //With this parameter you automatically obtain latitude and longitude
         infoWindow: InfoWindow(
-          title: "Tree Location"+(values.length +1).toString(),
-          snippet: "("+latlang.latitude.toStringAsPrecision(8)+" , "+ latlang.longitude.toStringAsPrecision(8) +")",
+          title: "Tree Location${values.length + 1}",
+          snippet:
+              "(${latlang.latitude.toStringAsPrecision(8)} , ${latlang.longitude.toStringAsPrecision(8)})",
         ),
         icon: BitmapDescriptor.defaultMarker,
       );
@@ -136,7 +183,7 @@ class _TigramMapState extends State<TigramMap> {
       setState(() {
         markers[markerId] = marker;
       });
-    print("---------------------Latitude/longitude----------------------");
+      print("---------------------Latitude/longitude----------------------");
     });
     values.add(latlang.latitude);
     values.add(latlang.longitude);

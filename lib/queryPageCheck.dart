@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'dart:io';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 import 'package:flutter/foundation.dart';
@@ -25,13 +25,13 @@ class queryPage extends StatefulWidget {
   String userAddress;
   String userGroup;
   queryPage(
-      {this.userId,
-      this.sessionToken,
-      this.userName,
-      this.userEmail,
-      this.userMobile,
-      this.userAddress,
-      this.userGroup});
+      {required this.userId,
+      required this.sessionToken,
+      required this.userName,
+      required this.userEmail,
+      required this.userMobile,
+      required this.userAddress,
+      required this.userGroup});
 
   @override
   _queryPageState createState() => _queryPageState(userId, sessionToken,
@@ -46,8 +46,8 @@ class _queryPageState extends State<queryPage> {
   String userMobile;
   String userAddress;
   String userGroup;
-  Barcode result;
-  QRViewController controller;
+  Barcode? result; // Change to nullable
+  late MobileScannerController controller = MobileScannerController();
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   _queryPageState(this.userId, this.sessionToken, this.userName, this.userEmail,
       this.userMobile, this.userAddress, this.userGroup);
@@ -91,7 +91,7 @@ class _queryPageState extends State<queryPage> {
     _remarkfile = (result.files.first.name);
     print(_remarkfile);
     if (_remarkfile != null) {
-      const String url = 'http://13.234.208.246/api/auth/scaned_details';
+      const String url = 'http://192.168.54.114:8000/api/auth/scaned_details';
       Map data = {
         "app_form_id": newString,
         "checkpost_officer_id": userId,
@@ -154,9 +154,9 @@ class _queryPageState extends State<queryPage> {
   void reassemble() {
     super.reassemble();
     if (Platform.isAndroid) {
-      controller.pauseCamera();
+      controller.stop();
     }
-    controller.resumeCamera();
+    controller.start();
   }
 
   @override
@@ -182,7 +182,7 @@ class _queryPageState extends State<queryPage> {
                     // ])
 
                     Text(
-                        'Barcode Type: ${describeEnum(result.format)}   Data: ${result.code}')
+                        'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.rawValue}')
                   else
                     const Text('Scan a code'),
                   Row(
@@ -190,17 +190,13 @@ class _queryPageState extends State<queryPage> {
                       Container(
                         margin: const EdgeInsets.only(top: 4, right: 50),
                         child: ElevatedButton(
-                            onPressed: () async {
-                              await controller?.toggleFlash();
-                              setState(() {});
-                            },
-                            child: FutureBuilder(
-                              future: controller?.getFlashStatus(),
-                              builder: (context, snapshot) {
-                                return const Text('Flash',
-                                    style: TextStyle(fontSize: 20));
-                              },
-                            )),
+                          onPressed: () async {
+                            await controller.toggleTorch();
+                            setState(() {});
+                          },
+                          child: const Text('Flash',
+                              style: TextStyle(fontSize: 20)),
+                        ),
                       ),
                       Container(
                         margin: const EdgeInsets.only(top: 4),
@@ -261,7 +257,7 @@ class _queryPageState extends State<queryPage> {
                             const EdgeInsets.only(top: 4, right: 50, left: 5),
                         child: ElevatedButton(
                           onPressed: () async {
-                            await controller?.pauseCamera();
+                            await controller.stop();
                           },
                           child: const Text('pause',
                               style: TextStyle(fontSize: 20)),
@@ -271,7 +267,7 @@ class _queryPageState extends State<queryPage> {
                         margin: const EdgeInsets.only(top: 4, right: 14),
                         child: ElevatedButton(
                           onPressed: () async {
-                            await controller?.resumeCamera();
+                            await controller.start();
                           },
                           child: const Text('start',
                               style: TextStyle(fontSize: 20)),
@@ -300,8 +296,9 @@ class _queryPageState extends State<queryPage> {
 
                             print("----QRURI----");
 
-                            print(result.code);
-                            String newString = result.code.substring(39, 42);
+                            print(result!.rawValue);
+                            String newString =
+                                result!.rawValue!.substring(39, 42);
                             print(userId);
                             //String newString = result.code.substring(0, result.code.indexOf('/SA'));
                             //    var newString = result.code.substring((result.code.length - 5).clamp(0, result.code.length));
@@ -309,7 +306,7 @@ class _queryPageState extends State<queryPage> {
                             if (newString != null && latImage2 != "") {
                               submitData(newString);
                               // const String url =
-                              //     'http://13.234.208.246/api/auth/scaned_details';
+                              //     'http://192.168.54.114:8000/api/auth/scaned_details';
                               // Map data = {
                               //   "app_form_id": newString,
                               //   "checkpost_officer_id": userId,
@@ -384,58 +381,28 @@ class _queryPageState extends State<queryPage> {
     );
   }
 
-  // _launchURL() async {
-  //   if (await canLaunchUrl(Uri.parse(result.code))) {
-  //     await launchUrl (Uri.parse(result.code));
-  //   } else {
-  //     throw 'Could not launch ${result.code}';
-  //   }
-  // }
-
   Widget _buildQrView(BuildContext context) {
-    // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
     var scanArea = (MediaQuery.of(context).size.width < 400 ||
             MediaQuery.of(context).size.height < 400)
         ? 150.0
         : 300.0;
-    // To ensure the Scanner view is properly sizes after rotation
-    // we need to listen for Flutter SizeChanged notification and update controller
-    return QRView(
-      key: qrKey,
-      onQRViewCreated: _onQRViewCreated,
-      overlay: QrScannerOverlayShape(
-          borderColor: Colors.red,
-          borderRadius: 10,
-          borderLength: 30,
-          borderWidth: 10,
-          cutOutSize: scanArea),
-      onPermissionSet: (ctrl, p) => _onPermissionSet(context, ctrl, p),
+
+    return MobileScanner(
+      controller: controller,
+      onDetect: (capture) {
+        final List<Barcode> barcodes = capture.barcodes;
+        if (barcodes.isNotEmpty) {
+          setState(() {
+            result = barcodes.first;
+          });
+        }
+      },
     );
-  }
-
-  void _onQRViewCreated(QRViewController controller) {
-    setState(() {
-      this.controller = controller;
-    });
-    controller.scannedDataStream.listen((scanData) {
-      setState(() {
-        result = scanData;
-      });
-    });
-  }
-
-  void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
-    log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
-    if (!p) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('no Permission')),
-      );
-    }
   }
 
   @override
   void dispose() {
-    controller?.dispose();
+    controller.dispose();
     super.dispose();
   }
 }

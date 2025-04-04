@@ -18,10 +18,11 @@ class Form2Page1 extends StatefulWidget {
   int userId;
 
   Form2Page1({
-    this.sessionToken,
-    this.userName,
-    this.userEmail,
-    this.userId,
+    super.key,
+    required this.sessionToken,
+    required this.userName,
+    required this.userEmail,
+    required this.userId,
   });
   @override
   _Form2Page1State createState() =>
@@ -76,7 +77,7 @@ class _Form2Page1State extends State<Form2Page1> {
   //   });
   // }
 
-  String dropdownValue;
+  late String dropdownValue;
   String range_holder = '';
   List<String> range = [
     'Paruthippally',
@@ -90,7 +91,7 @@ class _Form2Page1State extends State<Form2Page1> {
     print(range_holder);
   }
 
-  String dropdownValue1;
+  late String dropdownValue1;
   String division_holder = '';
   List<String> Division = [
     'Trivandrum',
@@ -99,7 +100,7 @@ class _Form2Page1State extends State<Form2Page1> {
     setState(() {
       division_holder = dropdownValue1;
     });
-    print("------------" + division_holder);
+    print("------------$division_holder");
   }
 
   @override
@@ -113,12 +114,12 @@ class _Form2Page1State extends State<Form2Page1> {
   }
 
   //------------------------------Taluka & Distric------------------------------
-  String selectedTalukaF1;
-  String selectedDistrict;
+  late String selectedTalukaF1;
+  late String selectedDistrict;
   //----------------------------District----------------------------------
   List<String> district = [];
   LoadDistric() async {
-    const String url = 'http://13.234.208.246/api/auth/ListDistrict';
+    const String url = 'http://192.168.54.114:8000/api/auth/ListDistrict';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -138,7 +139,7 @@ class _Form2Page1State extends State<Form2Page1> {
   List<String> taluka1 = [];
   LoadTaluka() async {
     int RL = 0;
-    const String url = 'http://13.234.208.246/api/auth/LoadTaluka';
+    const String url = 'http://192.168.54.114:8000/api/auth/LoadTaluka';
 
     Map data = {
       "district": selectedDistrict ?? "",
@@ -162,11 +163,11 @@ class _Form2Page1State extends State<Form2Page1> {
   }
 
   //----------------------------------Village--------------------------------
-  String SelectedVillage;
+  late String SelectedVillage;
   List<String> Village = [];
   LoadVillage() async {
     int RL = 0;
-    const String url = 'http://13.234.208.246/api/auth/LoadVillage';
+    const String url = 'http://192.168.54.114:8000/api/auth/LoadVillage';
     Map data = {"taluka": selectedTalukaF1 ?? ""};
     print(data);
     var body = json.encode(data);
@@ -193,7 +194,7 @@ class _Form2Page1State extends State<Form2Page1> {
   List<String> Rname = [];
   int RL = 0;
   ListRange() async {
-    const String url = 'http://13.234.208.246/api/auth/ListRange';
+    const String url = 'http://192.168.54.114:8000/api/auth/ListRange';
     final response = await http.get(Uri.parse(url), headers: {
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -211,12 +212,12 @@ class _Form2Page1State extends State<Form2Page1> {
     print(Rname);
   }
 
-  String DD;
-  List<String> Dname = List<String>();
+  late String DD;
+  List<String> Dname = [];
 
   int DL = 0;
   ListDivision() async {
-    const String url = 'http://13.234.208.246/api/auth/LoadDivision';
+    const String url = 'http://192.168.54.114:8000/api/auth/LoadDivision';
     Map data = {
       "range_area": dropdownValue ?? "",
     };
@@ -426,10 +427,10 @@ class _Form2Page1State extends State<Form2Page1> {
                         await setfilepiccam();
                       },
                       splashColor: Colors.blueAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.camera,
                               color: Colors.blueAccent,
@@ -511,10 +512,10 @@ class _Form2Page1State extends State<Form2Page1> {
                         await setfilepiccampic2();
                       },
                       splashColor: Colors.blueAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.camera,
                               color: Colors.blueAccent,
@@ -596,10 +597,10 @@ class _Form2Page1State extends State<Form2Page1> {
                         await setfilepiccampic3();
                       },
                       splashColor: Colors.blueAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.camera,
                               color: Colors.blueAccent,
@@ -681,10 +682,10 @@ class _Form2Page1State extends State<Form2Page1> {
                         await setfilepiccampic4();
                       },
                       splashColor: Colors.blueAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.camera,
                               color: Colors.blueAccent,
@@ -758,33 +759,32 @@ class _Form2Page1State extends State<Form2Page1> {
       this.sessionToken, this.userName, this.userEmail, this.userId);
 
   Future<bool> _onBackPressed() {
-    return showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: new Text('Do you want to go previous page'),
-            content: new Text('Changes you made may not be saved.'),
-            actions: <Widget>[
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(false),
-                child: Text("NO"),
-              ),
-              SizedBox(height: 16),
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(true),
-                child: Text("YES"),
-              ),
-            ],
+    return showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Do you want to go previous page'),
+        content: const Text('Changes you made may not be saved.'),
+        actions: <Widget>[
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(false),
+            child: const Text("NO"),
           ),
-        ) ??
-        false;
+          const SizedBox(height: 16),
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(true),
+            child: const Text("YES"),
+          ),
+        ],
+      ),
+    ).then((value) => value ?? false);
   }
 
-  String get _errorText {
+  String? get _errorText {
     // at any time, we can get the text from _controller.value.text
     final text = Pincode.value.text;
     // Note: you can do your own custom validation here
     // Move this logic this outside the widget for more testable code
-    if (text.length == 0) {
+    if (text.isEmpty) {
       return '';
     }
     if (text.length < 6) {
@@ -799,7 +799,7 @@ class _Form2Page1State extends State<Form2Page1> {
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
-        appBar: NewGradientAppBar(
+        appBar: AppBar(
           title: const Text(
             "FORM - II",
             style: TextStyle(
@@ -808,8 +808,7 @@ class _Form2Page1State extends State<Form2Page1> {
             ),
           ),
           //backgroundColor: ColorLinearGradient(colors: [HexColor("#26f596"),HexColor("#0499f2")]),
-          gradient: LinearGradient(
-              colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+
           elevation: 0,
           //automaticallyImplyLeading: false,
         ),
@@ -836,8 +835,8 @@ class _Form2Page1State extends State<Form2Page1> {
               Container(
                 width: double.infinity,
                 margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                decoration: new BoxDecoration(
-                    border: new Border.all(
+                decoration: BoxDecoration(
+                    border: Border.all(
                       color: Colors.grey,
                       width: 1,
                     ),
@@ -847,14 +846,14 @@ class _Form2Page1State extends State<Form2Page1> {
                 child: Row(children: <Widget>[
                   DropdownButton<String>(
                     value: dropdownValue,
-                    icon: Icon(Icons.arrow_drop_down),
+                    icon: const Icon(Icons.arrow_drop_down),
                     iconSize: 24,
                     elevation: 16,
-                    style: TextStyle(color: Colors.black, fontSize: 18),
+                    style: const TextStyle(color: Colors.black, fontSize: 18),
                     hint: RichText(
                       textAlign: TextAlign.center,
-                      text: TextSpan(children: <TextSpan>[
-                        const TextSpan(
+                      text: const TextSpan(children: <TextSpan>[
+                        TextSpan(
                             text: "Select Division",
                             style: TextStyle(
                                 color: Colors.black,
@@ -871,9 +870,9 @@ class _Form2Page1State extends State<Form2Page1> {
                           height: 2,
                           color: Colors.grey,
                         ),*/
-                    onChanged: (String data) {
+                    onChanged: (String? data) {
                       setState(() {
-                        dropdownValue = data;
+                        dropdownValue = data!;
                         ListDivision();
                       });
                       print(dropdownValue);
@@ -891,16 +890,16 @@ class _Form2Page1State extends State<Form2Page1> {
                       );
                     }).toList(),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   DropdownButton<String>(
                       value: dropdownValue1,
-                      icon: Icon(Icons.arrow_drop_down),
+                      icon: const Icon(Icons.arrow_drop_down),
                       iconSize: 24,
                       elevation: 16,
-                      style: TextStyle(color: Colors.black, fontSize: 18),
+                      style: const TextStyle(color: Colors.black, fontSize: 18),
                       hint: RichText(
                         textAlign: TextAlign.center,
-                        text: TextSpan(children: <TextSpan>[
+                        text: const TextSpan(children: <TextSpan>[
                           TextSpan(
                               text: "Select Range",
                               style: TextStyle(
@@ -918,9 +917,9 @@ class _Form2Page1State extends State<Form2Page1> {
                           height: 2,
                           color: Colors.grey,
                         ),*/
-                      onChanged: (String data) {
+                      onChanged: (String? data) {
                         setState(() {
-                          dropdownValue1 = data;
+                          dropdownValue1 = data!;
                         });
                       },
                       items: Dname.toSet()
@@ -950,7 +949,7 @@ class _Form2Page1State extends State<Form2Page1> {
                         // border: OutlineInputBorder(),
                         labelText: 'Name*',
                         hintText: 'Enter Your Name'),
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.blue)),
               ),
               Padding(
@@ -971,7 +970,7 @@ class _Form2Page1State extends State<Form2Page1> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(
+                padding: const EdgeInsets.only(
                     left: 15.0, right: 15.0, top: 10, bottom: 0),
                 //padding: EdgeInsets.symmetric(horizontal: 15),
                 child: TextField(
@@ -992,7 +991,7 @@ class _Form2Page1State extends State<Form2Page1> {
                     left: 15.0, right: 15.0, top: 10, bottom: 0),
                 child: RichText(
                   textAlign: TextAlign.right,
-                  text: TextSpan(children: <TextSpan>[
+                  text: const TextSpan(children: <TextSpan>[
                     TextSpan(
                         text: "District                                Taluke",
                         style: TextStyle(
@@ -1006,8 +1005,8 @@ class _Form2Page1State extends State<Form2Page1> {
               Container(
                 width: double.infinity,
                 margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                decoration: new BoxDecoration(
-                    border: new Border.all(
+                decoration: BoxDecoration(
+                    border: Border.all(
                       color: Colors.grey,
                       width: 1,
                     ),
@@ -1017,13 +1016,13 @@ class _Form2Page1State extends State<Form2Page1> {
                 child: Row(children: <Widget>[
                   DropdownButton<String>(
                     value: selectedDistrict,
-                    icon: Icon(Icons.arrow_drop_down),
+                    icon: const Icon(Icons.arrow_drop_down),
                     iconSize: 24,
                     elevation: 16,
-                    style: TextStyle(color: Colors.black, fontSize: 18),
+                    style: const TextStyle(color: Colors.black, fontSize: 18),
                     hint: RichText(
                       textAlign: TextAlign.center,
-                      text: TextSpan(children: <TextSpan>[
+                      text: const TextSpan(children: <TextSpan>[
                         TextSpan(
                             text: "Select District",
                             style: TextStyle(
@@ -1041,9 +1040,9 @@ class _Form2Page1State extends State<Form2Page1> {
                           height: 2,
                           color: Colors.grey,
                         ),*/
-                    onChanged: (String data) {
+                    onChanged: (String? data) {
                       setState(() {
-                        selectedDistrict = data;
+                        selectedDistrict = data!;
                       });
                       LoadTaluka();
                       print(selectedDistrict);
@@ -1054,13 +1053,13 @@ class _Form2Page1State extends State<Form2Page1> {
                         value: value,
                         child: Text(
                           value,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 13, fontWeight: FontWeight.bold),
                         ),
                       );
                     }).toList(),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   // DropdownButton<String>(
                   //   value: selectedTaluka,
                   //   icon: Icon(Icons.arrow_drop_down),
@@ -1101,13 +1100,13 @@ class _Form2Page1State extends State<Form2Page1> {
                   // ),
                   DropdownButton<String>(
                     value: selectedTalukaF1,
-                    icon: Icon(Icons.arrow_drop_down),
+                    icon: const Icon(Icons.arrow_drop_down),
                     iconSize: 24,
                     elevation: 16,
-                    style: TextStyle(color: Colors.black, fontSize: 18),
+                    style: const TextStyle(color: Colors.black, fontSize: 18),
                     hint: RichText(
                       textAlign: TextAlign.center,
-                      text: TextSpan(children: <TextSpan>[
+                      text: const TextSpan(children: <TextSpan>[
                         TextSpan(
                             text: "Select Taluka",
                             style: TextStyle(
@@ -1125,9 +1124,9 @@ class _Form2Page1State extends State<Form2Page1> {
                           height: 2,
                           color: Colors.grey,
                         ),*/
-                    onChanged: (String data) {
+                    onChanged: (String? data) {
                       setState(() {
-                        selectedTalukaF1 = data;
+                        selectedTalukaF1 = data!;
                         LoadVillage();
                       });
                       print(selectedTalukaF1);
@@ -1138,7 +1137,7 @@ class _Form2Page1State extends State<Form2Page1> {
                         value: value,
                         child: Text(
                           value,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 13, fontWeight: FontWeight.bold),
                         ),
                       );
@@ -1151,7 +1150,7 @@ class _Form2Page1State extends State<Form2Page1> {
                     left: 15.0, right: 15.0, top: 10, bottom: 0),
                 child: RichText(
                   textAlign: TextAlign.right,
-                  text: TextSpan(children: <TextSpan>[
+                  text: const TextSpan(children: <TextSpan>[
                     TextSpan(
                         text: "Village",
                         style: TextStyle(
@@ -1165,8 +1164,8 @@ class _Form2Page1State extends State<Form2Page1> {
               Container(
                 width: double.infinity,
                 margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                decoration: new BoxDecoration(
-                    border: new Border.all(
+                decoration: BoxDecoration(
+                    border: Border.all(
                       color: Colors.grey,
                       width: 1,
                     ),
@@ -1175,13 +1174,13 @@ class _Form2Page1State extends State<Form2Page1> {
                     left: 10.0, right: 10, top: 10, bottom: 0),
                 child: DropdownButton<String>(
                   value: SelectedVillage,
-                  icon: Icon(Icons.arrow_drop_down),
+                  icon: const Icon(Icons.arrow_drop_down),
                   iconSize: 24,
                   elevation: 16,
-                  style: TextStyle(color: Colors.black, fontSize: 18),
+                  style: const TextStyle(color: Colors.black, fontSize: 18),
                   hint: RichText(
                     textAlign: TextAlign.left,
-                    text: TextSpan(children: <TextSpan>[
+                    text: const TextSpan(children: <TextSpan>[
                       TextSpan(
                           text: "Select Village",
                           style: TextStyle(
@@ -1199,9 +1198,9 @@ class _Form2Page1State extends State<Form2Page1> {
                           height: 2,
                           color: Colors.grey,
                         ),*/
-                  onChanged: (String data) {
+                  onChanged: (String? data) {
                     setState(() {
-                      SelectedVillage = data;
+                      SelectedVillage = data!;
                     });
                     print(SelectedVillage);
                   },
@@ -1210,7 +1209,7 @@ class _Form2Page1State extends State<Form2Page1> {
                       value: value,
                       child: Text(
                         value,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                     );
@@ -1223,15 +1222,14 @@ class _Form2Page1State extends State<Form2Page1> {
                 //padding: EdgeInsets.symmetric(horizontal: 15),
                 child: TextField(
                     controller: block,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         border: OutlineInputBorder(
                           borderSide: BorderSide(width: 2),
-                          borderRadius: const BorderRadius.all(
-                              const Radius.circular(14.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(14.0)),
                         ),
                         labelText: 'Block',
                         hintText: 'Enter Your Block'),
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.blue)),
               ),
               /*Padding(
@@ -1265,15 +1263,14 @@ class _Form2Page1State extends State<Form2Page1> {
                     keyboardType: TextInputType.number,
                     maxLength: 6,
                     decoration: InputDecoration(
-                        border: OutlineInputBorder(
+                        border: const OutlineInputBorder(
                           borderSide: BorderSide(width: 2),
-                          borderRadius: const BorderRadius.all(
-                              const Radius.circular(14.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(14.0)),
                         ),
                         labelText: 'Pincode',
                         hintText: 'Enter Your Pincode',
                         errorText: _errorText),
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.blue)),
               ),
               Padding(
@@ -1281,7 +1278,7 @@ class _Form2Page1State extends State<Form2Page1> {
                     left: 15.0, right: 15.0, top: 10, bottom: 0),
                 child: RichText(
                   textAlign: TextAlign.center,
-                  text: TextSpan(children: <TextSpan>[
+                  text: const TextSpan(children: <TextSpan>[
                     TextSpan(
                         text:
                             "Please add location site photographs now, you can't update it later.",
@@ -1296,8 +1293,8 @@ class _Form2Page1State extends State<Form2Page1> {
               Container(
                 width: double.infinity,
                 margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                decoration: new BoxDecoration(
-                    border: new Border.all(
+                decoration: BoxDecoration(
+                    border: Border.all(
                       color: Colors.grey,
                       width: 1,
                     ),
@@ -1306,7 +1303,7 @@ class _Form2Page1State extends State<Form2Page1> {
                     left: 10.0, right: 0, top: 10, bottom: 0),
                 child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
                   TextButton.icon(
-                    icon: Icon(Icons.image),
+                    icon: const Icon(Icons.image),
                     onPressed: () {
                       setState(() {
                         getCurrentLocation1();
@@ -1315,7 +1312,7 @@ class _Form2Page1State extends State<Form2Page1> {
                     },
                     label: const Text("Location site photograph 1"),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Icon(
                     Icons.check_circle,
                     color: ((_image1) == null && latImage1 == "")
@@ -1328,8 +1325,8 @@ class _Form2Page1State extends State<Form2Page1> {
               Container(
                 width: double.infinity,
                 margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                decoration: new BoxDecoration(
-                    border: new Border.all(
+                decoration: BoxDecoration(
+                    border: Border.all(
                       color: Colors.grey,
                       width: 1,
                     ),
@@ -1338,7 +1335,7 @@ class _Form2Page1State extends State<Form2Page1> {
                     left: 10.0, right: 0, top: 10, bottom: 0),
                 child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
                   TextButton.icon(
-                    icon: Icon(Icons.image),
+                    icon: const Icon(Icons.image),
                     onPressed: () {
                       setState(() {
                         getCurrentLocation2();
@@ -1347,7 +1344,7 @@ class _Form2Page1State extends State<Form2Page1> {
                     },
                     label: const Text("Location site photograph 2"),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Icon(
                     Icons.check_circle,
                     color: ((_image2) == null && latImage2 == "")
@@ -1360,8 +1357,8 @@ class _Form2Page1State extends State<Form2Page1> {
               Container(
                 width: double.infinity,
                 margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                decoration: new BoxDecoration(
-                    border: new Border.all(
+                decoration: BoxDecoration(
+                    border: Border.all(
                       color: Colors.grey,
                       width: 1,
                     ),
@@ -1370,7 +1367,7 @@ class _Form2Page1State extends State<Form2Page1> {
                     left: 10.0, right: 0, top: 10, bottom: 0),
                 child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
                   TextButton.icon(
-                    icon: Icon(Icons.image),
+                    icon: const Icon(Icons.image),
                     onPressed: () {
                       setState(() {
                         getCurrentLocation3();
@@ -1379,7 +1376,7 @@ class _Form2Page1State extends State<Form2Page1> {
                     },
                     label: const Text("Location site photograph 3"),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Icon(
                     Icons.check_circle,
                     color: ((_image3) == null && latImage3 == "")
@@ -1392,8 +1389,8 @@ class _Form2Page1State extends State<Form2Page1> {
               Container(
                 width: double.infinity,
                 margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                decoration: new BoxDecoration(
-                    border: new Border.all(
+                decoration: BoxDecoration(
+                    border: Border.all(
                       color: Colors.grey,
                       width: 1,
                     ),
@@ -1402,7 +1399,7 @@ class _Form2Page1State extends State<Form2Page1> {
                     left: 10.0, right: 0, top: 10, bottom: 0),
                 child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
                   TextButton.icon(
-                    icon: Icon(Icons.image),
+                    icon: const Icon(Icons.image),
                     onPressed: () {
                       setState(() {
                         getCurrentLocation4();
@@ -1411,7 +1408,7 @@ class _Form2Page1State extends State<Form2Page1> {
                     },
                     label: const Text("Location site photograph 4"),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Icon(
                     Icons.check_circle,
                     color: ((_image4) == null && latImage4 == "")
@@ -1427,10 +1424,9 @@ class _Form2Page1State extends State<Form2Page1> {
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: FloatingActionButton(
           isExtended: true,
-          child: Icon(Icons.navigate_next),
           backgroundColor: HexColor("#0499f2"),
           onPressed: () async {
-            if (Name.text.length == 0) {
+            if (Name.text.isEmpty) {
               Fluttertoast.showToast(
                   msg: "Please add name ",
                   toastLength: Toast.LENGTH_SHORT,
@@ -1439,7 +1435,7 @@ class _Form2Page1State extends State<Form2Page1> {
                   backgroundColor: Colors.red,
                   textColor: Colors.white,
                   fontSize: 18.0);
-            } else if (Address.text.length == 0) {
+            } else if (Address.text.isEmpty) {
               Fluttertoast.showToast(
                   msg: "Please add Address ",
                   toastLength: Toast.LENGTH_SHORT,
@@ -1448,7 +1444,7 @@ class _Form2Page1State extends State<Form2Page1> {
                   backgroundColor: Colors.red,
                   textColor: Colors.white,
                   fontSize: 18.0);
-            } else if (survey_no.text.length == 0) {
+            } else if (survey_no.text.isEmpty) {
               Fluttertoast.showToast(
                   msg: "Please add survay number ",
                   toastLength: Toast.LENGTH_SHORT,
@@ -1458,17 +1454,17 @@ class _Form2Page1State extends State<Form2Page1> {
                   textColor: Colors.white,
                   fontSize: 18.0);
             } else if ((_image1 == null) ||
-                (latImage1.length == 0) ||
-                (longImage1.length == 0) ||
+                (latImage1.isEmpty) ||
+                (longImage1.isEmpty) ||
                 (_image2 == null) ||
-                (latImage2.length == 0) ||
-                (longImage2.length == 0) ||
+                (latImage2.isEmpty) ||
+                (longImage2.isEmpty) ||
                 (_image3 == null) ||
-                (latImage3.length == 0) ||
-                (longImage3.length == 0) ||
+                (latImage3.isEmpty) ||
+                (longImage3.isEmpty) ||
                 (_image4 == null) ||
                 (latImage4.isEmpty) ||
-                (longImage4.length == 0)) {
+                (longImage4.isEmpty)) {
               Fluttertoast.showToast(
                   msg: "Please take Location Images ",
                   toastLength: Toast.LENGTH_SHORT,
@@ -1481,7 +1477,7 @@ class _Form2Page1State extends State<Form2Page1> {
               Navigator.pushReplacement(
                   context,
                   PageRouteBuilder(
-                      transitionDuration: Duration(milliseconds: 400),
+                      transitionDuration: const Duration(milliseconds: 400),
                       transitionsBuilder:
                           (context, animation, animationTime, child) {
                         return ScaleTransition(
@@ -1518,11 +1514,13 @@ class _Form2Page1State extends State<Form2Page1> {
                           imagelongtwo: longImage2,
                           imagelongthree: longImage3,
                           imagelongfour: longImage4,
+                          Ownership: '', // Add the required Ownership argument
                         );
                       }));
               setState(() {});
             }
           },
+          child: const Icon(Icons.navigate_next),
         ),
       ),
     );

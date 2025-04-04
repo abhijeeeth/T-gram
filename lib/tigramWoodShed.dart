@@ -38,18 +38,19 @@ import 'package:flutter/foundation.dart';
 import 'Images.dart';
 
 class tigramWoodShed extends StatefulWidget {
-  int userId;
-  String sessionToken;
-  String userName;
-  String userEmail;
-  String userCato;
+  final int userId;
+  final String sessionToken;
+  final String userName;
+  final String userEmail;
+  final String userCato;
 
-  tigramWoodShed(
-      {this.userId,
-      this.sessionToken,
-      this.userName,
-      this.userEmail,
-      this.userCato});
+  const tigramWoodShed(
+      {super.key,
+      required this.userId,
+      required this.sessionToken,
+      required this.userName,
+      required this.userEmail,
+      required this.userCato});
 
   @override
   tigramWoodShedState createState() =>
@@ -57,11 +58,11 @@ class tigramWoodShed extends StatefulWidget {
 }
 
 class tigramWoodShedState extends State<tigramWoodShed> {
-  int userId;
-  String sessionToken;
-  String userName;
-  String userEmail;
-  String userCato;
+  final int userId;
+  final String sessionToken;
+  final String userName;
+  final String userEmail;
+  final String userCato;
 
   tigramWoodShedState(this.userId, this.sessionToken, this.userName,
       this.userEmail, this.userCato);
@@ -69,31 +70,28 @@ class tigramWoodShedState extends State<tigramWoodShed> {
   bool flag = true;
   var tab = 0;
   bool isShow = false;
-  var _sortAscending = true;
-  var _sortColumnIndex = 0;
-  int _currentSortColumn = 9;
-  bool _isAscending = true;
+  final _sortAscending = true;
+  final _sortColumnIndex = 0;
+  final int _currentSortColumn = 9;
+  final bool _isAscending = true;
   @override
-  void _handleRadioValueChange(int value) async {
-    setState(() {
-      _radioValue = value;
-      if (_radioValue == 0) {
-        setState(() {
+  int? _handleRadioValueChange(int? value) {
+    if (value != null) {
+      setState(() {
+        _radioValue = value;
+        if (_radioValue == 0) {
           tab = 0;
           flag = true;
-        });
-      } else if (_radioValue == 1) {
-        setState(() {
+        } else if (_radioValue == 1) {
           tab = 1;
           flag = false;
-        });
-      } else if (_radioValue == 2) {
-        setState(() {
+        } else if (_radioValue == 2) {
           tab = 2;
           flag = true;
-        });
-      }
-    });
+        }
+      });
+    }
+    return value;
   }
 
   Future<bool> loginAction() async {
@@ -124,23 +122,29 @@ class tigramWoodShedState extends State<tigramWoodShed> {
   }
 
   int progress = 0;
-  ReceivePort _receivePort = ReceivePort();
+  final ReceivePort _receivePort = ReceivePort();
   static downloadingCallback(id, status, progress) {
-    SendPort sendPort = IsolateNameServer.lookupPortByName("downloading");
-    sendPort.send([id, status, progress]);
+    SendPort? sendPort = IsolateNameServer.lookupPortByName("downloading");
+    if (sendPort != null) {
+      sendPort.send([id, status, progress]);
+    }
   }
 
   void _requestDownload(String link) async {
     final status = await Permission.storage.request();
     if (status.isGranted) {
       final localPath = await getExternalStorageDirectory();
-      final Id = await FlutterDownloader.enqueue(
-        url: link,
-        savedDir: localPath.path,
-        showNotification: true,
-        openFileFromNotification: true,
-      );
-      print(localPath.path);
+      if (localPath != null) {
+        final Id = await FlutterDownloader.enqueue(
+          url: link,
+          savedDir: localPath.path,
+          showNotification: true,
+          openFileFromNotification: true,
+        );
+        print(localPath.path);
+      } else {
+        print("External storage directory not available");
+      }
     } else {
       print("Permission deined");
     }
@@ -162,7 +166,7 @@ class tigramWoodShedState extends State<tigramWoodShed> {
       disti.clear();
       status.clear();
       const String url =
-          'http://13.234.208.246/api/auth/addtimber_district_species_filtration';
+          'http://192.168.54.114:8000/api/auth/addtimber_district_species_filtration';
       Map data = {
         "district": selectedDistrict ?? "",
         "species": dropdownValue ?? ""
@@ -213,7 +217,7 @@ class tigramWoodShedState extends State<tigramWoodShed> {
       division1.clear();
       dist1.clear();
       const String url =
-          'http://13.234.208.246/api/auth/requirement_district_species_filtration';
+          'http://192.168.54.114:8000/api/auth/requirement_district_species_filtration';
 
       Map data = {
         "district": selectedDistrict ?? "",
@@ -283,7 +287,8 @@ class tigramWoodShedState extends State<tigramWoodShed> {
     division.clear();
     disti.clear();
     status.clear();
-    const String url = 'http://13.234.208.246/api/auth/Buyer_Seller_Add_Data';
+    const String url =
+        'http://192.168.54.114:8000/api/auth/Buyer_Seller_Add_Data';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -340,7 +345,8 @@ class tigramWoodShedState extends State<tigramWoodShed> {
     quntity1.clear();
     division1.clear();
     dist1.clear();
-    const String url = 'http://13.234.208.246/api/auth/View_All_BuyerRequirement';
+    const String url =
+        'http://192.168.54.114:8000/api/auth/View_All_BuyerRequirement';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -397,7 +403,8 @@ class tigramWoodShedState extends State<tigramWoodShed> {
     division2.clear();
     disti2.clear();
     status2.clear();
-    const String url = 'http://13.234.208.246/api/auth/SellerView_SelectedDta';
+    const String url =
+        'http://192.168.54.114:8000/api/auth/SellerView_SelectedDta';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -428,9 +435,9 @@ class tigramWoodShedState extends State<tigramWoodShed> {
     }
   }
 
-  String dropdownValue;
-  String selectedDistrict;
-  String DD;
+  String? dropdownValue;
+  String? selectedDistrict;
+  String? DD;
   List<String> Rname = [];
   int RL = 0;
   List<String> Dname = [];
@@ -438,7 +445,7 @@ class tigramWoodShedState extends State<tigramWoodShed> {
   LoadDistric() async {
     int RL = 0;
 
-    String url = 'http://13.234.208.246/api/auth/ListDistrict';
+    String url = 'http://192.168.54.114:8000/api/auth/ListDistrict';
 
     //  Map<String, String> headers = {
     //  'Content-Type': 'application/json',
@@ -464,7 +471,7 @@ class tigramWoodShedState extends State<tigramWoodShed> {
   }
 
   ListRange() async {
-    const String url = 'http://13.234.208.246/api/auth/LoadTreeSpecies';
+    const String url = 'http://192.168.54.114:8000/api/auth/LoadTreeSpecies';
     final response = await http.post(Uri.parse(url), headers: {
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -486,17 +493,16 @@ class tigramWoodShedState extends State<tigramWoodShed> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: NewGradientAppBar(
-          title: Text("Tigram WoodShed"),
-          gradient: LinearGradient(
-              colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+        appBar: AppBar(
+          title: const Text("Tigram WoodShed"),
+
           //backgroundColor: Colors.blueGrey,
           elevation: 0,
         ),
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              Container(
+              SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
@@ -510,14 +516,14 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                                     userEmail: userEmail,
                                   )));
                     },
-                    child: Text("ADD  TIMBER"),
+                    child: const Text("ADD  TIMBER"),
                   )),
-              Container(
+              SizedBox(
                   height: 25,
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.orangeAccent,
+                      backgroundColor: Colors.orangeAccent,
                     ),
                     onPressed: () {
                       setState(() {
@@ -540,13 +546,13 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                   child: Row(children: <Widget>[
                     DropdownButton<String>(
                       value: dropdownValue,
-                      icon: Icon(Icons.arrow_drop_down),
+                      icon: const Icon(Icons.arrow_drop_down),
                       iconSize: 20,
-                      style: TextStyle(color: Colors.black, fontSize: 18),
+                      style: const TextStyle(color: Colors.black, fontSize: 18),
                       hint: RichText(
                         textAlign: TextAlign.center,
                         text: TextSpan(children: <TextSpan>[
-                          TextSpan(
+                          const TextSpan(
                               text: "Select Specias",
                               style: TextStyle(
                                   color: Colors.black,
@@ -563,7 +569,7 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                                 height: 2,
                                 color: Colors.grey,
                               ),*/
-                      onChanged: (String data) {
+                      onChanged: (String? data) {
                         setState(() {
                           dropdownValue = data;
                         });
@@ -576,24 +582,24 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                           value: value,
                           child: Text(
                             value,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 13, fontWeight: FontWeight.bold),
                           ),
                         );
                       }).toList(),
                     ),
-                    Spacer(),
+                    const Spacer(),
 
                     // Spacer(),
                     DropdownButton<String>(
                       value: selectedDistrict,
-                      icon: Icon(Icons.arrow_drop_down),
+                      icon: const Icon(Icons.arrow_drop_down),
                       iconSize: 20,
-                      style: TextStyle(color: Colors.black, fontSize: 18),
+                      style: const TextStyle(color: Colors.black, fontSize: 18),
                       hint: RichText(
                         textAlign: TextAlign.center,
                         text: TextSpan(children: <TextSpan>[
-                          TextSpan(
+                          const TextSpan(
                               text: "Select District",
                               style: TextStyle(
                                   color: Colors.black,
@@ -610,7 +616,7 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                                 height: 2,
                                 color: Colors.grey,
                               ),*/
-                      onChanged: (String data) {
+                      onChanged: (String? data) {
                         setState(() {
                           selectedDistrict = data;
                         });
@@ -622,7 +628,7 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                           value: value,
                           child: Text(
                             value,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 13, fontWeight: FontWeight.bold),
                           ),
                         );
@@ -655,7 +661,7 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                   color: Colors.grey,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.grey,
+                      backgroundColor: Colors.grey,
                     ),
                     onPressed: () {
                       filterall();
@@ -678,7 +684,7 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                     'Buyer\n Requirements',
                     'Selected\n Timber'
                   ],
-                  activeBgColors: [
+                  activeBgColors: const [
                     [Colors.orange],
                     [Colors.green],
                     [Colors.orange]
@@ -693,7 +699,7 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
                         color: Colors.white,
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             color: Colors.deepOrangeAccent,
                             blurRadius: 2.0,
@@ -707,13 +713,13 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                       padding: const EdgeInsets.only(
                           left: 2, right: 2, top: 2, bottom: 2),
                       child: Scrollbar(
-                          isAlwaysShown: true,
+                          thumbVisibility: true,
                           thickness: 15,
                           child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               padding: const EdgeInsets.only(bottom: 15),
                               child: Scrollbar(
-                                isAlwaysShown: true,
+                                thumbVisibility: true,
                                 thickness: 15,
                                 child: SingleChildScrollView(
                                   scrollDirection: Axis.vertical,
@@ -724,9 +730,9 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                                     columnSpacing: 20,
                                     showBottomBorder: true,
                                     headingRowColor:
-                                        MaterialStateColor.resolveWith(
+                                        WidgetStateColor.resolveWith(
                                             (states) => Colors.orange),
-                                    columns: [
+                                    columns: const [
                                       DataColumn(
                                         label: Text(
                                           'S.No',
@@ -842,8 +848,12 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                                                 semanticContainer: true,
                                                 clipBehavior:
                                                     Clip.antiAliasWithSaveLayer,
-                                                margin:
-                                                    EdgeInsets.only(top: 10),
+                                                margin: const EdgeInsets.only(
+                                                    top: 10),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                ),
                                                 child: InkWell(
                                                   onTap: () {
                                                     Navigator.push(
@@ -871,10 +881,6 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                                                     ),
                                                   ),
                                                 ),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                ),
                                               )
                                                   // new Visibility(
                                                   //   child: IconButton(
@@ -900,7 +906,7 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                                                 Visibility(
                                                   visible: true,
                                                   child: IconButton(
-                                                      icon: new Icon(
+                                                      icon: const Icon(
                                                           Icons.delete),
                                                       color: Colors.blue,
                                                       onPressed: () async {
@@ -908,7 +914,7 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                                                                 value)] !=
                                                             null) {
                                                           const String url =
-                                                              "http://13.234.208.246/api/auth/Delete_Timber_Data";
+                                                              "http://192.168.54.114:8000/api/auth/Delete_Timber_Data";
                                                           Map data = {
                                                             "id": Ids[int.parse(
                                                                 value)]
@@ -977,7 +983,6 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                                                             isShow = false;
                                                           });
                                                         }
-                                                        ;
                                                       }),
                                                 ),
                                               ),
@@ -992,7 +997,7 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
                         color: Colors.white,
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             color: Colors.deepOrangeAccent,
                             blurRadius: 2.0,
@@ -1006,13 +1011,13 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                       padding: const EdgeInsets.only(
                           left: 2, right: 2, top: 2, bottom: 2),
                       child: Scrollbar(
-                          isAlwaysShown: true,
+                          thumbVisibility: true,
                           thickness: 15,
                           child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               padding: const EdgeInsets.only(bottom: 15),
                               child: Scrollbar(
-                                isAlwaysShown: true,
+                                thumbVisibility: true,
                                 thickness: 15,
                                 child: SingleChildScrollView(
                                   scrollDirection: Axis.vertical,
@@ -1023,9 +1028,9 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                                     columnSpacing: 20,
                                     showBottomBorder: true,
                                     headingRowColor:
-                                        MaterialStateColor.resolveWith(
+                                        WidgetStateColor.resolveWith(
                                             (states) => Colors.orange),
-                                    columns: [
+                                    columns: const [
                                       DataColumn(
                                         label: Text(
                                           'S.No',
@@ -1074,7 +1079,7 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                                               color: Colors.white),
                                         ),
                                       ),
-                                      const DataColumn(
+                                      DataColumn(
                                           label: Text(
                                         ' Phone Number ',
                                         style: TextStyle(
@@ -1095,7 +1100,7 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white),
                                       )),
-                                      const DataColumn(
+                                      DataColumn(
                                           label: Text(
                                         ' Date ',
                                         style: TextStyle(
@@ -1136,8 +1141,13 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                                                   semanticContainer: true,
                                                   clipBehavior: Clip
                                                       .antiAliasWithSaveLayer,
-                                                  margin:
-                                                      EdgeInsets.only(top: 10),
+                                                  margin: const EdgeInsets.only(
+                                                      top: 10),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                  ),
                                                   child: InkWell(
                                                     onTap: () {
                                                       Navigator.push(
@@ -1164,11 +1174,6 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                                                       ),
                                                     ),
                                                   ),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
-                                                  ),
                                                 ),
                                               ),
                                               DataCell(Text(
@@ -1186,7 +1191,7 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
                         color: Colors.white,
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             color: Colors.deepOrangeAccent,
                             blurRadius: 2.0,
@@ -1200,13 +1205,13 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                       padding: const EdgeInsets.only(
                           left: 2, right: 2, top: 2, bottom: 2),
                       child: Scrollbar(
-                          isAlwaysShown: true,
+                          thumbVisibility: true,
                           thickness: 15,
                           child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               padding: const EdgeInsets.only(bottom: 15),
                               child: Scrollbar(
-                                isAlwaysShown: true,
+                                thumbVisibility: true,
                                 thickness: 15,
                                 child: SingleChildScrollView(
                                   scrollDirection: Axis.vertical,
@@ -1217,9 +1222,9 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                                     columnSpacing: 20,
                                     showBottomBorder: true,
                                     headingRowColor:
-                                        MaterialStateColor.resolveWith(
+                                        WidgetStateColor.resolveWith(
                                             (states) => Colors.orange),
-                                    columns: [
+                                    columns: const [
                                       DataColumn(
                                         label: Text(
                                           'S.No',
@@ -1276,7 +1281,7 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                                               color: Colors.white),
                                         ),
                                       ),
-                                      const DataColumn(
+                                      DataColumn(
                                           label: Text(
                                         ' Phone Number ',
                                         style: TextStyle(
@@ -1291,7 +1296,7 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                                             color: Colors.white),
                                       )),
 
-                                      const DataColumn(
+                                      DataColumn(
                                           label: Text(
                                         ' Date of \n insert ',
                                         style: TextStyle(
@@ -1316,7 +1321,7 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                                               //           if (Ids[int.parse(value)] !=
                                               //               null) {
                                               //             const String url =
-                                              //                 "http://13.234.208.246/api/auth/Select_Data";
+                                              //                 "http://192.168.54.114:8000/api/auth/Select_Data";
                                               //             Map data = {
                                               //               "id": Ids[
                                               //                   int.parse(value)]
@@ -1454,6 +1459,7 @@ class tigramWoodShedState extends State<tigramWoodShed> {
                                 ),
                               ))));
                 }
+                return Container(); // Add this line
               })
             ],
           ),

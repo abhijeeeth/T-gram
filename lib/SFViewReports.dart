@@ -1,9 +1,12 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables, curly_braces_in_flow_control_structures
+
 import 'package:flutter/material.dart';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 import 'package:pie_chart/pie_chart.dart';
@@ -28,19 +31,20 @@ class SFViewReports extends StatefulWidget {
   int R9;
   int R10;
   SFViewReports(
-      {this.sessionToken,
-      this.SelectedRange,
-      this.SelectedRange1,
-      this.R1,
-      this.R2,
-      this.R3,
-      this.R4,
-      this.R5,
-      this.R6,
-      this.R7,
-      this.R8,
-      this.R9,
-      this.R10});
+      {super.key,
+      required this.sessionToken,
+      required this.SelectedRange,
+      required this.SelectedRange1,
+      required this.R1,
+      required this.R2,
+      required this.R3,
+      required this.R4,
+      required this.R5,
+      required this.R6,
+      required this.R7,
+      required this.R8,
+      required this.R9,
+      required this.R10});
   @override
   _SFViewReportsState createState() => _SFViewReportsState(sessionToken,
       SelectedRange, SelectedRange1, R1, R2, R3, R4, R5, R6, R7, R8, R9, R10);
@@ -78,7 +82,7 @@ class _SFViewReportsState extends State<SFViewReports> {
   bool flag = true;
   var tab = 0;
   int _radioValue = 0;
-  String toggle;
+  late String toggle;
 
   /* List<Employee> employees = <Employee>[];
   EmployeeDataSource employeeDataSource;
@@ -87,37 +91,37 @@ class _SFViewReportsState extends State<SFViewReports> {
   StatusDataSource statusDataSource;*/
 
   List<table1> Tabel1 = <table1>[];
-  Table1DataSource table1DataSource;
+  late Table1DataSource table1DataSource;
 
   List<table2> Tabel2 = <table2>[];
-  Table2DataSource table2DataSource;
+  late Table2DataSource table2DataSource;
 
   List<table3> Tabel3 = <table3>[];
-  Table3DataSource table3DataSource;
+  late Table3DataSource table3DataSource;
 
   List<table4> Tabel4 = <table4>[];
-  Table4DataSource table4DataSource;
+  late Table4DataSource table4DataSource;
 
   List<table5> Tabel5 = <table5>[];
-  Table5DataSource table5DataSource;
+  late Table5DataSource table5DataSource;
 
   List<table6> Tabel6 = <table6>[];
-  Table6DataSource table6DataSource;
+  late Table6DataSource table6DataSource;
 
   List<table7> Tabel7 = <table7>[];
-  Table7DataSource table7DataSource;
+  late Table7DataSource table7DataSource;
 
   List<table8> Tabel8 = <table8>[];
-  Table8DataSource table8DataSource;
+  late Table8DataSource table8DataSource;
 
   List<table9> Tabel9 = <table9>[];
-  Table9DataSource table9DataSource;
+  late Table9DataSource table9DataSource;
 
   List<table10> Tabel10 = <table10>[];
-  Table10DataSource table10DataSource;
+  late Table10DataSource table10DataSource;
 
-  List<TreesData> _chartData;
-  TooltipBehavior _tooltipBehavior;
+  late List<TreesData> _chartData;
+  late TooltipBehavior _tooltipBehavior;
 
   @override
   void initState() {
@@ -178,7 +182,7 @@ class _SFViewReportsState extends State<SFViewReports> {
   List t1_Rejected = [];
   //-----------------------End-Variable-----------------------------------
   Table_1() async {
-    const String url = ' http://13.234.208.246/api/auth/sfd_table_one/';
+    const String url = ' http://192.168.54.114:8000/api/auth/sfd_table_one/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -223,16 +227,16 @@ class _SFViewReportsState extends State<SFViewReports> {
 
   List<table1> getTable1Data() {
     //print(Ids.toString()+App_no.toString()+App_Date.toString()+App_Status.toString()+Current_status.toString());
-    List<table1> t1_lists = new List();
+    List<table1> t1Lists = <table1>[];
     for (int i = 0; i < t1; i++) {
-      t1_lists.add(table1(
+      t1Lists.add(table1(
           (i + 1).toString(),
           t1_Date[i].toString(),
           t1_Received[i].toString(),
           t1_Approved[i].toString(),
           t1_Received[i].toString()));
     }
-    return t1_lists;
+    return t1Lists;
   }
   //--------------------------End--Table 1------------------------------------
 
@@ -243,11 +247,11 @@ class _SFViewReportsState extends State<SFViewReports> {
   List t2_Reason = [];
   List t2_percentage = [];
   List t2_lists = [];
-  Map<String, dynamic> T2_P;
-  Map<String, double> T2_C;
+  late Map<String, dynamic> T2_P;
+  late Map<String, double> T2_C;
   //----------------End-Variable------------------------------------
   Table_2() async {
-    const String url = ' http://13.234.208.246/api/auth/sfd_table_two/';
+    const String url = ' http://192.168.54.114:8000/api/auth/sfd_table_two/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -281,7 +285,7 @@ class _SFViewReportsState extends State<SFViewReports> {
         print('Key = $key : Value = $value');
         //t2_Reason=[0];
         //t2_percentage=[0];
-        t2_Reason.add('$key');
+        t2_Reason.add(key);
         t2_percentage.add('$value');
       });
       for (var i = 0; i < t2; i++) {
@@ -300,13 +304,13 @@ class _SFViewReportsState extends State<SFViewReports> {
     print(t2_sr);
     print(t2_Reason);
     print(t2_percentage);
-    List<table2> t2_lists = new List();
+    List<table2> t2Lists = <table2>[];
     for (int i = 0; i < t2; i++) {
-      t2_lists.add(table2((i + 1).toString(), t2_Reason[i].toString(),
+      t2Lists.add(table2((i + 1).toString(), t2_Reason[i].toString(),
           t2_percentage[i].toString()));
     }
-    print(t2_lists);
-    return t2_lists;
+    print(t2Lists);
+    return t2Lists;
   }
   //----------------------------End--Table 2-----------------------------------
 
@@ -328,7 +332,7 @@ class _SFViewReportsState extends State<SFViewReports> {
   //--end-Graph
   //-----------------------End-Variable---------------------------------
   Table_3() async {
-    const String url = ' http://13.234.208.246/api/auth/sfd_table_three/';
+    const String url = ' http://192.168.54.114:8000/api/auth/sfd_table_three/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -385,16 +389,16 @@ class _SFViewReportsState extends State<SFViewReports> {
 
   List<table3> getTable3Data() {
     //print(Ids.toString()+App_no.toString()+App_Date.toString()+App_Status.toString()+Current_status.toString());
-    List<table3> t3_lists = new List();
+    List<table3> t3Lists = <table3>[];
     for (int i = 0; i < t3; i++) {
-      t3_lists.add(table3(
+      t3Lists.add(table3(
           (i + 1).toString(),
           t3_Date[i].toString(),
           t3_Species[i].toString(),
           t3_Transported[i].toString(),
           t3_No_of_TreeTrans[i].toString()));
     }
-    return t3_lists;
+    return t3Lists;
   }
   //----------------------------End--Table 3-----------------------------------
 
@@ -409,7 +413,7 @@ class _SFViewReportsState extends State<SFViewReports> {
   List t4_list = [];
   //-----------------------End-Variable---------------------------------
   Table_4() async {
-    const String url = ' http://13.234.208.246/api/auth/sfd_table_four/';
+    const String url = ' http://192.168.54.114:8000/api/auth/sfd_table_four/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -453,12 +457,12 @@ class _SFViewReportsState extends State<SFViewReports> {
 
   List<table4> getTable4Data() {
     //print(Ids.toString()+App_no.toString()+App_Date.toString()+App_Status.toString()+Current_status.toString());
-    List<table4> t4_lists = new List();
+    List<table4> t4Lists = <table4>[];
     for (int i = 0; i < t4; i++) {
-      t4_lists.add(table4((i + 1).toString(), t4_Date[i].toString(),
+      t4Lists.add(table4((i + 1).toString(), t4_Date[i].toString(),
           t4_volume_sum[i].toString(), t4_volume_percentage[i].toString()));
     }
-    return t4_lists;
+    return t4Lists;
   }
   //----------------------------End--Table 4------------------------------------
 
@@ -474,7 +478,7 @@ class _SFViewReportsState extends State<SFViewReports> {
   List t5_list = [];
   //-----------------------End-Variable---------------------------------
   Table_5() async {
-    const String url = ' http://13.234.208.246/api/auth/sfd_table_five/';
+    const String url = ' http://192.168.54.114:8000/api/auth/sfd_table_five/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -525,9 +529,9 @@ class _SFViewReportsState extends State<SFViewReports> {
   }
 
   List<table5> getTable5Data() {
-    List<table5> t5_lists = new List();
+    List<table5> t5Lists = <table5>[];
     for (int i = 0; i < t5; i++) {
-      t5_lists.add(table5(
+      t5Lists.add(table5(
           (i + 1).toString().toString(),
           t5_Date[i].toString(),
           t5_Species[i].toString(),
@@ -535,7 +539,7 @@ class _SFViewReportsState extends State<SFViewReports> {
           t5_volume_sum[i].toString(),
           t5_no_of_trees[i].toString()));
     }
-    return t5_lists;
+    return t5Lists;
   }
   //----------------------------End--Table 5-----------------------------------
 
@@ -550,7 +554,7 @@ class _SFViewReportsState extends State<SFViewReports> {
   List t6_list = [];
   //-----------------------End-Variable---------------------------------
   Table_6() async {
-    const String url = ' http://13.234.208.246/api/auth/sfd_table_six/';
+    const String url = ' http://192.168.54.114:8000/api/auth/sfd_table_six/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -599,16 +603,16 @@ class _SFViewReportsState extends State<SFViewReports> {
 
   List<table6> getTable6Data() {
     //print(Ids.toString()+App_no.toString()+App_Date.toString()+App_Status.toString()+Current_status.toString());
-    List<table6> t6_lists = new List();
+    List<table6> t6Lists = <table6>[];
     for (int i = 0; i < t6; i++) {
-      t6_lists.add(table6(
+      t6Lists.add(table6(
           (i + 1).toString(),
           t6_Date[i].toString(),
           t6_destination[i].toString(),
           t6_volume_sum[i].toString(),
           t6_volume_percentage[i].toString()));
     }
-    return t6_lists;
+    return t6Lists;
   }
   //----------------------------End--Table 6-----------------------------------
 
@@ -623,7 +627,7 @@ class _SFViewReportsState extends State<SFViewReports> {
   List t7_list = [];
   //-----------------------End-Variable---------------------------------
   Table_7() async {
-    const String url = ' http://13.234.208.246/api/auth/sfd_table_seven/';
+    const String url = ' http://192.168.54.114:8000/api/auth/sfd_table_seven/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -671,16 +675,16 @@ class _SFViewReportsState extends State<SFViewReports> {
   }
 
   List<table7> getTable7Data() {
-    List<table7> t7_lists = new List();
+    List<table7> t7Lists = <table7>[];
     for (int i = 0; i < t7; i++) {
-      t7_lists.add(table7(
+      t7Lists.add(table7(
           (i + 1).toString().toString(),
           t7_Date[i].toString(),
           t7_Time_for_Approval[i].toString(),
           t7_no_of_appln[i].toString(),
           t7_Appln_percentage[i].toString()));
     }
-    return t7_lists;
+    return t7Lists;
   }
   //----------------------------End--Table 7-----------------------------------
 
@@ -695,7 +699,7 @@ class _SFViewReportsState extends State<SFViewReports> {
   List t8_list = [];
   //-----------------------End-Variable---------------------------------
   Table_8() async {
-    const String url = ' http://13.234.208.246/api/auth/sfd_table_eight/';
+    const String url = ' http://192.168.54.114:8000/api/auth/sfd_table_eight/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -743,16 +747,16 @@ class _SFViewReportsState extends State<SFViewReports> {
   }
 
   List<table8> getTable8Data() {
-    List<table8> t8_lists = new List();
+    List<table8> t8Lists = <table8>[];
     for (int i = 0; i < t8; i++) {
-      t8_lists.add(table8(
+      t8Lists.add(table8(
           (i + 1).toString(),
           t8_Date[i].toString(),
           t8_Reason_for_Cutting[i].toString(),
           t8_no_of_appln[i].toString(),
           t8_Appln_percentage[i]));
     }
-    return t8_lists;
+    return t8Lists;
   }
   //----------------------------End--Table 8-----------------------------------
 
@@ -770,7 +774,7 @@ class _SFViewReportsState extends State<SFViewReports> {
   List t9_list = [];
   //-----------------------End-Variable---------------------------------
   Table_9() async {
-    const String url = ' http://13.234.208.246/api/auth/sfd_table_nine/';
+    const String url = ' http://192.168.54.114:8000/api/auth/sfd_table_nine/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -825,9 +829,9 @@ class _SFViewReportsState extends State<SFViewReports> {
   }
 
   List<table9> getTable9Data() {
-    List<table9> t9_lists = new List();
+    List<table9> t9Lists = <table9>[];
     for (int i = 0; i < t9; i++) {
-      t9_lists.add(table9(
+      t9Lists.add(table9(
           (i + 1).toString(),
           t9_Date[i].toString(),
           t9_Speices[i].toString(),
@@ -837,7 +841,7 @@ class _SFViewReportsState extends State<SFViewReports> {
           t9_after_cutting_percentage[i].toString(),
           t9_total_Application[i].toString()));
     }
-    return t9_lists;
+    return t9Lists;
   }
 
   //----------------------------End--Table 9------------------------------------
@@ -853,7 +857,8 @@ class _SFViewReportsState extends State<SFViewReports> {
   List t10_list = [];
   //----------------------End-Variable--------------------
   Table_10() async {
-    const String url = ' http://13.234.208.246/api/auth/sfd_table_noc_one/';
+    const String url =
+        ' http://192.168.54.114:8000/api/auth/sfd_table_noc_one/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -904,9 +909,9 @@ class _SFViewReportsState extends State<SFViewReports> {
   }
 
   List<table10> getTable10Data() {
-    List<table10> t10_lists = new List();
+    List<table10> t10Lists = <table10>[];
     for (int i = 0; i < t10; i++) {
-      t10_lists.add(table10(
+      t10Lists.add(table10(
           (i + 1).toString(),
           species_of_tree[i].toString(),
           appform__destination_details[i].toString(),
@@ -914,13 +919,14 @@ class _SFViewReportsState extends State<SFViewReports> {
           no_of_trees[i].toString(),
           volume_sum[i].toString()));
     }
-    return t10_lists;
+    return t10Lists;
   }
 
   //----------------------------End-Noc-Table----------------------------------
   //-----------------------------end-Connection--------------------------------
   @override
-  void _handleRadioValueChange(int value) async {
+  void _handleRadioValueChange(int? value) async {
+    if (value == null) return;
     setState(() {
       _radioValue = value;
       if (_radioValue == 0) {
@@ -945,7 +951,7 @@ class _SFViewReportsState extends State<SFViewReports> {
   //api----------
 //---------------------Pie-chart------------------
   void pie_chart() async {
-    const String url = ' http://13.234.208.246/api/auth/dashbord_chart';
+    const String url = ' http://192.168.54.114:8000/api/auth/dashbord_chart';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -962,9 +968,9 @@ class _SFViewReportsState extends State<SFViewReports> {
 
   int i = 0;
   List<TreesData> getChartData() {
-    List<TreesData> chartData = new List();
+    List<TreesData> chartData = <TreesData>[];
     for (int i = 0; i < g3; i++) {
-      TreesData(X_axis[i], Y_axis[i]);
+      chartData.add(TreesData(X_axis[i], Y_axis[i]));
     }
 
     return chartData;
@@ -973,10 +979,9 @@ class _SFViewReportsState extends State<SFViewReports> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: NewGradientAppBar(
-        title: Text('View Report'),
-        gradient:
-            LinearGradient(colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+      appBar: AppBar(
+        title: const Text('View Report'),
+
         //backgroundColor: Colors.blueGrey,
         elevation: 0,
         automaticallyImplyLeading: false,
@@ -1017,7 +1022,7 @@ class _SFViewReportsState extends State<SFViewReports> {
                       borderRadius: BorderRadius.circular(8),
                       color: Colors.white,
                       boxShadow: [
-                        BoxShadow(
+                        const BoxShadow(
                           color: Colors.black,
                           blurRadius: 2.0,
                           spreadRadius: 0.0,
@@ -1035,7 +1040,7 @@ class _SFViewReportsState extends State<SFViewReports> {
                         "Approved": Approved,
                         "Rejected": Rejected,
                       },
-                      animationDuration: Duration(milliseconds: 800),
+                      animationDuration: const Duration(milliseconds: 800),
                       chartLegendSpacing: 20,
                       chartRadius: MediaQuery.of(context).size.width * 0.65,
                       initialAngleInDegree: 0,
@@ -1046,7 +1051,7 @@ class _SFViewReportsState extends State<SFViewReports> {
                       ],
                       ringStrokeWidth: 32,
                       centerText: "",
-                      legendOptions: LegendOptions(
+                      legendOptions: const LegendOptions(
                         showLegendsInRow: false,
                         // ignore: missing_return
                         // legendPosition: LegendPosition.left,
@@ -1055,7 +1060,7 @@ class _SFViewReportsState extends State<SFViewReports> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      chartValuesOptions: ChartValuesOptions(
+                      chartValuesOptions: const ChartValuesOptions(
                         showChartValueBackground: true,
                         showChartValues: true,
                         showChartValuesInPercentage: false,
@@ -1072,7 +1077,7 @@ class _SFViewReportsState extends State<SFViewReports> {
                       borderRadius: BorderRadius.circular(8),
                       color: Colors.white,
                       boxShadow: [
-                        BoxShadow(
+                        const BoxShadow(
                           color: Colors.black,
                           blurRadius: 2.0,
                           spreadRadius: 0.0,
@@ -1093,53 +1098,53 @@ class _SFViewReportsState extends State<SFViewReports> {
                       allowMultiColumnSorting: true,
                       allowTriStateSorting: true,
                       columns: <GridColumn>[
-                        GridTextColumn(
+                        GridColumn(
                             columnName: 't1_sr',
                             label: Container(
                                 color: Colors.blue,
-                                padding: EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(8.0),
                                 alignment: Alignment.center,
-                                child: Text('SR.NO',
+                                child: const Text('SR.NO',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white)))),
-                        GridTextColumn(
+                        GridColumn(
                             columnName: 't1_Date',
                             label: Container(
                                 color: Colors.blue,
-                                padding: EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(8.0),
                                 alignment: Alignment.center,
-                                child: Text('Date',
+                                child: const Text('Date',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white)))),
-                        GridTextColumn(
+                        GridColumn(
                             columnName: 't1_Received',
                             label: Container(
                                 color: Colors.blue,
-                                padding: EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(8.0),
                                 alignment: Alignment.center,
-                                child: Text('Received',
+                                child: const Text('Received',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white)))),
-                        GridTextColumn(
+                        GridColumn(
                             columnName: 't1_Approved',
                             label: Container(
                                 color: Colors.blue,
-                                padding: EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(8.0),
                                 alignment: Alignment.center,
-                                child: Text('Approved',
+                                child: const Text('Approved',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white)))),
-                        GridTextColumn(
+                        GridColumn(
                             columnName: 't1_Rejected',
                             label: Container(
                                 color: Colors.blue,
-                                padding: EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(8.0),
                                 alignment: Alignment.center,
-                                child: Text('Rejecetd',
+                                child: const Text('Rejecetd',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white)))),
@@ -1147,6 +1152,7 @@ class _SFViewReportsState extends State<SFViewReports> {
                     ),
                   );
                 }
+                return Container(); // Add this line
               }),
             ]));
           else if (R2 == 2) {
@@ -1183,7 +1189,7 @@ class _SFViewReportsState extends State<SFViewReports> {
                       borderRadius: BorderRadius.circular(8),
                       color: Colors.white,
                       boxShadow: [
-                        BoxShadow(
+                        const BoxShadow(
                           color: Colors.black,
                           blurRadius: 2.0,
                           spreadRadius: 0.0,
@@ -1197,9 +1203,10 @@ class _SFViewReportsState extends State<SFViewReports> {
                     padding: const EdgeInsets.only(
                         left: 2, right: 2, top: 2, bottom: 2),
                     child: PieChart(
-                      dataMap: T2_C == null
-                          ? {"Empty": 100}
-                          : T2_C /*{
+                      dataMap: T2_C ??
+                          {
+                            "Empty": 100
+                          } /*{
 
                                         t2_Reason[0].toString():double.parse(t2_percentage[0].toString()),
                                         t2_Reason[1].toString():double.parse(t2_percentage[1].toString()),
@@ -1208,7 +1215,7 @@ class _SFViewReportsState extends State<SFViewReports> {
 
                                       }*/
                       ,
-                      animationDuration: Duration(milliseconds: 800),
+                      animationDuration: const Duration(milliseconds: 800),
                       chartLegendSpacing: 20,
                       chartRadius: MediaQuery.of(context).size.width * 0.65,
                       initialAngleInDegree: 0,
@@ -1225,7 +1232,7 @@ class _SFViewReportsState extends State<SFViewReports> {
                             ],
                       ringStrokeWidth: 72,
                       centerText: "",
-                      legendOptions: LegendOptions(
+                      legendOptions: const LegendOptions(
                         showLegendsInRow: false,
                         // legendPosition: LegendPosition.left,
                         showLegends: true,
@@ -1233,7 +1240,7 @@ class _SFViewReportsState extends State<SFViewReports> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      chartValuesOptions: ChartValuesOptions(
+                      chartValuesOptions: const ChartValuesOptions(
                         showChartValueBackground: true,
                         showChartValues: true,
                         showChartValuesInPercentage: false,
@@ -1249,7 +1256,7 @@ class _SFViewReportsState extends State<SFViewReports> {
                       borderRadius: BorderRadius.circular(8),
                       color: Colors.white,
                       boxShadow: [
-                        BoxShadow(
+                        const BoxShadow(
                           color: Colors.black,
                           blurRadius: 2.0,
                           spreadRadius: 0.0,
@@ -1270,35 +1277,35 @@ class _SFViewReportsState extends State<SFViewReports> {
                       allowMultiColumnSorting: true,
                       allowTriStateSorting: true,
                       columns: <GridColumn>[
-                        GridTextColumn(
+                        GridColumn(
                             columnName: 't2_sr',
                             label: Container(
                                 color: Colors.blue,
-                                padding: EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(8.0),
                                 alignment: Alignment.center,
-                                child: Text('SR.No',
+                                child: const Text('SR.No',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white)))),
-                        GridTextColumn(
+                        GridColumn(
                             width: 180,
                             columnName: 't2_Reason',
                             label: Container(
                                 color: Colors.blue,
-                                padding: EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(8.0),
                                 alignment: Alignment.center,
-                                child: Text('Reasons For Rejection',
+                                child: const Text('Reasons For Rejection',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white)))),
-                        GridTextColumn(
+                        GridColumn(
                             width: 150,
                             columnName: 't2_percentage',
                             label: Container(
                                 color: Colors.blue,
-                                padding: EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(8.0),
                                 alignment: Alignment.center,
-                                child: Text('Percentage',
+                                child: const Text('Percentage',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white)))),
@@ -1306,6 +1313,7 @@ class _SFViewReportsState extends State<SFViewReports> {
                     ),
                   );
                 }
+                return Container(); // Add this line
               }),
             ]));
           } else if (R3 == 3) {
@@ -1315,7 +1323,7 @@ class _SFViewReportsState extends State<SFViewReports> {
                 borderRadius: BorderRadius.circular(8),
                 color: Colors.white,
                 boxShadow: [
-                  BoxShadow(
+                  const BoxShadow(
                     color: Colors.black,
                     blurRadius: 2.0,
                     spreadRadius: 0.0,
@@ -1334,57 +1342,57 @@ class _SFViewReportsState extends State<SFViewReports> {
                 allowMultiColumnSorting: true,
                 allowTriStateSorting: true,
                 columns: <GridColumn>[
-                  GridTextColumn(
+                  GridColumn(
                       columnName: 't3_sr',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('S.No',
+                          child: const Text('S.No',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       columnName: 't3_Date',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('Date',
+                          child: const Text('Date',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       width: 150,
                       columnName: 't3_Species',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                               top: 8.0, bottom: 8.0, left: 15, right: 15),
                           alignment: Alignment.center,
-                          child: Text('Species',
+                          child: const Text('Species',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       width: 130,
                       columnName: 't3_Transported',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('Volume Transported',
+                          child: const Text('Volume Transported',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       width: 130,
                       columnName: 't3_No_of_TreeTrans',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('No of Trees Transported',
+                          child: const Text('No of Trees Transported',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
@@ -1399,7 +1407,7 @@ class _SFViewReportsState extends State<SFViewReports> {
                 borderRadius: BorderRadius.circular(8),
                 color: Colors.white,
                 boxShadow: [
-                  BoxShadow(
+                  const BoxShadow(
                     color: Colors.black,
                     blurRadius: 2.0,
                     spreadRadius: 0.0,
@@ -1418,45 +1426,45 @@ class _SFViewReportsState extends State<SFViewReports> {
                 allowMultiColumnSorting: true,
                 allowTriStateSorting: true,
                 columns: <GridColumn>[
-                  GridTextColumn(
+                  GridColumn(
                       columnName: 't4_sr',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.all(16.0),
                           alignment: Alignment.center,
-                          child: Text('SR.No',
+                          child: const Text('SR.No',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       columnName: 't4_Date',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('Date',
+                          child: const Text('Date',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       width: 130,
                       columnName: 't4_volume_sum',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('Volume Transported',
+                          child: const Text('Volume Transported',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       width: 180,
                       columnName: 't4_volume_percentage',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('No of Trees Transported',
+                          child: const Text('No of Trees Transported',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
@@ -1471,7 +1479,7 @@ class _SFViewReportsState extends State<SFViewReports> {
                 borderRadius: BorderRadius.circular(8),
                 color: Colors.white,
                 boxShadow: [
-                  BoxShadow(
+                  const BoxShadow(
                     color: Colors.black,
                     blurRadius: 2.0,
                     spreadRadius: 0.0,
@@ -1490,67 +1498,67 @@ class _SFViewReportsState extends State<SFViewReports> {
                 allowMultiColumnSorting: true,
                 allowTriStateSorting: true,
                 columns: <GridColumn>[
-                  GridTextColumn(
+                  GridColumn(
                       columnName: 't5_sr',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.all(16.0),
                           alignment: Alignment.center,
-                          child: Text('SR.No',
+                          child: const Text('SR.No',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       columnName: 't5_Date',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('Date',
+                          child: const Text('Date',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       width: 180,
                       columnName: 't5_Species',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('Species',
+                          child: const Text('Species',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       width: 150,
                       columnName: 't5_destination',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('Destination',
+                          child: const Text('Destination',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       width: 150,
                       columnName: 't5_volume_sum',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('Volume transported',
+                          child: const Text('Volume transported',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       width: 180,
                       columnName: 't5_no_of_trees',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('No of Tree Transported',
+                          child: const Text('No of Tree Transported',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
@@ -1565,7 +1573,7 @@ class _SFViewReportsState extends State<SFViewReports> {
                 borderRadius: BorderRadius.circular(8),
                 color: Colors.white,
                 boxShadow: [
-                  BoxShadow(
+                  const BoxShadow(
                     color: Colors.black,
                     blurRadius: 2.0,
                     spreadRadius: 0.0,
@@ -1584,60 +1592,60 @@ class _SFViewReportsState extends State<SFViewReports> {
                 allowMultiColumnSorting: true,
                 allowTriStateSorting: true,
                 columns: <GridColumn>[
-                  GridTextColumn(
+                  GridColumn(
                       columnName: 't6_sr',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.all(16.0),
                           alignment: Alignment.center,
-                          child: Text(
+                          child: const Text(
                             'SR.No',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white),
                           ))),
-                  GridTextColumn(
+                  GridColumn(
                       columnName: 't6_Date',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('Date',
+                          child: const Text('Date',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       width: 180,
                       columnName: 't6_destination',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text(
+                          child: const Text(
                             'Destination',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white),
                           ))),
-                  GridTextColumn(
+                  GridColumn(
                       width: 180,
                       columnName: 't6_volume_sum',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('Volume Transported',
+                          child: const Text('Volume Transported',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       width: 180,
                       columnName: 't6_volume_percentage',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('% Volume Transported',
+                          child: const Text('% Volume Transported',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
@@ -1652,7 +1660,7 @@ class _SFViewReportsState extends State<SFViewReports> {
                 borderRadius: BorderRadius.circular(8),
                 color: Colors.white,
                 boxShadow: [
-                  BoxShadow(
+                  const BoxShadow(
                     color: Colors.black,
                     blurRadius: 2.0,
                     spreadRadius: 0.0,
@@ -1671,56 +1679,56 @@ class _SFViewReportsState extends State<SFViewReports> {
                 allowMultiColumnSorting: true,
                 allowTriStateSorting: true,
                 columns: <GridColumn>[
-                  GridTextColumn(
+                  GridColumn(
                       columnName: 't7_sr',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.all(16.0),
                           alignment: Alignment.center,
-                          child: Text('SR.No',
+                          child: const Text('SR.No',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       columnName: 't7_Date',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('Date',
+                          child: const Text('Date',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       width: 180,
                       columnName: 't7_Time_for_Approval',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('Time Taken for Approval',
+                          child: const Text('Time Taken for Approval',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       width: 180,
                       columnName: 't7_no_of_appln',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('No of Application',
+                          child: const Text('No of Application',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       width: 180,
                       columnName: 't7_Appln_percentage',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('% of Application',
+                          child: const Text('% of Application',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
@@ -1735,7 +1743,7 @@ class _SFViewReportsState extends State<SFViewReports> {
                 borderRadius: BorderRadius.circular(8),
                 color: Colors.white,
                 boxShadow: [
-                  BoxShadow(
+                  const BoxShadow(
                     color: Colors.black,
                     blurRadius: 2.0,
                     spreadRadius: 0.0,
@@ -1754,58 +1762,58 @@ class _SFViewReportsState extends State<SFViewReports> {
                 allowMultiColumnSorting: true,
                 allowTriStateSorting: true,
                 columns: <GridColumn>[
-                  GridTextColumn(
+                  GridColumn(
                       columnName: 't8_sr',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.all(16.0),
                           alignment: Alignment.center,
-                          child: Text(
+                          child: const Text(
                             'SR.No',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white),
                           ))),
-                  GridTextColumn(
+                  GridColumn(
                       columnName: 't8_Date',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('Date',
+                          child: const Text('Date',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       width: 180,
                       columnName: 't8_Reason_for_Cutting',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('Reason For Cutting Trees',
+                          child: const Text('Reason For Cutting Trees',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       width: 150,
                       columnName: 't8_no_of_appln',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('No of Application',
+                          child: const Text('No of Application',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       width: 180,
                       columnName: 't8_Appln_percentage',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('% of Application',
+                          child: const Text('% of Application',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
@@ -1820,7 +1828,7 @@ class _SFViewReportsState extends State<SFViewReports> {
                 borderRadius: BorderRadius.circular(8),
                 color: Colors.white,
                 boxShadow: [
-                  BoxShadow(
+                  const BoxShadow(
                     color: Colors.black,
                     blurRadius: 2.0,
                     spreadRadius: 0.0,
@@ -1839,89 +1847,90 @@ class _SFViewReportsState extends State<SFViewReports> {
                 allowMultiColumnSorting: true,
                 allowTriStateSorting: true,
                 columns: <GridColumn>[
-                  GridTextColumn(
+                  GridColumn(
                       columnName: 't9_sr',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.all(16.0),
                           alignment: Alignment.center,
-                          child: Text('SR.No',
+                          child: const Text('SR.No',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       columnName: 't9_Date',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('Date',
+                          child: const Text('Date',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       width: 150,
                       columnName: 't9_Speices',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('Species',
+                          child: const Text('Species',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       width: 150,
                       columnName: 't9_before_cutting',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('App. Received Before cutting',
+                          child: const Text('App. Received Before cutting',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       width: 150,
                       columnName: 't9_after_cutting',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('App. Received After cutting',
+                          child: const Text('App. Received After cutting',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       width: 180,
                       columnName: 't9_before_cutting_percentage',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text(' % of App. Received Before cutting',
+                          child: const Text(
+                              ' % of App. Received Before cutting',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       width: 180,
                       columnName: 't9_after_cutting_percentage',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('%  of App. Received After cutting',
+                          child: const Text('%  of App. Received After cutting',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       width: 180,
                       columnName: 't9_total_Application',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('Total Application',
+                          child: const Text('Total Application',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
@@ -1936,7 +1945,7 @@ class _SFViewReportsState extends State<SFViewReports> {
                 borderRadius: BorderRadius.circular(8),
                 color: Colors.white,
                 boxShadow: [
-                  BoxShadow(
+                  const BoxShadow(
                     color: Colors.black,
                     blurRadius: 2.0,
                     spreadRadius: 0.0,
@@ -1955,67 +1964,67 @@ class _SFViewReportsState extends State<SFViewReports> {
                 allowMultiColumnSorting: true,
                 allowTriStateSorting: true,
                 columns: <GridColumn>[
-                  GridTextColumn(
+                  GridColumn(
                       columnName: 't10_sr',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.all(16.0),
                           alignment: Alignment.center,
-                          child: Text('SR.No',
+                          child: const Text('SR.No',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       width: 150,
                       columnName: 'appform__created_date',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('Date',
+                          child: const Text('Date',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       columnName: 'species_of_tree',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('Species',
+                          child: const Text('Species',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       width: 150,
                       columnName: 'appform__destination_details',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('Destination',
+                          child: const Text('Destination',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       width: 150,
                       columnName: 'no_of_trees',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('No of Transported',
+                          child: const Text('No of Transported',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
-                  GridTextColumn(
+                  GridColumn(
                       width: 180,
                       columnName: 'volume_sum',
                       label: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           alignment: Alignment.center,
-                          child: Text('Volume Transported',
+                          child: const Text('Volume Transported',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)))),
@@ -2050,7 +2059,7 @@ List<DataGridRow> _Table1Data = [];
 
 class Table1DataSource extends DataGridSource {
   @override
-  Table1DataSource({List<table1> Table1Data}) {
+  Table1DataSource({required List<table1> Table1Data}) {
     _Table1Data = Table1Data.map<DataGridRow>((e) => DataGridRow(cells: [
           DataGridCell<String>(columnName: 't1_sr', value: e.t1_sr),
           DataGridCell<String>(columnName: 't1_Date', value: e.t1_Date),
@@ -2067,7 +2076,7 @@ class Table1DataSource extends DataGridSource {
         cells: row.getCells().map<Widget>((e) {
       return Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: Text(e.value.toString()),
       );
     }).toList());
@@ -2087,7 +2096,7 @@ List<DataGridRow> _Table2Data = [];
 
 class Table2DataSource extends DataGridSource {
   @override
-  Table2DataSource({List<table2> Table2Data}) {
+  Table2DataSource({required List<table2> Table2Data}) {
     _Table2Data = Table2Data.map<DataGridRow>((e) => DataGridRow(cells: [
           DataGridCell<String>(columnName: 't2_sr', value: e.t2_sr),
           DataGridCell<String>(columnName: 't2_Reason', value: e.t2_Reason),
@@ -2103,7 +2112,7 @@ class Table2DataSource extends DataGridSource {
         cells: row.getCells().map<Widget>((e) {
       return Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: Text(e.value.toString()),
       );
     }).toList());
@@ -2126,7 +2135,7 @@ List<DataGridRow> _Table3Data = [];
 
 class Table3DataSource extends DataGridSource {
   @override
-  Table3DataSource({List<table3> Table3Data}) {
+  Table3DataSource({required List<table3> Table3Data}) {
     _Table3Data = Table3Data.map<DataGridRow>((e) => DataGridRow(cells: [
           DataGridCell<String>(columnName: 't3_sr', value: e.t3_sr),
           DataGridCell<String>(columnName: 't3_Date', value: e.t3_Date),
@@ -2145,7 +2154,7 @@ class Table3DataSource extends DataGridSource {
         cells: row.getCells().map<Widget>((e) {
       return Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: Text(e.value.toString()),
       );
     }).toList());
@@ -2168,7 +2177,7 @@ List<DataGridRow> _Table4Data = [];
 
 class Table4DataSource extends DataGridSource {
   @override
-  Table4DataSource({List<table4> Table4Data}) {
+  Table4DataSource({required List<table4> Table4Data}) {
     _Table4Data = Table4Data.map<DataGridRow>((e) => DataGridRow(cells: [
           DataGridCell<String>(columnName: 't4_sr', value: e.t4_sr),
           DataGridCell<String>(columnName: 't4_Date', value: e.t4_Date),
@@ -2187,7 +2196,7 @@ class Table4DataSource extends DataGridSource {
         cells: row.getCells().map<Widget>((e) {
       return Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: Text(e.value.toString()),
       );
     }).toList());
@@ -2211,7 +2220,7 @@ List<DataGridRow> _Table5Data = [];
 
 class Table5DataSource extends DataGridSource {
   @override
-  Table5DataSource({List<table5> Table5Data}) {
+  Table5DataSource({required List<table5> Table5Data}) {
     _Table5Data = Table5Data.map<DataGridRow>((e) => DataGridRow(cells: [
           DataGridCell<String>(columnName: 't5_sr', value: e.t5_sr),
           DataGridCell<String>(columnName: 't5_Date', value: e.t5_Date),
@@ -2232,7 +2241,7 @@ class Table5DataSource extends DataGridSource {
         cells: row.getCells().map<Widget>((e) {
       return Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: Text(e.value.toString()),
       );
     }).toList());
@@ -2257,7 +2266,7 @@ List<DataGridRow> _Table6Data = [];
 
 class Table6DataSource extends DataGridSource {
   @override
-  Table6DataSource({List<table6> Table6Data}) {
+  Table6DataSource({required List<table6> Table6Data}) {
     _Table6Data = Table6Data.map<DataGridRow>((e) => DataGridRow(cells: [
           DataGridCell<String>(columnName: 't6_sr', value: e.t6_sr),
           DataGridCell<String>(columnName: 't6_Date', value: e.t6_Date),
@@ -2278,7 +2287,7 @@ class Table6DataSource extends DataGridSource {
         cells: row.getCells().map<Widget>((e) {
       return Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: Text(e.value.toString()),
       );
     }).toList());
@@ -2301,7 +2310,7 @@ List<DataGridRow> _Table7Data = [];
 
 class Table7DataSource extends DataGridSource {
   @override
-  Table7DataSource({List<table7> Table7Data}) {
+  Table7DataSource({required List<table7> Table7Data}) {
     _Table7Data = Table7Data.map<DataGridRow>((e) => DataGridRow(cells: [
           DataGridCell<String>(columnName: 't7_sr', value: e.t7_sr),
           DataGridCell<String>(columnName: 't7_Date', value: e.t7_Date),
@@ -2322,7 +2331,7 @@ class Table7DataSource extends DataGridSource {
         cells: row.getCells().map<Widget>((e) {
       return Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: Text(e.value.toString()),
       );
     }).toList());
@@ -2345,7 +2354,7 @@ List<DataGridRow> _Table8Data = [];
 
 class Table8DataSource extends DataGridSource {
   @override
-  Table8DataSource({List<table8> Table8Data}) {
+  Table8DataSource({required List<table8> Table8Data}) {
     _Table8Data = Table8Data.map<DataGridRow>((e) => DataGridRow(cells: [
           DataGridCell<String>(columnName: 't8_sr', value: e.t8_sr),
           DataGridCell<String>(columnName: 't8_Date', value: e.t8_Date),
@@ -2366,7 +2375,7 @@ class Table8DataSource extends DataGridSource {
         cells: row.getCells().map<Widget>((e) {
       return Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: Text(e.value.toString()),
       );
     }).toList());
@@ -2399,7 +2408,7 @@ List<DataGridRow> _Table9Data = [];
 
 class Table9DataSource extends DataGridSource {
   @override
-  Table9DataSource({List<table9> Table9Data}) {
+  Table9DataSource({required List<table9> Table9Data}) {
     _Table9Data = Table9Data.map<DataGridRow>((e) => DataGridRow(cells: [
           DataGridCell<String>(columnName: 't9_sr', value: e.t9_sr),
           DataGridCell<String>(columnName: 't9_Date', value: e.t9_Date),
@@ -2427,7 +2436,7 @@ class Table9DataSource extends DataGridSource {
         cells: row.getCells().map<Widget>((e) {
       return Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: Text(e.value.toString()),
       );
     }).toList());
@@ -2460,7 +2469,7 @@ List<DataGridRow> _Table10Data = [];
 
 class Table10DataSource extends DataGridSource {
   @override
-  Table10DataSource({List<table10> Table10Data}) {
+  Table10DataSource({required List<table10> Table10Data}) {
     _Table10Data = Table10Data.map<DataGridRow>((e) => DataGridRow(cells: [
           DataGridCell<String>(columnName: 't10_sr', value: e.t10_sr),
           DataGridCell<String>(
@@ -2483,7 +2492,7 @@ class Table10DataSource extends DataGridSource {
         cells: row.getCells().map<Widget>((e) {
       return Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: Text(e.value.toString()),
       );
     }).toList());

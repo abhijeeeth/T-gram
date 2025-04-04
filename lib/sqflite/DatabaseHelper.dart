@@ -56,12 +56,12 @@ class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
 
   // only have a single app-wide reference to the database
-  static Database _database;
+  static Database? _database;
   Future<Database> get database async {
-    if (_database != null) return _database;
+    if (_database != null) return Future.value(_database);
     // lazily instantiate the db the first time it is accessed
     _database = await _initDatabase();
-    return _database;
+    return _database!;
   }
 
   // this opens the database (and creates it if it doesn't exist)
@@ -195,7 +195,8 @@ class DatabaseHelper {
   Future<int> queryRowCount() async {
     Database db = await instance.database;
     return Sqflite.firstIntValue(
-        await db.rawQuery('SELECT COUNT(*) FROM $table'));
+            await db.rawQuery('SELECT COUNT(*) FROM $table')) ??
+        0;
   }
 
   // We are assuming here that the id column in the map is set. The other

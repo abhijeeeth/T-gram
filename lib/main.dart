@@ -1,31 +1,54 @@
 import 'package:flutter/material.dart';
-
-import 'package:splashscreen/splashscreen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:tigramnks/login.dart';
+import 'dart:io';
 
-void main()async {
+// Add this class for SSL certificate bypass
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+  }
+}
+
+// Make sure this runs before anything else
+void _setHttpOverrides() {
+  HttpOverrides.global = MyHttpOverrides();
+}
+
+void main() async {
+  // Set overrides before anything else
+  _setHttpOverrides();
+  
+  // Then initialize Flutter
   WidgetsFlutterBinding.ensureInitialized();
+  
   await FlutterDownloader.initialize(
       debug: true // optional: set false to disable printing logs to console
   );
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    theme: ThemeData(primaryColor: Color.fromRGBO(99, 118, 71, 1)
-//      primaryColor: Colors.white70,
-    ),
-   home:login(),
-  ));
-}
-class myApp extends StatefulWidget {
-  @override
-  _myAppState createState() => _myAppState();
+  runApp(const MyApp());
 }
 
-class _myAppState extends State<myApp> {
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromRGBO(99, 118, 71, 1),
+          brightness: Brightness.light,
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color.fromRGBO(99, 118, 71, 1),
+          foregroundColor: Colors.white,
+        ),
+      ),
+      home: login(),
+    );
   }
 }

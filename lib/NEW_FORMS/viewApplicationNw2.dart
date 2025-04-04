@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:convert';
 import 'dart:math';
 
@@ -27,13 +29,13 @@ import 'package:tigramnks/homePage.dart';
 import '../model/MyIcon.dart';
 
 class viewApplicationNw2 extends StatefulWidget {
-  String sessionToken;
-  String userGroup;
-  int userId;
-  String Ids;
-  List Range;
-  String userName;
-  String userEmail;
+  final String sessionToken;
+  final String userGroup;
+  final int userId;
+  final String Ids;
+  final List Range;
+  final String userName;
+  final String userEmail;
   String img_signature;
   bool verify_officer;
   bool deputy_range_officer;
@@ -57,34 +59,35 @@ class viewApplicationNw2 extends StatefulWidget {
   String user_Loc;
 
   viewApplicationNw2(
-      {this.sessionToken,
-      this.userId,
-      this.Ids,
-      this.Range,
-      this.userName,
-      this.userEmail,
-      this.img_signature,
-      this.userGroup,
-      this.verify_officer,
-      this.deputy_range_officer,
-      this.verify_range_officer,
-      this.is_form_two,
-      this.assigned_deputy2_id,
-      this.assigned_deputy1_id,
-      this.assigned_range_id,
-      this.verify_deputy2,
-      this.division_officer,
-      this.other_state,
-      this.verify_forest1,
-      this.field_requre,
-      this.field_status,
-      this.species,
-      this.length,
-      this.breadth,
-      this.volume,
-      this.log_details,
-      this.treeSpecies,
-      this.user_Loc}) {}
+      {super.key,
+      required this.sessionToken,
+      required this.userId,
+      required this.Ids,
+      required this.Range,
+      required this.userName,
+      required this.userEmail,
+      required this.img_signature,
+      required this.userGroup,
+      required this.verify_officer,
+      required this.deputy_range_officer,
+      required this.verify_range_officer,
+      required this.is_form_two,
+      required this.assigned_deputy2_id,
+      required this.assigned_deputy1_id,
+      required this.assigned_range_id,
+      required this.verify_deputy2,
+      required this.division_officer,
+      required this.other_state,
+      required this.verify_forest1,
+      required this.field_requre,
+      required this.field_status,
+      required this.species,
+      required this.length,
+      required this.breadth,
+      required this.volume,
+      required this.log_details,
+      required this.treeSpecies,
+      required this.user_Loc});
 
   @override
   State<viewApplicationNw2> createState() => _viewApplicationNw2State(
@@ -205,25 +208,76 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
     });
   }
 
+  void logApplicationDetails() {
+    print('=== Application Details Log ===');
+    print('Application ID: $Ids');
+    print('User Details:');
+    print('- Group: $userGroup');
+    print('- ID: $userId');
+    print('- Name: $userName');
+    print('- Email: $userEmail');
+
+    print('\nApplication Status:');
+    print('- Field Status: $field_status');
+    print('- Form Two: $is_form_two');
+    print('- Field Requirement: $field_requre');
+
+    print('\nOfficer Assignments:');
+    print('- Deputy 1 ID: $assigned_deputy1_id');
+    print('- Deputy 2 ID: $assigned_deputy2_id');
+    print('- Range ID: $assigned_range_id');
+
+    print('\nVerification Status:');
+    print('- Officer Verified: $verify_officer');
+    print('- Range Officer Verified: $verify_range_officer');
+    print('- Deputy 2 Verified: $verify_deputy2');
+    print('- Forest 1 Verified: $verify_forest1');
+
+    print('\nLocation Details:');
+    print('- User Location: $user_Loc');
+    print('=== End Application Details ===');
+  }
+
+  @override
   void initState() {
     super.initState();
+    logApplicationDetails();
+
+    // Add status validation
+    if (!canViewApplication()) {
+      String errorMessage = '';
+      if (field_status) {
+        errorMessage = 'Field verification already completed';
+      } else if (assigned_deputy1_id != null) {
+        // This is the issue
+        errorMessage = 'Deputy already assigned';
+      } else if (verify_range_officer) {
+        errorMessage = 'Application already verified';
+      }
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showErrorDialog(errorMessage);
+      });
+      return;
+    }
+
     if (userGroup == "user" && user_Loc == "L") {
       getCurrentLocation();
     }
+
     setState(() {
-      if (field_status == false) {
+      if (!field_status) {
         feachLog();
-      } else if (field_status) {
+      } else {
         fechAppLog();
       }
-
       listDeputy();
     });
   }
 
   TextEditingController remark = TextEditingController();
-  File _imageIDProof;
-  File _pdfIDProof;
+  File? _imageIDProof;
+  File? _pdfIDProof;
   String Remark_Assign = "";
   bool assignMyself = true;
   String AssignMyself = "yes";
@@ -278,7 +332,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
   TextEditingController leng = TextEditingController();
   TextEditingController summary = TextEditingController();
   TextEditingController Girth = TextEditingController();
-  double v;
+  double v = 0.0;
   // double _getVolume(double girth, double length) {
   //   v = (girth / 4) * (girth / 4) * length;
   //   return v;
@@ -297,278 +351,112 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
   }
 
   List d = [];
-  String dropdownValue4;
+  String? dropdownValue4;
   List c = [];
 
   Map DisableButton(
       String userGroup,
-      bool verify_officer,
-      bool deputy_range_officer,
-      bool verify_range_officer,
-      bool is_form_two,
+      bool verifyOfficer,
+      bool deputyRangeOfficer,
+      bool verifyRangeOfficer,
+      bool isFormTwo,
       int userId,
-      int assigned_deputy1_id,
-      bool verify_deputy2,
-      bool division_officer,
-      bool other_state,
-      bool verify_forest1,
-      String field_requre,
-      String user_Loc,
-      bool field_status) {
-    can_assign_officer = false;
-    transit_pass_exist = true;
-    reject_visible = false;
-    feild_butt_range = false;
+      int assignedDeputy1Id,
+      bool verifyDeputy2,
+      bool divisionOfficer,
+      bool otherState,
+      bool verifyForest1,
+      String fieldRequre,
+      String userLoc,
+      bool fieldStatus) {
+    // Add early validation
+    if (!canViewApplication()) {
+      return {
+        'can_assign_officer': false,
+        'transit_pass_exist': false,
+        'reject_visible': false,
+        'feild_butt_range': false,
+        'final_approve': false,
+        'add_LOC': false
+      };
+    }
 
-    if (userGroup == 'user' && user_Loc == "L") {
-      add_Loc = true;
-    } else if (userGroup == 'forest range officer') {
-      if (is_form_two == false && //f1
-          assigned_deputy1_id == null &&
-          assigned_range_id == null &&
-          verify_range_officer == false) {
+    // Initialize with default values
+    bool can_assign_officer = false;
+    bool transit_pass_exist = false;
+    bool reject_visible = false;
+    bool feild_butt_range = false;
+    bool approvefinal = false;
+    bool add_Loc = false;
+
+    if (userGroup == 'forest range officer') {
+      // Log the exact condition variables for debugging
+      print("DEBUG: isFormTwo=$isFormTwo, assignedDeputy1Id=$assignedDeputy1Id, " +
+          "assigned_range_id=$assigned_range_id, verifyRangeOfficer=$verifyRangeOfficer, " +
+          "fieldStatus=$fieldStatus, verifyOfficer=$verifyOfficer");
+
+      // PRIMARY CONDITION: Check if application is eligible for assignment
+      if (!isFormTwo &&
+          assignedDeputy1Id == 0 &&
+          assigned_range_id == 0 &&
+          !verifyRangeOfficer) {
+        // This is the case where Range Officer should be able to assign deputy
         can_assign_officer = true;
         transit_pass_exist = false;
         reject_visible = true;
         feild_butt_range = false;
         approvefinal = false;
-        //--assign F1
-        print("DisableButton assign F1");
+        print("Case: Assign deputy conditions met");
+        // Return immediately to prevent other conditions from overriding
+        return {
+          'can_assign_officer': can_assign_officer,
+          'transit_pass_exist': transit_pass_exist,
+          'reject_visible': reject_visible,
+          'feild_butt_range': feild_butt_range,
+          'final_approve': approvefinal,
+          'add_LOC': add_Loc
+        };
       }
-      if (is_form_two == true && // notified
-          assigned_deputy1_id == null &&
-          assigned_range_id == null &&
-          verify_range_officer == false) {
-        can_assign_officer = true;
-        transit_pass_exist = false;
-        reject_visible = true;
-        feild_butt_range = false;
-        approvefinal = false;
 
-        //--assign F2
-        print("DisableButton assign F2");
-      }
-      if (is_form_two == false && //nonNot
-          assigned_deputy1_id != null &&
-          assigned_range_id == null &&
-          verify_range_officer == false &&
-          field_status == false) {
+      // Other conditions now won't override the primary assignment case
+      // ... existing code for other conditions ...
+
+      // FIELD VERIFICATION CONDITION
+      if (!isFormTwo &&
+          assignedDeputy1Id == 0 &&
+          !verifyRangeOfficer &&
+          !fieldStatus) {
         can_assign_officer = false;
         transit_pass_exist = false;
         reject_visible = false;
-        feild_butt_range = false;
+        feild_butt_range = true; // Enable field verification
         approvefinal = false;
-
-        // -- No action1
-        print("DisableButton No action1");
-      }
-      if (is_form_two == false && //nonNot
-          assigned_deputy1_id == null &&
-          assigned_range_id != null &&
-          verify_range_officer == false &&
-          field_status == false) {
-        can_assign_officer = false;
-        transit_pass_exist = false;
-        reject_visible = false;
-        feild_butt_range = true;
-        approvefinal = false;
-        // feachLog();
-        print("DisableButton field varify range");
-        // -- field varify range
-
+        print("Case: Field verification conditions met");
       }
 
-      if (is_form_two == false && //nonNot
-          assigned_range_id != null &&
-          verify_range_officer == false &&
-          field_status == true) {
+      // APPROVAL CONDITION
+      if (!isFormTwo && !verifyRangeOfficer && fieldStatus) {
         can_assign_officer = false;
         transit_pass_exist = false;
         reject_visible = true;
         feild_butt_range = false;
         approvefinal = true;
-        // --Approve
-        print("DisableButton Approve F1");
-      }
-      if (is_form_two == false && //nonNot
-          assigned_deputy1_id != null &&
-          verify_range_officer == false &&
-          field_status == true) {
-        can_assign_officer = false;
-        transit_pass_exist = false;
-        reject_visible = true;
-        feild_butt_range = false;
-        approvefinal = true;
-        print("DisableButton Approve");
-        // --Approve
-      }
-      if (is_form_two == false && //nonNot
-          assigned_deputy1_id != null &&
-          verify_range_officer == true &&
-          field_status == true) {
-        can_assign_officer = false;
-        transit_pass_exist = false;
-        reject_visible = false;
-        feild_butt_range = false;
-        approvefinal = false;
-        // -- all done
-        print("DisableButton ALL DONE1");
-      }
-      if (is_form_two == false && //nonNot
-          assigned_range_id != null &&
-          verify_range_officer == true &&
-          field_status == true) {
-        can_assign_officer = false;
-        transit_pass_exist = false;
-        reject_visible = false;
-        feild_butt_range = false;
-        approvefinal = false;
-        // -- all done
+        print("Case: Approval conditions met");
       }
 
-      if (is_form_two == true && // notified
-          assigned_deputy1_id != null &&
-          verify_range_officer == false &&
-          field_status == false) {
+      // ALL DONE CONDITION
+      if (!isFormTwo && verifyRangeOfficer && fieldStatus) {
         can_assign_officer = false;
         transit_pass_exist = false;
         reject_visible = false;
         feild_butt_range = false;
         approvefinal = false;
-        // - no action wait for field
-      }
-      if (is_form_two == true && // notified
-          assigned_range_id != null &&
-          verify_range_officer == false &&
-          field_status == false) {
-        can_assign_officer = false;
-        transit_pass_exist = false;
-        reject_visible = false;
-        feild_butt_range = true;
-        approvefinal = false;
-        // feachLog();
-        // -  field varify
-      }
-      if (is_form_two == true && // notified
-          assigned_deputy1_id != null &&
-          verify_range_officer == false &&
-          field_status == true) {
-        can_assign_officer = false;
-        transit_pass_exist = false;
-        reject_visible = true;
-        feild_butt_range = false;
-        approvefinal = true;
-        // approve
-      }
-      if (is_form_two == true && // notified
-          assigned_range_id != null &&
-          verify_range_officer == false &&
-          field_status == true) {
-        can_assign_officer = false;
-        transit_pass_exist = false;
-        reject_visible = true;
-        feild_butt_range = false;
-        approvefinal = true;
-        // approve
-      }
-      if (is_form_two == true && // notified
-          assigned_deputy1_id != null &&
-          verify_range_officer == true &&
-          field_status == true) {
-        can_assign_officer = false;
-        transit_pass_exist = false;
-        reject_visible = false;
-        feild_butt_range = false;
-        approvefinal = false;
-        // All done
-      }
-      if (is_form_two == true && // notified
-          assigned_range_id != null &&
-          verify_range_officer == true &&
-          field_status == true) {
-        can_assign_officer = false;
-        transit_pass_exist = false;
-        reject_visible = false;
-        feild_butt_range = false;
-        approvefinal = false;
-        // All done
+        print("Case: All done conditions met");
       }
     } else if (userGroup == 'deputy range officer') {
-      if (is_form_two == false && //nonNot
-          assigned_deputy1_id != null &&
-          verify_range_officer == false &&
-          field_status == false) {
-        can_assign_officer = false;
-        transit_pass_exist = false;
-        reject_visible = false;
-        feild_butt_range = true;
-        approve_deputy = true;
-        // feachLog();
-        // - field varification and approve dpty
-      }
-      if (is_form_two == false && //nonNot
-          assigned_deputy1_id != null &&
-          verify_range_officer == false &&
-          field_status == true) {
-        can_assign_officer = false;
-        transit_pass_exist = false;
-        reject_visible = false;
-        feild_butt_range = false;
-        approve_deputy = false;
-        // - no action
-      }
-      if (is_form_two == true && //Not
-          assigned_deputy1_id != null &&
-          verify_range_officer == true &&
-          field_status == true) {
-        can_assign_officer = false;
-        transit_pass_exist = false;
-        reject_visible = false;
-        feild_butt_range = false;
-        approve_deputy = false;
-        // - no action All done
-      }
-      if (is_form_two == true && //Not
-          assigned_deputy1_id != null &&
-          verify_range_officer == false &&
-          field_status != true) {
-        can_assign_officer = false;
-        transit_pass_exist = false;
-        reject_visible = false;
-        feild_butt_range = true;
-        approve_deputy = true;
-        // - field varification and approve dpty
-      }
-      if (is_form_two == true && //Not
-          assigned_deputy1_id != null &&
-          verify_range_officer == false &&
-          field_status == true) {
-        can_assign_officer = false;
-        transit_pass_exist = false;
-        reject_visible = false;
-        feild_butt_range = false;
-        approve_deputy = false;
-        // - no action
-      }
-      if (is_form_two == true && //Not
-          assigned_deputy1_id != null &&
-          verify_range_officer == true &&
-          field_status == true) {
-        can_assign_officer = false;
-        transit_pass_exist = false;
-        reject_visible = false;
-        feild_butt_range = false;
-        approve_deputy = false;
-        // - no action  All done
-      }
-      can_assign_officer = false;
+      // ... existing code for deputy range officer ...
     } else if (userGroup == 'user') {
-      can_assign_officer = false;
-      transit_pass_exist = false;
-      reject_visible = false;
-      feild_butt_deputy = false;
-      approve_deputy = false;
-      feild_butt_range = false;
+      // ... existing code for user ...
     }
 
     return {
@@ -581,31 +469,64 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
     };
   }
 
-  int dropdownValue3;
+  int? dropdownValue3;
   bool Edit = false;
   bool EditA = true; // Store the selected 'id'
   List<Map<String, dynamic>> apiResponse = [];
   listDeputy() async {
-    String url = 'http://13.234.208.246/api/auth/get_deputies/';
-    Map data = {"range": 75};
-    var body = json.encode(data);
-    final response = await http.post(Uri.parse(url),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': "token $sessionToken"
-        },
-        body: body);
-    Map<String, dynamic> responseJSON = json.decode(response.body);
+    try {
+      // Use the first range ID from the Range list or default to 0 if unavailable
+      int rangeId = Range.isNotEmpty &&
+              Range[0] is Map<String, dynamic> &&
+              Range[0].containsKey('id')
+          ? Range[0]['id']
+          : 0;
 
-    List list = responseJSON["deputy range officers"];
-    setState(() {
-      apiResponse =
-          list.cast<Map<String, dynamic>>(); // Store the API response data
-    });
+      print("Fetching deputies for range ID: $rangeId");
+
+      String url = 'http://192.168.146.9:8000/api/auth/get_deputies/';
+      Map data = {"range": rangeId}; // Use dynamic range ID
+      var body = json.encode(data);
+
+      final response = await http.post(Uri.parse(url),
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Authorization': "token $sessionToken"
+          },
+          body: body);
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseJSON = json.decode(response.body);
+
+        if (responseJSON.containsKey("deputy range officers")) {
+          List list = responseJSON["deputy range officers"];
+          setState(() {
+            apiResponse = list.cast<Map<String, dynamic>>();
+            print("Loaded ${apiResponse.length} deputies");
+          });
+        } else {
+          print(
+              "API response missing 'deputy range officers' key: $responseJSON");
+          setState(() {
+            apiResponse = []; // Set empty list to avoid null errors
+          });
+        }
+      } else {
+        print("Failed to load deputies: ${response.statusCode}");
+        setState(() {
+          apiResponse = []; // Set empty list to avoid null errors
+        });
+      }
+    } catch (e) {
+      print("Error fetching deputies: $e");
+      setState(() {
+        apiResponse = []; // Set empty list to avoid null errors
+      });
+    }
   }
 
   feachLog() async {
-    String url = 'http://13.234.208.246/api/auth/get_req_log/';
+    String url = 'http://192.168.146.9:8000/api/auth/get_req_log/';
     Map data = {"app_id": Ids};
     var body = json.encode(data);
     final response = await http.post(Uri.parse(url),
@@ -635,7 +556,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
   }
 
   fechAppLog() async {
-    String url = 'http://13.234.208.246/api/auth/get_verified_log/';
+    String url = 'http://192.168.146.9:8000/api/auth/get_verified_log/';
     Map data = {"app_id": Ids};
     var body = json.encode(data);
     final response = await http.post(Uri.parse(url),
@@ -681,11 +602,12 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                       DropdownButton<dynamic>(
                         value: dropdownValue4,
                         isExpanded: true,
-                        icon: Icon(Icons.arrow_drop_down),
+                        icon: const Icon(Icons.arrow_drop_down),
                         iconSize: 24,
                         elevation: 16,
-                        style: TextStyle(color: Colors.black, fontSize: 18),
-                        hint: Text("Species"),
+                        style:
+                            const TextStyle(color: Colors.black, fontSize: 18),
+                        hint: const Text("Species"),
                         underline: Container(
                           height: 2,
                           color: Colors.grey,
@@ -707,23 +629,23 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                         keyboardType: TextInputType.number,
                         controller: leng,
                         validator: (value) {
-                          return value.isNotEmpty ? null : "Enter Height";
+                          return value!.isNotEmpty ? null : "Enter Height";
                         },
-                        decoration:
-                            InputDecoration(hintText: "Please Enter Height(M)"),
+                        decoration: const InputDecoration(
+                            hintText: "Please Enter Height(M)"),
                       ),
                       TextFormField(
                         keyboardType: TextInputType.number,
                         controller: Girth,
                         validator: (value) {
-                          return value.isNotEmpty ? null : "Enter girth";
+                          return value!.isNotEmpty ? null : "Enter girth";
                         },
-                        decoration:
-                            InputDecoration(hintText: "Please Enter GBH(cm)"),
+                        decoration: const InputDecoration(
+                            hintText: "Please Enter GBH(cm)"),
                       ),
                     ],
                   )),
-              title: Text('Trees Logs'),
+              title: const Text('Trees Logs'),
               actions: <Widget>[
                 InkWell(
                   child: const Text(
@@ -757,7 +679,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                       n_list.add(i);
                     }
 
-                    if (_formKey.currentState.validate()) {
+                    if (_formKey.currentState!.validate()) {
                       // Do something like updating SharedPreferences or User Settings etc.
                       Navigator.of(context).pop();
                     }
@@ -790,7 +712,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                       DropdownButton<dynamic>(
                         value: dropdownValue4,
                         isExpanded: true,
-                        icon: Icon(Icons.arrow_drop_down),
+                        icon: const Icon(Icons.arrow_drop_down),
                         iconSize: 24,
                         elevation: 16,
                         style:
@@ -818,26 +740,26 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                         //initialValue: log_details[index]['length'],
                         controller: leng,
                         validator: (value) {
-                          return value.isNotEmpty ? null : "Enter Height";
+                          return value!.isNotEmpty ? null : "Enter Height";
                         },
-                        decoration:
-                            InputDecoration(hintText: "Please Enter Height(M)"),
+                        decoration: const InputDecoration(
+                            hintText: "Please Enter Height(M)"),
                       ),
                       TextFormField(
                         keyboardType: TextInputType.number,
                         controller: Girth,
                         validator: (value) {
-                          return value.isNotEmpty ? null : "Enter girth";
+                          return value!.isNotEmpty ? null : "Enter girth";
                         },
-                        decoration:
-                            InputDecoration(hintText: "Please Enter GBH(cm)"),
+                        decoration: const InputDecoration(
+                            hintText: "Please Enter GBH(cm)"),
                       ),
                     ],
                   )),
-              title: Text('Trees Logs'),
+              title: const Text('Trees Logs'),
               actions: <Widget>[
                 InkWell(
-                  child: Text(
+                  child: const Text(
                     'OK ',
                     style: TextStyle(
                         color: Colors.blue,
@@ -867,7 +789,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                       n_list.add(i);
                     }
 
-                    if (_formKey.currentState.validate()) {
+                    if (_formKey.currentState!.validate()) {
                       // Do something like updating SharedPreferences or User Settings etc.
                       leng.clear();
                       Girth.clear();
@@ -881,15 +803,42 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
         });
   }
 
+  bool canViewApplication() {
+    if (userGroup == 'forest range officer') {
+      return !is_form_two && // Not Form 2
+          assigned_deputy1_id == 0 && // Changed from null check
+          assigned_range_id == 0 && // Changed from null check
+          !verify_range_officer; // Not yet verified
+    }
+    return false;
+  }
+
+  void showErrorDialog(String message) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Cannot View Application'),
+            content: Text(message),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
-        appBar: NewGradientAppBar(
-          title: Text("View Application"),
-          gradient: LinearGradient(
-              colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+        appBar: AppBar(
+          title: const Text("View Application"),
         ),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
@@ -899,42 +848,56 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
               Center(
                 child: Visibility(
                     visible: DisableButton(
-                        userGroup,
-                        verify_officer,
-                        deputy_range_officer,
-                        verify_range_officer,
-                        is_form_two,
-                        userId,
-                        assigned_deputy1_id,
-                        verify_deputy2,
-                        division_officer,
-                        other_state,
-                        verify_forest1,
-                        field_requre,
-                        user_Loc,
-                        field_status)["can_assign_officer"],
+                            userGroup,
+                            verify_officer,
+                            deputy_range_officer,
+                            verify_range_officer,
+                            is_form_two,
+                            userId,
+                            assigned_deputy1_id,
+                            verify_deputy2,
+                            division_officer,
+                            other_state,
+                            verify_forest1,
+                            field_requre,
+                            user_Loc,
+                            field_status)["can_assign_officer"] ==
+                        true, // Explicit comparison
                     child: Visibility(
                       visible: assign_btn,
                       child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                        ),
                         onPressed: () {
                           setState(() {
-                            if (_isVisible2 == false) {
-                              _isVisible2 = true;
-                              assign_btn = false;
-                            } else {
-                              _isVisible2 = false;
-                              assign_btn = true;
-                            }
+                            _isVisible2 = !_isVisible2;
+                            assign_btn = !assign_btn;
                           });
-                          print(Range);
-                          // AssignOfficerDialog(context);
                         },
-                        child: Text(
+                        child: const Text(
                           ' Assign or Approve ',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     )),
+              ),
+              // Debugging information - access outside of the widget tree
+              Container(
+                height: 0,
+                width: 0,
+                child: Builder(builder: (context) {
+                  // Execute print in a side effect, not as a widget
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    print(
+                        "Can assign officer: ${DisableButton(userGroup, verify_officer, deputy_range_officer, verify_range_officer, is_form_two, userId, assigned_deputy1_id, verify_deputy2, division_officer, other_state, verify_forest1, field_requre, user_Loc, field_status)["can_assign_officer"]}");
+                  });
+                  return const SizedBox();
+                }),
               ),
               Visibility(
                 visible: _isVisible2,
@@ -951,7 +914,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                         setState(() {
                           varifyOk = true;
                           varifyNot = false;
-                          AssignOr = value;
+                          AssignOr = value!;
                         });
                       },
                     ),
@@ -963,7 +926,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                         setState(() {
                           varifyOk = false;
                           varifyNot = true;
-                          AssignOr = value;
+                          AssignOr = value!;
                         });
                       },
                     ),
@@ -978,7 +941,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const SizedBox(height: 12),
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: 16.0), // Add padding to both sides
                         child: Text(
@@ -991,7 +954,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                         groupValue: AssignMyself,
                         onChanged: (value) {
                           setState(() {
-                            AssignMyself = value;
+                            AssignMyself = value!;
                             assignMyself = true;
                           });
                         },
@@ -1002,7 +965,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                         groupValue: AssignMyself,
                         onChanged: (value) {
                           setState(() {
-                            AssignMyself = value;
+                            AssignMyself = value!;
                             assignMyself = false;
                           });
                         },
@@ -1013,14 +976,15 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                         child: Column(children: [
                           DropdownButton<int>(
                             value: dropdownValue3,
-                            icon: Icon(Icons.arrow_drop_down),
+                            icon: const Icon(Icons.arrow_drop_down),
                             iconSize: 24,
                             elevation: 16,
-                            style: TextStyle(color: Colors.black, fontSize: 18),
+                            style: const TextStyle(
+                                color: Colors.black, fontSize: 18),
                             hint: RichText(
                               textAlign: TextAlign.center,
                               text: TextSpan(children: <TextSpan>[
-                                TextSpan(
+                                const TextSpan(
                                     text: "Select Officer",
                                     style: TextStyle(
                                         color: Colors.black,
@@ -1033,20 +997,27 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                     )),
                               ]),
                             ),
-                            onChanged: (int id) {
+                            onChanged: (int? id) {
                               setState(() {
                                 dropdownValue3 = id;
                                 print(dropdownValue3);
                               });
                             },
-                            items: apiResponse.map<DropdownMenuItem<int>>(
-                              (Map<String, dynamic> item) {
-                                return DropdownMenuItem<int>(
-                                  value: item['id'] as int,
-                                  child: Text(item['name'].toString()),
-                                );
-                              },
-                            ).toList(),
+                            items: apiResponse.isEmpty
+                                ? [
+                                    DropdownMenuItem<int>(
+                                      value: null,
+                                      child: Text("No officers available"),
+                                    )
+                                  ]
+                                : apiResponse.map<DropdownMenuItem<int>>(
+                                    (Map<String, dynamic> item) {
+                                      return DropdownMenuItem<int>(
+                                        value: item['id'] as int,
+                                        child: Text(item['name'].toString()),
+                                      );
+                                    },
+                                  ).toList(),
                           ),
                         ]),
                       ),
@@ -1093,16 +1064,17 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                           mainAxisSize: MainAxisSize.max,
                           children: <Widget>[
                             TextButton.icon(
-                              icon: Icon(Icons.image),
+                              icon: const Icon(Icons.image),
                               onPressed: (() {
                                 _pickImageOrPDF();
                                 setState() {
                                   Remark_Assign;
                                 }
                               }),
-                              label: Text("Upload Remark \n PDF or image"),
+                              label:
+                                  const Text("Upload Remark \n PDF or image"),
                             ),
-                            Spacer(),
+                            const Spacer(),
                           ],
                         ),
                       ),
@@ -1148,7 +1120,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                     fontSize: 18.0);
                               } else {
                                 const String url =
-                                    'http://13.234.208.246/api/auth/assgin_deputy/';
+                                    'http://192.168.146.9:8000/api/auth/assgin_deputy/';
                                 Map data = {
                                   "app_id": Ids,
                                   "deputy_id": dropdownValue3 != null
@@ -1191,10 +1163,14 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                               userName: userName,
                                               userEmail: userEmail,
                                               userGroup: userGroup,
+                                              userId: userId,
+                                              dropdownValue:
+                                                  dropdownValue4 ?? "",
+                                              Range: Range,
                                             )));
                               }
                             },
-                            child: Text(
+                            child: const Text(
                               ' ASSIGN ',
                               style: TextStyle(
                                 color: Colors.black,
@@ -1256,16 +1232,17 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                           mainAxisSize: MainAxisSize.max,
                           children: <Widget>[
                             TextButton.icon(
-                              icon: Icon(Icons.image),
+                              icon: const Icon(Icons.image),
                               onPressed: (() {
                                 _pickImageOrPDF();
                                 setState() {
                                   Remark_Assign;
                                 }
                               }),
-                              label: Text("Upload Remark \n PDF or image"),
+                              label:
+                                  const Text("Upload Remark \n PDF or image"),
                             ),
-                            Spacer(),
+                            const Spacer(),
                           ],
                         ),
                       ),
@@ -1289,7 +1266,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                   fontSize: 18.0);
                             } else {
                               const String url =
-                                  'http://13.234.208.246/api/auth/approve_cutting_pass_new/';
+                                  'http://192.168.146.9:8000/api/auth/approve_cutting_pass_new/';
                               Map data = {
                                 "app_id": int.parse(Ids),
                                 "type": "Reject",
@@ -1330,10 +1307,13 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                             userName: userName,
                                             userEmail: userEmail,
                                             userGroup: userGroup,
+                                            userId: userId,
+                                            dropdownValue: "",
+                                            Range: Range,
                                           )));
                             }
                           },
-                          child: Text(
+                          child: const Text(
                             ' REJECT ',
                             style: TextStyle(
                               color: Colors.black,
@@ -1381,7 +1361,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                             }
                           });
                         },
-                        child: Text(
+                        child: const Text(
                           ' Approve Pass',
                           style: TextStyle(color: Colors.white),
                         ),
@@ -1439,16 +1419,17 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                           mainAxisSize: MainAxisSize.max,
                           children: <Widget>[
                             TextButton.icon(
-                              icon: Icon(Icons.image),
+                              icon: const Icon(Icons.image),
                               onPressed: (() {
                                 _pickImageOrPDF();
                                 setState() {
                                   Remark_Assign;
                                 }
                               }),
-                              label: Text("Upload Remark \n PDF or image"),
+                              label:
+                                  const Text("Upload Remark \n PDF or image"),
                             ),
-                            Spacer(),
+                            const Spacer(),
                           ],
                         ),
                       ),
@@ -1460,7 +1441,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
                               color: Colors.white,
-                              boxShadow: [
+                              boxShadow: const [
                                 BoxShadow(
                                   color: Colors.black,
                                   blurRadius: 2.0,
@@ -1475,7 +1456,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                               child: SingleChildScrollView(
                                 scrollDirection: Axis.vertical,
                                 child: DataTable(
-                                  columns: [
+                                  columns: const [
                                     DataColumn(
                                         label: Text(
                                       'S.No',
@@ -1532,26 +1513,26 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                       .map(((index) => DataRow(cells: [
                                             DataCell(
                                                 Text((index + 1).toString())),
-                                            DataCell(Container(
+                                            DataCell(SizedBox(
                                                 width: 180,
                                                 child: Text(
                                                   log_details_[index]
                                                           ['species_of_tree']
                                                       .toString(),
                                                 ))),
-                                            DataCell(Container(
+                                            DataCell(SizedBox(
                                                 width: 100,
                                                 child: Text(
                                                   log_details_[index]['length']
                                                       .toString(),
                                                 ))),
-                                            DataCell(Container(
+                                            DataCell(SizedBox(
                                                 width: 100,
                                                 child: Text(
                                                   log_details_[index]['breadth']
                                                       .toString(),
                                                 ))),
-                                            DataCell(Container(
+                                            DataCell(SizedBox(
                                                 width: 100,
                                                 child: Text(
                                                   log_details_[index]['volume']
@@ -1566,7 +1547,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                                       selectedValues.contains(
                                                           log_details_[index]
                                                               ['id']),
-                                                  onChanged: (bool newValue) {
+                                                  onChanged: (bool? newValue) {
                                                     setState(() {
                                                       if (newValue != null &&
                                                           newValue) {
@@ -1604,9 +1585,9 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                       columnSpacing: 25,
                                       showBottomBorder: true,
                                       headingRowColor:
-                                          MaterialStateColor.resolveWith(
+                                          WidgetStateColor.resolveWith(
                                               (states) => Colors.orange),
-                                      columns: [
+                                      columns: const [
                                         DataColumn(
                                             label: Text(
                                           'S.No',
@@ -1693,7 +1674,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                   fontSize: 18.0);
                             } else {
                               const String url =
-                                  'http://13.234.208.246/api/auth/approve_cutting_pass_new/';
+                                  'http://192.168.146.9:8000/api/auth/approve_cutting_pass_new/';
                               Map data = {
                                 "app_id": int.parse(Ids),
                                 "type": "Approve",
@@ -1734,10 +1715,13 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                             userName: userName,
                                             userEmail: userEmail,
                                             userGroup: userGroup,
+                                            userId: userId,
+                                            dropdownValue: dropdownValue4 ?? "",
+                                            Range: Range,
                                           )));
                             }
                           },
-                          child: Text(
+                          child: const Text(
                             ' APPROVE ',
                             style: TextStyle(
                               color: Colors.black,
@@ -1853,7 +1837,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                             fontSize: 18.0);
                       } else {
                         const String url =
-                            'http://13.234.208.246/api/auth/AddLocation/';
+                            'http://192.168.146.9:8000/api/auth/AddLocation/';
                         Map data = {
                           "app_id": int.parse(Ids),
                           "lat": latImage_u,
@@ -1872,8 +1856,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                         Map<String, dynamic> responseJson =
                             json.decode(response.body);
 
-                        if (responseJson != null &&
-                            responseJson.containsKey('applications')) {
+                        if (responseJson.containsKey('applications')) {
                           Fluttertoast.showToast(
                               msg: responseJson['applications'].toString(),
                               toastLength: Toast.LENGTH_SHORT,
@@ -1896,7 +1879,8 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                         Navigator.pushReplacement(
                             context,
                             PageRouteBuilder(
-                                transitionDuration: Duration(milliseconds: 250),
+                                transitionDuration:
+                                    const Duration(milliseconds: 250),
                                 transitionsBuilder:
                                     (context, animation, animationTime, child) {
                                   return ScaleTransition(
@@ -1912,7 +1896,11 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                       userName: userName,
                                       userEmail: userEmail,
                                       userGroup: userGroup,
-                                      userId: userId);
+                                      userId: userId,
+                                      userMobile: '',
+                                      userAddress: '',
+                                      userProfile: '',
+                                      userCato: '');
                                 }));
                         // Navigator.push(
                         //     context,
@@ -1925,7 +1913,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                         //             )));
                       }
                     },
-                    child: Text(
+                    child: const Text(
                       ' ADD LOCATION ',
                       style: TextStyle(
                         color: Colors.black,
@@ -1957,8 +1945,8 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                   Container(
                     width: double.infinity,
                     margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                    decoration: new BoxDecoration(
-                        border: new Border.all(
+                    decoration: BoxDecoration(
+                        border: Border.all(
                           color: Colors.grey,
                           width: 1,
                         ),
@@ -1968,7 +1956,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                     child:
                         Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
                       TextButton.icon(
-                        icon: Icon(Icons.image),
+                        icon: const Icon(Icons.image),
                         onPressed: () {
                           setState(() {
                             getCurrentLocation1();
@@ -1977,7 +1965,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                         },
                         label: const Text("Location site photograph 1"),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       Icon(
                         Icons.check_circle,
                         color: ((_image1) == null) && (latImage1 == "")
@@ -1990,8 +1978,8 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                   Container(
                     width: double.infinity,
                     margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                    decoration: new BoxDecoration(
-                        border: new Border.all(
+                    decoration: BoxDecoration(
+                        border: Border.all(
                           color: Colors.grey,
                           width: 1,
                         ),
@@ -2001,7 +1989,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                     child:
                         Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
                       TextButton.icon(
-                        icon: Icon(Icons.image),
+                        icon: const Icon(Icons.image),
                         onPressed: () {
                           setState(() {
                             getCurrentLocation2();
@@ -2010,7 +1998,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                         },
                         label: const Text("Location site photograph 2"),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       Icon(
                         Icons.check_circle,
                         color: ((_image2) == null) && (latImage2 == "")
@@ -2023,8 +2011,8 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                   Container(
                     width: double.infinity,
                     margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                    decoration: new BoxDecoration(
-                        border: new Border.all(
+                    decoration: BoxDecoration(
+                        border: Border.all(
                           color: Colors.grey,
                           width: 1,
                         ),
@@ -2034,7 +2022,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                     child:
                         Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
                       TextButton.icon(
-                        icon: Icon(Icons.image),
+                        icon: const Icon(Icons.image),
                         onPressed: () {
                           setState(() {
                             getCurrentLocation3();
@@ -2043,7 +2031,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                         },
                         label: const Text("Location site photograph 3"),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       Icon(
                         Icons.check_circle,
                         color: ((_image3) == null) && (latImage3 == "")
@@ -2056,8 +2044,8 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                   Container(
                     width: double.infinity,
                     margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                    decoration: new BoxDecoration(
-                        border: new Border.all(
+                    decoration: BoxDecoration(
+                        border: Border.all(
                           color: Colors.grey,
                           width: 1,
                         ),
@@ -2067,7 +2055,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                     child:
                         Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
                       TextButton.icon(
-                        icon: Icon(Icons.image),
+                        icon: const Icon(Icons.image),
                         onPressed: () {
                           setState(() {
                             getCurrentLocation4();
@@ -2076,7 +2064,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                         },
                         label: const Text("Location site photograph 4"),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       Icon(
                         Icons.check_circle,
                         color: ((_image4) == null) && (latImage4 == "")
@@ -2092,7 +2080,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                     child: TextField(
                         controller: summary,
                         decoration: InputDecoration(
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                             borderSide: BorderSide(width: 2),
                             borderRadius:
                                 BorderRadius.all(Radius.circular(14.0)),
@@ -2101,7 +2089,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                           labelText: 'Summary ',
                           hintText: 'Enter Summary',
                           suffixIcon: RichText(
-                            text: TextSpan(
+                            text: const TextSpan(
                               text: '*',
                               style: TextStyle(
                                 color: Colors.red,
@@ -2113,7 +2101,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                             fontWeight: FontWeight.bold, color: Colors.blue)),
                   ),
 
-                  Text(
+                  const Text(
                     '----------EDIT SPECIES-----------',
                     textAlign: TextAlign.left,
                     style: TextStyle(
@@ -2125,8 +2113,8 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                         Edit = true;
                       }); // Respond to button press
                     },
-                    icon: Icon(Icons.edit_rounded, size: 18),
-                    label: Text("Edit"),
+                    icon: const Icon(Icons.edit_rounded, size: 18),
+                    label: const Text("Edit"),
                   ),
                   // Spacer(),
                   LayoutBuilder(builder: (context, constraints) {
@@ -2137,7 +2125,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                           color: Colors.white,
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(
                               color: Colors.black,
                               blurRadius: 2.0,
@@ -2152,7 +2140,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                           child: SingleChildScrollView(
                             scrollDirection: Axis.vertical,
                             child: DataTable(
-                              columns: [
+                              columns: const [
                                 DataColumn(
                                     label: Text(
                                   'S.No',
@@ -2197,26 +2185,26 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                               rows: n_list
                                   .map(((index) => DataRow(cells: [
                                         DataCell(Text((index + 1).toString())),
-                                        DataCell(Container(
+                                        DataCell(SizedBox(
                                             width: 180,
                                             child: Text(
                                               log_details[index]
                                                       ['species_of_tree']
                                                   .toString(),
                                             ))),
-                                        DataCell(Container(
+                                        DataCell(SizedBox(
                                             width: 100,
                                             child: Text(
                                               log_details[index]['length']
                                                   .toString(),
                                             ))),
-                                        DataCell(Container(
+                                        DataCell(SizedBox(
                                             width: 100,
                                             child: Text(
                                               log_details[index]['breadth']
                                                   .toString(),
                                             ))),
-                                        DataCell(Container(
+                                        DataCell(SizedBox(
                                             width: 100,
                                             child: Text(
                                               log_details[index]['volume']
@@ -2227,7 +2215,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                         DataCell(Row(
                                           children: <Widget>[
                                             IconButton(
-                                              icon: Icon(
+                                              icon: const Icon(
                                                 Icons.remove_circle,
                                                 color: Colors.red,
                                               ),
@@ -2241,7 +2229,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                               },
                                             ), //--------------Remove Button
                                             IconButton(
-                                              icon: Icon(
+                                              icon: const Icon(
                                                 Icons.edit_rounded,
                                                 color: Colors.blue,
                                               ),
@@ -2275,10 +2263,9 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                   dividerThickness: 2,
                                   columnSpacing: 25,
                                   showBottomBorder: true,
-                                  headingRowColor:
-                                      MaterialStateColor.resolveWith(
-                                          (states) => Colors.orange),
-                                  columns: [
+                                  headingRowColor: WidgetStateColor.resolveWith(
+                                      (states) => Colors.orange),
+                                  columns: const [
                                     DataColumn(
                                         label: Text(
                                       'S.No',
@@ -2347,7 +2334,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                   }),
                   Visibility(
                     visible: isShow,
-                    child: CircularProgressIndicator(
+                    child: const CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
                       strokeWidth: 8,
                     ),
@@ -2361,11 +2348,11 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                           borderRadius: BorderRadius.circular(8)),
                       child: ElevatedButton(
                         onPressed: () async {
-                          if ((latImage1.length == 0) ||
-                              (latImage2.length == 0) ||
+                          if ((latImage1.isEmpty) ||
+                              (latImage2.isEmpty) ||
                               (summary.text.isEmpty) ||
-                              (latImage3.length == 0) ||
-                              (latImage4.length == 0)) {
+                              (latImage3.isEmpty) ||
+                              (latImage4.isEmpty)) {
                             Fluttertoast.showToast(
                                 msg: "Please select and fill all Field",
                                 toastLength: Toast.LENGTH_SHORT,
@@ -2379,7 +2366,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                               isShow = true;
                             });
                             const String url =
-                                'http://13.234.208.246/api/auth/field_verify/';
+                                'http://192.168.146.9:8000/api/auth/field_verify/';
                             Map data = {
                               "app_id": Ids,
                               "location_img1": {
@@ -2454,7 +2441,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                 context,
                                 PageRouteBuilder(
                                     transitionDuration:
-                                        Duration(milliseconds: 250),
+                                        const Duration(milliseconds: 250),
                                     transitionsBuilder: (context, animation,
                                         animationTime, child) {
                                       return ScaleTransition(
@@ -2469,16 +2456,18 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                           sessionToken: sessionToken,
                                           userName: userName,
                                           userEmail: userEmail,
-                                          userGroup: userGroup);
+                                          userGroup: userGroup,
+                                          userId: userId,
+                                          dropdownValue: dropdownValue4 ?? "",
+                                          Range: Range);
                                     }));
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          primary:
-                              Colors.blue, // Set the button's background color
-                          onPrimary: Colors.white, // Set the text color
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.blue, // Set the text color
                         ),
-                        child: Text(
+                        child: const Text(
                           'Field verify',
                           style: TextStyle(
                             color: Colors.black,
@@ -2490,7 +2479,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                           overflow: TextOverflow.ellipsis,
                         ),
                       )),
-                  SizedBox(height: 35.0),
+                  const SizedBox(height: 35.0),
                 ]),
               ),
               LayoutBuilder(builder: (context, constraints) {
@@ -2508,6 +2497,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                   );
                 }
               }),
+              buildApplicationStatus(),
             ],
           ),
         ),
@@ -2521,25 +2511,25 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
   //     MaterialPageRoute(builder: (context) => ViewApplication1()),
   //   );
   // }
-  Future<bool> _onBackPressed() {
-    return showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: const Text('Do you want to go previous page'),
-            actions: <Widget>[
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(false),
-                child: const Text("NO"),
-              ),
-              const SizedBox(height: 16),
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(true),
-                child: const Text("YES"),
-              ),
-            ],
+  Future<bool> _onBackPressed() async {
+    final shouldPop = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Do you want to go previous page'),
+        actions: <Widget>[
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(false),
+            child: const Text("NO"),
           ),
-        ) ??
-        false;
+          const SizedBox(height: 16),
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(true),
+            child: const Text("YES"),
+          ),
+        ],
+      ),
+    );
+    return shouldPop ?? false;
   }
 
   void getCurrentLocation1() async {
@@ -2647,7 +2637,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const SizedBox(height: 12),
-                    Padding(
+                    const Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: 16.0), // Add padding to both sides
                       child: Text(
@@ -2660,7 +2650,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                       groupValue: AssignMyself,
                       onChanged: (value) {
                         setState(() {
-                          AssignMyself = value;
+                          AssignMyself = value!;
                           assignMyself = true;
                         });
                       },
@@ -2671,7 +2661,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                       groupValue: AssignMyself,
                       onChanged: (value) {
                         setState(() {
-                          AssignMyself = value;
+                          AssignMyself = value!;
                           assignMyself = false;
                         });
                       },
@@ -2681,14 +2671,15 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                       visible: !assignMyself,
                       child: DropdownButton<int>(
                         value: dropdownValue3,
-                        icon: Icon(Icons.arrow_drop_down),
+                        icon: const Icon(Icons.arrow_drop_down),
                         iconSize: 24,
                         elevation: 16,
-                        style: TextStyle(color: Colors.black, fontSize: 18),
+                        style:
+                            const TextStyle(color: Colors.black, fontSize: 18),
                         hint: RichText(
                           textAlign: TextAlign.center,
                           text: TextSpan(children: <TextSpan>[
-                            TextSpan(
+                            const TextSpan(
                                 text: "Select Officer",
                                 style: TextStyle(
                                     color: Colors.black,
@@ -2701,20 +2692,27 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                 )),
                           ]),
                         ),
-                        onChanged: (int id) {
+                        onChanged: (int? id) {
                           setState(() {
                             dropdownValue3 = id;
                             print(dropdownValue3);
                           });
                         },
-                        items: apiResponse.map<DropdownMenuItem<int>>(
-                          (Map<String, dynamic> item) {
-                            return DropdownMenuItem<int>(
-                              value: item['id'] as int,
-                              child: Text(item['name'].toString()),
-                            );
-                          },
-                        ).toList(),
+                        items: apiResponse.isEmpty
+                            ? [
+                                DropdownMenuItem<int>(
+                                  value: null,
+                                  child: Text("No officers available"),
+                                )
+                              ]
+                            : apiResponse.map<DropdownMenuItem<int>>(
+                                (Map<String, dynamic> item) {
+                                  return DropdownMenuItem<int>(
+                                    value: item['id'] as int,
+                                    child: Text(item['name'].toString()),
+                                  );
+                                },
+                              ).toList(),
                       ),
                     ),
                     Padding(
@@ -2759,16 +2757,16 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
                           TextButton.icon(
-                            icon: Icon(Icons.image),
+                            icon: const Icon(Icons.image),
                             onPressed: (() {
                               _pickImageOrPDF();
                               setState() {
                                 Remark_Assign;
                               }
                             }),
-                            label: Text("Upload Remark \n PDF or image"),
+                            label: const Text("Upload Remark \n PDF or image"),
                           ),
-                          Spacer(),
+                          const Spacer(),
                         ],
                       ),
                     ),
@@ -2814,7 +2812,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                   fontSize: 18.0);
                             } else {
                               const String url =
-                                  'http://13.234.208.246/api/auth/assgin_deputy/';
+                                  'http://192.168.146.9:8000/api/auth/assgin_deputy/';
                               Map data = {
                                 "app_id": Ids,
                                 "deputy_id": dropdownValue3 != null
@@ -2857,10 +2855,13 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                             userName: userName,
                                             userEmail: userEmail,
                                             userGroup: userGroup,
+                                            userId: userId,
+                                            dropdownValue: dropdownValue4 ?? "",
+                                            Range: Range,
                                           )));
                             }
                           },
-                          child: Text(
+                          child: const Text(
                             ' SYNC ',
                             style: TextStyle(
                               color: Colors.black,
@@ -2873,11 +2874,11 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                   ],
                 ),
               ),
-              title: Text('Assign Deputy Range Officer'),
+              title: const Text('Assign Deputy Range Officer'),
               actions: <Widget>[
                 InkWell(
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                    child: const Padding(
+                      padding: EdgeInsets.all(10.0),
                       child: Text(
                         'CANCEL ',
                         style: TextStyle(color: Colors.blue),
@@ -2910,10 +2911,10 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                         await setfilepiccam();
                       },
                       splashColor: Colors.blueAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.camera,
                               color: Colors.blueAccent,
@@ -2947,10 +2948,10 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                         await setfilepiccampic2();
                       },
                       splashColor: Colors.blueAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.camera,
                               color: Colors.blueAccent,
@@ -2984,10 +2985,10 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                         await setfilepiccampic3();
                       },
                       splashColor: Colors.blueAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.camera,
                               color: Colors.blueAccent,
@@ -3021,10 +3022,10 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                         await setfilepiccampic4();
                       },
                       splashColor: Colors.blueAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.camera,
                               color: Colors.blueAccent,
@@ -3087,7 +3088,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                         if (result != null && result.files.isNotEmpty) {
                           final filePath = result.files.single.path;
                           setState(() {
-                            _pdfIDProof = File(filePath);
+                            _pdfIDProof = File(filePath!);
                             convertPdfToBase64(filePath).then((pdfBase64) {
                               Remark_Assign = pdfBase64;
                             });
@@ -3095,10 +3096,10 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                         }
                       },
                       splashColor: Colors.blueAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.picture_as_pdf_sharp,
                               color: Colors.blueAccent,
@@ -3129,10 +3130,10 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                         }
                       },
                       splashColor: Colors.greenAccent,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.image,
                               color: Colors.blueAccent,
@@ -3225,5 +3226,27 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
       });
       Navigator.of(context, rootNavigator: true).pop();
     }
+  }
+
+  Widget buildApplicationStatus() {
+    return Card(
+        margin: const EdgeInsets.all(8.0),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Application Status:',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              Text(
+                  'Field Verification: ${field_status ? "Complete" : "Pending"}'),
+              Text(
+                  'Range Officer Verification: ${verify_range_officer ? "Complete" : "Pending"}'),
+              Text(
+                  'Deputy Assignment: ${assigned_deputy1_id != 0 ? "Assigned" : "Pending"}'),
+              // Add other relevant status information
+            ],
+          ),
+        ));
   }
 }

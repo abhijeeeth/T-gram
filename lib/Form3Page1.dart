@@ -9,17 +9,20 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tigramnks/Form3Page2.dart';
 
 class Form3Page1 extends StatefulWidget {
-  String Ids1;
-  String sessionToken;
-  Form3Page1({this.sessionToken, this.Ids1});
+  final String Ids1;
+  final String sessionToken;
+  const Form3Page1({super.key, required this.sessionToken, required this.Ids1});
   @override
   _Form3Page1State createState() => _Form3Page1State(sessionToken, Ids1);
 }
 
 class _Form3Page1State extends State<Form3Page1> {
+  final String sessionToken;
+  final String Ids1;
+  // late GoogleMapController mapController;
+  late List v_species;
+
   _Form3Page1State(this.sessionToken, this.Ids1);
-  String sessionToken;
-  String Ids1;
   @override
   void initState() {
     super.initState();
@@ -36,18 +39,20 @@ class _Form3Page1State extends State<Form3Page1> {
   TextEditingController address = TextEditingController();
   TextEditingController Description = TextEditingController();
   TextEditingController Quantity = TextEditingController();
-  String Name;
-  String Address;
-  List s = [];
-  List Sname = [];
+  late String Name;
+  late String Address;
+  // String Name;
+  // String Address;
   List Slat = [];
   List Slong = [];
   final List Slen = [];
   final List Sbreath = [];
   final List Svol = [];
+  final List s = [];
+  final List Sname = [];
 
   Future<void> ViewApplication() async {
-    const String url = 'http://13.234.208.246/api/auth/ViewApplication';
+    const String url = 'http://192.168.54.114:8000/api/auth/ViewApplication';
     Map data = {"app_id": Ids1};
     print(data);
     var body = json.encode(data);
@@ -113,7 +118,7 @@ class _Form3Page1State extends State<Form3Page1> {
   var holder_IDs = [];
   getSpecies() async {
     print("----------------ALL Species----------------");
-    final String url = 'http://13.234.208.246/api/auth/TreeSpeciesList';
+    const String url = 'http://192.168.54.114:8000/api/auth/TreeSpeciesList';
     var response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -149,7 +154,7 @@ class _Form3Page1State extends State<Form3Page1> {
   //----------------------------Add--Map-----------------------------------
   //----------------------
   bool X = false;
-  GoogleMapController mapController;
+  late GoogleMapController mapController;
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   List values = [];
   Future<Widget> AddMap(BuildContext context) async {
@@ -158,11 +163,11 @@ class _Form3Page1State extends State<Form3Page1> {
         builder: (context) {
           return StatefulBuilder(builder: (context, setState) {
             return AlertDialog(
-                insetPadding:
-                    EdgeInsets.only(bottom: 30, top: 30, left: 10, right: 10),
-                contentPadding: EdgeInsets.all(5),
+                insetPadding: const EdgeInsets.only(
+                    bottom: 30, top: 30, left: 10, right: 10),
+                contentPadding: const EdgeInsets.all(5),
                 clipBehavior: Clip.antiAlias,
-                content: Container(
+                content: SizedBox(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
                   child: GoogleMap(
@@ -171,30 +176,26 @@ class _Form3Page1State extends State<Form3Page1> {
                     zoomGesturesEnabled: true,
                     mapType: MapType.normal,
                     //padding: EdgeInsets.only(bottom: 75.0, top: 0, right: 0, left: 0),
-                    initialCameraPosition: CameraPosition(
+                    initialCameraPosition: const CameraPosition(
                         target: LatLng(10.8505, 76.2711), zoom: 14),
                     //polygons: myPolygon(),
                     onMapCreated: onMapCreated,
-                    markers: Set<Marker>.of(markers.values) == null
-                        ? LatLng(10.8505, 76.2711)
+                    markers: markers.isEmpty
+                        ? <Marker>{}
                         : Set<Marker>.of(markers.values),
                     onTap: (latlang) {
                       setState(() {
                         values.clear();
-                        final MarkerId markerId = MarkerId('101');
+                        const MarkerId markerId = MarkerId('101');
                         Marker marker = Marker(
                           markerId: markerId,
                           draggable: true,
                           position:
                               latlang, //With this parameter you automatically obtain latitude and longitude
                           infoWindow: InfoWindow(
-                            title: "Tree Location" +
-                                (values.length + 1).toString(),
-                            snippet: "(" +
-                                latlang.latitude.toStringAsPrecision(8) +
-                                " , " +
-                                latlang.longitude.toStringAsPrecision(8) +
-                                ")",
+                            title: "Tree Location${values.length + 1}",
+                            snippet:
+                                "(${latlang.latitude.toStringAsPrecision(8)} , ${latlang.longitude.toStringAsPrecision(8)})",
                           ),
                           icon: BitmapDescriptor.defaultMarker,
                         );
@@ -214,10 +215,10 @@ class _Form3Page1State extends State<Form3Page1> {
                     },
                   ),
                 ),
-                title: Text('Trees Logs'),
+                title: const Text('Trees Logs'),
                 actions: <Widget>[
                   InkWell(
-                    child: Text(
+                    child: const Text(
                       'OK    ',
                       style: TextStyle(color: Colors.blue),
                     ),
@@ -247,7 +248,7 @@ class _Form3Page1State extends State<Form3Page1> {
   //---------------------------End--Map------------------------------------
 
   //-----------------------------Log--Form-----------------------------------
-  String dropdownValue3;
+  String dropdownValue3 = '';
   Map<String, TextEditingController> textEditingControllers = {};
   TextEditingController leng = TextEditingController();
   TextEditingController Girth = TextEditingController();
@@ -259,13 +260,13 @@ class _Form3Page1State extends State<Form3Page1> {
   List log_details = [];
   List d = [];
   Map<String, String> logs = {};
-  final List<TextEditingController> _controllers = List();
-  double v;
+  final List<TextEditingController> _controllers = [];
+  late double v;
   // double _getVolume(double girth, double length) {
   //   v = (girth / 4) * (girth / 4) * length;
   //   return v;
   // }
-   double _getVolume(double girth, double length) {
+  double _getVolume(double girth, double length) {
     // Convert girth from cm to meters
     double girthInMeters = girth * 0.01;
 
@@ -305,11 +306,12 @@ class _Form3Page1State extends State<Form3Page1> {
                       DropdownButton<dynamic>(
                         value: dropdownValue3,
                         isExpanded: true,
-                        icon: Icon(Icons.arrow_drop_down),
+                        icon: const Icon(Icons.arrow_drop_down),
                         iconSize: 24,
                         elevation: 16,
-                        style: TextStyle(color: Colors.black, fontSize: 18),
-                        hint: Text("Species"),
+                        style:
+                            const TextStyle(color: Colors.black, fontSize: 18),
+                        hint: const Text("Species"),
                         underline: Container(
                           height: 2,
                           color: Colors.grey,
@@ -331,19 +333,23 @@ class _Form3Page1State extends State<Form3Page1> {
                         keyboardType: TextInputType.number,
                         controller: leng,
                         validator: (value) {
-                          return value.isNotEmpty ? null : "Enter Height";
+                          return value != null && value.isNotEmpty
+                              ? null
+                              : "Enter Height";
                         },
-                        decoration:
-                            InputDecoration(hintText: "Please Enter Length"),
+                        decoration: const InputDecoration(
+                            hintText: "Please Enter Length"),
                       ),
                       TextFormField(
                         keyboardType: TextInputType.number,
                         controller: Girth,
                         validator: (value) {
-                          return value.isNotEmpty ? null : "Enter girth";
+                          return value != null && value.isNotEmpty
+                              ? null
+                              : "Enter girth";
                         },
-                        decoration:
-                            InputDecoration(hintText: "Please Enter girth"),
+                        decoration: const InputDecoration(
+                            hintText: "Please Enter girth"),
                       ),
                       // Row(
                       //   children: [
@@ -386,10 +392,10 @@ class _Form3Page1State extends State<Form3Page1> {
                       // ),
                     ],
                   )),
-              title: Text('Trees Logs'),
+              title: const Text('Trees Logs'),
               actions: <Widget>[
                 InkWell(
-                  child: Text(
+                  child: const Text(
                     'OK     ',
                     style: TextStyle(color: Colors.blue),
                   ),
@@ -421,7 +427,7 @@ class _Form3Page1State extends State<Form3Page1> {
                     print(n_list);
                     print(species);
                     print(d);
-                    if (_formKey.currentState.validate()) {
+                    if (_formKey.currentState?.validate() ?? false) {
                       // Do something like updating SharedPreferences or User Settings etc.
                       Navigator.of(context).pop();
                     }
@@ -457,11 +463,12 @@ class _Form3Page1State extends State<Form3Page1> {
                       DropdownButton<dynamic>(
                         value: dropdownValue3,
                         isExpanded: true,
-                        icon: Icon(Icons.arrow_drop_down),
+                        icon: const Icon(Icons.arrow_drop_down),
                         iconSize: 24,
                         elevation: 16,
-                        style: TextStyle(color: Colors.black, fontSize: 18),
-                        hint: Text("Species"),
+                        style:
+                            const TextStyle(color: Colors.black, fontSize: 18),
+                        hint: const Text("Species"),
                         underline: Container(
                           height: 2,
                           color: Colors.grey,
@@ -484,19 +491,23 @@ class _Form3Page1State extends State<Form3Page1> {
                         //initialValue: log_details[index]['length'],
                         controller: leng,
                         validator: (value) {
-                          return value.isNotEmpty ? null : "Enter height";
+                          return value != null && value.isNotEmpty
+                              ? null
+                              : "Enter height";
                         },
-                        decoration:
-                            InputDecoration(hintText: "Please Enter height"),
+                        decoration: const InputDecoration(
+                            hintText: "Please Enter height"),
                       ),
                       TextFormField(
                         keyboardType: TextInputType.number,
                         controller: Girth,
                         validator: (value) {
-                          return value.isNotEmpty ? null : "Enter girth";
+                          return value != null && value.isNotEmpty
+                              ? null
+                              : "Enter girth";
                         },
-                        decoration:
-                            InputDecoration(hintText: "Please Enter girth"),
+                        decoration: const InputDecoration(
+                            hintText: "Please Enter girth"),
                       ),
                       // Row(
                       //   children: [
@@ -538,10 +549,10 @@ class _Form3Page1State extends State<Form3Page1> {
                       // ),
                     ],
                   )),
-              title: Text('Trees Logs'),
+              title: const Text('Trees Logs'),
               actions: <Widget>[
                 InkWell(
-                  child: Text(
+                  child: const Text(
                     'OK   ',
                     style: TextStyle(color: Colors.blue),
                   ),
@@ -570,7 +581,7 @@ class _Form3Page1State extends State<Form3Page1> {
                     print(n_list);
                     print(species);
                     print(d);
-                    if (_formKey.currentState.validate()) {
+                    if (_formKey.currentState?.validate() ?? false) {
                       // Do something like updating SharedPreferences or User Settings etc.
                       Navigator.of(context).pop();
                     }
@@ -584,21 +595,20 @@ class _Form3Page1State extends State<Form3Page1> {
 
   //-----End-Edit-log--------------
   //----------------------------End-Log-Form---------------------------------
-  List v_species;
+  // List v_species; // Duplicate declaration removed
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: NewGradientAppBar(
-        title: Text(
+      appBar: AppBar(
+        title: const Text(
           "FORM - III",
           style: TextStyle(
             fontSize: 20,
             color: Colors.white,
           ),
         ),
-        gradient:
-            LinearGradient(colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+
         elevation: 0,
         //automaticallyImplyLeading: false,
       ),
@@ -610,17 +620,16 @@ class _Form3Page1State extends State<Form3Page1> {
                   left: 15.0, right: 15.0, top: 15, bottom: 0),
               child: TextField(
                   controller: name,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       border: OutlineInputBorder(
                         borderSide: BorderSide(width: 2),
-                        borderRadius:
-                            const BorderRadius.all(const Radius.circular(14.0)),
+                        borderRadius: BorderRadius.all(Radius.circular(14.0)),
                       ),
                       // border: OutlineInputBorder(),
                       labelText: 'Name',
                       hintText:
                           'Enter  Name of the person to whom pass is granted'),
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.bold, color: Colors.blue)),
             ),
             Padding(
@@ -629,18 +638,17 @@ class _Form3Page1State extends State<Form3Page1> {
               //padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
                 controller: address,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderSide: BorderSide(width: 2),
-                      borderRadius:
-                          const BorderRadius.all(const Radius.circular(14.0)),
+                      borderRadius: BorderRadius.all(Radius.circular(14.0)),
                     ),
                     labelText: 'Residence',
                     hintText:
                         'Residence of the person to whom pass is granted'),
                 //maxLines: ,
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.blue),
               ),
             ),
             Padding(
@@ -649,7 +657,7 @@ class _Form3Page1State extends State<Form3Page1> {
               child: RichText(
                 textAlign: TextAlign.right,
                 text: TextSpan(children: <TextSpan>[
-                  TextSpan(
+                  const TextSpan(
                       text: "Species",
                       style: TextStyle(
                         color: Colors.black,
@@ -675,20 +683,20 @@ class _Form3Page1State extends State<Form3Page1> {
                       padding: const EdgeInsets.all(8),
                       itemCount: Tree_species.toSet().toList().length,
                       itemBuilder: (BuildContext context, int index) {
-                        return Container(
+                        return SizedBox(
                           height: 50,
                           //color: Colors.amber[species[index]],
 
                           child: Card(
+                            elevation: 2,
                             child: ListTile(
                               title: Text(
                                 Tree_species.toSet().toList()[index].toString(),
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black),
                               ),
                             ),
-                            elevation: 2,
                           ),
                         );
                       }),
@@ -787,7 +795,7 @@ class _Form3Page1State extends State<Form3Page1> {
               child: RichText(
                 textAlign: TextAlign.right,
                 text: TextSpan(children: <TextSpan>[
-                  TextSpan(
+                  const TextSpan(
                       text: "Tree Species Details",
                       style: TextStyle(
                         color: Colors.black,
@@ -817,9 +825,9 @@ class _Form3Page1State extends State<Form3Page1> {
                           dividerThickness: 2,
                           columnSpacing: 25,
                           showBottomBorder: true,
-                          headingRowColor: MaterialStateColor.resolveWith(
+                          headingRowColor: WidgetStateColor.resolveWith(
                               (states) => Colors.green),
-                          columns: [
+                          columns: const [
                             DataColumn(
                                 label: Text(
                               'S.No',
@@ -892,7 +900,7 @@ class _Form3Page1State extends State<Form3Page1> {
               child: RichText(
                 textAlign: TextAlign.right,
                 text: TextSpan(children: <TextSpan>[
-                  TextSpan(
+                  const TextSpan(
                       text: "Log Details",
                       style: TextStyle(
                         color: Colors.black,
@@ -913,7 +921,7 @@ class _Form3Page1State extends State<Form3Page1> {
                 visible: false,
                 // visible: (userGroup=='deputy range officer' && species.length!=0)?true:false,
                 child: IconButton(
-                  icon: new Icon(Icons.edit_rounded),
+                  icon: const Icon(Icons.edit_rounded),
                   color: Colors.blue,
                   onPressed: () async {
                     setState(() {
@@ -925,7 +933,7 @@ class _Form3Page1State extends State<Form3Page1> {
               Visibility(
                 visible: (Edit == true) ? true : false,
                 child: IconButton(
-                  icon: new Icon(Icons.save_rounded),
+                  icon: const Icon(Icons.save_rounded),
                   color: Colors.blue,
                   onPressed: () async {},
                 ),
@@ -939,7 +947,7 @@ class _Form3Page1State extends State<Form3Page1> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     color: Colors.white,
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         color: Colors.black,
                         blurRadius: 2.0,
@@ -954,35 +962,35 @@ class _Form3Page1State extends State<Form3Page1> {
                           scrollDirection: Axis.vertical,
                           child: DataTable(
                             columns: [
-                              DataColumn(
+                              const DataColumn(
                                   label: Text(
                                 'S.No',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.blue),
                               )),
-                              DataColumn(
+                              const DataColumn(
                                   label: Text(
                                 'Species  ',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.blue),
                               )),
-                              DataColumn(
+                              const DataColumn(
                                   label: Text(
                                 ' Height   ',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.blue),
                               )),
-                              DataColumn(
+                              const DataColumn(
                                   label: Text(
                                 '  Girth  ',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.blue),
                               )),
-                              DataColumn(
+                              const DataColumn(
                                   label: Text(
                                 ' Volume   ',
                                 style: TextStyle(
@@ -995,7 +1003,7 @@ class _Form3Page1State extends State<Form3Page1> {
                                 label: Row(
                                   children: <Widget>[
                                     IconButton(
-                                      icon: Icon(
+                                      icon: const Icon(
                                         Icons.add_circle,
                                         color: Colors.blue,
                                       ),
@@ -1016,26 +1024,26 @@ class _Form3Page1State extends State<Form3Page1> {
                             rows: n_list
                                 .map(((index) => DataRow(cells: [
                                       DataCell(Text((index + 1).toString())),
-                                      DataCell(Container(
+                                      DataCell(SizedBox(
                                           width: 180,
                                           child: Text(
                                             log_details[index]
                                                     ['species_of_tree']
                                                 .toString(),
                                           ))),
-                                      DataCell(Container(
+                                      DataCell(SizedBox(
                                           width: 100,
                                           child: Text(
                                             log_details[index]['length']
                                                 .toString(),
                                           ))),
-                                      DataCell(Container(
+                                      DataCell(SizedBox(
                                           width: 100,
                                           child: Text(
                                             log_details[index]['breadth']
                                                 .toString(),
                                           ))),
-                                      DataCell(Container(
+                                      DataCell(SizedBox(
                                           width: 100,
                                           child: Text(
                                             log_details[index]['volume']
@@ -1046,7 +1054,7 @@ class _Form3Page1State extends State<Form3Page1> {
                                       DataCell(Row(
                                         children: <Widget>[
                                           IconButton(
-                                            icon: Icon(
+                                            icon: const Icon(
                                               Icons.remove_circle,
                                               color: Colors.red,
                                             ),
@@ -1064,7 +1072,7 @@ class _Form3Page1State extends State<Form3Page1> {
                                             },
                                           ), //--------------Remove Button
                                           IconButton(
-                                            icon: Icon(
+                                            icon: const Icon(
                                               Icons.edit_rounded,
                                               color: Colors.blue,
                                             ),
@@ -1100,9 +1108,9 @@ class _Form3Page1State extends State<Form3Page1> {
                             dividerThickness: 2,
                             columnSpacing: 25,
                             showBottomBorder: true,
-                            headingRowColor: MaterialStateColor.resolveWith(
+                            headingRowColor: WidgetStateColor.resolveWith(
                                 (states) => Colors.orange),
-                            columns: [
+                            columns: const [
                               DataColumn(
                                   label: Text(
                                 'S.No',
@@ -1187,7 +1195,7 @@ class _Form3Page1State extends State<Form3Page1> {
                         log_details: log_details,
                       )));
         },
-        child: Icon(Icons.navigate_next),
+        child: const Icon(Icons.navigate_next),
       ),
     );
   }

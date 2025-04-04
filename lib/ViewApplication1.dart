@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, sort_child_properties_last
+
 import 'package:flutter/material.dart';
 
 import 'package:hexcolor/hexcolor.dart';
@@ -48,40 +50,40 @@ class ViewApplication1 extends StatefulWidget {
   List log_details;
   String treeSpecies;
   ViewApplication1(
-      {this.sessionToken,
-      this.userGroup,
-      this.userId,
-      this.Ids,
-      this.Range,
-      this.userName,
-      this.userEmail,
-      this.img_signature,
-      this.img_revenue_approval,
-      this.img_declaration,
-      this.img_revenue_application,
-      this.img_location_sktech,
-      this.img_tree_ownership_detail,
-      this.img_aadhar_detail,
-      this.verify_officer,
-      this.deputy_range_officer,
-      this.verify_range_officer,
-      this.is_form_two,
-      this.assigned_deputy2_id,
-      this.assigned_deputy1_id,
-      this.assigned_range_id,
-      this.verify_deputy2,
-      this.division_officer,
-      this.other_state,
-      this.verify_forest1,
-      this.field_requre,
-      this.field_status,
-      this.species,
-      this.length,
-      this.breadth,
-      this.volume,
-      this.log_details,
-      this.treeSpecies,
-      this.user_Loc});
+      {required this.sessionToken,
+      required this.userGroup,
+      required this.userId,
+      required this.Ids,
+      required this.Range,
+      required this.userName,
+      required this.userEmail,
+      required this.img_signature,
+      required this.img_revenue_approval,
+      required this.img_declaration,
+      required this.img_revenue_application,
+      required this.img_location_sktech,
+      required this.img_tree_ownership_detail,
+      required this.img_aadhar_detail,
+      required this.verify_officer,
+      required this.deputy_range_officer,
+      required this.verify_range_officer,
+      required this.is_form_two,
+      required this.assigned_deputy2_id,
+      required this.assigned_deputy1_id,
+      required this.assigned_range_id,
+      required this.verify_deputy2,
+      required this.division_officer,
+      required this.other_state,
+      required this.verify_forest1,
+      required this.field_requre,
+      required this.field_status,
+      required this.species,
+      required this.length,
+      required this.breadth,
+      required this.volume,
+      required this.log_details,
+      required this.treeSpecies,
+      required this.user_Loc});
   @override
   _ViewApplication1State createState() => _ViewApplication1State(
       sessionToken,
@@ -238,8 +240,8 @@ class _ViewApplication1State extends State<ViewApplication1> {
       "Id Proof",
     ];
     print(images.toString());
-    Future<bool> _onBackPressed() {
-      return showDialog(
+    Future<bool> _onBackPressed() async {
+      return await showDialog(
             context: context,
             builder: (context) => new AlertDialog(
               title: const Text('Do you want to go previous page'),
@@ -262,10 +264,9 @@ class _ViewApplication1State extends State<ViewApplication1> {
     return new WillPopScope(
         onWillPop: _onBackPressed,
         child: Scaffold(
-          appBar: NewGradientAppBar(
+          appBar: AppBar(
             title: Text('Application View'),
-            gradient: LinearGradient(
-                colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+
             //backgroundColor: Colors.blueGrey,
             elevation: 0,
             // automaticallyImplyLeading: false,
@@ -341,15 +342,16 @@ class _ViewApplication1State extends State<ViewApplication1> {
                           final url = images[index].toString();
                           if (url.toLowerCase().endsWith('.pdf')) {
                             // Open a PDF viewer
-                            PdfLauncher.launchPdfUrl(url + "/$sessionToken");
-                     
+                            PdfLauncher.launchPdfUrl(url);
+                            // PdfLauncher.launchPdfUrl(url + "/$sessionToken");
                           } else {
                             // Display the image
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (_) =>
-                                    ImageView(Images: url + "/$sessionToken"),
+                                    // ImageView(Images: url + "/$sessionToken"),
+                                    ImageView(Images: url),
                               ),
                             );
                           }

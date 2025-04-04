@@ -22,8 +22,8 @@ class Form2Page2 extends StatefulWidget {
   String Taluka;
   String block;
   String District;
-  String Pincode;
-  String Ownership;
+  String Pincode = '';
+  String Ownership = '';
   String imageone;
   String imagetwo;
   String imagethree;
@@ -37,33 +37,34 @@ class Form2Page2 extends StatefulWidget {
   String imagelongthree;
   String imagelongfour;
   Form2Page2(
-      {this.sessionToken,
-      this.dropdownValue,
-      this.dropdownValue1,
-      this.userName,
-      this.userEmail,
-      this.userId,
-      this.Name,
-      this.Address,
-      this.survey_no,
-      this.village,
-      this.Taluka,
-      this.block,
-      this.District,
-      this.Pincode,
-      this.Ownership,
-      this.imageone,
-      this.imagetwo,
-      this.imagethree,
-      this.imagefour,
-      this.imagelatone,
-      this.imagelattwo,
-      this.imagelatthree,
-      this.imagelatfour,
-      this.imagelongone,
-      this.imagelongtwo,
-      this.imagelongthree,
-      this.imagelongfour});
+      {super.key,
+      required this.sessionToken,
+      required this.dropdownValue,
+      required this.dropdownValue1,
+      required this.userName,
+      required this.userEmail,
+      required this.userId,
+      required this.Name,
+      required this.Address,
+      required this.survey_no,
+      required this.village,
+      required this.Taluka,
+      required this.block,
+      required this.District,
+      required this.Pincode,
+      required this.Ownership,
+      required this.imageone,
+      required this.imagetwo,
+      required this.imagethree,
+      required this.imagefour,
+      required this.imagelatone,
+      required this.imagelattwo,
+      required this.imagelatthree,
+      required this.imagelatfour,
+      required this.imagelongone,
+      required this.imagelongtwo,
+      required this.imagelongthree,
+      required this.imagelongfour});
   @override
   _Form2Page2State createState() => _Form2Page2State(
       sessionToken,
@@ -91,6 +92,7 @@ class Form2Page2 extends StatefulWidget {
       imagelongone,
       imagelongtwo,
       imagelongthree,
+      Ownership,
       imagelongfour);
 }
 
@@ -109,6 +111,7 @@ class _Form2Page2State extends State<Form2Page2> {
   String block;
   String District;
   String Pincode;
+  String Ownership;
 
   String imageone;
   String imagetwo;
@@ -137,6 +140,7 @@ class _Form2Page2State extends State<Form2Page2> {
       this.block,
       this.District,
       this.Pincode,
+      this.Ownership,
       this.imageone,
       this.imagetwo,
       this.imagethree,
@@ -160,7 +164,7 @@ class _Form2Page2State extends State<Form2Page2> {
   // Map<String, dynamic> ListOfSpecies = {};
   // void getSpecies() async {
   //   print("----------------ALL Species----------------");
-  //   const String url = 'http://13.234.208.246/api/auth/TreeSpeciesList';
+  //   const String url = 'http://192.168.54.114:8000/api/auth/TreeSpeciesList';
   //   final response = await http.get(Uri.parse(url), headers: <String, String>{
   //     'Content-Type': 'application/json',
   //     'Authorization': "token $sessionToken"
@@ -226,10 +230,10 @@ class _Form2Page2State extends State<Form2Page2> {
 
   int _radioValue = 0;
   int _radioValue1 = 0;
-  String maintenance;
-  String maintenance1;
-  int maintenance_cost;
-  int estimatedMaintenanceCost;
+  String maintenance = '';
+  String maintenance1 = '';
+  int maintenance_cost = 0;
+  int estimatedMaintenanceCost = 0;
 
   bool flag = false;
   bool flag1 = false;
@@ -280,25 +284,24 @@ class _Form2Page2State extends State<Form2Page2> {
 
   //---file-picker
   Future<bool> _onBackPressed() {
-    return showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: new Text('Do you want to go previous page'),
-            content: new Text('Changes you made may not be saved.'),
-            actions: <Widget>[
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(false),
-                child: Text("NO"),
-              ),
-              SizedBox(height: 16),
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(true),
-                child: Text("YES"),
-              ),
-            ],
+    return showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Do you want to go previous page'),
+        content: const Text('Changes you made may not be saved.'),
+        actions: <Widget>[
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(false),
+            child: const Text("NO"),
           ),
-        ) ??
-        false;
+          const SizedBox(height: 16),
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(true),
+            child: const Text("YES"),
+          ),
+        ],
+      ),
+    ).then((value) => value ?? false);
   }
 
   @override
@@ -306,8 +309,8 @@ class _Form2Page2State extends State<Form2Page2> {
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
-        appBar: NewGradientAppBar(
-          title: Text(
+        appBar: AppBar(
+          title: const Text(
             "FORM - II",
             style: TextStyle(
               fontSize: 20,
@@ -315,8 +318,7 @@ class _Form2Page2State extends State<Form2Page2> {
             ),
           ),
           //backgroundColor: ColorLinearGradient(colors: [HexColor("#26f596"),HexColor("#0499f2")]),
-          gradient: LinearGradient(
-              colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+
           elevation: 0,
           //automaticallyImplyLeading: false,
         ),
@@ -325,7 +327,7 @@ class _Form2Page2State extends State<Form2Page2> {
           Row(children: <Widget>[
             Container(
               margin: const EdgeInsets.only(left: 13, top: 15),
-              child: Text(
+              child: const Text(
                 'Species of tree or trees proposed to be cut:',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.left,
@@ -336,7 +338,7 @@ class _Form2Page2State extends State<Form2Page2> {
             margin: const EdgeInsets.only(top: 10, left: 15, right: 15),
             height: MediaQuery.of(context).size.height * 0.65,
             decoration: BoxDecoration(
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                   color: Colors.black,
                   blurRadius: 2.0,
@@ -350,14 +352,14 @@ class _Form2Page2State extends State<Form2Page2> {
             child: ListView(
               scrollDirection: Axis.vertical,
               children: List.keys.map((String key) {
-                return new CheckboxListTile(
-                  title: new Text(key),
+                return CheckboxListTile(
+                  title: Text(key),
                   value: List[key],
                   activeColor: Colors.green,
                   checkColor: Colors.white,
-                  onChanged: (bool value) {
+                  onChanged: (bool? value) {
                     setState(() {
-                      List[key] = value;
+                      List[key] = value!;
                     });
                     if (value == true) {
                       holder_1.add(key);
@@ -401,11 +403,10 @@ class _Form2Page2State extends State<Form2Page2> {
             child: TextField(
               controller: Purpose,
               //  obscureText: true,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   border: OutlineInputBorder(
                     borderSide: BorderSide(width: 2),
-                    borderRadius:
-                        const BorderRadius.all(const Radius.circular(14.0)),
+                    borderRadius: BorderRadius.all(Radius.circular(14.0)),
                   ),
                   labelText: 'Purpose',
                   hintText:
@@ -456,11 +457,10 @@ class _Form2Page2State extends State<Form2Page2> {
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: FloatingActionButton(
             // isExtended: true,
-            child: Icon(Icons.navigate_next),
             backgroundColor: HexColor("#0499f2"),
             onPressed: () {
               print(holder_1);
-              if (holder_1.length == 0) {
+              if (holder_1.isEmpty) {
                 Fluttertoast.showToast(
                     msg: "Please select tree specias ",
                     toastLength: Toast.LENGTH_SHORT,
@@ -469,7 +469,7 @@ class _Form2Page2State extends State<Form2Page2> {
                     backgroundColor: Colors.red,
                     textColor: Colors.white,
                     fontSize: 18.0);
-              } else if ((Purpose.text.length == 0)) {
+              } else if ((Purpose.text.isEmpty)) {
                 Fluttertoast.showToast(
                     msg: "Please add purpose ",
                     toastLength: Toast.LENGTH_SHORT,
@@ -482,7 +482,7 @@ class _Form2Page2State extends State<Form2Page2> {
                 Navigator.pushReplacement(
                     context,
                     PageRouteBuilder(
-                        transitionDuration: Duration(milliseconds: 400),
+                        transitionDuration: const Duration(milliseconds: 400),
                         transitionsBuilder:
                             (context, animation, animationTime, child) {
                           return ScaleTransition(
@@ -507,6 +507,7 @@ class _Form2Page2State extends State<Form2Page2> {
                             block: block,
                             District: District,
                             Pincode: Pincode,
+                            Ownership: Ownership,
                             imageone: imageone,
                             imagetwo: imagetwo,
                             imagethree: imagethree,
@@ -526,7 +527,9 @@ class _Form2Page2State extends State<Form2Page2> {
                         }));
                 setState(() {});
               }
-            }),
+            },
+            // isExtended: true,
+            child: const Icon(Icons.navigate_next)),
       ),
     );
   }

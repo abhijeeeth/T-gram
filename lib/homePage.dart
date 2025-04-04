@@ -24,7 +24,6 @@ import 'package:tigramnks/login.dart';
 import 'package:tigramnks/noc_Form.dart';
 import 'package:tigramnks/tigramWoodShed.dart';
 import 'package:tigramnks/woodBuyerForm.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'TransitPass.dart';
@@ -35,9 +34,9 @@ class VillageData {
   final bool isNotified;
 
   VillageData({
-    this.id,
-    this.villageName,
-    this.isNotified,
+    required this.id,
+    required this.villageName,
+    required this.isNotified,
   });
 
   factory VillageData.fromJson(Map<String, dynamic> json) {
@@ -50,25 +49,26 @@ class VillageData {
 }
 
 class HomePage extends StatefulWidget {
-  String sessionToken;
-  int userId;
-  String userName;
-  String userMobile;
-  String userEmail;
-  String userAddress;
-  String userProfile;
-  String userGroup;
-  String userCato;
-  HomePage(
-      {this.sessionToken,
-      this.userId,
-      this.userName,
-      this.userEmail,
-      this.userMobile,
-      this.userAddress,
-      this.userProfile,
-      this.userGroup,
-      this.userCato});
+  final String sessionToken;
+  final int userId;
+  final String userName;
+  final String userMobile;
+  final String userEmail;
+  final String userAddress;
+  final String userProfile;
+  final String userGroup;
+  final String userCato;
+  const HomePage(
+      {super.key,
+      required this.sessionToken,
+      required this.userId,
+      required this.userName,
+      required this.userEmail,
+      required this.userMobile,
+      required this.userAddress,
+      required this.userProfile,
+      required this.userGroup,
+      required this.userCato});
 
   @override
   _HomePageState createState() => _HomePageState(sessionToken, userId, userName,
@@ -96,37 +96,40 @@ class _HomePageState extends State<HomePage> {
       this.userGroup,
       this.userCato);
 
-  bool _showPopup = false;
-  Future<bool> _onBackPressedM() {
-    return showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: new Text('Do you want to close Application'),
-            actions: <Widget>[
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(false),
-                child: Text("NO"),
-              ),
-              SizedBox(height: 16),
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(true),
-                child: Text("YES"),
-              ),
-            ],
-          ),
-        ) ??
-        false;
-  }
+  final bool _showPopup = false;
+  // Future<bool> _onBackPressedDialog() async {
+  //   final bool result = await showDialog<bool>(
+  //         context: context,
+  //         builder: (context) => AlertDialog(
+  //           title: const Text('Select the User type'),
+  //           content: const Column(
+  //             mainAxisSize: MainAxisSize.min,
+  //             children: <Widget>[
+  //               // ... your existing dialog content ...
+  //             ],
+  //           ),
+  //           actions: [
+  //             ElevatedButton(
+  //               child: const Text("cancel"),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop(false);
+  //               },
+  //             ),
+  //           ],
+  //         ),
+  //       ) ??
+  //       false;
+  //   return result;
+  // }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: _onBackPressedM,
+      onWillPop: _onBackPressed,
       child: Scaffold(
-        appBar: NewGradientAppBar(
+        appBar: AppBar(
           title: const Text("TIGRAM"),
-          gradient: LinearGradient(
-              colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+
           //backgroundColor: Colors.blueGrey,
           elevation: 0,
         ),
@@ -415,8 +418,8 @@ class _HomePageState extends State<HomePage> {
                     margin: const EdgeInsets.only(
                         top: 8.0, left: 20, right: 20, bottom: 20.0),
                     decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 15, 143, 55),
-                        boxShadow: [
+                        color: const Color.fromARGB(255, 15, 143, 55),
+                        boxShadow: const [
                           BoxShadow(
                             color: Colors.black,
                             blurRadius: 2.0,
@@ -440,7 +443,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       Container(
                         margin: const EdgeInsets.only(top: 15.0),
-                        child: Text(
+                        child: const Text(
                           'Tigram Woodshed',
                           style: TextStyle(
                               color: Colors.white,
@@ -456,30 +459,31 @@ class _HomePageState extends State<HomePage> {
             child: Container(
               color: Colors.white,
               child: ListView(
-                padding: EdgeInsets.all(0),
+                padding: const EdgeInsets.all(0),
                 children: [
                   UserAccountsDrawerHeader(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                           colors: [HexColor("#26f596"), HexColor("#0499f2")]),
                     ),
-                    accountEmail: Text('$userEmail'),
-                    accountName: Text('$userName'),
+                    accountEmail: Text(userEmail),
+                    accountName: Text(userName),
                     currentAccountPicture: CircleAvatar(
                       backgroundColor: Colors.white,
                       child: Text(
                         userName[0].toUpperCase(),
-                        style: TextStyle(color: Colors.black, fontSize: 20),
+                        style:
+                            const TextStyle(color: Colors.black, fontSize: 20),
                       ),
                     ),
                   ),
                   ListTile(
-                      leading: Icon(
+                      leading: const Icon(
                         Icons.perm_identity,
                         color: Colors.black,
                         size: 25,
                       ),
-                      title: Text(
+                      title: const Text(
                         'Profile',
                         style: TextStyle(color: Colors.black, fontSize: 20),
                       ),
@@ -496,12 +500,12 @@ class _HomePageState extends State<HomePage> {
                                     userProfile: userProfile)));
                       }),
                   ListTile(
-                      leading: Icon(
+                      leading: const Icon(
                         Icons.dashboard,
                         color: Colors.black,
                         size: 25,
                       ),
-                      title: Text(
+                      title: const Text(
                         'Dashboard',
                         style: TextStyle(color: Colors.black, fontSize: 20),
                       ),
@@ -517,49 +521,60 @@ class _HomePageState extends State<HomePage> {
                                       userAddress: userAddress,
                                       userProfile: userProfile,
                                       userGroup: userGroup,
+                                      userId: userId,
+                                      userCato: userCato,
                                     )));
                       }),
                   ListTile(
-                      leading: Icon(
+                      leading: const Icon(
                         Icons.qr_code_scanner,
                         color: Colors.black,
                         size: 25,
                       ),
-                      title: Text(
+                      title: const Text(
                         'QR-Scanner',
                         style: TextStyle(color: Colors.black, fontSize: 20),
                       ),
                       onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (_) => QueryPage()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => QueryPage(
+                                      sessionToken: sessionToken,
+                                      userId: userId,
+                                      userName: userName,
+                                      userEmail: userEmail,
+                                      userMobile: userMobile,
+                                      userAddress: userAddress,
+                                    )));
                       }),
                   ListTile(
-                      leading: Icon(
+                      leading: const Icon(
                         Icons.help,
                         color: Colors.black,
                         size: 25,
                       ),
-                      title: Text(
+                      title: const Text(
                         'Help',
                         style: TextStyle(color: Colors.black, fontSize: 20),
                       ),
                       onTap: () {
-                        Navigator.push(
-                            context, MaterialPageRoute(builder: (_) => Help()));
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (_) => const Help()));
                       }),
                   ListTile(
-                      leading: Icon(
+                      leading: const Icon(
                         Icons.logout,
                         color: Colors.black,
                         size: 25,
                       ),
-                      title: Text(
+                      title: const Text(
                         'Logout',
                         style: TextStyle(color: Colors.black, fontSize: 20),
                       ),
                       onTap: () async {
                         const String url =
-                            'http://13.234.208.246/api/auth/logout/';
+                            'http://192.168.54.114:8000/api/auth/logout/';
                         await http.post(
                           Uri.parse(url),
                           headers: <String, String>{
@@ -584,7 +599,7 @@ class _HomePageState extends State<HomePage> {
 
   String usertCat = "";
   void selectType() async {
-    const String url = 'http://13.234.208.246/api/auth/check_usr_category';
+    const String url = 'http://192.168.54.114:8000/api/auth/check_usr_category';
     Map data = {"id": userId};
 
     var body = json.encode(data);
@@ -607,80 +622,81 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<bool> _onBackPressed() {
-    return showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: new Text('Select the User type'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Visibility(
-                  visible: usertCat.contains("no_data"),
-                  child: ListTile(
-                    // leading: Icon(Icons.box),
-                    title: Text("Buyer"),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => woodBuyerForm(
-                                  userId: userId,
-                                  sessionToken: sessionToken,
-                                  userName: userName,
-                                  userEmail: userEmail,
-                                  userCato: "buyer")));
-                    },
-                  ),
-                ),
-                Divider(),
-                Visibility(
-                  visible: usertCat != "no_data",
-                  child: ListTile(
-                    // leading: Icon(Icons.check_box),
-                    title: Text("Buyer"),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => tigramWoodBuy(
-                                    userId: userId,
-                                    sessionToken: sessionToken,
-                                    userName: userName,
-                                    userEmail: userEmail,
-                                    userCato: "buyer",
-                                  )));
-                    },
-                  ),
-                ),
-                Divider(),
-                ListTile(
-                  leading: Icon(Icons.check_box),
-                  title: Text("Seller"),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => tigramWoodShed(
+  Future<bool> _onBackPressed() async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Select the User type'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Visibility(
+              visible: usertCat.contains("no_data"),
+              child: ListTile(
+                // leading: Icon(Icons.box),
+                title: const Text("Buyer"),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => woodBuyerForm(
+                              userId: userId,
+                              sessionToken: sessionToken,
+                              userName: userName,
+                              userEmail: userEmail,
+                              userCato: "buyer")));
+                },
+              ),
+            ),
+            const Divider(),
+            Visibility(
+              visible: usertCat != "no_data",
+              child: ListTile(
+                // leading: Icon(Icons.check_box),
+                title: const Text("Buyer"),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => tigramWoodBuy(
                                 userId: userId,
                                 sessionToken: sessionToken,
                                 userName: userName,
-                                userEmail: userEmail)));
-                  },
-                ),
-              ],
-            ),
-            actions: [
-              ElevatedButton(
-                child: Text("cancel"),
-                onPressed: () {
-                  Navigator.of(context).pop();
+                                userEmail: userEmail,
+                                userCato: "buyer",
+                              )));
                 },
               ),
-            ],
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.check_box),
+              title: const Text("Seller"),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => tigramWoodShed(
+                            userId: userId,
+                            sessionToken: sessionToken,
+                            userName: userName,
+                            userEmail: userEmail,
+                            userCato: "")));
+              },
+            ),
+          ],
+        ),
+        actions: [
+          ElevatedButton(
+            child: const Text("cancel"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
           ),
-        ) ??
-        false;
+        ],
+      ),
+    );
+    return result ?? false;
   }
 }
 
@@ -691,12 +707,13 @@ class YourDialog extends StatefulWidget {
   final String userMail;
   final String userGroup;
 
-  YourDialog({
-    this.sessionToken,
-    this.userId,
-    this.userName,
-    this.userMail,
-    this.userGroup,
+  const YourDialog({
+    super.key,
+    required this.sessionToken,
+    required this.userId,
+    required this.userName,
+    required this.userMail,
+    required this.userGroup,
   });
   @override
   _YourDialogState createState() =>
@@ -711,7 +728,7 @@ class _YourDialogState extends State<YourDialog> {
   String userGroup;
 
   List<VillageData> villages = [];
-  bool _showPopup = false;
+  final bool _showPopup = false;
   @override
   void initState() {
     super.initState();
@@ -722,11 +739,10 @@ class _YourDialogState extends State<YourDialog> {
   _YourDialogState(this.sessionToken, this.userName, this.userMail, this.userId,
       this.userGroup);
 
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   String _selectedVillage = '';
   int _selectedVillageId = 0;
-  bool _isNotified;
-
+  late bool _isNotified;
   List<String> _suggestions = [];
   String _selectedForm = '';
   String _selectedField = '';
@@ -765,22 +781,20 @@ class _YourDialogState extends State<YourDialog> {
     "Seemaplavu",
     "Paala"
   ];
-  Future<bool> _onBackPressed() {
-    return showDialog(
+  Future<bool> _onBackPressed() async {
+    return await showDialog(
           context: context,
-          builder: (context) => new AlertDialog(
-            title: new Text('Do you want to go Home page'),
+          builder: (context) => AlertDialog(
+            title: const Text('Do you want to go Home page'),
             actions: <Widget>[
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(false),
-                child: Text("NO"),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text("NO"),
               ),
-              SizedBox(height: 16),
-              new GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pop(true);
-                },
-                child: Text("YES"),
+              const SizedBox(height: 16),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text("YES"),
               ),
             ],
           ),
@@ -794,11 +808,11 @@ class _YourDialogState extends State<YourDialog> {
       onWillPop: _onBackPressed,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('FORM SELECTION'),
+          title: const Text('FORM SELECTION'),
         ),
         body: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.all(16.0), // Adjust the padding as needed
+            padding: const EdgeInsets.all(16.0), // Adjust the padding as needed
             decoration: BoxDecoration(
               border: Border.all(
                 color: Colors.grey, // Set your preferred border color
@@ -815,7 +829,7 @@ class _YourDialogState extends State<YourDialog> {
                   groupValue: _selectedForm,
                   onChanged: (value) {
                     setState(() {
-                      _selectedForm = value;
+                      _selectedForm = value!;
                       print(_selectedForm);
                       _showTextField = false;
                       _showTextField_C = true;
@@ -828,7 +842,7 @@ class _YourDialogState extends State<YourDialog> {
                   groupValue: _selectedForm,
                   onChanged: (value) {
                     setState(() {
-                      _selectedForm = value;
+                      _selectedForm = value!;
                       print(_selectedForm);
                       _showTextField = true;
                       _showTextField_C = false;
@@ -850,7 +864,7 @@ class _YourDialogState extends State<YourDialog> {
                         groupValue: _selectedField,
                         onChanged: (value) {
                           setState(() {
-                            _selectedField = value;
+                            _selectedField = value!;
                             print(_selectedField);
                           });
                         },
@@ -861,7 +875,7 @@ class _YourDialogState extends State<YourDialog> {
                         groupValue: _selectedField,
                         onChanged: (value) {
                           setState(() {
-                            _selectedField = value;
+                            _selectedField = value!;
                             print(_selectedField);
 
                             // _showPopupMessageField(context);
@@ -870,11 +884,11 @@ class _YourDialogState extends State<YourDialog> {
                       ),
                       //   ],
                       // ),
-                      SizedBox(
+                      const SizedBox(
                         height: 8,
                       ),
                       const Text(" Search and select your village "),
-                      SizedBox(
+                      const SizedBox(
                         height: 3,
                       ),
                       Container(
@@ -908,31 +922,29 @@ class _YourDialogState extends State<YourDialog> {
                                         (village) =>
                                             village.villageName ==
                                             selectedVillageName,
-                                        orElse: () => null,
+                                        orElse: () => VillageData(
+                                            id: 0,
+                                            villageName: '',
+                                            isNotified: false),
                                       );
 
-                                      if (selectedVillage != null) {
-                                        setState(() {
-                                          _searchController.text =
-                                              selectedVillage.villageName;
-                                          _selectedVillage =
-                                              selectedVillage.villageName;
-                                          _selectedVillageId =
-                                              selectedVillage.id;
-                                          _isNotified =
-                                              selectedVillage.isNotified;
-                                          _suggestions =
-                                              []; // Clear suggestions
+                                      setState(() {
+                                        _searchController.text =
+                                            selectedVillage.villageName;
+                                        _selectedVillage =
+                                            selectedVillage.villageName;
+                                        _selectedVillageId = selectedVillage.id;
+                                        _isNotified =
+                                            selectedVillage.isNotified;
+                                        _suggestions = []; // Clear suggestions
 
-                                          print(
-                                              "isNot" + _isNotified.toString());
-                                          if (_isNotified == false) {
-                                            _showSpecias = false;
-                                          } else if (_isNotified == true) {
-                                            _showSpecias = true;
-                                          }
-                                        });
-                                      }
+                                        print("isNot$_isNotified");
+                                        if (_isNotified == false) {
+                                          _showSpecias = false;
+                                        } else if (_isNotified == true) {
+                                          _showSpecias = true;
+                                        }
+                                      });
                                     },
                                   );
                                 },
@@ -969,7 +981,7 @@ class _YourDialogState extends State<YourDialog> {
                       ),
                       const SizedBox(height: 18),
                       if (_showSpecias)
-                        Container(
+                        SizedBox(
                           height: 200,
                           child: SingleChildScrollView(
                             child: Column(
@@ -990,7 +1002,7 @@ class _YourDialogState extends State<YourDialog> {
                           groupValue: _speciasContain,
                           onChanged: (value) {
                             setState(() {
-                              _speciasContain = value;
+                              _speciasContain = value!;
                               print(_speciasContain);
                               _showPopupMessage(context);
                             });
@@ -1003,7 +1015,7 @@ class _YourDialogState extends State<YourDialog> {
                           groupValue: _speciasContain,
                           onChanged: (value) {
                             setState(() {
-                              _speciasContain = value;
+                              _speciasContain = value!;
                               print(_speciasContain);
                               print("VILLAGE_se $_selectedVillage");
                             });
@@ -1064,12 +1076,14 @@ class _YourDialogState extends State<YourDialog> {
                               context,
                               MaterialPageRoute(
                                 builder: (_) => transitPassNotified(
-                                    sessionToken: sessionToken,
-                                    userName: userName,
-                                    userEmail: userMail,
-                                    userId: userId,
-                                    village_: _selectedVillage,
-                                    userGroup: userGroup),
+                                  sessionToken: sessionToken,
+                                  userName: userName,
+                                  userEmail: userMail,
+                                  userId: userId,
+                                  village_: _selectedVillage,
+                                  userGroup: userGroup,
+                                  formOneIndex: 0,
+                                ),
                               ),
                             );
                           } else if (_selectedForm == "cutting" &&
@@ -1082,12 +1096,14 @@ class _YourDialogState extends State<YourDialog> {
                               context,
                               MaterialPageRoute(
                                 builder: (_) => transitPassNotified(
-                                    sessionToken: sessionToken,
-                                    userName: userName,
-                                    userEmail: userMail,
-                                    userId: userId,
-                                    village_: _selectedVillage,
-                                    userGroup: userGroup),
+                                  sessionToken: sessionToken,
+                                  userName: userName,
+                                  userEmail: userMail,
+                                  userId: userId,
+                                  village_: _selectedVillage,
+                                  userGroup: userGroup,
+                                  formOneIndex: 0,
+                                ),
                               ),
                             );
                           }
@@ -1119,12 +1135,14 @@ class _YourDialogState extends State<YourDialog> {
                               context,
                               MaterialPageRoute(
                                 builder: (_) => transitPassNotified(
-                                    sessionToken: sessionToken,
-                                    userName: userName,
-                                    userEmail: userMail,
-                                    userId: userId,
-                                    village_: _selectedVillage,
-                                    userGroup: userGroup),
+                                  sessionToken: sessionToken,
+                                  userName: userName,
+                                  userEmail: userMail,
+                                  userId: userId,
+                                  village_: _selectedVillage,
+                                  userGroup: userGroup,
+                                  formOneIndex: 0,
+                                ),
                               ),
                             );
                           } else if (_selectedForm == "cutting" &&
@@ -1136,12 +1154,14 @@ class _YourDialogState extends State<YourDialog> {
                               context,
                               MaterialPageRoute(
                                 builder: (_) => transitPassNonNotified(
-                                    sessionToken: sessionToken,
-                                    userName: userName,
-                                    userEmail: userMail,
-                                    userId: userId,
-                                    village_: _selectedVillage,
-                                    userGroup: userGroup),
+                                  sessionToken: sessionToken,
+                                  userName: userName,
+                                  userEmail: userMail,
+                                  userId: userId,
+                                  village_: _selectedVillage,
+                                  userGroup: userGroup,
+                                  formOneIndex: 0,
+                                ),
                               ),
                             );
                           }
@@ -1207,13 +1227,15 @@ class _YourDialogState extends State<YourDialog> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (_) => transiView(
-                                      sessionToken: sessionToken,
-                                      userName: userName,
-                                      userEmail: userMail,
-                                      userId: userId,
-                                      village_: _selectedVillage,
-                                      userGroup: userGroup,
-                                      Ids: CuttingId),
+                                    sessionToken: sessionToken,
+                                    userName: userName,
+                                    userEmail: userMail,
+                                    userId: userId,
+                                    village_: _selectedVillage,
+                                    userGroup: userGroup,
+                                    Ids: CuttingId,
+                                    formOneIndex: 0,
+                                  ),
                                 ),
                               );
                             } else {
@@ -1260,6 +1282,11 @@ class _YourDialogState extends State<YourDialog> {
                       userName: userName,
                       userEmail: userMail,
                       userId: userId,
+                      userMobile: '',
+                      userAddress: '',
+                      userProfile: '',
+                      userGroup: userGroup,
+                      userCato: '',
                     ),
                   ),
                 );
@@ -1291,8 +1318,7 @@ class _YourDialogState extends State<YourDialog> {
     return filteredVillages;
   }
 
-  OverlayEntry overlayEntry;
-
+  late OverlayEntry overlayEntry;
   void _showSuggestionsOverlay(BuildContext context, List<String> suggestions) {
     overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
@@ -1317,27 +1343,26 @@ class _YourDialogState extends State<YourDialog> {
                     final selectedVillageName = suggestions[index];
                     final selectedVillage = villages.firstWhere(
                       (village) => village.villageName == selectedVillageName,
-                      orElse: () => null,
+                      orElse: () => VillageData(
+                          id: 0, villageName: '', isNotified: false),
                     );
 
-                    if (selectedVillage != null) {
-                      setState(() {
-                        _searchController.text = selectedVillage.villageName;
-                        _selectedVillage = selectedVillage.villageName;
-                        _selectedVillageId = selectedVillage.id;
-                        _isNotified = selectedVillage.isNotified;
-                        _suggestions = []; // Clear suggestions
+                    setState(() {
+                      _searchController.text = selectedVillage.villageName;
+                      _selectedVillage = selectedVillage.villageName;
+                      _selectedVillageId = selectedVillage.id;
+                      _isNotified = selectedVillage.isNotified;
+                      _suggestions = []; // Clear suggestions
 
-                        print("isNot" + _isNotified.toString());
-                        if (_isNotified == false) {
-                          _showSpecias = false;
-                        } else if (_isNotified == true) {
-                          _showSpecias = true;
-                        }
-                      });
+                      print("isNot$_isNotified");
+                      if (_isNotified == false) {
+                        _showSpecias = false;
+                      } else if (_isNotified == true) {
+                        _showSpecias = true;
+                      }
+                    });
 
-                      overlayEntry.remove(); // Close the overlay
-                    }
+                    overlayEntry.remove(); // Close the overlay
                   },
                 );
               },
@@ -1356,8 +1381,8 @@ class _YourDialogState extends State<YourDialog> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('VILLAGE SUGGESTIONS'),
-          content: Container(
+          title: const Text('VILLAGE SUGGESTIONS'),
+          content: SizedBox(
             width: double.maxFinite,
             child: ListView.builder(
               shrinkWrap: true,
@@ -1369,25 +1394,24 @@ class _YourDialogState extends State<YourDialog> {
                     final selectedVillageName = _suggestions[index];
                     final selectedVillage = villages.firstWhere(
                       (village) => village.villageName == selectedVillageName,
-                      orElse: () => null,
+                      orElse: () => VillageData(
+                          id: 0, villageName: '', isNotified: false),
                     );
 
-                    if (selectedVillage != null) {
-                      setState(() {
-                        _searchController.text = selectedVillage.villageName;
-                        _selectedVillage = selectedVillage.villageName;
-                        _selectedVillageId = selectedVillage.id;
-                        _isNotified = selectedVillage.isNotified;
-                        _suggestions = []; // Clear suggestions
+                    setState(() {
+                      _searchController.text = selectedVillage.villageName;
+                      _selectedVillage = selectedVillage.villageName;
+                      _selectedVillageId = selectedVillage.id;
+                      _isNotified = selectedVillage.isNotified;
+                      _suggestions = []; // Clear suggestions
 
-                        print("isNot" + _isNotified.toString());
-                        if (_isNotified == false) {
-                          _showSpecias = false;
-                        } else if (_isNotified == true) {
-                          _showSpecias = true;
-                        }
-                      });
-                    }
+                      print("isNot$_isNotified");
+                      if (_isNotified == false) {
+                        _showSpecias = false;
+                      } else if (_isNotified == true) {
+                        _showSpecias = true;
+                      }
+                    });
 
                     Navigator.pop(context); // Close the dialog
                   },
@@ -1400,7 +1424,7 @@ class _YourDialogState extends State<YourDialog> {
               onPressed: () {
                 Navigator.pop(context); // Close the dialog
               },
-              child: Text('Close'),
+              child: const Text('Close'),
             ),
           ],
         );
@@ -1409,8 +1433,8 @@ class _YourDialogState extends State<YourDialog> {
   }
 
   Future<void> fetchData() async {
-    final response =
-        await http.get(Uri.parse('http://13.234.208.246/api/auth/villages/'));
+    final response = await http
+        .get(Uri.parse('http://192.168.54.114:8000/api/auth/villages/'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
@@ -1444,7 +1468,7 @@ Future<bool> loginAction() async {
 }
 
 callApiFunction(String Id, String token) async {
-  const String url = 'http://13.234.208.246/api/auth/CheckTransit/';
+  const String url = 'http://192.168.54.114:8000/api/auth/CheckTransit/';
   Map data = {
     "app_id": Id,
   };
@@ -1457,10 +1481,10 @@ callApiFunction(String Id, String token) async {
         'Authorization': "token $token"
       },
       body: body);
-  print("REQUEST" + body.toString());
+  print("REQUEST$body");
 
   Map<String, dynamic> responseJson = json.decode(response.body);
-  print("RESSS" + responseJson.toString());
+  print("RESSS$responseJson");
   if (responseJson['status'] != "success") {
     Fluttertoast.showToast(
         msg: "Application not avaliable",

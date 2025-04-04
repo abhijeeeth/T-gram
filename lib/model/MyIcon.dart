@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class MyIcon extends StatefulWidget {
   final String remarkAssign;
 
-  MyIcon({this.remarkAssign});
+  MyIcon({required this.remarkAssign});
 
   @override
   _MyIconState createState() => _MyIconState();

@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -17,17 +19,18 @@ import 'login.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class checkPost extends StatefulWidget {
-  int userId;
-  String userName;
-  String userEmail;
-  String sessionToken;
-  String userGroup;
-  String dropdownValue;
-  String userMobile;
-  String userAddress;
-  String userProfile;
+  int? userId;
+  String? userName;
+  String? userEmail;
+  String? sessionToken;
+  String? userGroup;
+  String? dropdownValue;
+  String? userMobile;
+  String? userAddress;
+  String? userProfile;
   checkPost(
-      {this.userId,
+      {super.key,
+      this.userId,
       this.userName,
       this.userEmail,
       this.sessionToken,
@@ -51,21 +54,22 @@ class checkPost extends StatefulWidget {
 }
 
 class _checkPostState extends State<checkPost> {
+  @override
   void initState() {
     super.initState();
     ScanApp();
     print(userId);
   }
 
-  int userId;
-  String userName;
-  String userEmail;
-  String sessionToken;
-  String userGroup;
-  String dropdownValue;
-  String userMobile;
-  String userAddress;
-  String userProfile;
+  int? userId;
+  String? userName;
+  String? userEmail;
+  String? sessionToken;
+  String? userGroup;
+  String? dropdownValue;
+  String? userMobile;
+  String? userAddress;
+  String? userProfile;
   _checkPostState(
       this.userId,
       this.userName,
@@ -97,7 +101,8 @@ class _checkPostState extends State<checkPost> {
     App_no.clear();
 
     print("Scanning Application");
-    const String url = 'http://13.234.208.246/api/auth/ScanedListApplication';
+    const String url =
+        'http://192.168.54.114:8000/api/auth/ScanedListApplication';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -116,7 +121,7 @@ class _checkPostState extends State<checkPost> {
     }
   }
 
-  int _radioValue = 0;
+  final int _radioValue = 0;
   bool flag = true;
   var tab = 0;
   @override
@@ -143,10 +148,9 @@ class _checkPostState extends State<checkPost> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: NewGradientAppBar(
+      appBar: AppBar(
         title: Text("Check Post DashBoard"),
-        gradient:
-            LinearGradient(colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+
         //backgroundColor: Colors.blueGrey,
         elevation: 0,
       ),
@@ -161,7 +165,7 @@ class _checkPostState extends State<checkPost> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
                 color: Colors.white,
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     color: Colors.deepOrangeAccent,
                     blurRadius: 2.0,
@@ -175,20 +179,20 @@ class _checkPostState extends State<checkPost> {
               padding:
                   const EdgeInsets.only(left: 2, right: 2, top: 2, bottom: 2),
               child: Scrollbar(
-                  isAlwaysShown: true,
+                  thumbVisibility: true,
                   thickness: 15,
                   child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       padding: const EdgeInsets.only(bottom: 15),
                       child: Scrollbar(
-                          isAlwaysShown: true,
+                          thumbVisibility: true,
                           thickness: 15,
                           child: SingleChildScrollView(
                               scrollDirection: Axis.vertical,
                               child: DataTable(
                                 columnSpacing: 20,
                                 dividerThickness: 2,
-                                headingRowColor: MaterialStateColor.resolveWith(
+                                headingRowColor: WidgetStateColor.resolveWith(
                                     (states) => Colors.orange),
                                 columns: const [
                                   DataColumn(
@@ -249,10 +253,10 @@ class _checkPostState extends State<checkPost> {
                                                           .toString())),
 
                                                   DataCell(
-                                                    new Visibility(
+                                                    Visibility(
                                                       visible: true,
                                                       child: IconButton(
-                                                        icon: new Icon(
+                                                        icon: Icon(
                                                             Icons.visibility),
                                                         color: Colors.blue,
                                                         onPressed: () {
@@ -268,13 +272,18 @@ class _checkPostState extends State<checkPost> {
                                                                     builder: (_) =>
                                                                         ViewApplication(
                                                                           sessionToken:
-                                                                              sessionToken,
+                                                                              sessionToken ?? "",
                                                                           userGroup:
-                                                                              userGroup,
+                                                                              userGroup ?? "",
                                                                           userId:
-                                                                              userId,
+                                                                              userId ?? 0,
                                                                           Ids:
                                                                               IDS,
+                                                                          Range: const [],
+                                                                          userName:
+                                                                              userName ?? "",
+                                                                          userEmail:
+                                                                              userEmail ?? "",
                                                                         )));
                                                           }
                                                         },
@@ -282,18 +291,15 @@ class _checkPostState extends State<checkPost> {
                                                     ),
                                                   ),
                                                   DataCell(
-                                                    new Visibility(
+                                                    Visibility(
                                                       visible: true,
                                                       child: IconButton(
-                                                        icon: new Icon(Icons
+                                                        icon: Icon(Icons
                                                             .file_download),
                                                         color: Colors.blue,
                                                         onPressed: () async {
                                                           await launch(
-                                                              "http://13.234.208.246/api/auth/new_transit_pass_pdf/" +
-                                                                  App_no[int.parse(
-                                                                      value)] +
-                                                                  "/");
+                                                              "${"http://192.168.54.114:8000/api/auth/new_transit_pass_pdf/" + App_no[int.parse(value)]}/");
                                                           // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                         },
                                                       ),
@@ -306,7 +312,7 @@ class _checkPostState extends State<checkPost> {
                                                   //     color: Colors.blue,
                                                   //     onPressed: () async {
                                                   //       await launch(
-                                                  //           "http://13.234.208.246/api/auth/new_user_report/" +
+                                                  //           "http://192.168.54.114:8000/api/auth/new_user_report/" +
                                                   //               Ids[int.parse(
                                                   //                   value)] +
                                                   //               "/");
@@ -316,18 +322,15 @@ class _checkPostState extends State<checkPost> {
                                                   // ),
 
                                                   DataCell(
-                                                    new Visibility(
+                                                    Visibility(
                                                       visible: true,
                                                       child: IconButton(
-                                                        icon: new Icon(Icons
+                                                        icon: Icon(Icons
                                                             .qr_code_outlined),
                                                         color: Colors.blue,
                                                         onPressed: () async {
                                                           await launch(
-                                                              "http://13.234.208.246/api/auth/qr_code_pdf/" +
-                                                                  App_no[int.parse(
-                                                                      value)] +
-                                                                  "/");
+                                                              "${"http://192.168.54.114:8000/api/auth/qr_code_pdf/" + App_no[int.parse(value)]}/");
                                                           // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                         },
                                                       ),
@@ -336,15 +339,12 @@ class _checkPostState extends State<checkPost> {
                                                   DataCell(
                                                     Visibility(
                                                       child: IconButton(
-                                                        icon: new Icon(Icons
+                                                        icon: Icon(Icons
                                                             .file_download),
                                                         color: Colors.blue,
                                                         onPressed: () async {
                                                           await launch(
-                                                              "http://13.234.208.246app/location_views/" +
-                                                                  App_no[int.parse(
-                                                                      value)] +
-                                                                  "/");
+                                                              "${"https://timber.forest.kerala.gov.inapp/location_views/" + App_no[int.parse(value)]}/");
                                                           // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                         },
                                                       ),
@@ -374,7 +374,9 @@ class _checkPostState extends State<checkPost> {
                   currentAccountPicture: CircleAvatar(
                     backgroundColor: Colors.white,
                     child: Text(
-                      userName[0].toUpperCase(),
+                      userName != null && userName!.isNotEmpty
+                          ? userName![0].toUpperCase()
+                          : 'U',
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     ),
                   ),
@@ -415,12 +417,13 @@ class _checkPostState extends State<checkPost> {
                           context,
                           MaterialPageRoute(
                               builder: (_) => queryPage(
-                                    userId: userId,
-                                    sessionToken: sessionToken,
-                                    userName: userName,
-                                    userEmail: userEmail,
-                                    userAddress: userAddress,
-                                    userGroup: userGroup,
+                                    userId: userId ?? 0,
+                                    sessionToken: sessionToken ?? "",
+                                    userName: userName ?? "",
+                                    userEmail: userEmail ?? "",
+                                    userAddress: userAddress ?? "",
+                                    userGroup: userGroup ?? "",
+                                    userMobile: '',
                                   )));
                     }),
                 ListTile(
@@ -434,7 +437,8 @@ class _checkPostState extends State<checkPost> {
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     ),
                     onTap: () async {
-                      const String url = 'http://13.234.208.246/api/auth/logout/';
+                      const String url =
+                          'http://192.168.54.114:8000/api/auth/logout/';
                       await http.post(
                         Uri.parse(url),
                         headers: <String, String>{

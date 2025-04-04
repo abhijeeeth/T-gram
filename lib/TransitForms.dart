@@ -7,12 +7,17 @@ import 'package:tigramnks/TransitPass.dart';
 import 'package:tigramnks/sqflite/localdataForms.dart';
 
 class TransitForms extends StatefulWidget {
-  String sessionToken;
-  String userName;
-  String userEmail;
-  int userId;
+  String? sessionToken;
+  String? userName;
+  String? userEmail;
+  int? userId;
 
-  TransitForms({this.sessionToken, this.userName, this.userEmail, this.userId});
+  TransitForms(
+      {super.key,
+      this.sessionToken,
+      this.userName,
+      this.userEmail,
+      this.userId});
 
   @override
   _TransitFormsState createState() =>
@@ -20,23 +25,22 @@ class TransitForms extends StatefulWidget {
 }
 
 class _TransitFormsState extends State<TransitForms> {
-  String sessionToken;
-  String userName;
-  String userEmail;
-  int userId;
+  String? sessionToken;
+  String? userName;
+  String? userEmail;
+  int? userId;
   _TransitFormsState(
       this.sessionToken, this.userName, this.userEmail, this.userId);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: NewGradientAppBar(
-        title: Text('Forms'),
-        gradient:
-            LinearGradient(colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+      appBar: AppBar(
+        title: const Text('Forms'),
+
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -59,10 +63,11 @@ class _TransitFormsState extends State<TransitForms> {
                     context,
                     MaterialPageRoute(
                         builder: (_) => TransitPass(
-                            sessionToken: sessionToken,
-                            userName: userName,
-                            userEmail: userEmail,
-                            userId: userId)));
+                            sessionToken: sessionToken ?? '',
+                            userName: userName ?? '',
+                            userEmail: userEmail ?? '',
+                            userId: userId ?? 0,
+                            formOneIndex: 0)));
               },
               child: Container(
                   // width: 310,
@@ -73,7 +78,7 @@ class _TransitFormsState extends State<TransitForms> {
                   decoration: BoxDecoration(
                       gradient: LinearGradient(
                           colors: [HexColor("#36d1dc"), HexColor("#5b86e5")]),
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
                           color: Colors.black,
                           blurRadius: 2.0,
@@ -85,14 +90,14 @@ class _TransitFormsState extends State<TransitForms> {
                       borderRadius: BorderRadius.circular(20)),
                   child: Column(children: <Widget>[
                     Container(
-                      child: new Image.asset(
+                      child: Image.asset(
                         'assets/images/apply_icon.png',
                         height: MediaQuery.of(context).size.height * 0.12,
                       ),
                     ),
                     Container(
                       margin: const EdgeInsets.only(top: 15.0),
-                      child: Text(
+                      child: const Text(
                         'FORM - I',
                         style: TextStyle(
                             color: Colors.white,
@@ -102,7 +107,7 @@ class _TransitFormsState extends State<TransitForms> {
                     ),
                     Container(
                       margin: const EdgeInsets.only(top: 15.0),
-                      child: Text(
+                      child: const Text(
                         '( Transit Pass For  Non-Notified Villages )',
                         style: TextStyle(
                             color: Colors.white,
@@ -118,10 +123,10 @@ class _TransitFormsState extends State<TransitForms> {
                     context,
                     MaterialPageRoute(
                         builder: (_) => Form2Page1(
-                            sessionToken: sessionToken,
-                            userName: userName,
-                            userEmail: userEmail,
-                            userId: userId)));
+                            sessionToken: sessionToken ?? '',
+                            userName: userName ?? '',
+                            userEmail: userEmail ?? '',
+                            userId: userId ?? 0)));
               },
               child: Container(
                   // width: 310,
@@ -132,7 +137,7 @@ class _TransitFormsState extends State<TransitForms> {
                   decoration: BoxDecoration(
                       gradient: LinearGradient(
                           colors: [HexColor("#4568dc"), HexColor("b06ab3")]),
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
                           color: Colors.black,
                           blurRadius: 2.0,
@@ -144,14 +149,14 @@ class _TransitFormsState extends State<TransitForms> {
                       borderRadius: BorderRadius.circular(20)),
                   child: Column(children: <Widget>[
                     Container(
-                      child: new Image.asset(
+                      child: Image.asset(
                         'assets/images/apply_icon.png',
                         height: MediaQuery.of(context).size.height * 0.12,
                       ),
                     ),
                     Container(
                       margin: const EdgeInsets.only(top: 15.0),
-                      child: Text(
+                      child: const Text(
                         'FORM - II',
                         style: TextStyle(
                             color: Colors.white,
@@ -161,7 +166,7 @@ class _TransitFormsState extends State<TransitForms> {
                     ),
                     Container(
                       margin: const EdgeInsets.only(top: 15.0),
-                      child: Text(
+                      child: const Text(
                         '( Transit Pass For Notified Villages )',
                         style: TextStyle(
                             color: Colors.white,
@@ -177,10 +182,10 @@ class _TransitFormsState extends State<TransitForms> {
                     context,
                     MaterialPageRoute(
                         builder: (_) => localdataForms(
-                            sessionToken: sessionToken,
-                            userName: userName,
-                            userEmail: userEmail,
-                            userId: userId)));
+                            sessionToken: sessionToken ?? '',
+                            userName: userName ?? '',
+                            userEmail: userEmail ?? '',
+                            userId: userId ?? 0)));
               },
               child: Container(
                   // width: 310,
@@ -191,7 +196,7 @@ class _TransitFormsState extends State<TransitForms> {
                   decoration: BoxDecoration(
                       gradient: LinearGradient(
                           colors: [HexColor("#36d1dc"), HexColor("#5b86e5")]),
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
                           color: Colors.black,
                           blurRadius: 2.0,
@@ -203,14 +208,14 @@ class _TransitFormsState extends State<TransitForms> {
                       borderRadius: BorderRadius.circular(20)),
                   child: Column(children: <Widget>[
                     Container(
-                      child: new Image.asset(
+                      child: Image.asset(
                         'assets/images/apply_icon.png',
                         height: MediaQuery.of(context).size.height * 0.12,
                       ),
                     ),
                     Container(
                       margin: const EdgeInsets.only(top: 15.0),
-                      child: Text(
+                      child: const Text(
                         'local data forms',
                         style: TextStyle(
                             color: Colors.white,
@@ -220,7 +225,7 @@ class _TransitFormsState extends State<TransitForms> {
                     ),
                     Container(
                       margin: const EdgeInsets.only(top: 15.0),
-                      child: Text(
+                      child: const Text(
                         '( update or delete forms )',
                         style: TextStyle(
                             color: Colors.white,

@@ -1,38 +1,38 @@
+// ignore_for_file: sort_child_properties_last
 
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 import 'package:tigramnks/SFViewReports.dart';
 
-
 class SFReports extends StatefulWidget {
   String sessionToken;
-  List <String> Dist;
-  List <String> Range;
-  SFReports({this.sessionToken,this.Dist,this.Range});
+  List<String> Dist;
+  List<String> Range;
+  SFReports(
+      {super.key,
+      required this.sessionToken,
+      required this.Dist,
+      required this.Range});
   @override
-  _SFReportsState createState() => _SFReportsState(sessionToken,Dist,Range);
+  _SFReportsState createState() => _SFReportsState(sessionToken, Dist, Range);
 }
 
 class _SFReportsState extends State<SFReports> {
   String sessionToken;
-  List <String> Dist;
-  List <String> Range;
-  _SFReportsState(this.sessionToken,this.Dist,this.Range);
+  List<String> Dist;
+  List<String> Range;
+  _SFReportsState(this.sessionToken, this.Dist, this.Range);
 
-  String SelectedRange;
-  String SelectedRange1;
+  String? SelectedRange;
+  String? SelectedRange1;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: NewGradientAppBar(
-          title: Text(
-              'List of Reports'
-          ),
-          gradient: LinearGradient(colors: [HexColor("#26f596"),HexColor("#0499f2")]),
+        appBar: AppBar(
+          title: const Text('List of Reports'),
           elevation: 0,
-
         ),
         body: Container(
             /*decoration: BoxDecoration(
@@ -47,31 +47,40 @@ class _SFReportsState extends State<SFReports> {
                 )
               ],
             ),*/
-            margin: const EdgeInsets.only(left: 8,right: 8,top: 5,bottom: 5),
-            padding: const EdgeInsets.only(left: 2,right: 2,top: 2,bottom: 2),
-            child:ListView(
-              children:<Widget> [
+            margin: const EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 5),
+            padding:
+                const EdgeInsets.only(left: 2, right: 2, top: 2, bottom: 2),
+            child: ListView(
+              children: <Widget>[
                 Container(
                   width: MediaQuery.of(context).size.width,
-                  margin: const EdgeInsets.only(top: 0,left:10,right: 10,bottom: 5),
-                  decoration: new BoxDecoration(
-                      border: new Border.all(color: Colors.blue,width: 1,), borderRadius: BorderRadius.circular(8)
-                  ),
-                  padding: const EdgeInsets.only(left:15,right: 15),
+                  margin: const EdgeInsets.only(
+                      top: 0, left: 10, right: 10, bottom: 5),
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.blue,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(8)),
+                  padding: const EdgeInsets.only(left: 15, right: 15),
                   child: Row(
                     children: <Widget>[
                       DropdownButton<String>(
                         value: SelectedRange,
-                        icon: Icon(Icons.arrow_drop_down),
+                        icon: const Icon(Icons.arrow_drop_down),
                         iconSize: 24,
                         elevation: 16,
-                        style: TextStyle(color: Colors.black, fontSize: 18),
-                        hint:  RichText(
+                        style:
+                            const TextStyle(color: Colors.black, fontSize: 18),
+                        hint: RichText(
                           textAlign: TextAlign.center,
                           text: TextSpan(children: <TextSpan>[
-                            TextSpan(
+                            const TextSpan(
                                 text: "Select Range",
-                                style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,)),
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                )),
                             TextSpan(
                                 text: " * ",
                                 style: TextStyle(
@@ -84,32 +93,39 @@ class _SFReportsState extends State<SFReports> {
                         height: 2,
                         color: Colors.grey,
                       ),*/
-                        onChanged: (String data) {
+                        onChanged: (String? data) {
                           setState(() {
-                            SelectedRange = data;
+                            SelectedRange = data!;
                           });
-
                         },
-                        items:Range.toSet().toList().map<DropdownMenuItem<String >>((String value) {
+                        items: Range.toSet()
+                            .toList()
+                            .map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
-                            child: Text(value.toString(),style: TextStyle(fontSize: 16),),
+                            child: Text(
+                              value.toString(),
+                              style: const TextStyle(fontSize: 16),
+                            ),
                           );
                         }).toList(),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       DropdownButton<String>(
                         value: SelectedRange1,
-                        icon: Icon(Icons.arrow_drop_down),
+                        icon: const Icon(Icons.arrow_drop_down),
                         iconSize: 24,
                         elevation: 16,
-                        style: TextStyle(color: Colors.black, fontSize: 18),
-                        hint:  RichText(
+                        style:
+                            const TextStyle(color: Colors.black, fontSize: 18),
+                        hint: RichText(
                           textAlign: TextAlign.center,
                           text: TextSpan(children: <TextSpan>[
-                            TextSpan(
+                            const TextSpan(
                                 text: "Selected Division",
-                                style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold)),
                             TextSpan(
                                 text: " * ",
                                 style: TextStyle(
@@ -122,105 +138,289 @@ class _SFReportsState extends State<SFReports> {
                         height: 2,
                         color: Colors.grey,
                       ),*/
-                        onChanged: (String data) {
+                        onChanged: (String? data) {
                           setState(() {
-                            SelectedRange1 = data;
+                            SelectedRange1 = data!;
                           });
                         },
-                        items:Dist.toSet().toList().map<DropdownMenuItem<String >>((String value) {
+                        items: Dist.toSet()
+                            .toList()
+                            .map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
-                            child: Text(value.toString(),style: TextStyle(fontSize: 16),),
+                            child: Text(
+                              value.toString(),
+                              style: const TextStyle(fontSize: 16),
+                            ),
                           );
                         }).toList(),
                       ),
                     ],
                   ),
                 ),
-                Card(child: ListTile(title: Text('Application Received/Approved/Rejected'),
-                    onTap: (){
-                      int R1=1;
-                      Navigator.push(
-                          context,MaterialPageRoute(builder: (_) => SFViewReports(sessionToken:sessionToken,SelectedRange:SelectedRange,SelectedRange1:SelectedRange1,R1:R1,))
-                      );
-                    }
+                Card(
+                  child: ListTile(
+                      title:
+                          const Text('Application Received/Approved/Rejected'),
+                      onTap: () {
+                        int R1 = 1;
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => SFViewReports(
+                                      sessionToken: sessionToken,
+                                      SelectedRange: SelectedRange!,
+                                      SelectedRange1: SelectedRange1!,
+                                      R1: R1,
+                                      R2: 0,
+                                      R3: 0,
+                                      R4: 0,
+                                      R5: 0,
+                                      R6: 0,
+                                      R7: 0,
+                                      R8: 0,
+                                      R9: 0,
+                                      R10: 0,
+                                    )));
+                      }),
+                  elevation: 3,
                 ),
-                  elevation: 3,),
-                Card(child: ListTile(title: Text('Reason For Rejection'),
-                    onTap: (){
-                      int R2=2;
-                      Navigator.push(
-                          context,MaterialPageRoute(builder: (_) => SFViewReports(sessionToken:sessionToken,SelectedRange:SelectedRange,SelectedRange1:SelectedRange1,R2:R2,))
-                      );
-                    }
-                ),elevation: 3,),
-                Card(child: ListTile(title: Text('Species-wise Volume & Tree Transport'),
-                    onTap: (){
-                      int R3=3;
-                      Navigator.push(
-                          context,MaterialPageRoute(builder: (_) => SFViewReports(sessionToken:sessionToken,SelectedRange:SelectedRange,SelectedRange1:SelectedRange1,R3:R3,))
-                      );
-                    }
-                ),elevation: 3,),
-                Card(child: ListTile(title: Text('Volume & No. of tree Transported'),
-                    onTap: (){
-                      int R4=4;
-                      Navigator.push(
-                          context,MaterialPageRoute(builder: (_) => SFViewReports(sessionToken:sessionToken,SelectedRange:SelectedRange,SelectedRange1:SelectedRange1,R4:R4,))
-                      );
-                    }
-                ),elevation: 3,),
-                Card(child: ListTile(title: Text('Species wise Total volume transported & Total  No of trees transported to each destination'),
-                    onTap: (){
-                      int R5=5;
-                      Navigator.push(
-                          context,MaterialPageRoute(builder: (_) => SFViewReports(sessionToken:sessionToken,SelectedRange:SelectedRange,SelectedRange1:SelectedRange1,R5:R5,))
-                      );
-                    }
-                ),elevation: 3,),
-                Card(child: ListTile(title: Text('Total volume transported to each destination'),
-                    onTap: (){
-                      int R6=6;
-                      Navigator.push(
-                          context,MaterialPageRoute(builder: (_) => SFViewReports(sessionToken:sessionToken,SelectedRange:SelectedRange,SelectedRange1:SelectedRange1,R6:R6,))
-                      );
-                    }
-                ),elevation: 3,),
-                Card(child: ListTile(title: Text('Time takes for application'),
-                    onTap: (){
-                      int R7=7;
-                      Navigator.push(
-                          context,MaterialPageRoute(builder: (_) => SFViewReports(sessionToken:sessionToken,SelectedRange:SelectedRange,SelectedRange1:SelectedRange1,R7:R7,))
-                      );
-                    }
-                ),elevation: 3,),
-                Card(child: ListTile(title: Text('Reason for cutting'),
-                    onTap: (){
-                      int R8=8;
-                      Navigator.push(
-                          context,MaterialPageRoute(builder: (_) => SFViewReports(sessionToken:sessionToken,SelectedRange:SelectedRange,SelectedRange1:SelectedRange1,R8:R8,))
-                      );
-                    }
-                ),elevation: 3,),
-                Card(child: ListTile(title: Text('Number of Application received before & after cutting the tree'),
-                    onTap: (){
-                      int R9=9;
-                      Navigator.push(
-                          context,MaterialPageRoute(builder: (_) => SFViewReports(sessionToken:sessionToken,SelectedRange:SelectedRange,SelectedRange1:SelectedRange1,R9:R9,))
-                      );
-                    }
-                ),elevation: 3,),
-                Card(child: ListTile(title: Text('NOC Report'),
-                    onTap: (){
-                      int R10=10;
-                      Navigator.push(
-                          context,MaterialPageRoute(builder: (_) => SFViewReports(sessionToken:sessionToken,SelectedRange:SelectedRange,SelectedRange1:SelectedRange1,R10:R10,))
-                      );
-                    }
-                ),elevation: 3,),
+                Card(
+                  child: ListTile(
+                      title: const Text('Pending Application'),
+                      onTap: () {
+                        int R2 = 2;
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => SFViewReports(
+                                      sessionToken: sessionToken,
+                                      SelectedRange: SelectedRange!,
+                                      SelectedRange1: SelectedRange1!,
+                                      R1: 0,
+                                      R2: R2,
+                                      R3: 0,
+                                      R4: 0,
+                                      R5: 0,
+                                      R6: 0,
+                                      R7: 0,
+                                      R8: 0,
+                                      R9: 0,
+                                      R10: 0,
+                                    )));
+                      }),
+                  elevation: 3,
+                ),
+                Card(
+                  child: ListTile(
+                      title: const Text('Approved Application'),
+                      onTap: () {
+                        int R3 = 3;
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => SFViewReports(
+                                      sessionToken: sessionToken,
+                                      SelectedRange: SelectedRange!,
+                                      SelectedRange1: SelectedRange1!,
+                                      R1: 0,
+                                      R2: 0,
+                                      R3: R3,
+                                      R4: 0,
+                                      R5: 0,
+                                      R6: 0,
+                                      R7: 0,
+                                      R8: 0,
+                                      R9: 0,
+                                      R10: 0,
+                                    )));
+                      }),
+                  elevation: 3,
+                ),
+                Card(
+                  child: ListTile(
+                      title: const Text('Rejected Application'),
+                      onTap: () {
+                        int R4 = 4;
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => SFViewReports(
+                                      sessionToken: sessionToken,
+                                      SelectedRange: SelectedRange!,
+                                      SelectedRange1: SelectedRange1!,
+                                      R1: 0,
+                                      R2: 0,
+                                      R3: 0,
+                                      R4: R4,
+                                      R5: 0,
+                                      R6: 0,
+                                      R7: 0,
+                                      R8: 0,
+                                      R9: 0,
+                                      R10: 0,
+                                    )));
+                      }),
+                  elevation: 3,
+                ),
+                Card(
+                  child: ListTile(
+                      title: const Text('Forward Application'),
+                      onTap: () {
+                        int R5 = 5;
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => SFViewReports(
+                                      sessionToken: sessionToken,
+                                      SelectedRange: SelectedRange!,
+                                      SelectedRange1: SelectedRange1!,
+                                      R1: 0,
+                                      R2: 0,
+                                      R3: 0,
+                                      R4: 0,
+                                      R5: R5,
+                                      R6: 0,
+                                      R7: 0,
+                                      R8: 0,
+                                      R9: 0,
+                                      R10: 0,
+                                    )));
+                      }),
+                  elevation: 3,
+                ),
+                Card(
+                  child: ListTile(
+                      title: const Text('Cutting Permission'),
+                      onTap: () {
+                        int R6 = 6;
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => SFViewReports(
+                                      sessionToken: sessionToken,
+                                      SelectedRange: SelectedRange!,
+                                      SelectedRange1: SelectedRange1!,
+                                      R1: 0,
+                                      R2: 0,
+                                      R3: 0,
+                                      R4: 0,
+                                      R5: 0,
+                                      R6: R6,
+                                      R7: 0,
+                                      R8: 0,
+                                      R9: 0,
+                                      R10: 0,
+                                    )));
+                      }),
+                  elevation: 3,
+                ),
+                Card(
+                  child: ListTile(
+                      title: const Text('Time takes for application'),
+                      onTap: () {
+                        int R7 = 7;
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => SFViewReports(
+                                      sessionToken: sessionToken,
+                                      SelectedRange: SelectedRange!,
+                                      SelectedRange1: SelectedRange1!,
+                                      R1: 0,
+                                      R2: 0,
+                                      R3: 0,
+                                      R4: 0,
+                                      R5: 0,
+                                      R6: 0,
+                                      R7: R7,
+                                      R8: 0,
+                                      R9: 0,
+                                      R10: 0,
+                                    )));
+                      }),
+                  elevation: 3,
+                ),
+                Card(
+                  child: ListTile(
+                      title: const Text('Reason for cutting'),
+                      onTap: () {
+                        int R8 = 8;
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => SFViewReports(
+                                      sessionToken: sessionToken,
+                                      SelectedRange: SelectedRange!,
+                                      SelectedRange1: SelectedRange1!,
+                                      R1: 0,
+                                      R2: 0,
+                                      R3: 0,
+                                      R4: 0,
+                                      R5: 0,
+                                      R6: 0,
+                                      R7: 0,
+                                      R8: R8,
+                                      R9: 0,
+                                      R10: 0,
+                                    )));
+                      }),
+                  elevation: 3,
+                ),
+                Card(
+                  child: ListTile(
+                      title: const Text(
+                          'Number of Application received before & after cutting the tree'),
+                      onTap: () {
+                        int R9 = 9;
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => SFViewReports(
+                                      sessionToken: sessionToken,
+                                      SelectedRange: SelectedRange!,
+                                      SelectedRange1: SelectedRange1!,
+                                      R1: 0,
+                                      R2: 0,
+                                      R3: 0,
+                                      R4: 0,
+                                      R5: 0,
+                                      R6: 0,
+                                      R7: 0,
+                                      R8: 0,
+                                      R9: R9,
+                                      R10: 0,
+                                    )));
+                      }),
+                  elevation: 3,
+                ),
+                Card(
+                  child: ListTile(
+                      title: const Text('NOC Report'),
+                      onTap: () {
+                        int R10 = 10;
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => SFViewReports(
+                                      sessionToken: sessionToken,
+                                      SelectedRange: SelectedRange!,
+                                      SelectedRange1: SelectedRange1!,
+                                      R1: 0,
+                                      R2: 0,
+                                      R3: 0,
+                                      R4: 0,
+                                      R5: 0,
+                                      R6: 0,
+                                      R7: 0,
+                                      R8: 0,
+                                      R9: 0,
+                                      R10: R10,
+                                    )));
+                      }),
+                  elevation: 3,
+                ),
               ],
-            )
-        )
-    );
+            )));
   }
 }

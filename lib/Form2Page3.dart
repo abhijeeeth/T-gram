@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -44,39 +46,41 @@ class Form2Page3 extends StatefulWidget {
   String Purpose;
   List holder_1;
   Map<String, String> rev_holder_1;
-  List values;
+  List values = [];
   @override
   Form2Page3(
-      {this.sessionToken,
-      this.dropdownValue,
-      this.dropdownValue1,
-      this.userName,
-      this.userEmail,
-      this.userId,
-      this.Name,
-      this.Address,
-      this.survey_no,
-      this.village,
-      this.Taluka,
-      this.block,
-      this.District,
-      this.Pincode,
-      this.Ownership,
-      this.imageone,
-      this.imagetwo,
-      this.imagethree,
-      this.imagefour,
-      this.imagelatone,
-      this.imagelattwo,
-      this.imagelatthree,
-      this.imagelatfour,
-      this.imagelongone,
-      this.imagelongtwo,
-      this.imagelongthree,
-      this.imagelongfour,
-      this.Purpose,
-      this.holder_1,
-      this.rev_holder_1});
+      {super.key,
+      required this.sessionToken,
+      required this.dropdownValue,
+      required this.dropdownValue1,
+      required this.userName,
+      required this.userEmail,
+      required this.userId,
+      required this.Name,
+      required this.Address,
+      required this.survey_no,
+      required this.village,
+      required this.Taluka,
+      required this.block,
+      required this.District,
+      required this.Pincode,
+      required this.Ownership,
+      required this.imageone,
+      required this.imagetwo,
+      required this.imagethree,
+      required this.imagefour,
+      required this.imagelatone,
+      required this.imagelattwo,
+      required this.imagelatthree,
+      required this.imagelatfour,
+      required this.imagelongone,
+      required this.imagelongtwo,
+      required this.imagelongthree,
+      required this.imagelongfour,
+      required this.Purpose,
+      required this.holder_1,
+      required this.rev_holder_1});
+  @override
   _Form2Page3State createState() => _Form2Page3State(
       sessionToken,
       dropdownValue,
@@ -138,7 +142,7 @@ class _Form2Page3State extends State<Form2Page3> {
   String imagelongtwo;
   String imagelongthree;
   String imagelongfour;
-  String selectedPRoof;
+  String selectedPRoof = '';
   String Purpose;
 
   String base64ImageRevApp = '';
@@ -189,7 +193,7 @@ class _Form2Page3State extends State<Form2Page3> {
       this.rev_holder_1);
 
   //----------------------
-  GoogleMapController mapController;
+  late GoogleMapController mapController;
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   List values = [];
   Future<Widget> AddMap(BuildContext context) async {
@@ -202,7 +206,7 @@ class _Form2Page3State extends State<Form2Page3> {
                     EdgeInsets.only(bottom: 30, top: 30, left: 10, right: 10),
                 contentPadding: EdgeInsets.all(5),
                 clipBehavior: Clip.antiAlias,
-                content: Container(
+                content: SizedBox(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
                   child: GoogleMap(
@@ -216,9 +220,7 @@ class _Form2Page3State extends State<Form2Page3> {
                         target: LatLng(10.8505, 76.2711), zoom: 14),
                     //polygons: myPolygon(),
                     onMapCreated: onMapCreated,
-                    markers: Set<Marker>.of(markers.values) == null
-                        ? LatLng(10.8505, 76.2711)
-                        : Set<Marker>.of(markers.values),
+                    markers: Set<Marker>.of(markers.values),
                     onTap: (latlang) {
                       setState(() {
                         values.clear();
@@ -231,11 +233,8 @@ class _Form2Page3State extends State<Form2Page3> {
                           infoWindow: InfoWindow(
                             title:
                                 "Tree Location", //+(values.length +1).toString(),
-                            snippet: "( Latitude : " +
-                                latlang.latitude.toStringAsPrecision(8) +
-                                " , Longitude : " +
-                                latlang.longitude.toStringAsPrecision(8) +
-                                ")",
+                            snippet:
+                                "( Latitude : ${latlang.latitude.toStringAsPrecision(8)} , Longitude : ${latlang.longitude.toStringAsPrecision(8)})",
                           ),
                           icon: BitmapDescriptor.defaultMarker,
                         );
@@ -1123,7 +1122,7 @@ class _Form2Page3State extends State<Form2Page3> {
             text: "Latitude : ",
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
         TextSpan(
-            text: values.length == 0 ? '' : values[0].toString(),
+            text: values.isEmpty ? '' : values[0].toString(),
             style: TextStyle(
               color: Colors.blueAccent[700],
               fontSize: 14,
@@ -1136,7 +1135,7 @@ class _Form2Page3State extends State<Form2Page3> {
     return  Text((_getVolume(girth, length).toString()).toString());
   }*/
   //-----------------------------------End-GeoLocator---------------------------
-  String dropdownValue2;
+  String dropdownValue2 = '';
   String holder = '';
   List<String> IdProof = [
     'Aadhar Card',
@@ -1151,17 +1150,17 @@ class _Form2Page3State extends State<Form2Page3> {
     setState(() {
       holder = dropdownValue;
     });
-    print("-----------------------" + holder);
+    print("-----------------------$holder");
   }
 
-  String dropdownValue3;
+  String dropdownValue3 = '';
   String spacies_holder = '';
 
   void getDropDownItem1() {
     setState(() {
       spacies_holder = dropdownValue1;
     });
-    print("-----------------------" + holder);
+    print("-----------------------$holder");
   }
 
   bool flag = true;
@@ -1177,13 +1176,13 @@ class _Form2Page3State extends State<Form2Page3> {
   List Longitude = [];
   List n_list = [];
   Map<String, String> logs = {};
-  final List<TextEditingController> _controllers = List();
-  double v;
+  final List<TextEditingController> _controllers = <TextEditingController>[];
+  double v = 0.0;
   // double _getVolume(double girth, double length) {
   //   v = (girth / 4) * (girth / 4) * length;
   //   return v;
   // }
-   double _getVolume(double girth, double length) {
+  double _getVolume(double girth, double length) {
     // Convert girth from cm to meters
     double girthInMeters = girth * 0.01;
 
@@ -1642,7 +1641,9 @@ class _Form2Page3State extends State<Form2Page3> {
                         keyboardType: TextInputType.number,
                         controller: length,
                         validator: (value) {
-                          return value.isNotEmpty ? null : "Enter Height(M)";
+                          return value != null && value.isNotEmpty
+                              ? null
+                              : "Enter Height(M)";
                         },
                         decoration:
                             InputDecoration(hintText: "Please Enter Height(M)"),
@@ -1651,7 +1652,9 @@ class _Form2Page3State extends State<Form2Page3> {
                         keyboardType: TextInputType.number,
                         controller: girth,
                         validator: (value) {
-                          return value.isNotEmpty ? null : "Enter Girth(cm)";
+                          return value != null && value.isNotEmpty
+                              ? null
+                              : "Enter Girth(cm)";
                         },
                         decoration:
                             InputDecoration(hintText: "Please Enter Girth(cm)"),
@@ -1723,8 +1726,8 @@ class _Form2Page3State extends State<Form2Page3> {
                   ),
                   onTap: () {
                     if ((dropdownValue3 == null) ||
-                        (length.text.length == 0) ||
-                        (girth.text.length == 0)) {
+                        (length.text.isEmpty) ||
+                        (girth.text.isEmpty)) {
                       Fluttertoast.showToast(
                           msg: "Please add all details ",
                           toastLength: Toast.LENGTH_SHORT,
@@ -1827,7 +1830,9 @@ class _Form2Page3State extends State<Form2Page3> {
                         //initialValue: log_details[index]['length'],
                         controller: length,
                         validator: (value) {
-                          return value.isNotEmpty ? null : "Enter height";
+                          return value != null && value.isNotEmpty
+                              ? null
+                              : "Enter height";
                         },
                         decoration:
                             InputDecoration(hintText: "Please Enter height"),
@@ -1836,7 +1841,9 @@ class _Form2Page3State extends State<Form2Page3> {
                         keyboardType: TextInputType.number,
                         controller: girth,
                         validator: (value) {
-                          return value.isNotEmpty ? null : "Enter Girth";
+                          return value != null && value.isNotEmpty
+                              ? null
+                              : "Enter Girth";
                         },
                         decoration:
                             InputDecoration(hintText: "Please Enter Girth"),
@@ -1922,8 +1929,8 @@ class _Form2Page3State extends State<Form2Page3> {
                   ),
                   onTap: () {
                     if ((dropdownValue3 == null) ||
-                        (length.text.length == 0) ||
-                        (girth.text.length == 0)) {
+                        (length.text.isEmpty) ||
+                        (girth.text.isEmpty)) {
                       Fluttertoast.showToast(
                           msg: "Please add all details ",
                           toastLength: Toast.LENGTH_SHORT,
@@ -1964,7 +1971,7 @@ class _Form2Page3State extends State<Form2Page3> {
                       print(n_list);
                       print(Species);
                       print(d);
-                      if (_formKey.currentState.validate()) {
+                      if (_formKey.currentState?.validate() ?? false) {
                         // Do something like updating SharedPreferences or User Settings etc.
                         length.clear();
                         girth.clear();
@@ -2010,25 +2017,24 @@ class _Form2Page3State extends State<Form2Page3> {
   Row()
    */
   Future<bool> _onBackPressed() {
-    return showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: new Text('Do you want to go previous page'),
-            content: new Text('Changes you made may not be saved.'),
-            actions: <Widget>[
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(false),
-                child: Text("NO"),
-              ),
-              SizedBox(height: 16),
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(true),
-                child: Text("YES"),
-              ),
-            ],
+    return showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Do you want to go previous page'),
+        content: Text('Changes you made may not be saved.'),
+        actions: <Widget>[
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(false),
+            child: Text("NO"),
           ),
-        ) ??
-        false;
+          SizedBox(height: 16),
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(true),
+            child: Text("YES"),
+          ),
+        ],
+      ),
+    ).then((value) => value ?? false);
   }
 
   @override
@@ -2036,7 +2042,7 @@ class _Form2Page3State extends State<Form2Page3> {
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
-        appBar: NewGradientAppBar(
+        appBar: AppBar(
           title: Text(
             "FORM - II",
             style: TextStyle(
@@ -2045,8 +2051,7 @@ class _Form2Page3State extends State<Form2Page3> {
             ),
           ),
           //backgroundColor: ColorLinearGradient(colors: [HexColor("#26f596"),HexColor("#0499f2")]),
-          gradient: LinearGradient(
-              colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+
           elevation: 0,
           // automaticallyImplyLeading: false,
         ),
@@ -2089,7 +2094,7 @@ class _Form2Page3State extends State<Form2Page3> {
                     ],
                   ),
                   child: Scrollbar(
-                      isAlwaysShown: true,
+                      thumbVisibility: true,
                       thickness: 15,
                       child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
@@ -2169,26 +2174,26 @@ class _Form2Page3State extends State<Form2Page3> {
                                       .map(((index) => DataRow(cells: [
                                             DataCell(
                                                 Text((index + 1).toString())),
-                                            DataCell(Container(
+                                            DataCell(SizedBox(
                                                 width: 180,
                                                 child: Text(
                                                   log_details[index]
                                                           ['species_of_tree']
                                                       .toString(),
                                                 ))),
-                                            DataCell(Container(
+                                            DataCell(SizedBox(
                                                 width: 100,
                                                 child: Text(
                                                   log_details[index]['length']
                                                       .toString(),
                                                 ))),
-                                            DataCell(Container(
+                                            DataCell(SizedBox(
                                                 width: 100,
                                                 child: Text(
                                                   log_details[index]['breadth']
                                                       .toString(),
                                                 ))),
-                                            DataCell(Container(
+                                            DataCell(SizedBox(
                                                 width: 100,
                                                 child: Text(
                                                   log_details[index]['volume']
@@ -2248,8 +2253,8 @@ class _Form2Page3State extends State<Form2Page3> {
               Container(
                 width: double.infinity,
                 margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                decoration: new BoxDecoration(
-                    border: new Border.all(
+                decoration: BoxDecoration(
+                    border: Border.all(
                       color: Colors.grey,
                       width: 1,
                     ),
@@ -2278,8 +2283,8 @@ class _Form2Page3State extends State<Form2Page3> {
               Container(
                 width: double.infinity,
                 margin: const EdgeInsets.only(top: 5, left: 15, right: 15),
-                decoration: new BoxDecoration(
-                    border: new Border.all(
+                decoration: BoxDecoration(
+                    border: Border.all(
                       color: Colors.grey,
                       width: 1,
                     ),
@@ -2309,8 +2314,8 @@ class _Form2Page3State extends State<Form2Page3> {
               Container(
                 width: double.infinity,
                 margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                decoration: new BoxDecoration(
-                    border: new Border.all(
+                decoration: BoxDecoration(
+                    border: Border.all(
                       color: Colors.grey,
                       width: 1,
                     ),
@@ -2339,8 +2344,8 @@ class _Form2Page3State extends State<Form2Page3> {
               Container(
                 width: double.infinity,
                 margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                decoration: new BoxDecoration(
-                    border: new Border.all(
+                decoration: BoxDecoration(
+                    border: Border.all(
                       color: Colors.grey,
                       width: 1,
                     ),
@@ -2369,8 +2374,8 @@ class _Form2Page3State extends State<Form2Page3> {
               Container(
                 width: double.infinity,
                 margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                decoration: new BoxDecoration(
-                    border: new Border.all(
+                decoration: BoxDecoration(
+                    border: Border.all(
                       color: Colors.grey,
                       width: 1,
                     ),
@@ -2399,8 +2404,8 @@ class _Form2Page3State extends State<Form2Page3> {
               Container(
                 width: double.infinity,
                 margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                decoration: new BoxDecoration(
-                    border: new Border.all(
+                decoration: BoxDecoration(
+                    border: Border.all(
                       color: Colors.grey,
                       width: 1,
                     ),
@@ -2428,8 +2433,8 @@ class _Form2Page3State extends State<Form2Page3> {
               ),
               Container(
                 margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                decoration: new BoxDecoration(
-                    border: new Border.all(
+                decoration: BoxDecoration(
+                    border: Border.all(
                       color: Colors.grey,
                       width: 1,
                     ),
@@ -2448,9 +2453,9 @@ class _Form2Page3State extends State<Form2Page3> {
                            height: 2,
                            color: Colors.grey,
                          ),*/
-                  onChanged: (String data) {
+                  onChanged: (String? data) {
                     setState(() {
-                      dropdownValue2 = data;
+                      dropdownValue2 = data!;
                       selectedPRoof = dropdownValue2;
                     });
                     print(dropdownValue2);
@@ -2467,8 +2472,8 @@ class _Form2Page3State extends State<Form2Page3> {
                 width: double.infinity,
                 margin: const EdgeInsets.only(
                     top: 15, left: 15, right: 15, bottom: 20),
-                decoration: new BoxDecoration(
-                    border: new Border.all(
+                decoration: BoxDecoration(
+                    border: Border.all(
                       color: Colors.grey,
                       width: 1,
                     ),
@@ -2500,7 +2505,6 @@ class _Form2Page3State extends State<Form2Page3> {
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: FloatingActionButton(
           // isExtended: true,
-          child: Icon(Icons.navigate_next),
           backgroundColor: HexColor("#0499f2"),
           onPressed: () {
             if (base64Image == "") {
@@ -2640,6 +2644,8 @@ class _Form2Page3State extends State<Form2Page3> {
               setState(() {});
             }
           },
+          // isExtended: true,
+          child: Icon(Icons.navigate_next),
         ),
       ),
     );

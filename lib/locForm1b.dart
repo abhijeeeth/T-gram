@@ -60,54 +60,55 @@ class locForm1b extends StatefulWidget {
   String selectProof;
   String logData;
   locForm1b(
-      {this.sessionToken,
-      this.userId,
-      this.id,
-      this.Type,
-      this.userName,
-      this.userEmail,
-      this.App_no,
-      this.Division,
-      this.Range,
-      this.District,
-      this.Taluke,
-      this.Village,
-      this.address,
-      this.survay,
-      this.treePCut,
-      this.blockL,
-      this.pin,
-      this.imageA,
-      this.imageB,
-      this.imageC,
-      this.imageD,
-      this.image1lat,
-      this.image2lat,
-      this.image3lat,
-      this.image4lat,
-      this.image1log,
-      this.image2log,
-      this.image3log,
-      this.image4log,
-      this.treespecies,
-      this.purposecut,
-      this.drivername,
-      this.vechclereg,
-      this.mode,
-      this.phone,
-      this.destAddress,
-      this.destState,
-      this.licenceImg,
-      this.ownerProof,
-      this.revenApplication,
-      this.revenApprove,
-      this.declaration,
-      this.locationSkch,
-      this.treeOwnership,
-      this.aadarcard,
-      this.signatureImg,
-      this.selectProof,
-      this.logData});
+      {super.key,
+      required this.sessionToken,
+      required this.userId,
+      required this.id,
+      required this.Type,
+      required this.userName,
+      required this.userEmail,
+      required this.App_no,
+      required this.Division,
+      required this.Range,
+      required this.District,
+      required this.Taluke,
+      required this.Village,
+      required this.address,
+      required this.survay,
+      required this.treePCut,
+      required this.blockL,
+      required this.pin,
+      required this.imageA,
+      required this.imageB,
+      required this.imageC,
+      required this.imageD,
+      required this.image1lat,
+      required this.image2lat,
+      required this.image3lat,
+      required this.image4lat,
+      required this.image1log,
+      required this.image2log,
+      required this.image3log,
+      required this.image4log,
+      required this.treespecies,
+      required this.purposecut,
+      required this.drivername,
+      required this.vechclereg,
+      required this.mode,
+      required this.phone,
+      required this.destAddress,
+      required this.destState,
+      required this.licenceImg,
+      required this.ownerProof,
+      required this.revenApplication,
+      required this.revenApprove,
+      required this.declaration,
+      required this.locationSkch,
+      required this.treeOwnership,
+      required this.aadarcard,
+      required this.signatureImg,
+      required this.selectProof,
+      required this.logData});
   @override
   State<locForm1b> createState() => _locForm1bState(
       sessionToken,
@@ -160,11 +161,12 @@ class locForm1b extends StatefulWidget {
       logData);
 }
 
-List<String> listtc;
-List<String> specias;
+List<String> listtc = [];
+List<String> specias = [];
 List<String> intersection = [];
 
 class _locForm1bState extends State<locForm1b> {
+  @override
   void initState() {
     super.initState();
     viewData();
@@ -313,17 +315,16 @@ class _locForm1bState extends State<locForm1b> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: NewGradientAppBar(
+      appBar: AppBar(
         //backgroundColor:Colors.blueGrey,
-        title: Text(
+        title: const Text(
           "FORM - I",
           style: TextStyle(
             color: Colors.white,
             fontSize: 20,
           ),
         ),
-        gradient:
-            LinearGradient(colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+
         elevation: 0,
         // automaticallyImplyLeading: false,
       ),
@@ -333,7 +334,7 @@ class _locForm1bState extends State<locForm1b> {
             Row(children: <Widget>[
               Container(
                 margin: const EdgeInsets.only(left: 13, top: 15),
-                child: Text(
+                child: const Text(
                   'Species of tree or trees proposed to be cut:',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.left,
@@ -344,7 +345,7 @@ class _locForm1bState extends State<locForm1b> {
               margin: const EdgeInsets.only(top: 10, left: 15, right: 15),
               height: MediaQuery.of(context).size.height * 0.39,
               decoration: BoxDecoration(
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     color: Colors.black,
                     blurRadius: 2.0,
@@ -358,14 +359,14 @@ class _locForm1bState extends State<locForm1b> {
               child: ListView(
                 children: [
                   CheckboxListTile(
-                    title: Text("Rosewood(Dalbergia latifolia)"),
+                    title: const Text("Rosewood(Dalbergia latifolia)"),
                     value: _selectedValues
                             .contains('Rosewood(Dalbergia latifolia)') ||
                         _selectedValues
                             .contains(' Rosewood(Dalbergia latifolia)'),
-                    onChanged: (bool value) {
+                    onChanged: (bool? value) {
                       setState(() {
-                        if (value) {
+                        if (value!) {
                           _selectedValues.add("Rosewood(Dalbergia latifolia)");
                         } else {
                           _selectedValues
@@ -375,13 +376,13 @@ class _locForm1bState extends State<locForm1b> {
                     },
                   ),
                   CheckboxListTile(
-                    title: Text('Teak(Tectona grandis)'),
+                    title: const Text('Teak(Tectona grandis)'),
                     value: _selectedValues.contains('Teak(Tectona grandis)') ||
                         _selectedValues.contains('(Teak (Tectona grandis)') ||
                         _selectedValues.contains(' Teak(Tectona grandis) '),
-                    onChanged: (bool value) {
+                    onChanged: (bool? value) {
                       setState(() {
-                        if (value) {
+                        if (value!) {
                           _selectedValues.add("Teak(Tectona grandis)");
                         } else {
                           _selectedValues.remove("Teak(Tectona grandis)");
@@ -390,16 +391,16 @@ class _locForm1bState extends State<locForm1b> {
                     },
                   ),
                   CheckboxListTile(
-                    title: Text("Thempavu(Terminalia tomantosa)"),
+                    title: const Text("Thempavu(Terminalia tomantosa)"),
                     value: _selectedValues
                             .contains('Thempavu(Terminalia tomantosa)') ||
                         _selectedValues
                             .contains(' Thempavu (Terminalia tomentosa)') ||
                         _selectedValues
                             .contains(' Thempavu(Terminalia tomantosa)'),
-                    onChanged: (bool value) {
+                    onChanged: (bool? value) {
                       setState(() {
-                        if (value) {
+                        if (value!) {
                           _selectedValues.add("Thempavu(Terminalia tomantosa)");
                         } else {
                           _selectedValues
@@ -409,14 +410,14 @@ class _locForm1bState extends State<locForm1b> {
                     },
                   ),
                   CheckboxListTile(
-                    title: Text("Chadachi(Grewia tiliaefolia)"),
+                    title: const Text("Chadachi(Grewia tiliaefolia)"),
                     value: _selectedValues
                             .contains("Chadachi(Grewia tiliaefolia)") ||
                         _selectedValues
                             .contains(" Chadachi(Grewia tiliaefolia)"),
-                    onChanged: (bool value) {
+                    onChanged: (bool? value) {
                       setState(() {
-                        if (value) {
+                        if (value!) {
                           _selectedValues.add("Chadachi(Grewia tiliaefolia)");
                         } else {
                           _selectedValues
@@ -428,14 +429,14 @@ class _locForm1bState extends State<locForm1b> {
                     },
                   ),
                   CheckboxListTile(
-                    title: Text("Chandana vempu(Cedrela toona)"),
+                    title: const Text("Chandana vempu(Cedrela toona)"),
                     value: _selectedValues
                             .contains("Chandana vempu(Cedrela toona)") ||
                         _selectedValues
                             .contains(" Chandana vempu(Cedrela toona)"),
-                    onChanged: (bool value) {
+                    onChanged: (bool? value) {
                       setState(() {
-                        if (value) {
+                        if (value!) {
                           _selectedValues.add("Chandana vempu(Cedrela toona)");
                         } else {
                           _selectedValues
@@ -445,14 +446,14 @@ class _locForm1bState extends State<locForm1b> {
                     },
                   ),
                   CheckboxListTile(
-                    title: Text("Vellakil(Dysoxylum malabaricum)"),
+                    title: const Text("Vellakil(Dysoxylum malabaricum)"),
                     value: _selectedValues
                             .contains("Vellakil(Dysoxylum malabaricum)") ||
                         _selectedValues
                             .contains(" Vellakil(Dysoxylum malabaricum)"),
-                    onChanged: (bool value) {
+                    onChanged: (bool? value) {
                       setState(() {
-                        if (value) {
+                        if (value!) {
                           _selectedValues
                               .add("Vellakil(Dysoxylum malabaricum)");
                         } else {
@@ -463,12 +464,12 @@ class _locForm1bState extends State<locForm1b> {
                     },
                   ),
                   CheckboxListTile(
-                    title: Text("Irul(Xylia xylocarpa)"),
+                    title: const Text("Irul(Xylia xylocarpa)"),
                     value: _selectedValues.contains("Irul(Xylia xylocarpa)") ||
                         _selectedValues.contains(" Irul(Xylia xylocarpa)"),
-                    onChanged: (bool value) {
+                    onChanged: (bool? value) {
                       setState(() {
-                        if (value) {
+                        if (value!) {
                           _selectedValues.add("Irul(Xylia xylocarpa)");
                         } else {
                           _selectedValues.remove("Irul(Xylia xylocarpa)");
@@ -477,12 +478,12 @@ class _locForm1bState extends State<locForm1b> {
                     },
                   ),
                   CheckboxListTile(
-                    title: Text("Ebony(Diospyrus sp.)"),
+                    title: const Text("Ebony(Diospyrus sp.)"),
                     value: _selectedValues.contains("Ebony(Diospyrus sp.)") ||
                         _selectedValues.contains(" Ebony(Diospyrus sp.)"),
-                    onChanged: (bool value) {
+                    onChanged: (bool? value) {
                       setState(() {
-                        if (value) {
+                        if (value!) {
                           _selectedValues.add("Ebony(Diospyrus sp.)");
                         } else {
                           _selectedValues.remove("Ebony(Diospyrus sp.)");
@@ -491,13 +492,13 @@ class _locForm1bState extends State<locForm1b> {
                     },
                   ),
                   CheckboxListTile(
-                    title: Text("Kampakam(Hopea Parviflora)"),
+                    title: const Text("Kampakam(Hopea Parviflora)"),
                     value: _selectedValues
                             .contains("Kampakam(Hopea Parviflora)") ||
                         _selectedValues.contains(" Kampakam(Hopea Parviflora)"),
-                    onChanged: (bool value) {
+                    onChanged: (bool? value) {
                       setState(() {
-                        if (value) {
+                        if (value!) {
                           _selectedValues.add("Kampakam(Hopea Parviflora)");
                         } else {
                           _selectedValues.remove("Kampakam(Hopea Parviflora)");
@@ -515,11 +516,10 @@ class _locForm1bState extends State<locForm1b> {
               child: TextField(
                 controller: Purpose,
                 //  obscureText: true,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderSide: BorderSide(width: 2),
-                      borderRadius:
-                          const BorderRadius.all(const Radius.circular(14.0)),
+                      borderRadius: BorderRadius.all(Radius.circular(14.0)),
                     ),
                     labelText: 'Purpose',
                     hintText: 'trees proposed to be cut'),
@@ -608,7 +608,6 @@ class _locForm1bState extends State<locForm1b> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         isExtended: true,
-        child: Icon(Icons.navigate_next),
         backgroundColor: HexColor("#0499f2"),
         onPressed: () async {
           // if ((dropdownValue == null)
@@ -651,7 +650,7 @@ class _locForm1bState extends State<locForm1b> {
           Navigator.pushReplacement(
               context,
               PageRouteBuilder(
-                  transitionDuration: Duration(milliseconds: 400),
+                  transitionDuration: const Duration(milliseconds: 400),
                   transitionsBuilder:
                       (context, animation, animationTime, child) {
                     return ScaleTransition(
@@ -716,6 +715,7 @@ class _locForm1bState extends State<locForm1b> {
           // print(sessionToken + dropdownValue1 + userName);
           // }
         },
+        child: const Icon(Icons.navigate_next),
       ),
     );
   }
