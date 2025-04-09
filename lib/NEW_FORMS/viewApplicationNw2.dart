@@ -354,6 +354,8 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
   String? dropdownValue4;
   List c = [];
 
+  bool isAssignmentComplete = false;
+
   Map DisableButton(
       String userGroup,
       bool verifyOfficer,
@@ -369,9 +371,6 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
       String fieldRequre,
       String userLoc,
       bool fieldStatus) {
-    print(
-        "DEBUG DisableButton: userGroup=$userGroup, isFormTwo=$isFormTwo, assignedDeputy1Id=$assignedDeputy1Id");
-
     // Initialize with default values
     bool can_assign_officer = false;
     bool transit_pass_exist = false;
@@ -380,33 +379,28 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
     bool approvefinal = false;
     bool add_Loc = false;
 
+    // Enable field verification for both range officer and assigned deputy
+    if ((userGroup == 'forest range officer' && isAssignmentComplete) ||
+        (userGroup == 'deputy range officer' && assignedDeputy1Id == userId)) {
+      if (!fieldStatus && !verifyRangeOfficer) {
+        feild_butt_range = true; // Enable field verification button
+      }
+    }
+
+    // Handle range officer specific permissions
     if (userGroup == 'forest range officer') {
-      // Handle Form Two applications
-      if (isFormTwo) {
-        // For Form Two, allow assignment if not yet verified
-        if (!verifyRangeOfficer && !fieldStatus && assignedDeputy1Id == 0) {
+      if (!verifyRangeOfficer) {
+        if (!fieldStatus && assignedDeputy1Id == 0) {
           can_assign_officer = true;
           reject_visible = true;
-          print("Form Two: Can assign officer");
-        } else if (!verifyRangeOfficer && fieldStatus) {
+        } else if (fieldStatus) {
           approvefinal = true;
-          print("Form Two: Ready for approval");
-        }
-      } else {
-        // Handle regular applications
-        if (!verifyRangeOfficer && assignedDeputy1Id == 0 && !fieldStatus) {
-          can_assign_officer = true;
-          reject_visible = true;
-          print("Regular: Can assign officer");
-        } else if (!verifyRangeOfficer && fieldStatus) {
-          approvefinal = true;
-          print("Regular: Ready for approval");
         }
       }
     }
 
     print(
-        "Button States: can_assign=$can_assign_officer, approve=$approvefinal, reject=$reject_visible");
+        "Button States: field_verify=$feild_butt_range, can_assign=$can_assign_officer");
 
     return {
       'can_assign_officer': can_assign_officer,
@@ -435,7 +429,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
 
       String url =
           'https://f4020lwv-8000.inc1.devtunnels.ms/api/auth/get_deputies/';
-      Map data = {"range": rangeId}; // Use dynamic range ID
+      Map data = {"range": userId};
       var body = json.encode(data);
       print(sessionToken);
       final response = await http.post(Uri.parse(url),
@@ -458,7 +452,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
           print(
               "API response missing 'deputy range officers' key: $responseJSON");
           setState(() {
-            apiResponse = []; // Set empty list to avoid null errors
+            apiResponse = [];
           });
         }
       } else {
@@ -1110,6 +1104,12 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                     backgroundColor: Colors.blue,
                                     textColor: Colors.white,
                                     fontSize: 18.0);
+
+                                setState(() {
+                                  isAssignmentComplete = true;
+                                  _isVisible2 = false;
+                                  assign_btn = false;
+                                });
 
                                 Navigator.push(
                                     context,
