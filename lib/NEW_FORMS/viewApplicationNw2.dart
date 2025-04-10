@@ -388,29 +388,29 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
     if (userGroup == 'forest range officer') {
       if (!fieldStatus && !verifyRangeOfficer) {
         if (isSelfAssigned && !isDeputyAssigned) {
-          // Allow field verification for self-assigned applications without deputy
           feild_butt_range = true;
           can_assign_officer = false;
         } else if (!isDeputyAssigned) {
-          // Allow assigning if not yet assigned
           can_assign_officer = true;
           reject_visible = true;
         }
+      }
+      // Only range officers can approve final cutting pass
+      if (fieldStatus && !verifyRangeOfficer) {
+        approvefinal = true;
       }
     } else if (userGroup == 'deputy range officer') {
       // Only allow field verification if assigned to this deputy
       if (assignedDeputy1Id == userId && !fieldStatus) {
         feild_butt_range = true;
       }
+      // Explicitly set approvefinal to false for deputies
+      approvefinal = false;
+      can_assign_officer = false;
+      reject_visible = false;
     }
 
-    // Handle approve button visibility
-    if (fieldStatus && !verifyRangeOfficer) {
-      approvefinal = true;
-    }
-
-    print(
-        "Button States: field_verify=$feild_butt_range, can_assign=$can_assign_officer, is_self_assigned=$isSelfAssigned, deputy_assigned=$isDeputyAssigned");
+    print("User Group: $userGroup, Approve Final: $approvefinal"); // Debug log
 
     return {
       'can_assign_officer': can_assign_officer,
@@ -2081,14 +2081,20 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                     style: TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.blueGrey),
                   ),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      setState(() {
-                        Edit = true;
-                      }); // Respond to button press
-                    },
-                    icon: const Icon(Icons.edit_rounded, size: 18),
-                    label: const Text("Edit"),
+                  Visibility(
+                    visible: !field_status &&
+                        (userGroup == 'forest range officer' ||
+                            (userGroup == 'deputy range officer' &&
+                                assigned_deputy1_id == userId)),
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        setState(() {
+                          Edit = true;
+                        }); // Respond to button press
+                      },
+                      icon: const Icon(Icons.edit_rounded, size: 18),
+                      label: const Text("Edit"),
+                    ),
                   ),
                   // Spacer(),
                   LayoutBuilder(builder: (context, constraints) {
