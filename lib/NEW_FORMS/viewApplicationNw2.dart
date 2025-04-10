@@ -243,6 +243,18 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
     super.initState();
     logApplicationDetails();
 
+    // Initialize log_details with the incoming data
+    setState(() {
+      log_details =
+          List.from(log_details); // Create a copy of incoming log details
+      if (!field_status) {
+        feachLog();
+      } else {
+        fechAppLog();
+      }
+      listDeputy();
+    });
+
     // Add status validation
     if (!canViewApplication()) {
       String errorMessage = '';
@@ -493,10 +505,19 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
     Map<String, dynamic> responseJSON = json.decode(response.body);
 
     setState(() {
+      // Clear existing data
+      c.clear();
+      Tree_species_.clear();
+      logId_.clear();
+      species_.clear();
+      length_.clear();
+      breadth_.clear();
+      volume_.clear();
+
+      // Load new data
       for (int i = 0; i < responseJSON['data'].length; i++) {
         c.add(i);
         Tree_species_.add(responseJSON['data'][i]['species_of_tree']);
-        // n_list.add(i);
         logId_.add(responseJSON['data'][i]['id']);
         species_.add(responseJSON['data'][i]['species_of_tree']);
         length_.add(responseJSON['data'][i]['length']);
@@ -504,9 +525,15 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
         volume_.add(responseJSON['data'][i]['volume']);
       }
 
-      n_list = c;
-      treelog_ = responseJSON['data'];
+      n_list = List.from(c); // Create a copy
+      treelog_ = List.from(responseJSON['data']); // Create a copy
       log_details_ = treelog_;
+      log_details = List.from(log_details_); // Initialize log_details
+
+      // Debug logs
+      print("Loaded ${log_details.length} log details");
+      print(
+          "First log detail: ${log_details.isNotEmpty ? log_details[0] : 'none'}");
     });
   }
 
@@ -2090,6 +2117,9 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                       onPressed: () {
                         setState(() {
                           Edit = true;
+                          // Debug print
+                          print(
+                              "Edit button pressed. Log details count: ${log_details.length}");
                         }); // Respond to button press
                       },
                       icon: const Icon(Icons.edit_rounded, size: 18),

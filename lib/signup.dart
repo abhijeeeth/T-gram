@@ -222,25 +222,25 @@ class _signupState extends State<signup> {
             height: 80,
             child: Row(
               children: <Widget>[
-                Image.asset(
-                  "assets/images/usaid_logo.png",
-                  width: 130,
-                  height: 75,
-                ),
+                // Image.asset(
+                //   "assets/images/usaid_logo.png",
+                //   width: 130,
+                //   height: 75,
+                // ),
                 Spacer(),
                 Image.asset(
                   "assets/images/kerala_logo.jpg",
                   alignment: Alignment.center,
-                  width: 80,
-                  height: 80,
+                  width: 70,
+                  height: 70,
                 ),
                 Spacer(),
-                Container(
-                    child: Row(children: <Widget>[
-                  Image.asset(
-                    "assets/images/ministry_logo.jpg",
-                  ),
-                ]))
+                // Container(
+                //     child: Row(children: <Widget>[
+                //   Image.asset(
+                //     "assets/images/ministry_logo.jpg",
+                //   ),
+                // ]))
               ],
             )),
         Container(

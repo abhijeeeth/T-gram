@@ -123,26 +123,13 @@ class _LoginDemoState extends State<LoginDemo> {
                   width: double.infinity,
                   height: 80,
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center, // Add this
                     children: <Widget>[
                       Image.asset(
-                        "assets/images/usaid_logo.png",
-                        width: 130,
-                        height: 75,
-                      ),
-                      const Spacer(),
-                      Image.asset(
                         "assets/images/kerala_logo.jpg",
-                        alignment: Alignment.center,
                         width: 80,
                         height: 80,
                       ),
-                      const Spacer(),
-                      Container(
-                          child: Row(children: <Widget>[
-                        Image.asset(
-                          "assets/images/ministry_logo.jpg",
-                        ),
-                      ]))
                     ],
                   )),
               Container(
