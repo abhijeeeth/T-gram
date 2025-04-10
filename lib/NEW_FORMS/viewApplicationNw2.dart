@@ -371,7 +371,6 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
       String fieldRequre,
       String userLoc,
       bool fieldStatus) {
-    // Initialize with default values
     bool can_assign_officer = false;
     bool transit_pass_exist = false;
     bool reject_visible = false;
@@ -379,28 +378,39 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
     bool approvefinal = false;
     bool add_Loc = false;
 
-    // Enable field verification for both range officer and assigned deputy
-    if ((userGroup == 'forest range officer' && isAssignmentComplete) ||
-        (userGroup == 'deputy range officer' && assignedDeputy1Id == userId)) {
+    // Check if application is self-assigned to the range officer
+    bool isSelfAssigned =
+        userGroup == 'forest range officer' && assigned_deputy2_id == userId;
+
+    // Check if application is assigned to a deputy
+    bool isDeputyAssigned = assignedDeputy1Id != 0;
+
+    if (userGroup == 'forest range officer') {
       if (!fieldStatus && !verifyRangeOfficer) {
-        feild_butt_range = true; // Enable field verification button
+        if (isSelfAssigned && !isDeputyAssigned) {
+          // Allow field verification for self-assigned applications without deputy
+          feild_butt_range = true;
+          can_assign_officer = false;
+        } else if (!isDeputyAssigned) {
+          // Allow assigning if not yet assigned
+          can_assign_officer = true;
+          reject_visible = true;
+        }
+      }
+    } else if (userGroup == 'deputy range officer') {
+      // Only allow field verification if assigned to this deputy
+      if (assignedDeputy1Id == userId && !fieldStatus) {
+        feild_butt_range = true;
       }
     }
 
-    // Handle range officer specific permissions
-    if (userGroup == 'forest range officer') {
-      if (!verifyRangeOfficer) {
-        if (!fieldStatus && assignedDeputy1Id == 0) {
-          can_assign_officer = true;
-          reject_visible = true;
-        } else if (fieldStatus) {
-          approvefinal = true;
-        }
-      }
+    // Handle approve button visibility
+    if (fieldStatus && !verifyRangeOfficer) {
+      approvefinal = true;
     }
 
     print(
-        "Button States: field_verify=$feild_butt_range, can_assign=$can_assign_officer");
+        "Button States: field_verify=$feild_butt_range, can_assign=$can_assign_officer, is_self_assigned=$isSelfAssigned, deputy_assigned=$isDeputyAssigned");
 
     return {
       'can_assign_officer': can_assign_officer,
@@ -751,12 +761,20 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
 
   bool canViewApplication() {
     if (userGroup == 'forest range officer') {
+      // Check if this is a self-assigned application
+      bool isSelfAssigned = assigned_deputy2_id == userId;
+
       // For Form Two applications
       if (is_form_two) {
-        return !verify_range_officer; // Allow if not yet verified by range officer
+        // Allow if not verified by range officer and either:
+        // - application is not assigned (for initial assignment)
+        // - application is self-assigned (for field verification)
+        return !verify_range_officer &&
+            (assigned_deputy1_id == 0 || isSelfAssigned);
       }
-      // For regular applications
-      return assigned_deputy1_id == 0 &&
+
+      // For regular applications, same logic
+      return (assigned_deputy1_id == 0 || isSelfAssigned) &&
           assigned_range_id == 0 &&
           !verify_range_officer;
     }
@@ -1319,7 +1337,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                         },
                         child: const Text(
                           ' Approve Pass',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
                         ),
                       ),
                     )),
