@@ -1,13 +1,14 @@
 buildscript {
-    // Update Kotlin version
-    ext.kotlin_version = '1.9.22'  // Changed from 1.6.10
+    ext.kotlin_version = '1.9.23'  // Updated Kotlin version
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://jitpack.io' }  // Added JitPack repository
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.2.1'
+        classpath 'com.android.tools.build:gradle:8.1.0'  // Downgraded Gradle version
+        classpath 'com.google.gms:google-services:4.4.0'  // Added Google Services dependency
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -16,15 +17,14 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://jitpack.io' }  // Added JitPack repository
     }
 }
 
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
-subprojects {
-    project.evaluationDependsOn(':app')
+    project.evaluationDependsOn(':app')  // Moved evaluationDependsOn into this block
 }
 
 tasks.register("clean", Delete) {
