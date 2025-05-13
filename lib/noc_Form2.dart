@@ -1,22 +1,14 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:convert';
+import 'dart:io' show File;
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io' show File;
 import 'package:http/http.dart' as http;
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
-import 'dart:io' as Io;
-
+import 'package:image_picker/image_picker.dart';
 import 'package:tigramnks/homePage.dart';
 
 class noc_Form2 extends StatefulWidget {

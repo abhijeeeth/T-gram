@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:hexcolor/hexcolor.dart';
-import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
+
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pie_chart/pie_chart.dart';
@@ -37,7 +37,8 @@ class OfficerDashboard extends StatefulWidget {
 
   var userAddress;
   OfficerDashboard(
-      {required this.userId,
+      {super.key,
+      required this.userId,
       required this.userName,
       required this.userEmail,
       required this.sessionToken,
@@ -50,6 +51,7 @@ class OfficerDashboard extends StatefulWidget {
 }
 
 class _OfficerDashboardState extends State<OfficerDashboard> {
+  @override
   void initState() {
     super.initState();
     print(userId);
@@ -640,16 +642,16 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
     }
   }
 
-  String AssignOfficer(bool isForm2, String? assign_deputy2,
-      String? assign_deputy1, bool? log_updated_by_user) {
+  String AssignOfficer(bool isForm2, String? assignDeputy2,
+      String? assignDeputy1, bool? logUpdatedByUser) {
     if (isForm2 == true) {
-      if (assign_deputy2 != null) {
-        return assign_deputy2;
-      } else if (assign_deputy1 != null) {
-        if (log_updated_by_user == true) {
+      if (assignDeputy2 != null) {
+        return assignDeputy2;
+      } else if (assignDeputy1 != null) {
+        if (logUpdatedByUser == true) {
           return 'Yet to Assign for Stage 2';
         } else {
-          return assign_deputy1;
+          return assignDeputy1;
         }
       } else {
         return 'Yet to Assign for Stage 1';
@@ -658,30 +660,30 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
     return 'N/A';
   }
 
-  bool getForm(bool isform, bool other_State, bool division_officer,
-      bool verify_range_officer, String App_status) {
-    bool can_apply3 = false;
-    if (App_status == 'A') {
-      return can_apply3;
+  bool getForm(bool isform, bool otherState, bool divisionOfficer,
+      bool verifyRangeOfficer, String appStatus) {
+    bool canApply3 = false;
+    if (appStatus == 'A') {
+      return canApply3;
     }
     if (isform == true) {
-      if (other_State == false) {
-        if (division_officer == true && App_status != 'P') {
-          can_apply3 = true;
-          return can_apply3;
+      if (otherState == false) {
+        if (divisionOfficer == true && appStatus != 'P') {
+          canApply3 = true;
+          return canApply3;
         } else {
-          return can_apply3;
+          return canApply3;
         }
       } else {
-        if (verify_range_officer == true && App_status != 'P') {
-          can_apply3 = true;
-          return can_apply3;
+        if (verifyRangeOfficer == true && appStatus != 'P') {
+          canApply3 = true;
+          return canApply3;
         } else {
-          return can_apply3;
+          return canApply3;
         }
       }
     }
-    return can_apply3;
+    return canApply3;
   }
 
   int daysBetween(DateTime from) {
@@ -696,8 +698,8 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
     }
   }
 
-  int _currentSortColumn = 0;
-  bool _isAscending = true;
+  final int _currentSortColumn = 0;
+  final bool _isAscending = true;
   Future<bool> _onBackPressed() async {
     bool returnValue = false;
     return await showDialog(
@@ -888,7 +890,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                     columnSpacing: 20,
                                     dividerThickness: 2,
                                     headingRowColor:
-                                        MaterialStateColor.resolveWith(
+                                        WidgetStateColor.resolveWith(
                                             (states) => Colors.orange),
                                     columns: [
                                       DataColumn(
@@ -1077,10 +1079,10 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                   .toString()
                                                               : "N/A"))),
                                                       DataCell(
-                                                        new Visibility(
+                                                        Visibility(
                                                           visible: true,
                                                           child: IconButton(
-                                                            icon: new Icon(Icons
+                                                            icon: Icon(Icons
                                                                 .visibility),
                                                             color: Colors.blue,
                                                             onPressed: () {
@@ -1114,7 +1116,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                         ),
                                                       ),
                                                       DataCell(
-                                                        new Visibility(
+                                                        Visibility(
                                                           visible: (Current_status[
                                                                           int.parse(
                                                                               value)]
@@ -1123,7 +1125,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                               ? true
                                                               : false,
                                                           child: IconButton(
-                                                            icon: new Icon(Icons
+                                                            icon: Icon(Icons
                                                                 .file_download),
                                                             color: Colors.blue,
                                                             onPressed:
@@ -1141,7 +1143,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                       ),
                                                       DataCell(
                                                         IconButton(
-                                                          icon: new Icon(Icons
+                                                          icon: Icon(Icons
                                                               .file_download),
                                                           color: Colors.blue,
                                                           onPressed: () async {
@@ -1157,7 +1159,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                       ),
 
                                                       DataCell(
-                                                        new Visibility(
+                                                        Visibility(
                                                           visible: (Current_status[
                                                                           int.parse(
                                                                               value)]
@@ -1166,7 +1168,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                               ? true
                                                               : false,
                                                           child: IconButton(
-                                                            icon: new Icon(Icons
+                                                            icon: Icon(Icons
                                                                 .qr_code_outlined),
                                                             color: Colors.blue,
                                                             onPressed:
@@ -1225,7 +1227,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                       DataCell(
                                                         Visibility(
                                                           child: IconButton(
-                                                            icon: new Icon(Icons
+                                                            icon: Icon(Icons
                                                                 .location_on_rounded),
                                                             color: Colors.blue,
                                                             onPressed:
@@ -1281,7 +1283,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                         columnSpacing: 30,
                                         dividerThickness: 2,
                                         headingRowColor:
-                                            MaterialStateColor.resolveWith(
+                                            WidgetStateColor.resolveWith(
                                                 (states) => Colors.green),
                                         columns: [
                                           DataColumn(
@@ -1477,11 +1479,11 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                       .toString()
                                                                   : "N/A")),
                                                           DataCell(
-                                                            new Visibility(
+                                                            Visibility(
                                                               // visible: (Current_status1[int.parse(value)].toString()=='A')?true:false,
                                                               visible: true,
                                                               child: IconButton(
-                                                                icon: new Icon(Icons
+                                                                icon: Icon(Icons
                                                                     .visibility),
                                                                 color:
                                                                     Colors.blue,
@@ -1508,7 +1510,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                             ),
                                                           ),
                                                           DataCell(
-                                                            new Visibility(
+                                                            Visibility(
                                                               visible: (Current_status1[
                                                                               int.parse(value)]
                                                                           .toString() ==
@@ -1516,7 +1518,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                   ? true
                                                                   : false,
                                                               child: IconButton(
-                                                                icon: new Icon(Icons
+                                                                icon: Icon(Icons
                                                                     .file_download),
                                                                 color:
                                                                     Colors.blue,
@@ -1534,7 +1536,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                           ),
                                                           DataCell(
                                                             IconButton(
-                                                              icon: new Icon(Icons
+                                                              icon: Icon(Icons
                                                                   .file_download),
                                                               color:
                                                                   Colors.blue,
@@ -1550,7 +1552,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                             ),
                                                           ),
                                                           DataCell(
-                                                            new Visibility(
+                                                            Visibility(
                                                               visible: (Current_status1[
                                                                               int.parse(value)]
                                                                           .toString() ==
@@ -1558,7 +1560,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                   ? true
                                                                   : false,
                                                               child: IconButton(
-                                                                icon: new Icon(Icons
+                                                                icon: Icon(Icons
                                                                     .qr_code_outlined),
                                                                 color:
                                                                     Colors.blue,
@@ -1619,7 +1621,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                           DataCell(
                                                             Visibility(
                                                               child: IconButton(
-                                                                icon: new Icon(Icons
+                                                                icon: Icon(Icons
                                                                     .location_on_rounded),
                                                                 color:
                                                                     Colors.blue,
@@ -1732,7 +1734,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                         columnSpacing: 20,
                                         dividerThickness: 2,
                                         headingRowColor:
-                                            MaterialStateColor.resolveWith(
+                                            WidgetStateColor.resolveWith(
                                                 (states) => Colors.cyan),
                                         columns: [
                                           DataColumn(
@@ -1857,10 +1859,10 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                           value)]
                                                                   .toString())),
                                                           DataCell(
-                                                            new Visibility(
+                                                            Visibility(
                                                               // visible: (Current_status[int.parse(value)].toString()=='A')?true:false,
                                                               child: IconButton(
-                                                                icon: new Icon(Icons
+                                                                icon: Icon(Icons
                                                                     .visibility),
                                                                 color:
                                                                     Colors.blue,
@@ -1888,7 +1890,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                             ),
                                                           ),
                                                           DataCell(
-                                                            new Visibility(
+                                                            Visibility(
                                                               visible: (Current_status2[
                                                                               int.parse(value)]
                                                                           .toString() ==
@@ -1896,7 +1898,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                   ? true
                                                                   : false,
                                                               child: IconButton(
-                                                                icon: new Icon(Icons
+                                                                icon: Icon(Icons
                                                                     .file_download),
                                                                 color:
                                                                     Colors.blue,
@@ -1914,7 +1916,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                           ),
                                                           DataCell(
                                                             IconButton(
-                                                              icon: new Icon(Icons
+                                                              icon: Icon(Icons
                                                                   .file_download),
                                                               color:
                                                                   Colors.blue,
@@ -1930,7 +1932,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                             ),
                                                           ),
                                                           DataCell(
-                                                            new Visibility(
+                                                            Visibility(
                                                               visible: (Current_status2[
                                                                               int.parse(value)]
                                                                           .toString() ==
@@ -1938,7 +1940,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                   ? true
                                                                   : false,
                                                               child: IconButton(
-                                                                icon: new Icon(Icons
+                                                                icon: Icon(Icons
                                                                     .qr_code_outlined),
                                                                 color:
                                                                     Colors.blue,
@@ -2036,7 +2038,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                           columnSpacing: 20,
                                           dividerThickness: 2,
                                           headingRowColor:
-                                              MaterialStateColor.resolveWith(
+                                              WidgetStateColor.resolveWith(
                                                   (states) => Colors.blue),
                                           columns: [
                                             DataColumn(
@@ -2117,7 +2119,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                             // DataCell(Text((Approved_date3[int.parse(value)].toString()=='true')?Approved_date3[int.parse(value)].toString():"N/A",)),
                                                             DataCell(
                                                               IconButton(
-                                                                icon: new Icon(Icons
+                                                                icon: Icon(Icons
                                                                     .visibility),
                                                                 color:
                                                                     Colors.blue,
@@ -2165,9 +2167,8 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                               Visibility(
                                                                 child:
                                                                     IconButton(
-                                                                  icon: new Icon(
-                                                                      Icons
-                                                                          .location_on_rounded),
+                                                                  icon: Icon(Icons
+                                                                      .location_on_rounded),
                                                                   color: Colors
                                                                       .blue,
                                                                   onPressed:
@@ -2222,8 +2223,8 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                       gradient: LinearGradient(
                           colors: [HexColor("#26f596"), HexColor("#0499f2")]),
                     ),
-                    accountEmail: Text('$userEmail'),
-                    accountName: Text("$userName"),
+                    accountEmail: Text(userEmail),
+                    accountName: Text(userName),
                     currentAccountPicture: CircleAvatar(
                       backgroundColor: Colors.white,
                       child: Text(

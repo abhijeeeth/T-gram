@@ -1,13 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:convert';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
-import 'package:hexcolor/hexcolor.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 import 'package:tigramnks/newPassword.dart';
 
 class forgetPassword extends StatefulWidget {

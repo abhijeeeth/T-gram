@@ -1,21 +1,5 @@
 import 'dart:convert';
 import 'dart:core';
-import 'dart:ffi';
-import 'dart:isolate';
-
-import 'dart:ui';
-
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
-import 'package:get/get.dart';
-//import 'package:syncfusion_flutter_datagrid/datagrid.dart';
-
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:dio/dio.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:path_provider/path_provider.dart';
 import 'dart:io'
     show
         Directory,
@@ -25,17 +9,19 @@ import 'dart:io'
         HttpClientRequest,
         HttpClientResponse,
         Platform;
-import 'package:http/http.dart' as http;
+import 'dart:isolate';
+import 'dart:ui';
+
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:tigramnks/DivisionViewReport.dart';
-import 'package:tigramnks/NocViewApplication.dart';
+import 'package:schedulers/schedulers.dart';
 import 'package:tigramnks/ViewApplication.dart';
-import 'package:tigramnks/addLocation.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:schedulers/schedulers.dart';
-import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 
 class CheckPassStatus extends StatefulWidget {
   String sessionToken;

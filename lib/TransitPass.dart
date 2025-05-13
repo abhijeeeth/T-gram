@@ -1,18 +1,15 @@
 import 'dart:convert';
+import 'dart:io' show File, HttpHeaders;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
-
-import 'package:hexcolor/hexcolor.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'dart:io' show File, HttpHeaders;
+import 'package:geolocator/geolocator.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
-import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:tigramnks/Form.dart';
 import 'package:tigramnks/sqflite/dataBase.dart';
-import 'dart:developer' as logNK;
-import 'model/formOneModel.dart';
 
 class TransitPass extends StatefulWidget {
   //final formOneFields form;

@@ -3,7 +3,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'dart:io';
 import 'dart:developer';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -17,7 +17,8 @@ class QueryPage extends StatefulWidget {
   String userMobile;
   String userAddress;
   QueryPage(
-      {required this.userId,
+      {super.key,
+      required this.userId,
       required this.sessionToken,
       required this.userName,
       required this.userEmail,

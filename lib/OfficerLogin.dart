@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 
 import "package:flutter/cupertino.dart";
 
-import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tigramnks/OfficerDashboard.dart';
 
 import 'main.dart';
 
 class OfficerLogin extends StatefulWidget {
+  const OfficerLogin({super.key});
+
   @override
   _OfficerLoginState createState() => _OfficerLoginState();
 }
@@ -27,7 +28,7 @@ class _OfficerLoginState extends State<OfficerLogin> {
   bool validateEmail(String value) {
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern as String);
+    RegExp regex = RegExp(pattern as String);
     return (!regex.hasMatch(value)) ? false : true;
   }
 
@@ -36,7 +37,7 @@ class _OfficerLoginState extends State<OfficerLogin> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(" Officer Login"),
+        title: const Text(" Officer Login"),
         backgroundColor: Colors.green,
       ),
       body: SingleChildScrollView(
@@ -45,7 +46,7 @@ class _OfficerLoginState extends State<OfficerLogin> {
             Padding(
               padding: const EdgeInsets.only(top: 60.0),
               child: Center(
-                child: Container(
+                child: SizedBox(
                     width: 200,
                     height: 150,
                     /*decoration: BoxDecoration(
@@ -56,10 +57,10 @@ class _OfficerLoginState extends State<OfficerLogin> {
             ),
             Padding(
               //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
-              padding: EdgeInsets.symmetric(horizontal: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
                 controller: loginEmail,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Officer ID',
                     hintText: 'Enter valid ID'),
@@ -79,8 +80,9 @@ class _OfficerLoginState extends State<OfficerLogin> {
                             isHiddenPassword = !isHiddenPassword;
                           });
                         },
-                        child: Icon(Icons.visibility, color: Colors.black54)),
-                    border: OutlineInputBorder(),
+                        child: const Icon(Icons.visibility,
+                            color: Colors.black54)),
+                    border: const OutlineInputBorder(),
                     labelText: 'Password',
                     hintText: 'Enter secure password'),
               ),
@@ -93,8 +95,8 @@ class _OfficerLoginState extends State<OfficerLogin> {
               margin: const EdgeInsets.only(top: 20.0),
               child: TextButton(
                 onPressed: () {
-                  if ((loginEmail.text.length == 0) ||
-                      (loginPassword.text.length == 0)) {
+                  if ((loginEmail.text.isEmpty) ||
+                      (loginPassword.text.isEmpty)) {
                     Fluttertoast.showToast(
                         msg: "Either email or password field is empty",
                         toastLength: Toast.LENGTH_SHORT,
@@ -122,13 +124,13 @@ class _OfficerLoginState extends State<OfficerLogin> {
                                     sessionToken: sessionToken,
                                     userGroup: 'someUserGroup',
                                     dropdownValue: 'someDropdownValue',
-                                    Range: [
+                                    Range: const [
                                       'someRange'
                                     ] // example list of dynamic values
                                     )));
                   }
                 },
-                child: Text(
+                child: const Text(
                   'Login',
                   style: TextStyle(color: Colors.white, fontSize: 25),
                 ),

@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/home/devmode/development/flutter/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/usr/bin/ninja",
+      "-C",
+      "/home/devmode/Downloads/TIGRAM_Repo1/android/app/.cxx/RelWithDebInfo/4c421l1s/x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/usr/bin/ninja",
+    "-C",
+    "/home/devmode/Downloads/TIGRAM_Repo1/android/app/.cxx/RelWithDebInfo/4c421l1s/x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}

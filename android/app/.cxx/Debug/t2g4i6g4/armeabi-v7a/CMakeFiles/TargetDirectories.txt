@@ -1,0 +1,2 @@
+/home/devmode/Downloads/TIGRAM_Repo1/android/app/.cxx/Debug/t2g4i6g4/armeabi-v7a/CMakeFiles/edit_cache.dir
+/home/devmode/Downloads/TIGRAM_Repo1/android/app/.cxx/Debug/t2g4i6g4/armeabi-v7a/CMakeFiles/rebuild_cache.dir

@@ -1,21 +1,11 @@
 import 'dart:convert';
-
-import 'dart:math';
-
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:http/http.dart' as http;
+import 'dart:io' show File;
 
 import 'package:file_picker/file_picker.dart';
-
-import 'dart:io' show File;
-import 'dart:io' as Io;
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 import 'package:tigramnks/Images.dart';
 import 'package:tigramnks/OfficerDashboard.dart';
 import 'package:tigramnks/ViewApplication1.dart';

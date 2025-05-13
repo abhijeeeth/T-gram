@@ -1,15 +1,15 @@
 buildscript {
     ext.kotlin_version = '1.9.23'  // Updated Kotlin version
     repositories {
-        google()
+        google() // Ensure this is present
         mavenCentral()
         maven { url 'https://jitpack.io' }  // Added JitPack repository
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.1.0'  // Downgraded Gradle version
-        classpath 'com.google.gms:google-services:4.4.0'  // Added Google Services dependency
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.android.tools.build:gradle:7.0.4'
+        classpath 'com.google.gms:google-services:4.3.15' // Add this line
+        // classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 

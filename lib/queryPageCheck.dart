@@ -8,7 +8,7 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tigramnks/checkPostDash.dart';
@@ -25,7 +25,8 @@ class queryPage extends StatefulWidget {
   String userAddress;
   String userGroup;
   queryPage(
-      {required this.userId,
+      {super.key,
+      required this.userId,
       required this.sessionToken,
       required this.userName,
       required this.userEmail,
@@ -54,7 +55,7 @@ class _queryPageState extends State<queryPage> {
   bool isShow = false;
   String latImage2 = "";
   String longImage2 = "";
-  var _remarkfile = null;
+  var _remarkfile;
 
   void getCurrentLocation2() async {
     LocationPermission permission;
@@ -68,9 +69,6 @@ class _queryPageState extends State<queryPage> {
     var posi3 = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     var lastPosition = await Geolocator.getLastKnownPosition();
-    if (latImage2 == null || longImage2 == null) {
-      getCurrentLocation2();
-    }
     print(latImage2);
     setState(() {
       latImage2 = posi3.latitude.toString();
@@ -304,7 +302,7 @@ class _queryPageState extends State<queryPage> {
                             //String newString = result.code.substring(0, result.code.indexOf('/SA'));
                             //    var newString = result.code.substring((result.code.length - 5).clamp(0, result.code.length));
                             print(newString);
-                            if (newString != null && latImage2 != "") {
+                            if (latImage2 != "") {
                               submitData(newString);
                               // const String url =
                               //     'https://timber.forest.kerala.gov.in/api/auth/scaned_details';
@@ -359,7 +357,7 @@ class _queryPageState extends State<queryPage> {
                             }
                           },
                           child: Container(
-                            child: Column(
+                            child: const Column(
                               children: [
                                 Icon(
                                   Icons.camera,

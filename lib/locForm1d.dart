@@ -1,23 +1,12 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:geolocator/geolocator.dart';
-
-import 'package:hexcolor/hexcolor.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io' show File;
-import 'package:http/http.dart' as http;
+
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
-import 'package:tigramnks/blocks/formOneblock.dart';
-import 'package:tigramnks/events/addFormOne.dart';
-import 'dart:io' as Io;
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:tigramnks/homePage.dart';
-import 'package:tigramnks/model/formOneModel.dart';
 import 'package:tigramnks/sqflite/DatabaseHelper.dart';
-import 'package:tigramnks/sqflite/dataBase.dart';
 import 'package:tigramnks/sqflite/formModel.dart';
 
 class locForm1d extends StatefulWidget {

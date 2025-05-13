@@ -1,9 +1,6 @@
 // ignore_for_file: sort_child_properties_last
 
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
-import 'package:tigramnks/SFViewReports.dart';
 
 class SFReports extends StatefulWidget {
   String sessionToken;
@@ -164,24 +161,24 @@ class _SFReportsState extends State<SFReports> {
                           const Text('Application Received/Approved/Rejected'),
                       onTap: () {
                         int R1 = 1;
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => SFViewReports(
-                                      sessionToken: sessionToken,
-                                      SelectedRange: SelectedRange!,
-                                      SelectedRange1: SelectedRange1!,
-                                      R1: R1,
-                                      R2: 0,
-                                      R3: 0,
-                                      R4: 0,
-                                      R5: 0,
-                                      R6: 0,
-                                      R7: 0,
-                                      R8: 0,
-                                      R9: 0,
-                                      R10: 0,
-                                    )));
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (_) => SFViewReports(
+                        //               sessionToken: sessionToken,
+                        //               SelectedRange: SelectedRange!,
+                        //               SelectedRange1: SelectedRange1!,
+                        //               R1: R1,
+                        //               R2: 0,
+                        //               R3: 0,
+                        //               R4: 0,
+                        //               R5: 0,
+                        //               R6: 0,
+                        //               R7: 0,
+                        //               R8: 0,
+                        //               R9: 0,
+                        //               R10: 0,
+                        //             )));
                       }),
                   elevation: 3,
                 ),
@@ -190,24 +187,24 @@ class _SFReportsState extends State<SFReports> {
                       title: const Text('Pending Application'),
                       onTap: () {
                         int R2 = 2;
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => SFViewReports(
-                                      sessionToken: sessionToken,
-                                      SelectedRange: SelectedRange!,
-                                      SelectedRange1: SelectedRange1!,
-                                      R1: 0,
-                                      R2: R2,
-                                      R3: 0,
-                                      R4: 0,
-                                      R5: 0,
-                                      R6: 0,
-                                      R7: 0,
-                                      R8: 0,
-                                      R9: 0,
-                                      R10: 0,
-                                    )));
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (_) => SFViewReports(
+                        //               sessionToken: sessionToken,
+                        //               SelectedRange: SelectedRange!,
+                        //               SelectedRange1: SelectedRange1!,
+                        //               R1: 0,
+                        //               R2: R2,
+                        //               R3: 0,
+                        //               R4: 0,
+                        //               R5: 0,
+                        //               R6: 0,
+                        //               R7: 0,
+                        //               R8: 0,
+                        //               R9: 0,
+                        //               R10: 0,
+                        //             )));
                       }),
                   elevation: 3,
                 ),
@@ -216,24 +213,24 @@ class _SFReportsState extends State<SFReports> {
                       title: const Text('Approved Application'),
                       onTap: () {
                         int R3 = 3;
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => SFViewReports(
-                                      sessionToken: sessionToken,
-                                      SelectedRange: SelectedRange!,
-                                      SelectedRange1: SelectedRange1!,
-                                      R1: 0,
-                                      R2: 0,
-                                      R3: R3,
-                                      R4: 0,
-                                      R5: 0,
-                                      R6: 0,
-                                      R7: 0,
-                                      R8: 0,
-                                      R9: 0,
-                                      R10: 0,
-                                    )));
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (_) => SFViewReports(
+                        //               sessionToken: sessionToken,
+                        //               SelectedRange: SelectedRange!,
+                        //               SelectedRange1: SelectedRange1!,
+                        //               R1: 0,
+                        //               R2: 0,
+                        //               R3: R3,
+                        //               R4: 0,
+                        //               R5: 0,
+                        //               R6: 0,
+                        //               R7: 0,
+                        //               R8: 0,
+                        //               R9: 0,
+                        //               R10: 0,
+                        //             )));
                       }),
                   elevation: 3,
                 ),
@@ -242,24 +239,24 @@ class _SFReportsState extends State<SFReports> {
                       title: const Text('Rejected Application'),
                       onTap: () {
                         int R4 = 4;
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => SFViewReports(
-                                      sessionToken: sessionToken,
-                                      SelectedRange: SelectedRange!,
-                                      SelectedRange1: SelectedRange1!,
-                                      R1: 0,
-                                      R2: 0,
-                                      R3: 0,
-                                      R4: R4,
-                                      R5: 0,
-                                      R6: 0,
-                                      R7: 0,
-                                      R8: 0,
-                                      R9: 0,
-                                      R10: 0,
-                                    )));
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (_) => SFViewReports(
+                        //               sessionToken: sessionToken,
+                        //               SelectedRange: SelectedRange!,
+                        //               SelectedRange1: SelectedRange1!,
+                        //               R1: 0,
+                        //               R2: 0,
+                        //               R3: 0,
+                        //               R4: R4,
+                        //               R5: 0,
+                        //               R6: 0,
+                        //               R7: 0,
+                        //               R8: 0,
+                        //               R9: 0,
+                        //               R10: 0,
+                        //             )));
                       }),
                   elevation: 3,
                 ),
@@ -268,24 +265,24 @@ class _SFReportsState extends State<SFReports> {
                       title: const Text('Forward Application'),
                       onTap: () {
                         int R5 = 5;
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => SFViewReports(
-                                      sessionToken: sessionToken,
-                                      SelectedRange: SelectedRange!,
-                                      SelectedRange1: SelectedRange1!,
-                                      R1: 0,
-                                      R2: 0,
-                                      R3: 0,
-                                      R4: 0,
-                                      R5: R5,
-                                      R6: 0,
-                                      R7: 0,
-                                      R8: 0,
-                                      R9: 0,
-                                      R10: 0,
-                                    )));
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (_) => SFViewReports(
+                        //               sessionToken: sessionToken,
+                        //               SelectedRange: SelectedRange!,
+                        //               SelectedRange1: SelectedRange1!,
+                        //               R1: 0,
+                        //               R2: 0,
+                        //               R3: 0,
+                        //               R4: 0,
+                        //               R5: R5,
+                        //               R6: 0,
+                        //               R7: 0,
+                        //               R8: 0,
+                        //               R9: 0,
+                        //               R10: 0,
+                        //             )));
                       }),
                   elevation: 3,
                 ),
@@ -294,24 +291,24 @@ class _SFReportsState extends State<SFReports> {
                       title: const Text('Cutting Permission'),
                       onTap: () {
                         int R6 = 6;
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => SFViewReports(
-                                      sessionToken: sessionToken,
-                                      SelectedRange: SelectedRange!,
-                                      SelectedRange1: SelectedRange1!,
-                                      R1: 0,
-                                      R2: 0,
-                                      R3: 0,
-                                      R4: 0,
-                                      R5: 0,
-                                      R6: R6,
-                                      R7: 0,
-                                      R8: 0,
-                                      R9: 0,
-                                      R10: 0,
-                                    )));
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (_) => SFViewReports(
+                        //               sessionToken: sessionToken,
+                        //               SelectedRange: SelectedRange!,
+                        //               SelectedRange1: SelectedRange1!,
+                        //               R1: 0,
+                        //               R2: 0,
+                        //               R3: 0,
+                        //               R4: 0,
+                        //               R5: 0,
+                        //               R6: R6,
+                        //               R7: 0,
+                        //               R8: 0,
+                        //               R9: 0,
+                        //               R10: 0,
+                        //             )));
                       }),
                   elevation: 3,
                 ),
@@ -320,24 +317,24 @@ class _SFReportsState extends State<SFReports> {
                       title: const Text('Time takes for application'),
                       onTap: () {
                         int R7 = 7;
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => SFViewReports(
-                                      sessionToken: sessionToken,
-                                      SelectedRange: SelectedRange!,
-                                      SelectedRange1: SelectedRange1!,
-                                      R1: 0,
-                                      R2: 0,
-                                      R3: 0,
-                                      R4: 0,
-                                      R5: 0,
-                                      R6: 0,
-                                      R7: R7,
-                                      R8: 0,
-                                      R9: 0,
-                                      R10: 0,
-                                    )));
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (_) => SFViewReports(
+                        //               sessionToken: sessionToken,
+                        //               SelectedRange: SelectedRange!,
+                        //               SelectedRange1: SelectedRange1!,
+                        //               R1: 0,
+                        //               R2: 0,
+                        //               R3: 0,
+                        //               R4: 0,
+                        //               R5: 0,
+                        //               R6: 0,
+                        //               R7: R7,
+                        //               R8: 0,
+                        //               R9: 0,
+                        //               R10: 0,
+                        //             )));
                       }),
                   elevation: 3,
                 ),
@@ -346,24 +343,24 @@ class _SFReportsState extends State<SFReports> {
                       title: const Text('Reason for cutting'),
                       onTap: () {
                         int R8 = 8;
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => SFViewReports(
-                                      sessionToken: sessionToken,
-                                      SelectedRange: SelectedRange!,
-                                      SelectedRange1: SelectedRange1!,
-                                      R1: 0,
-                                      R2: 0,
-                                      R3: 0,
-                                      R4: 0,
-                                      R5: 0,
-                                      R6: 0,
-                                      R7: 0,
-                                      R8: R8,
-                                      R9: 0,
-                                      R10: 0,
-                                    )));
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (_) => SFViewReports(
+                        //               sessionToken: sessionToken,
+                        //               SelectedRange: SelectedRange!,
+                        //               SelectedRange1: SelectedRange1!,
+                        //               R1: 0,
+                        //               R2: 0,
+                        //               R3: 0,
+                        //               R4: 0,
+                        //               R5: 0,
+                        //               R6: 0,
+                        //               R7: 0,
+                        //               R8: R8,
+                        //               R9: 0,
+                        //               R10: 0,
+                        //             )));
                       }),
                   elevation: 3,
                 ),
@@ -373,24 +370,24 @@ class _SFReportsState extends State<SFReports> {
                           'Number of Application received before & after cutting the tree'),
                       onTap: () {
                         int R9 = 9;
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => SFViewReports(
-                                      sessionToken: sessionToken,
-                                      SelectedRange: SelectedRange!,
-                                      SelectedRange1: SelectedRange1!,
-                                      R1: 0,
-                                      R2: 0,
-                                      R3: 0,
-                                      R4: 0,
-                                      R5: 0,
-                                      R6: 0,
-                                      R7: 0,
-                                      R8: 0,
-                                      R9: R9,
-                                      R10: 0,
-                                    )));
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (_) => SFViewReports(
+                        //               sessionToken: sessionToken,
+                        //               SelectedRange: SelectedRange!,
+                        //               SelectedRange1: SelectedRange1!,
+                        //               R1: 0,
+                        //               R2: 0,
+                        //               R3: 0,
+                        //               R4: 0,
+                        //               R5: 0,
+                        //               R6: 0,
+                        //               R7: 0,
+                        //               R8: 0,
+                        //               R9: R9,
+                        //               R10: 0,
+                        //             )));
                       }),
                   elevation: 3,
                 ),
@@ -399,24 +396,24 @@ class _SFReportsState extends State<SFReports> {
                       title: const Text('NOC Report'),
                       onTap: () {
                         int R10 = 10;
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => SFViewReports(
-                                      sessionToken: sessionToken,
-                                      SelectedRange: SelectedRange!,
-                                      SelectedRange1: SelectedRange1!,
-                                      R1: 0,
-                                      R2: 0,
-                                      R3: 0,
-                                      R4: 0,
-                                      R5: 0,
-                                      R6: 0,
-                                      R7: 0,
-                                      R8: 0,
-                                      R9: 0,
-                                      R10: R10,
-                                    )));
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (_) => SFViewReports(
+                        //               sessionToken: sessionToken,
+                        //               SelectedRange: SelectedRange!,
+                        //               SelectedRange1: SelectedRange1!,
+                        //               R1: 0,
+                        //               R2: 0,
+                        //               R3: 0,
+                        //               R4: 0,
+                        //               R5: 0,
+                        //               R6: 0,
+                        //               R7: 0,
+                        //               R8: 0,
+                        //               R9: 0,
+                        //               R10: R10,
+                        //             )));
                       }),
                   elevation: 3,
                 ),

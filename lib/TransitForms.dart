@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 import 'package:tigramnks/Form2Page1.dart';
-import 'package:tigramnks/TransitFormsList.dart';
 import 'package:tigramnks/TransitPass.dart';
 import 'package:tigramnks/sqflite/localdataForms.dart';
 

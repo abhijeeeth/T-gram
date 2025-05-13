@@ -1,15 +1,12 @@
 // ignore_for_file: prefer_const_constructors, unnecessary_null_comparison
 
 import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:http/http.dart' as http;
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:tigramnks/homePage.dart';
 import 'package:tigramnks/sqflite/DatabaseHelper.dart';
 import 'package:tigramnks/sqflite/formModel.dart';

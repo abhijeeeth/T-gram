@@ -9,7 +9,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
+
 import 'package:tigramnks/ViewApplication1.dart';
 
 class ViewApplication extends StatefulWidget {
@@ -145,7 +145,6 @@ class _ViewApplicationState extends State<ViewApplication> {
     print(data);
     var body = json.encode(data);
     print(body);
-    ;
     print(sessionToken); // Fixed missing semicolon here
     print("Session Token: $sessionToken");
     final response = await http.post(Uri.parse(url),
@@ -903,12 +902,12 @@ class _ViewApplicationState extends State<ViewApplication> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         color: Colors.white,
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black26,
             blurRadius: 5.0,
             spreadRadius: 0.5,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           )
         ],
       ),
@@ -978,12 +977,12 @@ class _ViewApplicationState extends State<ViewApplication> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         color: Colors.white,
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black26,
             blurRadius: 5.0,
             spreadRadius: 0.5,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           )
         ],
       ),

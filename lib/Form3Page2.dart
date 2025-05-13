@@ -1,13 +1,10 @@
 import 'dart:convert';
+import 'dart:io' show File;
 
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
-import 'dart:io' show File;
-import 'package:image_picker/image_picker.dart';
-import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
-import 'dart:io' as Io;
+import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 
 class Form3Page2 extends StatefulWidget {
   final String Name;

@@ -15,7 +15,7 @@ import 'dart:io' show File;
 import 'dart:io' as Io;
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
+
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tigramnks/CheckPassStatus.dart';
 import 'package:tigramnks/Images.dart';
@@ -382,12 +382,12 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
       String fieldRequre,
       String userLoc,
       bool fieldStatus) {
-    bool can_assign_officer = false;
-    bool transit_pass_exist = false;
-    bool reject_visible = false;
-    bool feild_butt_range = false;
+    bool canAssignOfficer = false;
+    bool transitPassExist = false;
+    bool rejectVisible = false;
+    bool feildButtRange = false;
     bool approvefinal = false;
-    bool add_Loc = false;
+    bool addLoc = false;
 
     // Check if application is self-assigned to the range officer
     bool isSelfAssigned =
@@ -399,11 +399,11 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
     if (userGroup == 'forest range officer') {
       if (!fieldStatus && !verifyRangeOfficer) {
         if (isSelfAssigned && !isDeputyAssigned) {
-          feild_butt_range = true;
-          can_assign_officer = false;
+          feildButtRange = true;
+          canAssignOfficer = false;
         } else if (!isDeputyAssigned) {
-          can_assign_officer = true;
-          reject_visible = true;
+          canAssignOfficer = true;
+          rejectVisible = true;
         }
       }
       // Only range officers can approve final cutting pass
@@ -413,23 +413,23 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
     } else if (userGroup == 'deputy range officer') {
       // Only allow field verification if assigned to this deputy
       if (assignedDeputy1Id == userId && !fieldStatus) {
-        feild_butt_range = true;
+        feildButtRange = true;
       }
       // Explicitly set approvefinal to false for deputies
       approvefinal = false;
-      can_assign_officer = false;
-      reject_visible = false;
+      canAssignOfficer = false;
+      rejectVisible = false;
     }
 
     print("User Group: $userGroup, Approve Final: $approvefinal"); // Debug log
 
     return {
-      'can_assign_officer': can_assign_officer,
-      'transit_pass_exist': transit_pass_exist,
-      'reject_visible': reject_visible,
-      'feild_butt_range': feild_butt_range,
+      'can_assign_officer': canAssignOfficer,
+      'transit_pass_exist': transitPassExist,
+      'reject_visible': rejectVisible,
+      'feild_butt_range': feildButtRange,
       'final_approve': approvefinal,
-      'add_LOC': add_Loc
+      'add_LOC': addLoc
     };
   }
 
@@ -879,7 +879,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                     )),
               ),
               // Debugging information - access outside of the widget tree
-              Container(
+              SizedBox(
                 height: 0,
                 width: 0,
                 child: Builder(builder: (context) {

@@ -1,15 +1,8 @@
-import 'dart:math';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tigramnks/locForm1a.dart';
 import 'package:tigramnks/sqflite/DatabaseHelper.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 import '../homePage.dart';
 import 'formModel.dart';
 

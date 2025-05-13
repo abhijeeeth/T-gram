@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
-import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
+
 import 'package:tigramnks/Images.dart';
 
 import 'package:tigramnks/NEW_FORMS/viewApplicationNw2.dart';
@@ -50,7 +50,8 @@ class ViewApplication1 extends StatefulWidget {
   List log_details;
   String treeSpecies;
   ViewApplication1(
-      {required this.sessionToken,
+      {super.key,
+      required this.sessionToken,
       required this.userGroup,
       required this.userId,
       required this.Ids,
@@ -230,7 +231,7 @@ class _ViewApplication1State extends State<ViewApplication1> {
     ];
 
     print(img_signature);
-    List<String> Image_nm = [
+    List<String> imageNm = [
       // "Signature",
       "Land Proof",
       "Possession Proof",
@@ -240,18 +241,18 @@ class _ViewApplication1State extends State<ViewApplication1> {
       "Id Proof",
     ];
     print(images.toString());
-    Future<bool> _onBackPressed() async {
+    Future<bool> onBackPressed() async {
       return await showDialog(
             context: context,
-            builder: (context) => new AlertDialog(
+            builder: (context) => AlertDialog(
               title: const Text('Do you want to go previous page'),
               actions: <Widget>[
-                new GestureDetector(
+                GestureDetector(
                   onTap: () => Navigator.of(context).pop(false),
                   child: const Text("NO"),
                 ),
                 const SizedBox(height: 16),
-                new GestureDetector(
+                GestureDetector(
                   onTap: () => Navigator.of(context).pop(true),
                   child: const Text("YES"),
                 ),
@@ -261,8 +262,8 @@ class _ViewApplication1State extends State<ViewApplication1> {
           false;
     }
 
-    return new WillPopScope(
-        onWillPop: _onBackPressed,
+    return WillPopScope(
+        onWillPop: onBackPressed,
         child: Scaffold(
           appBar: AppBar(
             title: Text('Application View'),
@@ -369,7 +370,7 @@ class _ViewApplication1State extends State<ViewApplication1> {
                             children: <Widget>[
                               ListTile(
                                 title: Text(
-                                  Image_nm[index].toString(),
+                                  imageNm[index].toString(),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     backgroundColor: Colors.black,

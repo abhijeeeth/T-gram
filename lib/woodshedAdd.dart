@@ -1,15 +1,11 @@
 import 'dart:convert';
 import 'dart:core';
-import 'dart:core';
-import 'dart:core';
-
 import 'dart:io' show File, HttpHeaders;
+
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:tigramnks/tigramWoodShed.dart';
 
 class woodshedAdd extends StatefulWidget {

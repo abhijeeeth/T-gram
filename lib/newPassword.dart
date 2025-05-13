@@ -1,9 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
+
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
 import 'package:tigramnks/login.dart';
 
 class newPassword extends StatefulWidget {

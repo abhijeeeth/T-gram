@@ -2,11 +2,10 @@
 
 import 'dart:convert';
 
-import 'package:http/http.dart' as http;
-
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
+import 'package:http/http.dart' as http;
+import 'package:pie_chart/pie_chart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tigramnks/DivisionReport.dart';
 import 'package:tigramnks/NocViewApplication.dart';
@@ -15,8 +14,6 @@ import 'package:tigramnks/QueryPage.dart';
 import 'package:tigramnks/ViewApplication.dart';
 import 'package:tigramnks/login.dart';
 import 'package:toggle_switch/toggle_switch.dart';
-import 'OfficerDashboard.dart' as OD;
-import 'package:pie_chart/pie_chart.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DivisonDashBoard extends StatefulWidget {

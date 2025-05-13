@@ -8,7 +8,7 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tigramnks/acknowlegeUser.dart';
@@ -25,7 +25,8 @@ class userScan extends StatefulWidget {
 
   String userGroup;
   userScan(
-      {required this.userId,
+      {super.key,
+      required this.userId,
       required this.sessionToken,
       required this.userName,
       required this.userEmail,
@@ -51,7 +52,7 @@ class _userScanState extends State<userScan> {
   bool isShow = false;
   String latImage2 = "";
   String longImage2 = "";
-  var _remarkfile = null;
+  var _remarkfile;
 
   void getCurrentLocation2() async {
     LocationPermission permission;
@@ -65,9 +66,6 @@ class _userScanState extends State<userScan> {
     var posi3 = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     var lastPosition = await Geolocator.getLastKnownPosition();
-    if (latImage2 == null || longImage2 == null) {
-      getCurrentLocation2();
-    }
     print(latImage2);
     setState(() {
       latImage2 = posi3.latitude.toString();
@@ -171,19 +169,16 @@ class _userScanState extends State<userScan> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  if (result != null)
-                    // Row(children: <Widget>[
-                    //   Container(
-                    //       child: new ElevatedButton(
-                    //     onPressed: _launchURL,
-                    //     child: new Text('Show Flutter homepage'),
-                    //   ))
-                    // ])
+                  // Row(children: <Widget>[
+                  //   Container(
+                  //       child: new ElevatedButton(
+                  //     onPressed: _launchURL,
+                  //     child: new Text('Show Flutter homepage'),
+                  //   ))
+                  // ])
 
-                    Text(
-                        'Barcode Type: ${describeEnum(result.format)}   Data: ${result.rawValue}')
-                  else
-                    const Text('Scan a code'),
+                  Text(
+                      'Barcode Type: ${describeEnum(result.format)}   Data: ${result.rawValue}'),
                   Row(
                     children: <Widget>[
                       Container(
@@ -262,7 +257,8 @@ class _userScanState extends State<userScan> {
                           onPressed: () async {
                             await controller.stop();
                           },
-                          child: Text('pause', style: TextStyle(fontSize: 20)),
+                          child: const Text('pause',
+                              style: TextStyle(fontSize: 20)),
                         ),
                       ),
                       Container(
@@ -271,7 +267,8 @@ class _userScanState extends State<userScan> {
                           onPressed: () async {
                             await controller.start();
                           },
-                          child: Text('start', style: TextStyle(fontSize: 20)),
+                          child: const Text('start',
+                              style: TextStyle(fontSize: 20)),
                         ),
                       )
                     ],
@@ -365,8 +362,8 @@ class _userScanState extends State<userScan> {
                             }
                           },
                           child: Container(
-                            child: Column(
-                              children: const [
+                            child: const Column(
+                              children: [
                                 Icon(
                                   Icons.camera,
                                 ),

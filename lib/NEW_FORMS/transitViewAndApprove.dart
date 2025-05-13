@@ -1,28 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
-import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
-
-import 'package:flutter/material.dart';
-
-import 'package:hexcolor/hexcolor.dart';
-
-import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:tigramnks/OfficerDashboard.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class transitViewAndApprove extends StatefulWidget {
   String? userGroup;

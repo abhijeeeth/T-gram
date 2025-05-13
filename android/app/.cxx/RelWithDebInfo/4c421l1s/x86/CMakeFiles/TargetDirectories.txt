@@ -1,0 +1,2 @@
+/home/devmode/Downloads/TIGRAM_Repo1/android/app/.cxx/RelWithDebInfo/4c421l1s/x86/CMakeFiles/edit_cache.dir
+/home/devmode/Downloads/TIGRAM_Repo1/android/app/.cxx/RelWithDebInfo/4c421l1s/x86/CMakeFiles/rebuild_cache.dir
