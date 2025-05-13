@@ -261,7 +261,6 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
       if (field_status) {
         errorMessage = 'Field verification already completed';
       } else if (assigned_deputy1_id != 0) {
-        // This is the issue
         errorMessage = 'Deputy already assigned';
       } else if (verify_range_officer) {
         errorMessage = 'Application already verified';
@@ -449,8 +448,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
 
       print("Fetching deputies for range ID: $rangeId");
 
-      String url =
-          'https://f4020lwv-8000.inc1.devtunnels.ms/api/auth/get_deputies/';
+      String url = 'https://timber.forest.kerala.gov.in/api/auth/get_deputies/';
       Map data = {"range": userId};
       var body = json.encode(data);
       print(sessionToken);
@@ -492,8 +490,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
   }
 
   feachLog() async {
-    String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms/api/auth/get_req_log/';
+    String url = 'https://timber.forest.kerala.gov.in/api/auth/get_req_log/';
     Map data = {"app_id": Ids};
     var body = json.encode(data);
     final response = await http.post(Uri.parse(url),
@@ -539,7 +536,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
 
   fechAppLog() async {
     String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms/api/auth/get_verified_log/';
+        'https://timber.forest.kerala.gov.in/api/auth/get_verified_log/';
     Map data = {"app_id": Ids};
     var body = json.encode(data);
     final response = await http.post(Uri.parse(url),
@@ -1115,7 +1112,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                     fontSize: 18.0);
                               } else {
                                 const String url =
-                                    'https://f4020lwv-8000.inc1.devtunnels.ms/api/auth/assgin_deputy/';
+                                    'https://timber.forest.kerala.gov.in/api/auth/assgin_deputy/';
                                 Map data = {
                                   "app_id": Ids,
                                   "deputy_id": dropdownValue3 != null
@@ -1267,7 +1264,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                   fontSize: 18.0);
                             } else {
                               const String url =
-                                  'https://f4020lwv-8000.inc1.devtunnels.ms/api/auth/approve_cutting_pass_new/';
+                                  'https://timber.forest.kerala.gov.in/api/auth/approve_cutting_pass_new/';
                               Map data = {
                                 "app_id": int.parse(Ids),
                                 "type": "Reject",
@@ -1675,7 +1672,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                   fontSize: 18.0);
                             } else {
                               const String url =
-                                  'https://f4020lwv-8000.inc1.devtunnels.ms/api/auth/approve_cutting_pass_new/';
+                                  'https://timber.forest.kerala.gov.in/api/auth/approve_cutting_pass_new/';
                               Map data = {
                                 "app_id": int.parse(Ids),
                                 "type": "Approve",
@@ -1838,7 +1835,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                             fontSize: 18.0);
                       } else {
                         const String url =
-                            'https://f4020lwv-8000.inc1.devtunnels.ms/api/auth/AddLocation/';
+                            'https://timber.forest.kerala.gov.in/api/auth/AddLocation/';
                         Map data = {
                           "app_id": int.parse(Ids),
                           "lat": latImage_u,
@@ -2376,7 +2373,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                               isShow = true;
                             });
                             const String url =
-                                'https://f4020lwv-8000.inc1.devtunnels.ms/api/auth/field_verify/';
+                                'https://timber.forest.kerala.gov.in/api/auth/field_verify/';
                             Map data = {
                               "app_id": Ids,
                               "location_img1": {
@@ -2822,7 +2819,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                   fontSize: 18.0);
                             } else {
                               const String url =
-                                  'https://f4020lwv-8000.inc1.devtunnels.ms/api/auth/assgin_deputy/';
+                                  'https://timber.forest.kerala.gov.in/api/auth/assgin_deputy/';
                               Map data = {
                                 "app_id": Ids,
                                 "deputy_id": dropdownValue3 != null

@@ -61,7 +61,7 @@ class _NocViewApplicationState extends State<NocViewApplication> {
 
   void NocView() async {
     String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/NocViewApplication';
+        'https://timber.forest.kerala.gov.in/api/auth/NocViewApplication';
     Map data = {
       "app_id": Ids,
     };

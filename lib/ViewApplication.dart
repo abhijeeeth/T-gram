@@ -45,8 +45,7 @@ class _ViewApplicationState extends State<ViewApplication> {
   String userEmail;
   _ViewApplicationState(this.sessionToken, this.userId, this.userGroup,
       this.Ids, this.Range, this.userName, this.userEmail);
-  String url =
-      'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ViewApplication';
+  String url = 'https://timber.forest.kerala.gov.in/api/auth/ViewApplication';
 
   late bool verify_officer;
   late bool deputy_range_officer;
@@ -141,8 +140,7 @@ class _ViewApplicationState extends State<ViewApplication> {
 
   //---end vehical-----------
   View_Record() async {
-    String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ViewApplication';
+    String url = 'https://timber.forest.kerala.gov.in/api/auth/ViewApplication';
     Map data = {"app_id": Ids};
     print(data);
     var body = json.encode(data);
@@ -1154,7 +1152,7 @@ class _ViewApplicationState extends State<ViewApplication> {
 
     try {
       const String url =
-          'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/UpdateTimberlog';
+          'https://timber.forest.kerala.gov.in/api/auth/UpdateTimberlog';
       Map data = {"app_id": Ids, "log_details": log_details};
       var body = json.encode(data);
 

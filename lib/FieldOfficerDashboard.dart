@@ -103,7 +103,7 @@ class _FieldOfficerDashboardState extends State<FieldOfficerDashboard> {
                 onTap: () async {
                   if (Ids.text.isNotEmpty) {
                     await launch(
-                        " https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/qr_code_pdf/${Ids.text}/");
+                        " https://timber.forest.kerala.gov.in/api/auth/qr_code_pdf/${Ids.text}/");
                   } else {
                     Fluttertoast.showToast(
                         msg: 'Login Successful',
@@ -143,7 +143,7 @@ class _FieldOfficerDashboardState extends State<FieldOfficerDashboard> {
               InkWell(
                 onTap: () async {
                   await launch(
-                      " https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_transit_pass_pdf/${Ids.text}/");
+                      " https://timber.forest.kerala.gov.in/api/auth/new_transit_pass_pdf/${Ids.text}/");
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.40,
@@ -178,7 +178,7 @@ class _FieldOfficerDashboardState extends State<FieldOfficerDashboard> {
               InkWell(
                 onTap: () async {
                   await launch(
-                      " https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_user_report/${Ids.text}/");
+                      " https://timber.forest.kerala.gov.in/api/auth/new_user_report/${Ids.text}/");
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.40,
@@ -208,7 +208,7 @@ class _FieldOfficerDashboardState extends State<FieldOfficerDashboard> {
               InkWell(
                 onTap: () async {
                   await launch(
-                      " https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/qr_code_pdf/${Ids.text}/");
+                      " https://timber.forest.kerala.gov.in/api/auth/qr_code_pdf/${Ids.text}/");
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.40,
@@ -317,7 +317,7 @@ class _FieldOfficerDashboardState extends State<FieldOfficerDashboard> {
                     ),
                     onTap: () async {
                       const String url =
-                          'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/logout/';
+                          'https://timber.forest.kerala.gov.in/api/auth/logout/';
                       await http.post(
                         Uri.parse(url),
                         headers: <String, String>{

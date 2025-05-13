@@ -96,8 +96,7 @@ class _woodshedAddReqState extends State<woodshedAddReq> {
   LoadDistric() async {
     int RL = 0;
 
-    String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ListDistrict';
+    String url = 'https://timber.forest.kerala.gov.in/api/auth/ListDistrict';
 
     //  Map<String, String> headers = {
     //  'Content-Type': 'application/json',
@@ -123,8 +122,7 @@ class _woodshedAddReqState extends State<woodshedAddReq> {
   }
 
   ListRange() async {
-    const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ListRange';
+    const String url = 'https://timber.forest.kerala.gov.in/api/auth/ListRange';
     final response = await http.get(Uri.parse(url), headers: {
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -400,7 +398,7 @@ class _woodshedAddReqState extends State<woodshedAddReq> {
                       isShow = true;
                     });
                     const String url =
-                        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/Add_Requirement';
+                        'https://timber.forest.kerala.gov.in/api/auth/Add_Requirement';
                     Map data = {
                       "id": userId,
                       "name": Name.text,

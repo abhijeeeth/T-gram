@@ -53,7 +53,7 @@ class _Form3Page1State extends State<Form3Page1> {
 
   Future<void> ViewApplication() async {
     const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ViewApplication';
+        'https://timber.forest.kerala.gov.in/api/auth/ViewApplication';
     Map data = {"app_id": Ids1};
     print(data);
     var body = json.encode(data);
@@ -120,7 +120,7 @@ class _Form3Page1State extends State<Form3Page1> {
   getSpecies() async {
     print("----------------ALL Species----------------");
     const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/TreeSpeciesList';
+        'https://timber.forest.kerala.gov.in/api/auth/TreeSpeciesList';
     var response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"

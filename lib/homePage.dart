@@ -574,7 +574,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       onTap: () async {
                         const String url =
-                            'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/logout/';
+                            'https://timber.forest.kerala.gov.in/api/auth/logout/';
                         await http.post(
                           Uri.parse(url),
                           headers: <String, String>{
@@ -600,7 +600,7 @@ class _HomePageState extends State<HomePage> {
   String usertCat = "";
   void selectType() async {
     const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/check_usr_category';
+        'https://timber.forest.kerala.gov.in/api/auth/check_usr_category';
     Map data = {"id": userId};
 
     var body = json.encode(data);
@@ -1434,8 +1434,8 @@ class _YourDialogState extends State<YourDialog> {
   }
 
   Future<void> fetchData() async {
-    final response = await http.get(Uri.parse(
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/villages/'));
+    final response = await http.get(
+        Uri.parse('https://timber.forest.kerala.gov.in/api/auth/villages/'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
@@ -1470,7 +1470,7 @@ Future<bool> loginAction() async {
 
 callApiFunction(String Id, String token) async {
   const String url =
-      'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/CheckTransit/';
+      'https://timber.forest.kerala.gov.in/api/auth/CheckTransit/';
   Map data = {
     "app_id": Id,
   };

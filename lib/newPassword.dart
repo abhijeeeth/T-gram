@@ -143,7 +143,7 @@ class _newPasswordState extends State<newPassword> {
                             fontSize: 18.0);
                       } else {
                         const String url =
-                            'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/changepassword';
+                            'https://timber.forest.kerala.gov.in/api/auth/changepassword';
                         Map data = {
                           "phone": userId,
                           "passwd": Password.text,

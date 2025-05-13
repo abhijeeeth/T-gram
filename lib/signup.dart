@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -619,7 +621,7 @@ class _signupState extends State<signup> {
                           fontSize: 18.0);
                     } else {
                       const String url =
-                          'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/NewRegisterAPI';
+                          'https://timber.forest.kerala.gov.in/api/auth/NewRegisterAPI';
                       // final bytes6 = File(_imageFile.path).readAsBytesSync();
                       // String aadhar_base= _imageFile != null ? 'data:image/png;base64,' + base64Encode(bytes6) : '';
                       print(base64Image);
@@ -659,7 +661,7 @@ class _signupState extends State<signup> {
                         //     textColor: Colors.white,
                         //     fontSize: 18.0);
                         const String url1 =
-                            'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/register_otp_verification';
+                            'https://timber.forest.kerala.gov.in/api/auth/register_otp_verification';
                         Map data1 = {
                           "phone": Mobile.text,
                         };
@@ -792,7 +794,7 @@ class _signupState extends State<signup> {
                                   fontSize: 18.0);
                             } else {
                               const String url =
-                                  'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/register_Otp_verify';
+                                  'https://timber.forest.kerala.gov.in/api/auth/register_Otp_verify';
                               Map data = {
                                 "phone": Mobile.text,
                                 "otp": otp.text,

@@ -183,7 +183,7 @@ class _SFViewReportsState extends State<SFViewReports> {
   //-----------------------End-Variable-----------------------------------
   Table_1() async {
     const String url =
-        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/sfd_table_one/';
+        ' https://timber.forest.kerala.gov.in/api/auth/sfd_table_one/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -253,7 +253,7 @@ class _SFViewReportsState extends State<SFViewReports> {
   //----------------End-Variable------------------------------------
   Table_2() async {
     const String url =
-        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/sfd_table_two/';
+        ' https://timber.forest.kerala.gov.in/api/auth/sfd_table_two/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -335,7 +335,7 @@ class _SFViewReportsState extends State<SFViewReports> {
   //-----------------------End-Variable---------------------------------
   Table_3() async {
     const String url =
-        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/sfd_table_three/';
+        ' https://timber.forest.kerala.gov.in/api/auth/sfd_table_three/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -417,7 +417,7 @@ class _SFViewReportsState extends State<SFViewReports> {
   //-----------------------End-Variable---------------------------------
   Table_4() async {
     const String url =
-        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/sfd_table_four/';
+        ' https://timber.forest.kerala.gov.in/api/auth/sfd_table_four/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -483,7 +483,7 @@ class _SFViewReportsState extends State<SFViewReports> {
   //-----------------------End-Variable---------------------------------
   Table_5() async {
     const String url =
-        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/sfd_table_five/';
+        ' https://timber.forest.kerala.gov.in/api/auth/sfd_table_five/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -560,7 +560,7 @@ class _SFViewReportsState extends State<SFViewReports> {
   //-----------------------End-Variable---------------------------------
   Table_6() async {
     const String url =
-        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/sfd_table_six/';
+        ' https://timber.forest.kerala.gov.in/api/auth/sfd_table_six/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -634,7 +634,7 @@ class _SFViewReportsState extends State<SFViewReports> {
   //-----------------------End-Variable---------------------------------
   Table_7() async {
     const String url =
-        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/sfd_table_seven/';
+        ' https://timber.forest.kerala.gov.in/api/auth/sfd_table_seven/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -707,7 +707,7 @@ class _SFViewReportsState extends State<SFViewReports> {
   //-----------------------End-Variable---------------------------------
   Table_8() async {
     const String url =
-        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/sfd_table_eight/';
+        ' https://timber.forest.kerala.gov.in/api/auth/sfd_table_eight/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -783,7 +783,7 @@ class _SFViewReportsState extends State<SFViewReports> {
   //-----------------------End-Variable---------------------------------
   Table_9() async {
     const String url =
-        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/sfd_table_nine/';
+        ' https://timber.forest.kerala.gov.in/api/auth/sfd_table_nine/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -867,7 +867,7 @@ class _SFViewReportsState extends State<SFViewReports> {
   //----------------------End-Variable--------------------
   Table_10() async {
     const String url =
-        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/sfd_table_noc_one/';
+        ' https://timber.forest.kerala.gov.in/api/auth/sfd_table_noc_one/';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -961,7 +961,7 @@ class _SFViewReportsState extends State<SFViewReports> {
 //---------------------Pie-chart------------------
   void pie_chart() async {
     const String url =
-        ' https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/dashbord_chart';
+        ' https://timber.forest.kerala.gov.in/api/auth/dashbord_chart';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',

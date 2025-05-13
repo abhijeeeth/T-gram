@@ -209,7 +209,7 @@ class _ViewReportsState extends State<ViewReports> {
   //-----------------------End-Variable-----------------------------------
   Table_1() async {
     const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/table_one/';
+        'https://timber.forest.kerala.gov.in/api/auth/table_one/';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -264,7 +264,7 @@ class _ViewReportsState extends State<ViewReports> {
   //----------------End-Variable------------------------------------
   Table_2() async {
     const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/table_two/';
+        'https://timber.forest.kerala.gov.in/api/auth/table_two/';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -331,7 +331,7 @@ class _ViewReportsState extends State<ViewReports> {
   //-----------------------End-Variable---------------------------------
   Table_3() async {
     const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/table_three/';
+        'https://timber.forest.kerala.gov.in/api/auth/table_three/';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -398,7 +398,7 @@ class _ViewReportsState extends State<ViewReports> {
   //-----------------------End-Variable---------------------------------
   Table_4() async {
     const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/table_four/';
+        'https://timber.forest.kerala.gov.in/api/auth/table_four/';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -449,7 +449,7 @@ class _ViewReportsState extends State<ViewReports> {
   //-----------------------End-Variable---------------------------------
   Table_5() async {
     const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/table_five/';
+        'https://timber.forest.kerala.gov.in/api/auth/table_five/';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -511,7 +511,7 @@ class _ViewReportsState extends State<ViewReports> {
   //-----------------------End-Variable---------------------------------
   Table_6() async {
     const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/table_six/';
+        'https://timber.forest.kerala.gov.in/api/auth/table_six/';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -570,7 +570,7 @@ class _ViewReportsState extends State<ViewReports> {
   //-----------------------End-Variable---------------------------------
   Table_7() async {
     const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/table_seven/';
+        'https://timber.forest.kerala.gov.in/api/auth/table_seven/';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -628,7 +628,7 @@ class _ViewReportsState extends State<ViewReports> {
   //-----------------------End-Variable---------------------------------
   Table_8() async {
     const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/table_eight/';
+        'https://timber.forest.kerala.gov.in/api/auth/table_eight/';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -689,7 +689,7 @@ class _ViewReportsState extends State<ViewReports> {
   //----------------ارياتable---------------------------------
   Table_9() async {
     const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/table_nine/';
+        'https://timber.forest.kerala.gov.in/api/auth/table_nine/';
     var response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -758,7 +758,7 @@ class _ViewReportsState extends State<ViewReports> {
   //----------------------End-Variable--------------------
   Table_10() async {
     const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/table_noc_one/';
+        'https://timber.forest.kerala.gov.in/api/auth/table_noc_one/';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -818,7 +818,7 @@ class _ViewReportsState extends State<ViewReports> {
   List t11_list = [];
   Table_11() async {
     const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/table_eleven';
+        'https://timber.forest.kerala.gov.in/api/auth/table_eleven';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -907,7 +907,7 @@ class _ViewReportsState extends State<ViewReports> {
 //---------------------Pie-chart------------------
   void pie_chart() async {
     const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/dashbord_chart';
+        'https://timber.forest.kerala.gov.in/api/auth/dashbord_chart';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -929,7 +929,7 @@ class _ViewReportsState extends State<ViewReports> {
     print("hello");
 
     const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ApprovedListViewApplication';
+        'https://timber.forest.kerala.gov.in/api/auth/ApprovedListViewApplication';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"

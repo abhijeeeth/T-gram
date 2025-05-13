@@ -171,8 +171,7 @@ class _transiViewState extends State<transiView> {
   // }
 
   View_Record() async {
-    String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/CheckTransit/';
+    String url = 'https://timber.forest.kerala.gov.in/api/auth/CheckTransit/';
     Map data = {"app_id": Ids};
 
     var body = json.encode(data);
@@ -914,7 +913,7 @@ class _transiViewState extends State<transiView> {
                                       fontSize: 18.0);
                                 } else {
                                   const String url =
-                                      'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/apply_orign_transit/';
+                                      'https://timber.forest.kerala.gov.in/api/auth/apply_orign_transit/';
                                   Map data = {
                                     "app_id": Ids,
                                     "dest_state": "Kerala",

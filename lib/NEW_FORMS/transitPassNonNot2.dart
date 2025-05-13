@@ -769,7 +769,7 @@ class _transitPassNonNot2State extends State<transitPassNonNot2> {
 
   Future<void> submitApplication() async {
     final url = Uri.parse(
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_application_form/');
+        'https://timber.forest.kerala.gov.in/api/auth/new_application_form/');
 
     var request = http.MultipartRequest('POST', url);
 

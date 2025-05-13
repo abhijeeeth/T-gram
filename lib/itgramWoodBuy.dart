@@ -173,7 +173,7 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
     division1.clear();
     dist1.clear();
     const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/Buyer_Seller_All_Data';
+        'https://timber.forest.kerala.gov.in/api/auth/Buyer_Seller_All_Data';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -232,7 +232,7 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
     disti.clear();
     status.clear();
     const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/View_Buyer_Requirement';
+        'https://timber.forest.kerala.gov.in/api/auth/View_Buyer_Requirement';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -292,7 +292,7 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
     disti2.clear();
     status2.clear();
     const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/Buyer_SelectedDta';
+        'https://timber.forest.kerala.gov.in/api/auth/Buyer_SelectedDta';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -333,8 +333,7 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
   LoadDistric() async {
     int RL = 0;
 
-    String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ListDistrict';
+    String url = 'https://timber.forest.kerala.gov.in/api/auth/ListDistrict';
 
     var response = await http.get(
       Uri.parse(url),
@@ -359,7 +358,7 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
 
   ListRange() async {
     const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/LoadTreeSpecies';
+        'https://timber.forest.kerala.gov.in/api/auth/LoadTreeSpecies';
     final response = await http.post(Uri.parse(url), headers: {
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -395,7 +394,7 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
       dist1.clear();
 
       const String url =
-          'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/addtimber_district_species_filtration';
+          'https://timber.forest.kerala.gov.in/api/auth/addtimber_district_species_filtration';
       Map data = {
         "district": selectedDistrict ?? "",
         "species": dropdownValue ?? ""
@@ -446,7 +445,7 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
       division1.clear();
       dist1.clear();
       const String url =
-          'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/requirement_district_species_filtration';
+          'https://timber.forest.kerala.gov.in/api/auth/requirement_district_species_filtration';
 
       Map data = {
         "district": selectedDistrict ?? "",
@@ -817,7 +816,7 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
                                                             int.parse(value)] !=
                                                         null) {
                                                       const String url =
-                                                          "https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/Select_Data";
+                                                          "https://timber.forest.kerala.gov.in/api/auth/Select_Data";
                                                       Map data = {
                                                         "id": Ids1[
                                                             int.parse(value)]
@@ -972,7 +971,7 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
                                           //                   int.parse(value)] !=
                                           //               null) {
                                           //             const String url =
-                                          //                 "https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/Delete_Timber_Data";
+                                          //                 "https://timber.forest.kerala.gov.in/api/auth/Delete_Timber_Data";
                                           //             Map data = {
                                           //               "id": Ids1[
                                           //                   int.parse(value)]
@@ -1328,7 +1327,7 @@ class _tigramWoodBuyState extends State<tigramWoodBuy> {
                                           //           if (Ids[int.parse(value)] !=
                                           //               null) {
                                           //             const String url =
-                                          //                 "https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/Select_Data";
+                                          //                 "https://timber.forest.kerala.gov.in/api/auth/Select_Data";
                                           //             Map data = {
                                           //               "id": Ids[
                                           //                   int.parse(value)]

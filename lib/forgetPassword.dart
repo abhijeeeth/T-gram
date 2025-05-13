@@ -138,7 +138,7 @@ class _forgetPasswordState extends State<forgetPassword> {
                               } else {
                                 NewPage = true;
                                 const String url =
-                                    'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/forgotpassword';
+                                    'https://timber.forest.kerala.gov.in/api/auth/forgotpassword';
                                 Map data = {
                                   "username":
                                       f_userName.text.replaceAll(' ', ''),
@@ -284,7 +284,7 @@ class _forgetPasswordState extends State<forgetPassword> {
                                             fontSize: 18.0);
                                       } else {
                                         const String url =
-                                            'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/forgotverifyotp';
+                                            'https://timber.forest.kerala.gov.in/api/auth/forgotverifyotp';
                                         Map data = {
                                           "phone":
                                               f_Mobile.text.replaceAll(' ', ''),

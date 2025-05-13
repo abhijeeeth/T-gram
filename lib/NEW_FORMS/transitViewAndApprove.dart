@@ -100,8 +100,7 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
   String ID_type = "";
   String ID_PROOF = "";
   void TransitView() async {
-    String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/SeeTransit/';
+    String url = 'https://timber.forest.kerala.gov.in/api/auth/SeeTransit/';
     Map data = {
       "transit_number": Ids,
     };
@@ -503,7 +502,7 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
                                 }
 
                                 const String url =
-                                    'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ApproveNewProductTransit/';
+                                    'https://timber.forest.kerala.gov.in/api/auth/ApproveNewProductTransit/';
                                 Map data = {
                                   "transit_number": transitId,
                                   "action": "Approve",
@@ -614,7 +613,7 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
                                   isShow = true;
                                 });
                                 const String url =
-                                    'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ApproveNewProductTransit/';
+                                    'https://timber.forest.kerala.gov.in/api/auth/ApproveNewProductTransit/';
                                 Map data = {
                                   "transit_number": transitId,
                                   "action": "Reject",

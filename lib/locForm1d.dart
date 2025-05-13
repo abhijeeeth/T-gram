@@ -813,7 +813,7 @@ class _locForm1dState extends State<locForm1d> {
                                 });
 
                                 const String url =
-                                    'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/InsertRecord';
+                                    'https://timber.forest.kerala.gov.in/api/auth/InsertRecord';
                                 Map data = {
                                   "name": App_no,
                                   "address": address,
@@ -1029,7 +1029,7 @@ class _locForm1dState extends State<locForm1d> {
                                 });
 
                                 const String url =
-                                    'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/Formtwophaseone';
+                                    'https://timber.forest.kerala.gov.in/api/auth/Formtwophaseone';
                                 Map data = {
                                   "name": App_no,
                                   "address": address,

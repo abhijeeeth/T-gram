@@ -109,8 +109,8 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
   }
 
   Future<void> fetchVillage() async {
-    final response = await http.get(Uri.parse(
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/villages/'));
+    final response = await http.get(
+        Uri.parse('https://timber.forest.kerala.gov.in/api/auth/villages/'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
@@ -135,8 +135,7 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
   List<String> divisions = [];
   LoadDivisionRange() async {
     int DL = 0;
-    const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/villages/';
+    const String url = 'https://timber.forest.kerala.gov.in/api/auth/villages/';
     Map data = {
       "village": _selectedVillage,
     };
@@ -1044,7 +1043,7 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
                                         fontSize: 18.0);
                                   } else {
                                     const String url =
-                                        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_application_form/';
+                                        'https://timber.forest.kerala.gov.in/api/auth/new_application_form/';
                                     Map data = {
                                       "name": nameC.text,
                                       "survey_no": survayC.text,

@@ -120,7 +120,7 @@ class _Form2Page1State extends State<Form2Page1> {
   List<String> district = [];
   LoadDistric() async {
     const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ListDistrict';
+        'https://timber.forest.kerala.gov.in/api/auth/ListDistrict';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -141,7 +141,7 @@ class _Form2Page1State extends State<Form2Page1> {
   LoadTaluka() async {
     int RL = 0;
     const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/LoadTaluka';
+        'https://timber.forest.kerala.gov.in/api/auth/LoadTaluka';
 
     Map data = {
       "district": selectedDistrict ?? "",
@@ -170,7 +170,7 @@ class _Form2Page1State extends State<Form2Page1> {
   LoadVillage() async {
     int RL = 0;
     const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/LoadVillage';
+        'https://timber.forest.kerala.gov.in/api/auth/LoadVillage';
     Map data = {"taluka": selectedTalukaF1 ?? ""};
     print(data);
     var body = json.encode(data);
@@ -197,8 +197,7 @@ class _Form2Page1State extends State<Form2Page1> {
   List<String> Rname = [];
   int RL = 0;
   ListRange() async {
-    const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ListRange';
+    const String url = 'https://timber.forest.kerala.gov.in/api/auth/ListRange';
     final response = await http.get(Uri.parse(url), headers: {
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -222,7 +221,7 @@ class _Form2Page1State extends State<Form2Page1> {
   int DL = 0;
   ListDivision() async {
     const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/LoadDivision';
+        'https://timber.forest.kerala.gov.in/api/auth/LoadDivision';
     Map data = {
       "range_area": dropdownValue ?? "",
     };

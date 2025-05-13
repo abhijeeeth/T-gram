@@ -750,7 +750,7 @@ class _addLocState extends State<addLoc> {
                             isShow = true;
                           });
                           const String url =
-                              'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/UpdateLocationImage';
+                              'https://timber.forest.kerala.gov.in/api/auth/UpdateLocationImage';
                           Map data = {
                             "app_id": Ids,
                             "location_img1": {

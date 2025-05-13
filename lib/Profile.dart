@@ -83,7 +83,7 @@ class _ProfileState extends State<Profile> {
   // }
   viewProfile() async {
     const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ViewProfile';
+        'https://timber.forest.kerala.gov.in/api/auth/ViewProfile';
     print(sessionToken);
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
@@ -278,7 +278,7 @@ class _ProfileState extends State<Profile> {
                         // String profile_base= _imgProfile.path != null ? 'data:image/png;base64,' + base64Encode(bytes) : '';
                         print(base64Image);
                         const String url =
-                            'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/EditProfile';
+                            'https://timber.forest.kerala.gov.in/api/auth/EditProfile';
 
                         Map data = {
                           "name": name.text,
