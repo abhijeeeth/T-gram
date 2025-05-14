@@ -1811,27 +1811,27 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.white),
                                           )),
-                                          DataColumn(
-                                              label: Text(
-                                            'Download\n      Tp',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )),
-                                          DataColumn(
-                                              label: Text(
-                                            'Download\n Report',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )),
-                                          DataColumn(
-                                              label: Text(
-                                            'QR Code',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )),
+                                          // DataColumn(
+                                          //     label: Text(
+                                          //   'Download\n      Tp',
+                                          //   style: TextStyle(
+                                          //       fontWeight: FontWeight.bold,
+                                          //       color: Colors.white),
+                                          // )),
+                                          // DataColumn(
+                                          //     label: Text(
+                                          //   'Download\n Report',
+                                          //   style: TextStyle(
+                                          //       fontWeight: FontWeight.bold,
+                                          //       color: Colors.white),
+                                          // )),
+                                          // DataColumn(
+                                          //     label: Text(
+                                          //   'QR Code',
+                                          //   style: TextStyle(
+                                          //       fontWeight: FontWeight.bold,
+                                          //       color: Colors.white),
+                                          // )),
                                           DataColumn(
                                               label: Text(
                                             'Remark',
@@ -1913,73 +1913,73 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                               ),
                                                             ),
                                                           ),
-                                                          DataCell(
-                                                            Visibility(
-                                                              visible: (Current_status2[
-                                                                              int.parse(value)]
-                                                                          .toString() ==
-                                                                      'A')
-                                                                  ? true
-                                                                  : false,
-                                                              child: IconButton(
-                                                                icon: Icon(Icons
-                                                                    .file_download),
-                                                                color:
-                                                                    Colors.blue,
-                                                                onPressed:
-                                                                    () async {
-                                                                  await launch("https://timber.forest.kerala.gov.in/api/auth/new_transit_pass_pdf/" +
-                                                                      replaceSlashesWithDashes(
-                                                                          App_no2[
-                                                                              int.parse(value)]) +
-                                                                      "/");
-                                                                  // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-                                                                },
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          DataCell(
-                                                            IconButton(
-                                                              icon: Icon(Icons
-                                                                  .file_download),
-                                                              color:
-                                                                  Colors.blue,
-                                                              onPressed:
-                                                                  () async {
-                                                                await launch("https://timber.forest.kerala.gov.in/api/auth/new_user_report/" +
-                                                                    replaceSlashesWithDashes(
-                                                                        App_no2[
-                                                                            int.parse(value)]) +
-                                                                    "/");
-                                                                // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-                                                              },
-                                                            ),
-                                                          ),
-                                                          DataCell(
-                                                            Visibility(
-                                                              visible: (Current_status2[
-                                                                              int.parse(value)]
-                                                                          .toString() ==
-                                                                      'A')
-                                                                  ? true
-                                                                  : false,
-                                                              child: IconButton(
-                                                                icon: Icon(Icons
-                                                                    .qr_code_outlined),
-                                                                color:
-                                                                    Colors.blue,
-                                                                onPressed:
-                                                                    () async {
-                                                                  await launch("https://timber.forest.kerala.gov.in/api/auth/qr_code_pdf/" +
-                                                                      replaceSlashesWithDashes(
-                                                                          App_no2[
-                                                                              int.parse(value)]) +
-                                                                      "/");
-                                                                  // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-                                                                },
-                                                              ),
-                                                            ),
-                                                          ),
+                                                          // DataCell(
+                                                          //   Visibility(
+                                                          //     visible: (Current_status2[
+                                                          //                     int.parse(value)]
+                                                          //                 .toString() ==
+                                                          //             'A')
+                                                          //         ? true
+                                                          //         : false,
+                                                          //     child: IconButton(
+                                                          //       icon: Icon(Icons
+                                                          //           .file_download),
+                                                          //       color:
+                                                          //           Colors.blue,
+                                                          //       onPressed:
+                                                          //           () async {
+                                                          //         await launch("https://timber.forest.kerala.gov.in/api/auth/new_transit_pass_pdf/" +
+                                                          //             replaceSlashesWithDashes(
+                                                          //                 App_no2[
+                                                          //                     int.parse(value)]) +
+                                                          //             "/");
+                                                          //         // _requestDownload("http://www.orimi.com/pdf-test.pdf");
+                                                          //       },
+                                                          //     ),
+                                                          //   ),
+                                                          // ),
+                                                          // DataCell(
+                                                          //   IconButton(
+                                                          //     icon: Icon(Icons
+                                                          //         .file_download),
+                                                          //     color:
+                                                          //         Colors.blue,
+                                                          //     onPressed:
+                                                          //         () async {
+                                                          //       await launch("https://timber.forest.kerala.gov.in/api/auth/new_user_report/" +
+                                                          //           replaceSlashesWithDashes(
+                                                          //               App_no2[
+                                                          //                   int.parse(value)]) +
+                                                          //           "/");
+                                                          //       // _requestDownload("http://www.orimi.com/pdf-test.pdf");
+                                                          //     },
+                                                          //   ),
+                                                          // ),
+                                                          // DataCell(
+                                                          //   Visibility(
+                                                          //     visible: (Current_status2[
+                                                          //                     int.parse(value)]
+                                                          //                 .toString() ==
+                                                          //             'A')
+                                                          //         ? true
+                                                          //         : false,
+                                                          //     child: IconButton(
+                                                          //       icon: Icon(Icons
+                                                          //           .qr_code_outlined),
+                                                          //       color:
+                                                          //           Colors.blue,
+                                                          //       onPressed:
+                                                          //           () async {
+                                                          //         await launch("https://timber.forest.kerala.gov.in/api/auth/qr_code_pdf/" +
+                                                          //             replaceSlashesWithDashes(
+                                                          //                 App_no2[
+                                                          //                     int.parse(value)]) +
+                                                          //             "/");
+                                                          //         // _requestDownload("http://www.orimi.com/pdf-test.pdf");
+                                                          //       },
+                                                          //     ),
+                                                          //   ),
+                                                          // ),
                                                           DataCell(Text(OfficerRemark(
                                                               Current_status2[
                                                                       int.parse(
