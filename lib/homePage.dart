@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tigramnks/CheckPassStatus.dart';
 import 'package:tigramnks/Help.dart';
@@ -122,347 +123,375 @@ class _HomePageState extends State<HomePage> {
           //backgroundColor: Colors.blueGrey,
           elevation: 0,
         ),
-        body: SingleChildScrollView(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-              // InkWell(
-              //   onTap: () {
-              //     showDialog(
-              //       context: context,
-              //       builder: (BuildContext context) {
-              //         return YourDialog(
-              //             sessionToken: sessionToken,
-              //             userId: userId,
-              //             userName: userName,
-              //             userMail: userEmail,
-              //             userGroup: userGroup);
-              //       },
-              //     );
-              //   },
-              //   child: Container(
-              //       // width: 310,
-              //       width: double.infinity,
-              //       height: MediaQuery.of(context).size.height * 0.25,
-              //       margin: const EdgeInsets.only(
-              //           top: 25.0, left: 20, right: 20, bottom: 20.0),
-              //       decoration: BoxDecoration(
-              //           color: Colors.blue,
-              //           boxShadow: const [
-              //             BoxShadow(
-              //               color: Colors.black,
-              //               blurRadius: 2.0,
-              //               spreadRadius: 0.0,
-              //               offset: Offset(
-              //                   2.0, 2.0), // shadow direction: bottom right
-              //             )
-              //           ],
-              //           borderRadius: BorderRadius.circular(20)),
-              //       child: Column(children: <Widget>[
-              //         Container(
-              //           child: Image.asset(
-              //             'assets/images/apply_icon.png',
-              //             height: MediaQuery.of(context).size.height * 0.12,
-              //           ),
-              //         ),
-              //         Container(
-              //           margin: const EdgeInsets.only(top: 15.0),
-              //           child: const Text(
-              //             'Apply for Cutting / \nTransit Pass',
-              //             style: TextStyle(
-              //                 color: Colors.white,
-              //                 fontWeight: FontWeight.bold,
-              //                 fontSize: 22),
-              //           ),
-              //         ),
-              //       ])),
-              // ),
+        body: Center(
+          child: SingleChildScrollView(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                // InkWell(
+                //   onTap: () {
+                //     showDialog(
+                //       context: context,
+                //       builder: (BuildContext context) {
+                //         return YourDialog(
+                //             sessionToken: sessionToken,
+                //             userId: userId,
+                //             userName: userName,
+                //             userMail: userEmail,
+                //             userGroup: userGroup);
+                //       },
+                //     );
+                //   },
+                //   child: Container(
+                //       // width: 310,
+                //       width: double.infinity,
+                //       height: MediaQuery.of(context).size.height * 0.25,
+                //       margin: const EdgeInsets.only(
+                //           top: 25.0, left: 20, right: 20, bottom: 20.0),
+                //       decoration: BoxDecoration(
+                //           color: Colors.blue,
+                //           boxShadow: const [
+                //             BoxShadow(
+                //               color: Colors.black,
+                //               blurRadius: 2.0,
+                //               spreadRadius: 0.0,
+                //               offset: Offset(
+                //                   2.0, 2.0), // shadow direction: bottom right
+                //             )
+                //           ],
+                //           borderRadius: BorderRadius.circular(20)),
+                //       child: Column(children: <Widget>[
+                //         Container(
+                //           child: Image.asset(
+                //             'assets/images/apply_icon.png',
+                //             height: MediaQuery.of(context).size.height * 0.12,
+                //           ),
+                //         ),
+                //         Container(
+                //           margin: const EdgeInsets.only(top: 15.0),
+                //           child: const Text(
+                //             'Apply for Cutting / \nTransit Pass',
+                //             style: TextStyle(
+                //                 color: Colors.white,
+                //                 fontWeight: FontWeight.bold,
+                //                 fontSize: 22),
+                //           ),
+                //         ),
+                //       ])),
+                // ),
 
-              // InkWell(
-              //   splashColor: Colors.white70,
-              //   onTap: () async {
-              //     await Navigator.push(
-              //       context,
-              //       MaterialPageRoute(
-              //         builder: (_) => sandalwoodForm(
-              //             sessionToken: sessionToken,
-              //             userName: userName,
-              //             userEmail: userEmail,
-              //             userGroup: userGroup,
-              //             userId: userId),
-              //       ),
-              //     );
-              //   },
-              //   hoverColor: Colors.blueGrey,
-              //   child: Container(
-              //       width: double.infinity,
-              //       height: MediaQuery.of(context).size.height * 0.25,
-              //       margin: const EdgeInsets.only(
-              //           top: 8, left: 20, right: 20, bottom: 20.0),
-              //       decoration: BoxDecoration(
-              //           color: const Color.fromARGB(255, 173, 126, 72),
-              //           boxShadow: const [
-              //             BoxShadow(
-              //               color: Colors.black,
-              //               blurRadius: 2.0,
-              //               spreadRadius: 0.0,
-              //               offset: Offset(
-              //                   2.0, 2.0), // shadow direction: bottom right
-              //             )
-              //           ],
-              //           borderRadius: BorderRadius.circular(20)),
-              //       child: Column(children: <Widget>[
-              //         Image.asset(
-              //           'assets/images/apply_icon.png',
-              //           height: MediaQuery.of(context).size.height * 0.12,
-              //         ),
-              //         Container(
-              //           margin: const EdgeInsets.only(top: 15.0),
-              //           child: const Text(
-              //             'Apply for cutting \nSandalwood',
-              //             style: TextStyle(
-              //                 color: Colors.white,
-              //                 fontWeight: FontWeight.bold,
-              //                 fontSize: 22),
-              //           ),
-              //         )
-              //       ])),
-              // ),
-              InkWell(
-                splashColor: Colors.transparent,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => CheckPassStatus(
-                          sessionToken: sessionToken,
-                          userName: userName,
-                          userEmail: userEmail,
-                          userGroup: userGroup,
-                          userId: userId),
-                    ),
-                  );
-                },
-                child: Container(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height * 0.18,
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [
-                        Color.fromARGB(255, 28, 110, 99),
-                        Color.fromARGB(207, 28, 110, 99),
-                        Color.fromARGB(195, 105, 138, 132)
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
+                // InkWell(
+                //   splashColor: Colors.white70,
+                //   onTap: () async {
+                //     await Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //         builder: (_) => sandalwoodForm(
+                //             sessionToken: sessionToken,
+                //             userName: userName,
+                //             userEmail: userEmail,
+                //             userGroup: userGroup,
+                //             userId: userId),
+                //       ),
+                //     );
+                //   },
+                //   hoverColor: Colors.blueGrey,
+                //   child: Container(
+                //       width: double.infinity,
+                //       height: MediaQuery.of(context).size.height * 0.25,
+                //       margin: const EdgeInsets.only(
+                //           top: 8, left: 20, right: 20, bottom: 20.0),
+                //       decoration: BoxDecoration(
+                //           color: const Color.fromARGB(255, 173, 126, 72),
+                //           boxShadow: const [
+                //             BoxShadow(
+                //               color: Colors.black,
+                //               blurRadius: 2.0,
+                //               spreadRadius: 0.0,
+                //               offset: Offset(
+                //                   2.0, 2.0), // shadow direction: bottom right
+                //             )
+                //           ],
+                //           borderRadius: BorderRadius.circular(20)),
+                //       child: Column(children: <Widget>[
+                //         Image.asset(
+                //           'assets/images/apply_icon.png',
+                //           height: MediaQuery.of(context).size.height * 0.12,
+                //         ),
+                //         Container(
+                //           margin: const EdgeInsets.only(top: 15.0),
+                //           child: const Text(
+                //             'Apply for cutting \nSandalwood',
+                //             style: TextStyle(
+                //                 color: Colors.white,
+                //                 fontWeight: FontWeight.bold,
+                //                 fontSize: 22),
+                //           ),
+                //         )
+                //       ])),
+                // ),
+                Column(
+                  children: [
+                    SizedBox(
+                      height: 200,
+                      child: Lottie.asset(
+                        'assets/tree.json',
+                        fit: BoxFit.contain,
                       ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Image.asset(
-                          'assets/images/check_status.png',
-                          height: MediaQuery.of(context).size.height * 0.08,
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(vertical: 20),
+                      child: const Text(
+                        'Welcome to TIGRAM',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blueGrey,
                         ),
+                        textAlign: TextAlign.center,
                       ),
-                      const Expanded(
-                        child: Text(
-                          'Check Pass Status',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18,
+                    ),
+                  ],
+                ),
+                InkWell(
+                  splashColor: Colors.transparent,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => CheckPassStatus(
+                            sessionToken: sessionToken,
+                            userName: userName,
+                            userEmail: userEmail,
+                            userGroup: userGroup,
+                            userId: userId),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height: MediaQuery.of(context).size.height / 12,
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [
+                          Color.fromARGB(255, 28, 110, 99),
+                          Color.fromARGB(207, 28, 110, 99),
+                          Color.fromARGB(195, 105, 138, 132)
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Image.asset(
+                            'assets/images/check_status.png',
+                            height: MediaQuery.of(context).size.height * 0.08,
                           ),
                         ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(right: 12.0),
-                        child: Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.white70,
-                          size: 18,
+                        const Expanded(
+                          child: Text(
+                            'Check Pass Status',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18,
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
+                        const Padding(
+                          padding: EdgeInsets.only(right: 12.0),
+                          child: Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.white70,
+                            size: 18,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
+                const SizedBox(
+                  height: 200,
+                ),
 
-              // InkWell(
-              //     onTap: () {
-              //       Navigator.push(
-              //         context,
-              //         MaterialPageRoute(
-              //           builder: (_) => NocForm(
-              //               sessionToken: sessionToken,
-              //               userName: userName,
-              //               userEmail: userEmail,
-              //               userId: userId),
-              //         ),
-              //       );
+                // InkWell(
+                //     onTap: () {
+                //       Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //           builder: (_) => NocForm(
+                //               sessionToken: sessionToken,
+                //               userName: userName,
+                //               userEmail: userEmail,
+                //               userId: userId),
+                //         ),
+                //       );
 
-              //       // Navigator.pushReplacement(
-              //       //     context,
-              //       //     MaterialPageRoute(
-              //       //         builder: (_) => NocForm(
-              //       //             sessionToken: sessionToken,
-              //       //             userName: userName,
-              //       //             userEmail: userEmail,
-              //       //             userId: userId)));
-              //     },
-              //     hoverColor: Colors.blueGrey,
-              //     child: Container(
-              //         width: double.infinity,
-              //         height: MediaQuery.of(context).size.height * 0.25,
-              //         margin: const EdgeInsets.only(
-              //             top: 8.0, left: 20, right: 20, bottom: 20.0),
-              //         decoration: BoxDecoration(
-              //             color: Colors.orange,
-              //             boxShadow: [
-              //               BoxShadow(
-              //                 color: Colors.black,
-              //                 blurRadius: 2.0,
-              //                 spreadRadius: 0.0,
-              //                 offset: Offset(
-              //                     2.0, 2.0), // shadow direction: bottom right
-              //               )
-              //             ],
-              //             borderRadius: BorderRadius.circular(20)),
-              //         child: Column(children: <Widget>[
-              //           Container(
-              //             child: Icon(
-              //               Icons.sticky_note_2,
-              //               size: MediaQuery.of(context).size.height * 0.12,
-              //               color: Colors.white,
-              //             ),
-              //             /*child:new Image.asset(
-              //                 'assets/images/question_icon.png',
-              //                 height: 125,
-              //               ),*/
-              //           ),
-              //           Container(
-              //             margin: const EdgeInsets.only(top: 15.0),
-              //             child: Text(
-              //               'NOC For Exempted Species',
-              //               style: TextStyle(
-              //                   color: Colors.white,
-              //                   fontWeight: FontWeight.bold,
-              //                   fontSize: 22),
-              //             ),
-              //           ),
-              //         ]))),
-              // InkWell(
-              //     onTap: () {
-              //       Navigator.push(
-              //         context,
-              //         MaterialPageRoute(
-              //           builder: (_) => acknowUser(
-              //             userId: userId,
-              //             sessionToken: sessionToken,
-              //             userName: userName,
-              //             userEmail: userEmail,
-              //             userGroup: userGroup,
-              //           ),
-              //         ),
-              //       );
-              //     },
-              //     hoverColor: Color.fromARGB(255, 26, 189, 17),
-              //     child: Container(
-              //         width: double.infinity,
-              //         height: MediaQuery.of(context).size.height * 0.25,
-              //         margin: const EdgeInsets.only(
-              //             top: 8.0, left: 20, right: 20, bottom: 20.0),
-              //         decoration: BoxDecoration(
-              //             color: Color.fromARGB(255, 185, 30, 144),
-              //             boxShadow: [
-              //               BoxShadow(
-              //                 color: Colors.black,
-              //                 blurRadius: 2.0,
-              //                 spreadRadius: 0.0,
-              //                 offset: Offset(
-              //                     2.0, 2.0), // shadow direction: bottom right
-              //               )
-              //             ],
-              //             borderRadius: BorderRadius.circular(20)),
-              //         child: Column(children: <Widget>[
-              //           Container(
-              //             child: Icon(
-              //               Icons.ads_click_outlined,
-              //               size: MediaQuery.of(context).size.height * 0.12,
-              //               color: Colors.white,
-              //             ),
-              //             /*child:new Image.asset(
-              //                 'assets/images/question_icon.png',
-              //                 height: 125,
-              //               ),*/
-              //           ),
-              //           Container(
-              //             margin: const EdgeInsets.only(top: 15.0),
-              //             child: Text(
-              //               'My Acknowledgement',
-              //               style: TextStyle(
-              //                   color: Colors.white,
-              //                   fontWeight: FontWeight.bold,
-              //                   fontSize: 22),
-              //             ),
-              //           ),
-              //         ]))),
-              // InkWell(
-              //     onTap: selectType,
-              //     hoverColor: Colors.blueGrey,
-              //     child: Container(
-              //         width: double.infinity,
-              //         height: MediaQuery.of(context).size.height * 0.25,
-              //         margin: const EdgeInsets.only(
-              //             top: 8.0, left: 20, right: 20, bottom: 20.0),
-              //         decoration: BoxDecoration(
-              //             color: const Color.fromARGB(255, 15, 143, 55),
-              //             boxShadow: const [
-              //               BoxShadow(
-              //                 color: Colors.black,
-              //                 blurRadius: 2.0,
-              //                 spreadRadius: 0.0,
-              //                 offset: Offset(
-              //                     2.0, 2.0), // shadow direction: bottom right
-              //               )
-              //             ],
-              //             borderRadius: BorderRadius.circular(20)),
-              //         child: Column(children: <Widget>[
-              //           Container(
-              //             child: Icon(
-              //               Icons.sell,
-              //               size: MediaQuery.of(context).size.height * 0.12,
-              //               color: Colors.white,
-              //             ),
-              //             /*child:new Image.asset(
-              //             'assets/images/question_icon.png',
-              //             height: 125,
-              //           ),*/
-              //           ),
-              //           Container(
-              //             margin: const EdgeInsets.only(top: 15.0),
-              //             child: const Text(
-              //               'Tigram Woodshed',
-              //               style: TextStyle(
-              //                   color: Colors.white,
-              //                   fontWeight: FontWeight.bold,
-              //                   fontSize: 22),
-              //             ),
-              //           ),
-              //         ]))),
-            ])),
+                //       // Navigator.pushReplacement(
+                //       //     context,
+                //       //     MaterialPageRoute(
+                //       //         builder: (_) => NocForm(
+                //       //             sessionToken: sessionToken,
+                //       //             userName: userName,
+                //       //             userEmail: userEmail,
+                //       //             userId: userId)));
+                //     },
+                //     hoverColor: Colors.blueGrey,
+                //     child: Container(
+                //         width: double.infinity,
+                //         height: MediaQuery.of(context).size.height * 0.25,
+                //         margin: const EdgeInsets.only(
+                //             top: 8.0, left: 20, right: 20, bottom: 20.0),
+                //         decoration: BoxDecoration(
+                //             color: Colors.orange,
+                //             boxShadow: [
+                //               BoxShadow(
+                //                 color: Colors.black,
+                //                 blurRadius: 2.0,
+                //                 spreadRadius: 0.0,
+                //                 offset: Offset(
+                //                     2.0, 2.0), // shadow direction: bottom right
+                //               )
+                //             ],
+                //             borderRadius: BorderRadius.circular(20)),
+                //         child: Column(children: <Widget>[
+                //           Container(
+                //             child: Icon(
+                //               Icons.sticky_note_2,
+                //               size: MediaQuery.of(context).size.height * 0.12,
+                //               color: Colors.white,
+                //             ),
+                //             /*child:new Image.asset(
+                //                 'assets/images/question_icon.png',
+                //                 height: 125,
+                //               ),*/
+                //           ),
+                //           Container(
+                //             margin: const EdgeInsets.only(top: 15.0),
+                //             child: Text(
+                //               'NOC For Exempted Species',
+                //               style: TextStyle(
+                //                   color: Colors.white,
+                //                   fontWeight: FontWeight.bold,
+                //                   fontSize: 22),
+                //             ),
+                //           ),
+                //         ]))),
+                // InkWell(
+                //     onTap: () {
+                //       Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //           builder: (_) => acknowUser(
+                //             userId: userId,
+                //             sessionToken: sessionToken,
+                //             userName: userName,
+                //             userEmail: userEmail,
+                //             userGroup: userGroup,
+                //           ),
+                //         ),
+                //       );
+                //     },
+                //     hoverColor: Color.fromARGB(255, 26, 189, 17),
+                //     child: Container(
+                //         width: double.infinity,
+                //         height: MediaQuery.of(context).size.height * 0.25,
+                //         margin: const EdgeInsets.only(
+                //             top: 8.0, left: 20, right: 20, bottom: 20.0),
+                //         decoration: BoxDecoration(
+                //             color: Color.fromARGB(255, 185, 30, 144),
+                //             boxShadow: [
+                //               BoxShadow(
+                //                 color: Colors.black,
+                //                 blurRadius: 2.0,
+                //                 spreadRadius: 0.0,
+                //                 offset: Offset(
+                //                     2.0, 2.0), // shadow direction: bottom right
+                //               )
+                //             ],
+                //             borderRadius: BorderRadius.circular(20)),
+                //         child: Column(children: <Widget>[
+                //           Container(
+                //             child: Icon(
+                //               Icons.ads_click_outlined,
+                //               size: MediaQuery.of(context).size.height * 0.12,
+                //               color: Colors.white,
+                //             ),
+                //             /*child:new Image.asset(
+                //                 'assets/images/question_icon.png',
+                //                 height: 125,
+                //               ),*/
+                //           ),
+                //           Container(
+                //             margin: const EdgeInsets.only(top: 15.0),
+                //             child: Text(
+                //               'My Acknowledgement',
+                //               style: TextStyle(
+                //                   color: Colors.white,
+                //                   fontWeight: FontWeight.bold,
+                //                   fontSize: 22),
+                //             ),
+                //           ),
+                //         ]))),
+                // InkWell(
+                //     onTap: selectType,
+                //     hoverColor: Colors.blueGrey,
+                //     child: Container(
+                //         width: double.infinity,
+                //         height: MediaQuery.of(context).size.height * 0.25,
+                //         margin: const EdgeInsets.only(
+                //             top: 8.0, left: 20, right: 20, bottom: 20.0),
+                //         decoration: BoxDecoration(
+                //             color: const Color.fromARGB(255, 15, 143, 55),
+                //             boxShadow: const [
+                //               BoxShadow(
+                //                 color: Colors.black,
+                //                 blurRadius: 2.0,
+                //                 spreadRadius: 0.0,
+                //                 offset: Offset(
+                //                     2.0, 2.0), // shadow direction: bottom right
+                //               )
+                //             ],
+                //             borderRadius: BorderRadius.circular(20)),
+                //         child: Column(children: <Widget>[
+                //           Container(
+                //             child: Icon(
+                //               Icons.sell,
+                //               size: MediaQuery.of(context).size.height * 0.12,
+                //               color: Colors.white,
+                //             ),
+                //             /*child:new Image.asset(
+                //             'assets/images/question_icon.png',
+                //             height: 125,
+                //           ),*/
+                //           ),
+                //           Container(
+                //             margin: const EdgeInsets.only(top: 15.0),
+                //             child: const Text(
+                //               'Tigram Woodshed',
+                //               style: TextStyle(
+                //                   color: Colors.white,
+                //                   fontWeight: FontWeight.bold,
+                //                   fontSize: 22),
+                //             ),
+                //           ),
+                //         ]))),
+              ])),
+        ),
         drawer: Container(
           child: Drawer(
             child: Container(
