@@ -53,10 +53,10 @@ class _forgetPasswordState extends State<forgetPassword> {
                     borderRadius: BorderRadius.circular(12.0),
                     color: Colors.white,
                     border:
-                        Border.all(color: Colors.lightGreenAccent, width: 2),
+                        Border.all(color: Colors.lightGreenAccent, width: 1),
                     boxShadow: const [
                       BoxShadow(
-                        color: Colors.black,
+                        color: Color.fromARGB(99, 0, 0, 0),
                         blurRadius: 2.0,
                         spreadRadius: 0.0,
                         offset:
@@ -80,7 +80,7 @@ class _forgetPasswordState extends State<forgetPassword> {
                               border: OutlineInputBorder(
                                 borderSide: BorderSide(width: 2),
                                 borderRadius: const BorderRadius.all(
-                                    Radius.circular(20.0)),
+                                    Radius.circular(8.0)),
                               ),
                               prefixIcon:
                                   Icon(Icons.supervised_user_circle_outlined),
@@ -98,7 +98,7 @@ class _forgetPasswordState extends State<forgetPassword> {
                               border: OutlineInputBorder(
                                 borderSide: BorderSide(width: 2),
                                 borderRadius: const BorderRadius.all(
-                                    Radius.circular(20.0)),
+                                    Radius.circular(8.0)),
                               ),
                               prefixIcon: Icon(Icons.mobile_friendly_outlined),
                               labelText: 'Mobile',
@@ -106,12 +106,13 @@ class _forgetPasswordState extends State<forgetPassword> {
                         ),
                       ),
                       Container(
-                        margin: const EdgeInsets.only(top: 10.0, bottom: 0.0),
-                        height: 40,
-                        width: 150,
+                        margin: const EdgeInsets.only(
+                            top: 15.0, bottom: 0.0, left: 13, right: 13),
+                        height: 50,
+                        width: double.infinity,
                         decoration: BoxDecoration(
                             color: Colors.amber,
-                            borderRadius: BorderRadius.circular(20)),
+                            borderRadius: BorderRadius.circular(8)),
                         child: TextButton(
                             // color: Colors.amber,
                             child: Text(
