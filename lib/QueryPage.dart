@@ -1,11 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
-import 'dart:io';
 import 'dart:developer';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class QueryPage extends StatefulWidget {
@@ -37,7 +35,6 @@ class _QueryPageState extends State<QueryPage> {
   String userEmail;
   String userMobile;
   String userAddress;
-  // Changed from late to nullable to prevent initialization error
   Barcode? result;
   late MobileScannerController controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
@@ -67,125 +64,108 @@ class _QueryPageState extends State<QueryPage> {
         elevation: 0,
       ),
       body: Column(
-        children: <Widget>[
-          Expanded(flex: 3, child: _buildQrView(context)),
+        children: [
           Expanded(
-            flex: 1,
-            child: FittedBox(
-              fit: BoxFit.contain,
+            flex: 3,
+            child: _buildQrView(context),
+          ),
+          Expanded(
+            flex: 2,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  // Modified to handle null result
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
                   if (result != null)
                     Text(
-                        'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.rawValue}')
+                      'Type: ${describeEnum(result!.format)}\nData: ${result!.rawValue}',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 16),
+                    )
                   else
-                    const Text('Scan a code'),
+                    const Text(
+                      'Scan a QR code',
+                      style:
+                          TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
+                    ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.only(top: 4, right: 50),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller.toggleTorch();
-                            setState(() {});
-                          },
-                          // Replace FutureBuilder with a simple Text widget
-                          child: const Text('Flash',
-                              style: TextStyle(fontSize: 20)),
-                        ),
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: () async {
+                          await controller.toggleTorch();
+                          setState(() {});
+                        },
+                        icon: const Icon(Icons.flash_on),
+                        label: const Text('Flash'),
                       ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 4),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text('Back',
-                              style: TextStyle(fontSize: 20)),
-                        ),
-                      )
+                      ElevatedButton.icon(
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: const Icon(Icons.arrow_back),
+                        label: const Text('Back'),
+                      ),
                     ],
                   ),
                   Row(
-                    children: <Widget>[
-                      Container(
-                        margin:
-                            const EdgeInsets.only(top: 4, right: 50, left: 5),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller.stop();
-                          },
-                          child: const Text('Pause',
-                              style: TextStyle(fontSize: 20)),
-                        ),
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: () async {
+                          await controller.stop();
+                        },
+                        icon: const Icon(Icons.pause),
+                        label: const Text('Pause'),
                       ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 4, right: 14),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller.start();
-                          },
-                          child: const Text('Start',
-                              style: TextStyle(fontSize: 20)),
-                        ),
-                      )
+                      ElevatedButton.icon(
+                        onPressed: () async {
+                          await controller.start();
+                        },
+                        icon: const Icon(Icons.play_arrow),
+                        label: const Text('Start'),
+                      ),
                     ],
                   ),
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.only(top: 8),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              // Add null check before accessing result
-                              if (result != null && result!.rawValue != null) {
-                                String requestCode = result!.rawValue!;
-                                String modifiedCode =
-                                    requestCode.replaceAll(":8000", "");
+                  ElevatedButton.icon(
+                    onPressed: () async {
+                      if (result != null && result!.rawValue != null) {
+                        String requestCode = result!.rawValue!;
+                        String modifiedCode =
+                            requestCode.replaceAll(":8000", "");
 
-                                // Use launchUrl with correct Uri parsing
-                                if (await canLaunchUrl(
-                                    Uri.parse(modifiedCode))) {
-                                  await launchUrl(Uri.parse(modifiedCode));
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            'Could not launch URL: $modifiedCode')),
-                                  );
-                                }
+                        if (await canLaunchUrl(Uri.parse(modifiedCode))) {
+                          await launchUrl(Uri.parse(modifiedCode));
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content:
+                                  Text('Could not launch URL: $modifiedCode'),
+                            ),
+                          );
+                        }
 
-                                print("----QRURI----");
-                                print(result!.rawValue);
+                        print("----QRURI----");
+                        print(result!.rawValue);
 
-                                // Safely extract substring if possible
-                                if (result!.rawValue!.length >= 42) {
-                                  String newString =
-                                      result!.rawValue!.substring(39, 42);
-                                  print(newString);
-                                }
-                                print(userId);
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text('No QR code scanned yet')),
-                                );
-                              }
-                            },
-                            child: const Icon(
-                              Icons.camera,
-                            )),
-                      ),
-                    ],
-                  )
+                        if (result!.rawValue!.length >= 42) {
+                          String newString =
+                              result!.rawValue!.substring(39, 42);
+                          print(newString);
+                        }
+                        print(userId);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('No QR code scanned yet')),
+                        );
+                      }
+                    },
+                    icon: const Icon(Icons.camera),
+                    label: const Text('Process QR'),
+                  ),
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );
