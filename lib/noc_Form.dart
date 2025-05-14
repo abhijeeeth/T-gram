@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:tigramnks/noc_Form1.dart';
+import 'package:tigramnks/server/serverhelper.dart';
 
 class NocForm extends StatefulWidget {
   String sessionToken;
@@ -83,8 +84,7 @@ class _NocFormState extends State<NocForm> {
   List<String> district = [];
   LoadDistric() async {
     int RL = 0;
-    const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/ListDistrict';
+    const String url = '${ServerHelper.baseUrl}auth/ListDistrict';
     var response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -105,8 +105,7 @@ class _NocFormState extends State<NocForm> {
   LoadTaluka() async {
     // taluka.clear();
     int RL = 0;
-    const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/LoadTaluka';
+    const String url = '${ServerHelper.baseUrl}auth/LoadTaluka';
     Map data = {
       "district": selectedDistrict,
     };
@@ -133,8 +132,7 @@ class _NocFormState extends State<NocForm> {
   List<String> Village = [];
   LoadVillage() async {
     int RL = 0;
-    const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/LoadVillage';
+    const String url = '${ServerHelper.baseUrl}auth/LoadVillage';
     Map data = {"taluka": selectedTaluka};
     print(data);
     var body = json.encode(data);
@@ -161,7 +159,7 @@ class _NocFormState extends State<NocForm> {
   List<String> Rname = [];
   int RL = 0;
   ListRange() async {
-    const String url = 'https://timber.forest.kerala.gov.in/api/auth/ListRange';
+    const String url = '${ServerHelper.baseUrl}auth/ListRange';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -183,8 +181,7 @@ class _NocFormState extends State<NocForm> {
 
   int DL = 0;
   ListDivision() async {
-    const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/LoadDivision';
+    const String url = '${ServerHelper.baseUrl}auth/LoadDivision';
     Map data = {
       "range_area": dropdownValue,
     };

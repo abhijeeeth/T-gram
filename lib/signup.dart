@@ -1,17 +1,19 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:convert';
+import 'dart:io' show File;
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
-import 'package:file_picker/file_picker.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'dart:io' show File;
-import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:tigramnks/login.dart';
+import 'package:tigramnks/server/serverhelper.dart';
 
 class signup extends StatefulWidget {
+  const signup({super.key});
+
   @override
   _signupState createState() => _signupState();
 }
@@ -43,7 +45,7 @@ class _signupState extends State<signup> {
   bool validateEmail(String value) {
     String pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern);
+    RegExp regex = RegExp(pattern);
     return (!regex.hasMatch(value)) ? false : true;
   }
 
@@ -138,9 +140,9 @@ class _signupState extends State<signup> {
                       },
                       splashColor: Colors.greenAccent,
                       child: Row(
-                        children: [
+                        children: const [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.image,
                               color: Colors.blueAccent,
@@ -199,11 +201,7 @@ class _signupState extends State<signup> {
   void getDropDownItem() {
     setState(() {
       sproof_holder = dropdownValue!;
-      if (sproof_holder != null) {
-        check = true;
-      } else {
-        check = false;
-      }
+      check = true;
     });
     print(sproof_holder);
   }
@@ -297,7 +295,7 @@ class _signupState extends State<signup> {
                       border: OutlineInputBorder(
                         borderSide: BorderSide(width: 2),
                         borderRadius:
-                            const BorderRadius.all(const Radius.circular(12.0)),
+                            const BorderRadius.all(Radius.circular(12.0)),
                       ),
                       labelText: 'Name',
                       hintText: 'Enter Your Name'),
@@ -313,7 +311,7 @@ class _signupState extends State<signup> {
                       border: OutlineInputBorder(
                         borderSide: BorderSide(width: 2),
                         borderRadius:
-                            const BorderRadius.all(const Radius.circular(12.0)),
+                            const BorderRadius.all(Radius.circular(12.0)),
                       ),
                       labelText: 'E-mail',
                       hintText: 'Enter Your E-mail'),
@@ -330,7 +328,7 @@ class _signupState extends State<signup> {
                       border: OutlineInputBorder(
                         borderSide: BorderSide(width: 2),
                         borderRadius:
-                            const BorderRadius.all(const Radius.circular(12.0)),
+                            const BorderRadius.all(Radius.circular(12.0)),
                       ),
                       labelText: 'Mobile No',
                       hintText: 'Enter Valid Mobile Number'),
@@ -347,7 +345,7 @@ class _signupState extends State<signup> {
                       border: OutlineInputBorder(
                         borderSide: BorderSide(width: 2),
                         borderRadius:
-                            const BorderRadius.all(const Radius.circular(12.0)),
+                            const BorderRadius.all(Radius.circular(12.0)),
                       ),
                       labelText: 'Address',
                       hintText: 'Enter Your Address'),
@@ -357,8 +355,8 @@ class _signupState extends State<signup> {
                 margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
                 padding: const EdgeInsets.only(
                     left: 10.0, right: 10.0, top: 0, bottom: 10),
-                decoration: new BoxDecoration(
-                    border: new Border.all(
+                decoration: BoxDecoration(
+                    border: Border.all(
                       color: Colors.grey,
                       width: 1,
                     ),
@@ -407,8 +405,8 @@ class _signupState extends State<signup> {
                         decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderSide: BorderSide(width: 2),
-                              borderRadius: const BorderRadius.all(
-                                  const Radius.circular(12.0)),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(12.0)),
                             ),
                             labelText: 'Id Number',
                             hintText: 'Enter Id Proof Number'),
@@ -418,8 +416,8 @@ class _signupState extends State<signup> {
                       width: double.infinity,
                       margin: const EdgeInsets.only(
                           left: 10, right: 10, bottom: 10),
-                      decoration: new BoxDecoration(
-                          border: new Border.all(
+                      decoration: BoxDecoration(
+                          border: Border.all(
                             color: Colors.grey,
                             width: 1,
                           ),
@@ -512,7 +510,7 @@ class _signupState extends State<signup> {
                       border: OutlineInputBorder(
                         borderSide: BorderSide(width: 2),
                         borderRadius:
-                            const BorderRadius.all(const Radius.circular(12.0)),
+                            const BorderRadius.all(Radius.circular(12.0)),
                       ),
                       labelText: 'Password',
                       hintText: 'Enter Password'),
@@ -537,7 +535,7 @@ class _signupState extends State<signup> {
                       border: OutlineInputBorder(
                         borderSide: BorderSide(width: 2),
                         borderRadius:
-                            const BorderRadius.all(const Radius.circular(12.0)),
+                            const BorderRadius.all(Radius.circular(12.0)),
                       ),
                       labelText: 'Re-Password',
                       hintText: 'Repeat Password'),
@@ -552,13 +550,13 @@ class _signupState extends State<signup> {
                     borderRadius: BorderRadius.circular(12)),
                 child: TextButton(
                   onPressed: () async {
-                    if ((Name.text.length == 0) ||
-                        (rEmail.text.length == 0) ||
-                        (Mobile.text.length == 0) ||
-                        (Aadhar.text.length == 0) ||
-                        (Address.text.length == 0) ||
-                        (Password.text.length == 0) ||
-                        (rPassword.text.length == 0)) {
+                    if ((Name.text.isEmpty) ||
+                        (rEmail.text.isEmpty) ||
+                        (Mobile.text.isEmpty) ||
+                        (Aadhar.text.isEmpty) ||
+                        (Address.text.isEmpty) ||
+                        (Password.text.isEmpty) ||
+                        (rPassword.text.isEmpty)) {
                       Fluttertoast.showToast(
                           msg: "please fill all fields",
                           toastLength: Toast.LENGTH_SHORT,
@@ -621,7 +619,7 @@ class _signupState extends State<signup> {
                           fontSize: 18.0);
                     } else {
                       const String url =
-                          'https://timber.forest.kerala.gov.in/api/auth/NewRegisterAPI';
+                          '${ServerHelper.baseUrl}auth/NewRegisterAPI';
                       // final bytes6 = File(_imageFile.path).readAsBytesSync();
                       // String aadhar_base= _imageFile != null ? 'data:image/png;base64,' + base64Encode(bytes6) : '';
                       print(base64Image);
@@ -661,7 +659,7 @@ class _signupState extends State<signup> {
                         //     textColor: Colors.white,
                         //     fontSize: 18.0);
                         const String url1 =
-                            'https://timber.forest.kerala.gov.in/api/auth/register_otp_verification';
+                            '${ServerHelper.baseUrl}auth/register_otp_verification';
                         Map data1 = {
                           "phone": Mobile.text,
                         };
@@ -731,7 +729,7 @@ class _signupState extends State<signup> {
                           left: 15.0, right: 15.0, top: 15, bottom: 0),
                       //padding: EdgeInsets.symmetric(horizontal: 15),
                       child: Text(
-                        'OTP Send on Email OR Mobile Number: ' + Mobile.text,
+                        'OTP Send on Email OR Mobile Number: ${Mobile.text}',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontWeight: FontWeight.bold, color: Colors.blue),
@@ -783,7 +781,7 @@ class _signupState extends State<signup> {
                             ),
                           ),
                           onPressed: () async {
-                            if (otp.text.length == 0) {
+                            if (otp.text.isEmpty) {
                               Fluttertoast.showToast(
                                   msg: 'Please Enter OTP',
                                   toastLength: Toast.LENGTH_LONG,
@@ -794,7 +792,7 @@ class _signupState extends State<signup> {
                                   fontSize: 18.0);
                             } else {
                               const String url =
-                                  'https://timber.forest.kerala.gov.in/api/auth/register_Otp_verify';
+                                  '${ServerHelper.baseUrl}auth/register_Otp_verify';
                               Map data = {
                                 "phone": Mobile.text,
                                 "otp": otp.text,

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import "package:flutter/cupertino.dart";
 import 'package:http/http.dart' as http;
+import 'package:tigramnks/server/serverhelper.dart';
 import 'package:jailbreak_root_detection/jailbreak_root_detection.dart';
 
 import 'package:tigramnks/DivisionDashboard.dart';
@@ -22,13 +23,15 @@ import 'checkPostDash.dart';
 import 'main.dart';
 
 void main() {
-  runApp(login());
+  runApp(const login());
 }
 
 class login extends StatelessWidget {
+  const login({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: LoginDemo(),
     );
@@ -36,6 +39,8 @@ class login extends StatelessWidget {
 }
 
 class LoginDemo extends StatefulWidget {
+  const LoginDemo({super.key});
+
   @override
   _LoginDemoState createState() => _LoginDemoState();
 }
@@ -172,9 +177,9 @@ class _LoginDemoState extends State<LoginDemo> {
                   activeFgColor: Colors.white,
                   inactiveBgColor: Colors.white,
                   inactiveFgColor: Colors.blue,
-                  labels: ['User', 'Officer'],
+                  labels: const ['User', 'Officer'],
                   fontSize: 18,
-                  activeBgColors: [
+                  activeBgColors: const [
                     [Colors.blue],
                     [Colors.blue]
                   ],
@@ -183,9 +188,9 @@ class _LoginDemoState extends State<LoginDemo> {
               ),
               LayoutBuilder(builder: (context, constraints) {
                 if (flag == true) {
-                  return UserLogin();
+                  return const UserLogin();
                 } else if (flag == false) {
-                  return OfficerLogin();
+                  return const OfficerLogin();
                 }
                 return Container(); // Default return for type safety
               }),
@@ -216,12 +221,12 @@ class _LoginDemoState extends State<LoginDemo> {
                   ),
                   borderRadius: BorderRadius.circular(10), // Add border radius
                 ),
-                child: Row(
+                child: const Row(
                   children: [
-                    const SizedBox(
+                    SizedBox(
                         width:
                             8.0), // Add spacing between icon and version text
-                    const Text(
+                    Text(
                       "Version: 1.2.0",
                       style: TextStyle(
                         fontSize: 10,
@@ -241,6 +246,8 @@ class _LoginDemoState extends State<LoginDemo> {
 //-------------------------------User-Login-------------------------------------
 
 class UserLogin extends StatefulWidget {
+  const UserLogin({super.key});
+
   @override
   _UserState createState() => _UserState();
 }
@@ -284,7 +291,7 @@ class _UserState extends State<UserLogin> {
   void getLogin() async {
     List userRange;
     List<String> URange = [];
-    List Dist_Range = [];
+    List distRange = [];
     List<String> Dist = [];
     List Range = [];
     prefs = await SharedPreferences.getInstance();
@@ -292,8 +299,7 @@ class _UserState extends State<UserLogin> {
       newuser = (prefs?.getBool('isLoggedIn') ?? true);
     });
     if (newuser == false) {
-      const String url =
-          'https://timber.forest.kerala.gov.in/api/auth/NewLogin';
+      const String url = '${ServerHelper.baseUrl}auth/NewLogin';
       Map data = {
         "email_or_phone": (prefs?.getString('LoginUser') ?? '').trim(),
         "password": (prefs?.getString('LoginPass') ?? '').trim(),
@@ -321,7 +327,7 @@ class _UserState extends State<UserLogin> {
         });
         if (responseJson['data']['user_group'][0] == 'user') {
           Fluttertoast.showToast(
-              msg: 'Welcome ' + userName.toString(),
+              msg: 'Welcome $userName',
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 1,
@@ -362,7 +368,7 @@ class _UserState extends State<UserLogin> {
             URange = List<String>.from(userRange);
           });
           Fluttertoast.showToast(
-              msg: 'Welcome ' + userName.toString(),
+              msg: 'Welcome $userName',
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
               timeInSecForIosWeb: 4,
@@ -397,9 +403,9 @@ class _UserState extends State<UserLogin> {
                 .toLowerCase() ==
             'state officer') {
           setState(() {
-            Dist_Range = responseJson['data']['division_range_list'];
+            distRange = responseJson['data']['division_range_list'];
 
-            for (int i = 0; i < Dist_Range!.length; i++) {
+            for (int i = 0; i < distRange.length; i++) {
               Dist.add(
                   responseJson['data']['division_range_list'][i]['division']);
               Range.add(
@@ -412,7 +418,7 @@ class _UserState extends State<UserLogin> {
             //D_Range=List<String>.from(Dist_Range);
           });
           Fluttertoast.showToast(
-              msg: 'Welcome ' + userName.toString(),
+              msg: 'Welcome $userName',
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 4,
@@ -433,7 +439,7 @@ class _UserState extends State<UserLogin> {
                   },
                   pageBuilder: (context, animation, animationTime) {
                     return SFDashboard(
-                      Dist_Range: Dist_Range ?? [],
+                      Dist_Range: distRange ?? [],
                       userId: userId!,
                       userName: userName,
                       userEmail: userEmail,
@@ -452,7 +458,7 @@ class _UserState extends State<UserLogin> {
                 .toLowerCase() ==
             'field officer') {
           Fluttertoast.showToast(
-              msg: 'Welcome ' + userName.toString(),
+              msg: 'Welcome $userName',
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 4,
@@ -520,7 +526,7 @@ class _UserState extends State<UserLogin> {
             Range = responseJson['data']['range'];
           }
           Fluttertoast.showToast(
-              msg: 'Welcome ' + userName.toString(),
+              msg: 'Welcome $userName',
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 4,
@@ -556,7 +562,7 @@ class _UserState extends State<UserLogin> {
       } else {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => login()),
+          MaterialPageRoute(builder: (_) => const login()),
         );
       }
     }
@@ -579,8 +585,8 @@ class _UserState extends State<UserLogin> {
           borderRadius: BorderRadius.circular(12.0),
           color: Colors.white,
           border: Border.all(color: Colors.red[600]!, width: 1.2),
-          boxShadow: [
-            const BoxShadow(
+          boxShadow: const [
+            BoxShadow(
               color: Colors.black,
               blurRadius: 2.0,
               spreadRadius: 0.0,
@@ -594,15 +600,15 @@ class _UserState extends State<UserLogin> {
         child: Column(children: <Widget>[
           TextField(
               controller: loginEmail,
-              decoration: InputDecoration(
-                  border: const OutlineInputBorder(
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(
                     borderSide: BorderSide(width: 2),
                     borderRadius: BorderRadius.all(Radius.circular(20.0)),
                   ),
-                  prefixIcon: const Icon(Icons.email_outlined),
+                  prefixIcon: Icon(Icons.email_outlined),
                   hintText: 'Enter E-mail/Mobile',
                   labelText: "E-mail/Mobile",
-                  hintStyle: new TextStyle(
+                  hintStyle: TextStyle(
                     fontFamily: 'Cairo',
                     fontStyle: FontStyle.normal,
                   ))),
@@ -629,7 +635,7 @@ class _UserState extends State<UserLogin> {
                 ),
                 hintText: 'Enter Password',
                 labelText: "Password",
-                hintStyle: new TextStyle(
+                hintStyle: const TextStyle(
                   fontFamily: 'Cairo',
                   fontStyle: FontStyle.normal,
                 )),
@@ -642,7 +648,7 @@ class _UserState extends State<UserLogin> {
           TextButton(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => forgetPassword()));
+                    MaterialPageRoute(builder: (_) => const forgetPassword()));
               },
               child: Text(
                 'Forget Password',
@@ -685,8 +691,7 @@ class _UserState extends State<UserLogin> {
                         fontSize: 18.0);
                   } else {
                     print("----login----");
-                    const String url =
-                        'https://timber.forest.kerala.gov.in/api/auth/NewLogin';
+                    const String url = '${ServerHelper.baseUrl}auth/NewLogin';
                     Map data = {
                       "email_or_phone": loginEmail.text.trim(),
                       "password": loginPassword.text.trim()
@@ -758,7 +763,7 @@ class _UserState extends State<UserLogin> {
                                 }));
                       } else {
                         Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (_) => login()));
+                            MaterialPageRoute(builder: (_) => const login()));
                         Fluttertoast.showToast(
                             msg: 'Go to Officer Login',
                             toastLength: Toast.LENGTH_SHORT,
@@ -771,8 +776,8 @@ class _UserState extends State<UserLogin> {
                         loginPassword.clear();
                       }
                     } else {
-                      Navigator.pushReplacement(
-                          context, MaterialPageRoute(builder: (_) => login()));
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (_) => const login()));
                       Fluttertoast.showToast(
                           msg: 'Invalid credentials',
                           toastLength: Toast.LENGTH_SHORT,
@@ -791,7 +796,7 @@ class _UserState extends State<UserLogin> {
           TextButton(
               onPressed: () {
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => signup()));
+                    context, MaterialPageRoute(builder: (_) => const signup()));
               },
               child: RichText(
                 textAlign: TextAlign.center,
@@ -812,7 +817,6 @@ class _UserState extends State<UserLogin> {
                 ]),
               )),
         ]));
-    ;
   }
 }
 //-------------------------------End--UserLogin---------------------------------
@@ -820,6 +824,8 @@ class _UserState extends State<UserLogin> {
 //-----------------------Officer--Login-----------------------------------------
 
 class OfficerLogin extends StatefulWidget {
+  const OfficerLogin({super.key});
+
   @override
   _OfficerState createState() => _OfficerState();
 }
@@ -832,7 +838,7 @@ class _OfficerState extends State<OfficerLogin> {
   void getLogin() async {
     List userRange;
     List<String> URange = [];
-    List Dist_Range = [];
+    List distRange = [];
     List<String> Dist = [];
     List Range = [];
     prefs = await SharedPreferences.getInstance();
@@ -942,10 +948,10 @@ class _OfficerState extends State<OfficerLogin> {
                 .toLowerCase() ==
             'state officer') {
           setState(() {
-            Dist_Range = responseJson['data']['division_range_list'];
+            distRange = responseJson['data']['division_range_list'];
             print("----------------------------#%%%------");
 
-            for (int i = 0; i < Dist_Range.length; i++) {
+            for (int i = 0; i < distRange.length; i++) {
               Dist.add(
                   responseJson['data']['division_range_list'][i]['division']);
               Range.add(
@@ -992,7 +998,7 @@ class _OfficerState extends State<OfficerLogin> {
                       userAddress: userAddress,
                       Dist: Dist,
                       Range: URange,
-                      Dist_Range: Dist_Range ?? [],
+                      Dist_Range: distRange ?? [],
                     );
                   }));
         } else if (responseJson['data']['user_group'][0]
@@ -1104,7 +1110,7 @@ class _OfficerState extends State<OfficerLogin> {
       } else {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => login()),
+          MaterialPageRoute(builder: (_) => const login()),
         );
       }
     }
@@ -1141,7 +1147,7 @@ class _OfficerState extends State<OfficerLogin> {
   bool validateEmail(String value) {
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern.toString());
+    RegExp regex = RegExp(pattern.toString());
     return (!regex.hasMatch(value)) ? false : true;
   }
 
@@ -1182,8 +1188,8 @@ class _OfficerState extends State<OfficerLogin> {
             color: Colors.red[700]!,
             width: 1.2,
           ), //<---- Insert Gradient Here
-          boxShadow: [
-            const BoxShadow(
+          boxShadow: const [
+            BoxShadow(
               color: Colors.black,
               blurRadius: 2.0,
               spreadRadius: 0.0,
@@ -1196,8 +1202,8 @@ class _OfficerState extends State<OfficerLogin> {
         child: Column(children: <Widget>[
           Container(
             margin: const EdgeInsets.only(top: 10, bottom: 10),
-            decoration: new BoxDecoration(
-                border: new Border.all(
+            decoration: BoxDecoration(
+                border: Border.all(
                   color: Colors.grey,
                   width: 1,
                 ),
@@ -1237,15 +1243,15 @@ class _OfficerState extends State<OfficerLogin> {
           ),
           TextField(
               controller: loginEmail,
-              decoration: InputDecoration(
-                  border: const OutlineInputBorder(
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(
                     borderSide: BorderSide(width: 2),
                     borderRadius: BorderRadius.all(Radius.circular(20.0)),
                   ),
-                  prefixIcon: const Icon(Icons.perm_identity_rounded),
+                  prefixIcon: Icon(Icons.perm_identity_rounded),
                   hintText: 'Enter Email/Mobile',
                   labelText: "E-mail/Mobile",
-                  hintStyle: new TextStyle(
+                  hintStyle: TextStyle(
                     fontFamily: 'Cairo',
                     fontStyle: FontStyle.normal,
                   ))),
@@ -1270,7 +1276,7 @@ class _OfficerState extends State<OfficerLogin> {
                 ),
                 hintText: 'Enter Password',
                 labelText: "Password",
-                hintStyle: new TextStyle(
+                hintStyle: const TextStyle(
                   fontFamily: 'Cairo',
                   fontStyle: FontStyle.normal,
                 )),
@@ -1296,8 +1302,8 @@ class _OfficerState extends State<OfficerLogin> {
                   ),
                 ),
                 onPressed: () async {
-                  if ((loginEmail.text.length == 0) ||
-                      (loginPassword.text.length == 0)) {
+                  if ((loginEmail.text.isEmpty) ||
+                      (loginPassword.text.isEmpty)) {
                     Fluttertoast.showToast(
                         msg: "Either User Name or password field is empty",
                         toastLength: Toast.LENGTH_SHORT,
@@ -1317,8 +1323,7 @@ class _OfficerState extends State<OfficerLogin> {
                         fontSize: 18.0);
                   } else {
                     print("----login--");
-                    const String url =
-                        'https://timber.forest.kerala.gov.in/api/auth/NewLogin';
+                    const String url = '${ServerHelper.baseUrl}auth/NewLogin';
                     Map data = {
                       "email_or_phone": loginEmail.text.trim(),
                       "password": loginPassword.text.trim()
@@ -1576,7 +1581,7 @@ class _OfficerState extends State<OfficerLogin> {
                     } else {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => login()),
+                        MaterialPageRoute(builder: (_) => const login()),
                       );
                       Fluttertoast.showToast(
                           msg: 'Invalid credentials',
@@ -1596,7 +1601,7 @@ class _OfficerState extends State<OfficerLogin> {
           TextButton(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => forgetPassword()));
+                    MaterialPageRoute(builder: (_) => const forgetPassword()));
               },
               child: Text(
                 'Change Password',

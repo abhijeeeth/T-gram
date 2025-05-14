@@ -1,16 +1,14 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 //import 'package:Tigram/CheckPassStatus.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-
 import 'package:tigramnks/ViewApplication1.dart';
+import 'package:tigramnks/server/serverhelper.dart';
 
 class ViewApplication extends StatefulWidget {
   String userGroup;
@@ -45,7 +43,7 @@ class _ViewApplicationState extends State<ViewApplication> {
   String userEmail;
   _ViewApplicationState(this.sessionToken, this.userId, this.userGroup,
       this.Ids, this.Range, this.userName, this.userEmail);
-  String url = 'https://timber.forest.kerala.gov.in/api/auth/ViewApplication';
+  String url = '${ServerHelper.baseUrl}auth/ViewApplication';
 
   late bool verify_officer;
   late bool deputy_range_officer;
@@ -140,7 +138,7 @@ class _ViewApplicationState extends State<ViewApplication> {
 
   //---end vehical-----------
   View_Record() async {
-    String url = 'https://timber.forest.kerala.gov.in/api/auth/ViewApplication';
+    String url = '${ServerHelper.baseUrl}auth/ViewApplication';
     Map data = {"app_id": Ids};
     print(data);
     var body = json.encode(data);
@@ -1150,8 +1148,7 @@ class _ViewApplicationState extends State<ViewApplication> {
     });
 
     try {
-      const String url =
-          'https://timber.forest.kerala.gov.in/api/auth/UpdateTimberlog';
+      const String url = '${ServerHelper.baseUrl}auth/UpdateTimberlog';
       Map data = {"app_id": Ids, "log_details": log_details};
       var body = json.encode(data);
 

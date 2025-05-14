@@ -9,6 +9,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:tigramnks/Form2Page2.dart';
+import 'package:tigramnks/server/serverhelper.dart';
 
 class Form2Page1 extends StatefulWidget {
   String sessionToken;
@@ -118,8 +119,7 @@ class _Form2Page1State extends State<Form2Page1> {
   //----------------------------District----------------------------------
   List<String> district = [];
   LoadDistric() async {
-    const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/ListDistrict';
+    const String url = '${ServerHelper.baseUrl}auth/ListDistrict';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -139,8 +139,7 @@ class _Form2Page1State extends State<Form2Page1> {
   List<String> taluka1 = [];
   LoadTaluka() async {
     int RL = 0;
-    const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/LoadTaluka';
+    const String url = '${ServerHelper.baseUrl}auth/LoadTaluka';
 
     Map data = {
       "district": selectedDistrict ?? "",
@@ -168,8 +167,7 @@ class _Form2Page1State extends State<Form2Page1> {
   List<String> Village = [];
   LoadVillage() async {
     int RL = 0;
-    const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/LoadVillage';
+    const String url = '${ServerHelper.baseUrl}auth/LoadVillage';
     Map data = {"taluka": selectedTalukaF1 ?? ""};
     print(data);
     var body = json.encode(data);
@@ -196,7 +194,7 @@ class _Form2Page1State extends State<Form2Page1> {
   List<String> Rname = [];
   int RL = 0;
   ListRange() async {
-    const String url = 'https://timber.forest.kerala.gov.in/api/auth/ListRange';
+    const String url = '${ServerHelper.baseUrl}auth/ListRange';
     final response = await http.get(Uri.parse(url), headers: {
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -219,8 +217,7 @@ class _Form2Page1State extends State<Form2Page1> {
 
   int DL = 0;
   ListDivision() async {
-    const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/LoadDivision';
+    const String url = '${ServerHelper.baseUrl}auth/LoadDivision';
     Map data = {
       "range_area": dropdownValue ?? "",
     };

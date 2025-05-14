@@ -1,32 +1,19 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:convert';
+import 'dart:io' show File;
 import 'dart:math';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:get/get.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'dart:io' show File;
-import 'dart:io' as Io;
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:tigramnks/CheckPassStatus.dart';
-import 'package:tigramnks/Images.dart';
-import 'package:tigramnks/NEW_FORMS/transitView.dart';
-import 'package:tigramnks/OfficerDashboard.dart';
-import 'package:tigramnks/ViewApplication1.dart';
-import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:tigramnks/OfficerDashboard.dart';
 import 'package:tigramnks/homePage.dart';
-
-import '../model/MyIcon.dart';
+import 'package:tigramnks/server/serverhelper.dart';
 
 class viewApplicationNw2 extends StatefulWidget {
   final String sessionToken;
@@ -448,7 +435,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
 
       print("Fetching deputies for range ID: $rangeId");
 
-      String url = 'https://timber.forest.kerala.gov.in/api/auth/get_deputies/';
+      String url = '${ServerHelper.baseUrl}auth/get_deputies/';
       Map data = {"range": userId};
       var body = json.encode(data);
       print(sessionToken);
@@ -490,7 +477,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
   }
 
   feachLog() async {
-    String url = 'https://timber.forest.kerala.gov.in/api/auth/get_req_log/';
+    String url = '${ServerHelper.baseUrl}auth/get_req_log/';
     Map data = {"app_id": Ids};
     var body = json.encode(data);
     final response = await http.post(Uri.parse(url),
@@ -535,8 +522,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
   }
 
   fechAppLog() async {
-    String url =
-        'https://timber.forest.kerala.gov.in/api/auth/get_verified_log/';
+    String url = '${ServerHelper.baseUrl}auth/get_verified_log/';
     Map data = {"app_id": Ids};
     var body = json.encode(data);
     final response = await http.post(Uri.parse(url),
@@ -1112,7 +1098,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                     fontSize: 18.0);
                               } else {
                                 const String url =
-                                    'https://timber.forest.kerala.gov.in/api/auth/assgin_deputy/';
+                                    '${ServerHelper.baseUrl}auth/assgin_deputy/';
                                 Map data = {
                                   "app_id": Ids,
                                   "deputy_id": dropdownValue3 != null
@@ -1264,7 +1250,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                   fontSize: 18.0);
                             } else {
                               const String url =
-                                  'https://timber.forest.kerala.gov.in/api/auth/approve_cutting_pass_new/';
+                                  '${ServerHelper.baseUrl}auth/approve_cutting_pass_new/';
                               Map data = {
                                 "app_id": int.parse(Ids),
                                 "type": "Reject",
@@ -1672,7 +1658,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                   fontSize: 18.0);
                             } else {
                               const String url =
-                                  'https://timber.forest.kerala.gov.in/api/auth/approve_cutting_pass_new/';
+                                  '${ServerHelper.baseUrl}auth/approve_cutting_pass_new/';
                               Map data = {
                                 "app_id": int.parse(Ids),
                                 "type": "Approve",
@@ -1835,7 +1821,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                             fontSize: 18.0);
                       } else {
                         const String url =
-                            'https://timber.forest.kerala.gov.in/api/auth/AddLocation/';
+                            '${ServerHelper.baseUrl}auth/AddLocation/';
                         Map data = {
                           "app_id": int.parse(Ids),
                           "lat": latImage_u,
@@ -2373,7 +2359,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                               isShow = true;
                             });
                             const String url =
-                                'https://timber.forest.kerala.gov.in/api/auth/field_verify/';
+                                '${ServerHelper.baseUrl}auth/field_verify/';
                             Map data = {
                               "app_id": Ids,
                               "location_img1": {
@@ -2819,7 +2805,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                   fontSize: 18.0);
                             } else {
                               const String url =
-                                  'https://timber.forest.kerala.gov.in/api/auth/assgin_deputy/';
+                                  '${ServerHelper.baseUrl}auth/assgin_deputy/';
                               Map data = {
                                 "app_id": Ids,
                                 "deputy_id": dropdownValue3 != null

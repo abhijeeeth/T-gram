@@ -1,16 +1,9 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last
 
 import 'package:flutter/material.dart';
-
 import 'package:hexcolor/hexcolor.dart';
-import 'package:http/http.dart' as http;
-
 import 'package:tigramnks/Images.dart';
-
 import 'package:tigramnks/NEW_FORMS/viewApplicationNw2.dart';
-import 'package:tigramnks/ViewApplication.dart';
-import 'package:tigramnks/ViewApplication2.dart';
-
 import 'package:url_launcher/url_launcher.dart';
 
 class ViewApplication1 extends StatefulWidget {

@@ -1,15 +1,13 @@
 // ignore_for_file: unnecessary_new
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
+import 'package:image_picker/image_picker.dart';
+import 'package:tigramnks/server/serverhelper.dart';
 
 // ignore: camel_case_types, must_be_immutable
 class sandalwoodForm extends StatefulWidget {
@@ -37,9 +35,7 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
   @override
   void initState() {
     super.initState();
-    if (userName != null) {
-      nameC.text = userName; // Set the initial value to the controller
-    }
+    nameC.text = userName; // Set the initial value to the controller
     fetchVillage();
   }
 
@@ -109,8 +105,8 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
   }
 
   Future<void> fetchVillage() async {
-    final response = await http.get(
-        Uri.parse('https://timber.forest.kerala.gov.in/api/auth/villages/'));
+    final response =
+        await http.get(Uri.parse('${ServerHelper.baseUrl}auth/villages/'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
@@ -135,7 +131,7 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
   List<String> divisions = [];
   LoadDivisionRange() async {
     int DL = 0;
-    const String url = 'https://timber.forest.kerala.gov.in/api/auth/villages/';
+    const String url = '${ServerHelper.baseUrl}auth/villages/';
     Map data = {
       "village": _selectedVillage,
     };
@@ -230,7 +226,7 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
                                 fontWeight: FontWeight.bold),
                             decoration: InputDecoration(
                               labelText: 'Enter Name :',
-                              border: OutlineInputBorder(),
+                              border: const OutlineInputBorder(),
                               filled: true, // Enables the background color
                               fillColor: Colors.grey[
                                   200], // Sets the background color to a light gray shade
@@ -794,9 +790,9 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
                                     BorderRadius.circular(8), // Rounded corners
                               ),
                             ),
-                            child: Container(
+                            child: const SizedBox(
                               width: double.infinity,
-                              child: const Text(
+                              child: Text(
                                 "Land Possession Certificate",
                                 textAlign: TextAlign.center, // Center the text
                                 style: TextStyle(
@@ -816,7 +812,7 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
                                     _landPossProff != null
                                         ? 'PDF File: ${_landPossProff!.path.split('/').last}'
                                         : 'Image File: ${_imageLandPoss!.path.split('/').last}',
-                                    style: TextStyle(color: Colors.black),
+                                    style: const TextStyle(color: Colors.black),
                                   ),
                                 ),
                                 IconButton(
@@ -859,9 +855,9 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
                                     BorderRadius.circular(8), // Rounded corners
                               ),
                             ),
-                            child: Container(
+                            child: const SizedBox(
                               width: double.infinity,
-                              child: const Text(
+                              child: Text(
                                 "Land Sketch Cirtificate",
                                 textAlign: TextAlign.center, // Center the text
                                 style: TextStyle(
@@ -932,33 +928,33 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
                                 fontWeight: FontWeight.bold),
                             items: const [
                               DropdownMenuItem(
-                                child: Text('Dead'),
                                 value: 'Dead',
+                                child: Text('Dead'),
                               ),
                               DropdownMenuItem(
-                                child: Text('Wind Fallen'),
                                 value: 'Wind Fallen',
+                                child: Text('Wind Fallen'),
                               ),
                               DropdownMenuItem(
-                                child: Text('Dangerous to Life and Property'),
                                 value: 'Dangerous to Life and Property',
+                                child: Text('Dangerous to Life and Property'),
                               ),
                               DropdownMenuItem(
-                                child: Text('Others'),
                                 value: 'Others',
+                                child: Text('Others'),
                               ),
                             ],
                             onChanged: (value) async {
                               // Safely update state
-                              await Future.delayed(Duration(milliseconds: 100),
-                                  () {
+                              await Future.delayed(
+                                  const Duration(milliseconds: 100), () {
                                 setState(() {
                                   selectedReason = value;
                                 });
                               });
                             },
                           ),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           // Conditionally show the TextField if "Others" is selected
                           if (selectedReason == 'Others')
                             TextFormField(
@@ -970,7 +966,7 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
                                 labelText: 'Please specify other reason',
                                 filled: true,
                                 fillColor: Colors.grey[200],
-                                border: OutlineInputBorder(),
+                                border: const OutlineInputBorder(),
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -990,7 +986,7 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
                               labelText: 'Enter your Address here ..',
                               filled: true,
                               fillColor: Colors.grey[200],
-                              border: OutlineInputBorder(),
+                              border: const OutlineInputBorder(),
                             ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -1043,7 +1039,7 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
                                         fontSize: 18.0);
                                   } else {
                                     const String url =
-                                        'https://timber.forest.kerala.gov.in/api/auth/new_application_form/';
+                                        '${ServerHelper.baseUrl}auth/new_application_form/';
                                     Map data = {
                                       "name": nameC.text,
                                       "survey_no": survayC.text,
@@ -1139,7 +1135,7 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
                               ),
                               padding: const EdgeInsets.all(16.0),
                               // Gray background color
-                              child: Text(
+                              child: const Text(
                                 "Select Application",
                                 style: TextStyle(
                                   color: Colors.black87,
@@ -1188,14 +1184,14 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
               mainAxisSize: MainAxisSize.min, // Minimize the size of the dialog
               children: [
                 // Green tick mark at the center
-                Icon(
+                const Icon(
                   Icons.check_circle_outline,
                   color: Colors.green,
                   size: 100.0,
                 ),
                 const SizedBox(height: 20),
                 // Text in green color
-                Text(
+                const Text(
                   'Application Submitted Successfully!',
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -1208,7 +1204,7 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
                 // Note text
                 RichText(
                   textAlign: TextAlign.center,
-                  text: TextSpan(
+                  text: const TextSpan(
                     text: 'Note: ',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -1383,8 +1379,8 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('VILLAGE SUGGESTIONS'),
-          content: Container(
+          title: const Text('VILLAGE SUGGESTIONS'),
+          content: SizedBox(
             width: double.maxFinite,
             child: ListView.builder(
               shrinkWrap: true,
@@ -1400,20 +1396,18 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
                           id: 0, villageName: '', isNotified: false),
                     );
 
-                    if (selectedVillage != null) {
-                      setState(() {
-                        _villageController.text = selectedVillage.villageName;
-                        _selectedVillage = selectedVillage.villageName;
-                        _selectedVillageId = selectedVillage.id;
-                        divisionData = null;
-                        rangeData = null;
-                        divisions.clear();
-                        ranges.clear();
-                        LoadDivisionRange();
-                        // _isNotified = selectedVillage.isNotified;
-                        _suggestions = []; // Clear suggestions
-                      });
-                    }
+                    setState(() {
+                      _villageController.text = selectedVillage.villageName;
+                      _selectedVillage = selectedVillage.villageName;
+                      _selectedVillageId = selectedVillage.id;
+                      divisionData = null;
+                      rangeData = null;
+                      divisions.clear();
+                      ranges.clear();
+                      LoadDivisionRange();
+                      // _isNotified = selectedVillage.isNotified;
+                      _suggestions = []; // Clear suggestions
+                    });
 
                     Navigator.pop(context); // Close the dialog
                   },
@@ -1426,7 +1420,7 @@ class _sandalwoodFormState extends State<sandalwoodForm> {
               onPressed: () {
                 Navigator.pop(context); // Close the dialog
               },
-              child: Text('Close'),
+              child: const Text('Close'),
             ),
           ],
         );

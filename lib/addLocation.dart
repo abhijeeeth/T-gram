@@ -9,6 +9,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:tigramnks/CheckPassStatus.dart';
+import 'package:tigramnks/server/serverhelper.dart';
 
 class addLoc extends StatefulWidget {
   String userGroup;
@@ -743,7 +744,7 @@ class _addLocState extends State<addLoc> {
                             isShow = true;
                           });
                           const String url =
-                              'https://timber.forest.kerala.gov.in/api/auth/UpdateLocationImage';
+                              '${ServerHelper.baseUrl}auth/UpdateLocationImage';
                           Map data = {
                             "app_id": Ids,
                             "location_img1": {

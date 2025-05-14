@@ -20,6 +20,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:schedulers/schedulers.dart';
 import 'package:tigramnks/ViewApplication.dart';
+import 'package:tigramnks/server/serverhelper.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -49,8 +50,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
 
   _CheckPassStatusState(this.sessionToken, this.userName, this.userEmail,
       this.userGroup, this.userId);
-  final imageUrl =
-      "https://timber.forest.kerala.gov.in/api/auth/new_transit_pass_pdf/90/";
+  final imageUrl = "${ServerHelper.baseUrl}auth/new_transit_pass_pdf/90/";
   final scheduler = LazyScheduler(latency: Duration(seconds: 1));
 
   // List<Status> status = <Status>[];
@@ -180,8 +180,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
     App_Status_0.clear();
     Remark_0.clear();
 
-    const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/GetTransitPasses';
+    const String url = '${ServerHelper.baseUrl}auth/GetTransitPasses';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -287,8 +286,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
     field_status.clear();
     //-----clear------
 
-    const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/GetCuttingPasses';
+    const String url = '${ServerHelper.baseUrl}auth/GetCuttingPasses';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -365,8 +363,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
   void NocForm() async {
     sr3.clear();
 
-    const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/UserNocListApplication';
+    const String url = '${ServerHelper.baseUrl}auth/UserNocListApplication';
     var response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -705,7 +702,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                                       .blue,
                                                                   onPressed:
                                                                       () async {
-                                                                    await launch("https://timber.forest.kerala.gov.in/api/auth/new_transit_pass_pdf/" +
+                                                                    await launch("${ServerHelper.baseUrl}auth/new_transit_pass_pdf/" +
                                                                         App_no_0[
                                                                             int.parse(value)] +
                                                                         "/");
@@ -731,7 +728,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                                       () async {
                                                                     // _downloadFile(down,"TransitPass.pdf");
                                                                     //   downloadFile();
-                                                                    await launch("https://timber.forest.kerala.gov.in/api/auth/new_user_report/" +
+                                                                    await launch("${ServerHelper.baseUrl}auth/new_user_report/" +
                                                                         App_no_0[
                                                                             int.parse(value)] +
                                                                         "/");
@@ -1146,7 +1143,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                                       .blue,
                                                                   onPressed:
                                                                       () async {
-                                                                    await launch("https://timber.forest.kerala.gov.in/api/auth/new_transit_pass_pdf/" +
+                                                                    await launch("${ServerHelper.baseUrl}auth/new_transit_pass_pdf/" +
                                                                         Ids[int.parse(
                                                                             value)] +
                                                                         "/");
@@ -1171,7 +1168,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                                       .blue,
                                                                   onPressed:
                                                                       () async {
-                                                                    await launch("https://timber.forest.kerala.gov.in/api/auth/new_user_report/" +
+                                                                    await launch("${ServerHelper.baseUrl}auth/new_user_report/" +
                                                                         Ids[int.parse(
                                                                             value)] +
                                                                         "/");

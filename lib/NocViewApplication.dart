@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:tigramnks/server/serverhelper.dart';
 
 class NocViewApplication extends StatefulWidget {
   String userGroup;
@@ -58,8 +59,7 @@ class _NocViewApplicationState extends State<NocViewApplication> {
   //--------------------------
 
   void NocView() async {
-    String url =
-        'https://timber.forest.kerala.gov.in/api/auth/NocViewApplication';
+    String url = '${ServerHelper.baseUrl}auth/NocViewApplication';
     Map data = {
       "app_id": Ids,
     };

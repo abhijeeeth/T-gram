@@ -14,6 +14,7 @@ import 'package:tigramnks/QueryPage.dart';
 import 'package:tigramnks/Reports.dart';
 import 'package:tigramnks/ViewApplication.dart';
 import 'package:tigramnks/login.dart';
+import 'package:tigramnks/server/serverhelper.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -71,8 +72,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
 
 //---------------------Pie-chart------------------
   void pie_chart() async {
-    const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/dashbord_chart';
+    const String url = '${ServerHelper.baseUrl}auth/dashbord_chart';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -236,8 +236,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
     verify_forest1.clear();
     field_status.clear();
     print("Pending Application");
-    const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/PendingListViewApplication';
+    const String url = '${ServerHelper.baseUrl}auth/PendingListViewApplication';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -333,7 +332,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
     verify_forest1_1.clear();
     print("Approved Application");
     const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/ApprovedListViewApplication';
+        '${ServerHelper.baseUrl}auth/ApprovedListViewApplication';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -430,8 +429,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
   void DeemedApp() async {
     sr2.clear();
     print("Deemed Application");
-    const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/DeemedApprovedList';
+    const String url = '${ServerHelper.baseUrl}auth/DeemedApprovedList';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -492,8 +490,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
 
   void NocForm() async {
     sr3.clear();
-    const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/GetOfficerTransitPasses/';
+    const String url = '${ServerHelper.baseUrl}auth/GetOfficerTransitPasses/';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -861,7 +858,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                           //   icon: Icon(Icons.download, color: Colors.white),
                           //   onPressed: () async {
                           //     await launch(
-                          //         "https://timber.forest.kerala.gov.in/api/auth/summary_report/");
+                          //         "${ServerHelper.baseUrl}auth/summary_report/");
                           //   },
                           //   label: Text(
                           //     "Download Report",
@@ -1154,7 +1151,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                       //       color: Colors.blue,
                                                       //       onPressed:
                                                       //           () async {
-                                                      //         await launch("https://timber.forest.kerala.gov.in/api/auth/new_transit_pass_pdf/" +
+                                                      //         await launch("${ServerHelper.baseUrl}auth/new_transit_pass_pdf/" +
                                                       //             replaceSlashesWithDashes(
                                                       //                 App_no[int
                                                       //                     .parse(
@@ -1171,7 +1168,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                       //         .file_download),
                                                       //     color: Colors.blue,
                                                       //     onPressed: () async {
-                                                      //       await launch("https://timber.forest.kerala.gov.in/api/auth/new_user_report/" +
+                                                      //       await launch("${ServerHelper.baseUrl}auth/new_user_report/" +
                                                       //           replaceSlashesWithDashes(
                                                       //               App_no[int
                                                       //                   .parse(
@@ -1197,7 +1194,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                       //       color: Colors.blue,
                                                       //       onPressed:
                                                       //           () async {
-                                                      //         await launch("https://timber.forest.kerala.gov.in/api/auth/qr_code_pdf/" +
+                                                      //         await launch("${ServerHelper.baseUrl}auth/qr_code_pdf/" +
                                                       //             replaceSlashesWithDashes(
                                                       //                 App_no[int
                                                       //                     .parse(
@@ -1548,7 +1545,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                     Colors.blue,
                                                                 onPressed:
                                                                     () async {
-                                                                  await launch("https://timber.forest.kerala.gov.in/api/auth/new_transit_pass_pdf/" +
+                                                                  await launch("${ServerHelper.baseUrl}auth/new_transit_pass_pdf/" +
                                                                       replaceSlashesWithDashes(
                                                                           App_no1[
                                                                               int.parse(value)]) +
@@ -1566,7 +1563,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                   Colors.blue,
                                                               onPressed:
                                                                   () async {
-                                                                await launch("https://timber.forest.kerala.gov.in/api/auth/new_user_report/" +
+                                                                await launch("${ServerHelper.baseUrl}auth/new_user_report/" +
                                                                     replaceSlashesWithDashes(
                                                                         App_no1[
                                                                             int.parse(value)]) +
@@ -1590,7 +1587,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                           //           Colors.blue,
                                                           //       onPressed:
                                                           //           () async {
-                                                          //         await launch("https://timber.forest.kerala.gov.in/api/auth/qr_code_pdf/" +
+                                                          //         await launch("${ServerHelper.baseUrl}auth/qr_code_pdf/" +
                                                           //             replaceSlashesWithDashes(
                                                           //                 App_no1[
                                                           //                     int.parse(value)]) +
@@ -1928,7 +1925,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                           //           Colors.blue,
                                                           //       onPressed:
                                                           //           () async {
-                                                          //         await launch("https://timber.forest.kerala.gov.in/api/auth/new_transit_pass_pdf/" +
+                                                          //         await launch("${ServerHelper.baseUrl}auth/new_transit_pass_pdf/" +
                                                           //             replaceSlashesWithDashes(
                                                           //                 App_no2[
                                                           //                     int.parse(value)]) +
@@ -1946,7 +1943,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                           //         Colors.blue,
                                                           //     onPressed:
                                                           //         () async {
-                                                          //       await launch("https://timber.forest.kerala.gov.in/api/auth/new_user_report/" +
+                                                          //       await launch("${ServerHelper.baseUrl}auth/new_user_report/" +
                                                           //           replaceSlashesWithDashes(
                                                           //               App_no2[
                                                           //                   int.parse(value)]) +
@@ -1970,7 +1967,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                           //           Colors.blue,
                                                           //       onPressed:
                                                           //           () async {
-                                                          //         await launch("https://timber.forest.kerala.gov.in/api/auth/qr_code_pdf/" +
+                                                          //         await launch("${ServerHelper.baseUrl}auth/qr_code_pdf/" +
                                                           //             replaceSlashesWithDashes(
                                                           //                 App_no2[
                                                           //                     int.parse(value)]) +
@@ -2214,7 +2211,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                             //     onPressed:
                                                             //         () async {
                                                             //       await launch(
-                                                            //           " https://timber.forest.kerala.gov.in/api/auth/new_noc_pdf/" +
+                                                            //           " ${ServerHelper.baseUrl}auth/new_noc_pdf/" +
                                                             //               Ids3[int.parse(
                                                             //                   value)] +
                                                             //               "/");
@@ -2333,7 +2330,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                       ),
                       onTap: () async {
                         const String url =
-                            'https://timber.forest.kerala.gov.in/api/auth/logout/';
+                            '${ServerHelper.baseUrl}auth/logout/';
                         await http.post(
                           Uri.parse(url),
                           headers: <String, String>{

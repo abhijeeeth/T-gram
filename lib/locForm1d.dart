@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:tigramnks/homePage.dart';
+import 'package:tigramnks/server/serverhelper.dart';
 import 'package:tigramnks/sqflite/DatabaseHelper.dart';
 import 'package:tigramnks/sqflite/formModel.dart';
 
@@ -802,7 +803,7 @@ class _locForm1dState extends State<locForm1d> {
                                 });
 
                                 const String url =
-                                    'https://timber.forest.kerala.gov.in/api/auth/InsertRecord';
+                                    '${ServerHelper.baseUrl}auth/InsertRecord';
                                 Map data = {
                                   "name": App_no,
                                   "address": address,
@@ -1018,7 +1019,7 @@ class _locForm1dState extends State<locForm1d> {
                                 });
 
                                 const String url =
-                                    'https://timber.forest.kerala.gov.in/api/auth/Formtwophaseone';
+                                    '${ServerHelper.baseUrl}auth/Formtwophaseone';
                                 Map data = {
                                   "name": App_no,
                                   "address": address,

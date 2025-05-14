@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:tigramnks/server/serverhelper.dart';
 
 import '../homePage.dart';
 
@@ -624,7 +625,7 @@ class _transitPassNotified2State extends State<transitPassNotified2> {
                                       mimePos = "application/pdf";
                                     }
                                     const String url =
-                                        'https://timber.forest.kerala.gov.in/api/auth/new_application_form/';
+                                        '${ServerHelper.baseUrl}auth/new_application_form/';
                                     Map data = {
                                       "name": Name_,
                                       "lat": latImage,

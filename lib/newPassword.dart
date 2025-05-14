@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:tigramnks/server/serverhelper.dart';
 import 'package:tigramnks/login.dart';
 
 class newPassword extends StatefulWidget {
@@ -142,7 +143,7 @@ class _newPasswordState extends State<newPassword> {
                             fontSize: 18.0);
                       } else {
                         const String url =
-                            'https://timber.forest.kerala.gov.in/api/auth/changepassword';
+                            '${ServerHelper.baseUrl}auth/changepassword';
                         Map data = {
                           "phone": userId,
                           "passwd": Password.text,
@@ -179,8 +180,8 @@ class _newPasswordState extends State<newPassword> {
                                       )));
                         }
                       }
-                      Navigator.pushReplacement(
-                          context, MaterialPageRoute(builder: (_) => login()));
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (_) => const login()));
                     }),
               ),
             ],

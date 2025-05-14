@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:tigramnks/newPassword.dart';
+import 'package:tigramnks/server/serverhelper.dart';
 
 class forgetPassword extends StatefulWidget {
   const forgetPassword({super.key});
@@ -135,7 +136,7 @@ class _forgetPasswordState extends State<forgetPassword> {
                               } else {
                                 NewPage = true;
                                 const String url =
-                                    'https://timber.forest.kerala.gov.in/api/auth/forgotpassword';
+                                    '${ServerHelper.baseUrl}auth/forgotpassword';
                                 Map data = {
                                   "username":
                                       f_userName.text.replaceAll(' ', ''),
@@ -281,7 +282,7 @@ class _forgetPasswordState extends State<forgetPassword> {
                                             fontSize: 18.0);
                                       } else {
                                         const String url =
-                                            'https://timber.forest.kerala.gov.in/api/auth/forgotverifyotp';
+                                            '${ServerHelper.baseUrl}auth/forgotverifyotp';
                                         Map data = {
                                           "phone":
                                               f_Mobile.text.replaceAll(' ', ''),

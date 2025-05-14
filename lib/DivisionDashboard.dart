@@ -13,6 +13,7 @@ import 'package:tigramnks/OfficerDashboard.dart';
 import 'package:tigramnks/QueryPage.dart';
 import 'package:tigramnks/ViewApplication.dart';
 import 'package:tigramnks/login.dart';
+import 'package:tigramnks/server/serverhelper.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -66,8 +67,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
 
 //---------------------Pie-chart------------------
   void pie_chart() async {
-    const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/dashbord_chart';
+    const String url = '${ServerHelper.baseUrl}auth/dashbord_chart';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token ${sessionToken ?? ''}"
@@ -85,8 +85,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
 
 //------------------End--Pie--Chart--------------
 
-  String url =
-      " https://timber.forest.kerala.gov.in/api/auth/new_transit_pass_pdf/90/";
+  String url = " ${ServerHelper.baseUrl}auth/new_transit_pass_pdf/90/";
 
   //---------------Table ----------------------
 
@@ -225,7 +224,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
     verify_forest1.clear();
     //---------------clear---------------
     const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/DfoPendingListViewApplication';
+        '${ServerHelper.baseUrl}auth/DfoPendingListViewApplication';
     Map data = {
       "area_range": SelectedRange == "All Range" ? "" : SelectedRange ?? "",
     };
@@ -329,7 +328,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
     verify_forest1_1.clear();
     //----------clear-----------
     const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/DfoApprovedListViewApplication';
+        '${ServerHelper.baseUrl}auth/DfoApprovedListViewApplication';
     Map data = {
       "area_range": SelectedRange == "All Range" ? "" : SelectedRange ?? "",
     };
@@ -430,8 +429,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
   void DeemedApp() async {
     print("Deemed Application");
     sr2.clear();
-    const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/DeemedApprovedList';
+    const String url = '${ServerHelper.baseUrl}auth/DeemedApprovedList';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -496,8 +494,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
   void NocForm() async {
     print("Noc Application");
     sr3.clear();
-    const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/NocListApplication/';
+    const String url = '${ServerHelper.baseUrl}auth/NocListApplication/';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -868,7 +865,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                           icon: Icon(Icons.file_download),
                           onPressed: () async {
                             await launch(
-                                " https://timber.forest.kerala.gov.in/api/auth/summary_report/");
+                                " ${ServerHelper.baseUrl}auth/summary_report/");
                           },
                           label: Text("Download"),
                         ),
@@ -1170,7 +1167,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    "${" https://timber.forest.kerala.gov.in/api/auth/new_transit_pass_pdf/" + Ids[int.parse(value)]}/");
+                                                                    "${" ${ServerHelper.baseUrl}auth/new_transit_pass_pdf/" + Ids[int.parse(value)]}/");
                                                                 // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                               },
                                                             ),
@@ -1184,7 +1181,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                             onPressed:
                                                                 () async {
                                                               await launch(
-                                                                  "${"https://timber.forest.kerala.gov.in/api/auth/new_user_report/" + Ids[int.parse(value)]}/");
+                                                                  "${"${ServerHelper.baseUrl}auth/new_user_report/" + Ids[int.parse(value)]}/");
                                                               // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                             },
                                                           ),
@@ -1205,7 +1202,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    "${" https://timber.forest.kerala.gov.in/api/auth/qr_code_pdf/" + Ids[int.parse(value)]}/");
+                                                                    "${" ${ServerHelper.baseUrl}auth/qr_code_pdf/" + Ids[int.parse(value)]}/");
                                                                 // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                               },
                                                             ),
@@ -1523,7 +1520,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    "${" https://timber.forest.kerala.gov.in/api/auth/new_transit_pass_pdf/" + Ids1[int.parse(value)]}/");
+                                                                    "${" ${ServerHelper.baseUrl}auth/new_transit_pass_pdf/" + Ids1[int.parse(value)]}/");
                                                                 // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                               },
                                                             ),
@@ -1537,7 +1534,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                             onPressed:
                                                                 () async {
                                                               await launch(
-                                                                  "${" https://timber.forest.kerala.gov.in/api/auth/new_user_report/" + Ids1[int.parse(value)]}/");
+                                                                  "${" ${ServerHelper.baseUrl}auth/new_user_report/" + Ids1[int.parse(value)]}/");
                                                               // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                             },
                                                           ),
@@ -1558,7 +1555,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    "${" https://timber.forest.kerala.gov.in/api/auth/qr_code_pdf/" + Ids1[int.parse(value)]}/");
+                                                                    "${" ${ServerHelper.baseUrl}auth/qr_code_pdf/" + Ids1[int.parse(value)]}/");
                                                                 // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                               },
                                                             ),
@@ -1813,7 +1810,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    "${" https://timber.forest.kerala.gov.in/api/auth/new_transit_pass_pdf/" + Ids[int.parse(value)]}/");
+                                                                    "${" ${ServerHelper.baseUrl}auth/new_transit_pass_pdf/" + Ids[int.parse(value)]}/");
                                                                 // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                               },
                                                             ),
@@ -1827,7 +1824,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                             onPressed:
                                                                 () async {
                                                               await launch(
-                                                                  "${" https://timber.forest.kerala.gov.in/api/auth/new_user_report/" + Ids2[int.parse(value)]}/");
+                                                                  "${" ${ServerHelper.baseUrl}auth/new_user_report/" + Ids2[int.parse(value)]}/");
                                                               // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                             },
                                                           ),
@@ -1848,7 +1845,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    "${" https://timber.forest.kerala.gov.in/api/auth/qr_code_pdf/" + Ids[int.parse(value)]}/");
+                                                                    "${" ${ServerHelper.baseUrl}auth/qr_code_pdf/" + Ids[int.parse(value)]}/");
                                                                 // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                               },
                                                             ),
@@ -2045,7 +2042,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                                                             onPressed:
                                                                 () async {
                                                               await launch(
-                                                                  "${" https://timber.forest.kerala.gov.in/api/auth/new_noc_pdf/" + Ids3[int.parse(value)]}/");
+                                                                  "${" ${ServerHelper.baseUrl}auth/new_noc_pdf/" + Ids3[int.parse(value)]}/");
                                                               // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                             },
                                                           ),
@@ -2192,8 +2189,7 @@ class _DivisonDashBoardState extends State<DivisonDashBoard> {
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     ),
                     onTap: () async {
-                      const String url =
-                          'https://timber.forest.kerala.gov.in/api/auth/logout/';
+                      const String url = '${ServerHelper.baseUrl}auth/logout/';
                       await http.post(
                         Uri.parse(url),
                         headers: <String, String>{

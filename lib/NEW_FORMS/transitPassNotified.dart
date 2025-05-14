@@ -9,6 +9,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:tigramnks/NEW_FORMS/transitPassNotified2.dart';
 import 'package:tigramnks/homePage.dart';
+import 'package:tigramnks/server/serverhelper.dart';
 
 class transitPassNotified extends StatefulWidget {
   final int formOneIndex;
@@ -2107,7 +2108,7 @@ class _transitPassNotifiedState extends State<transitPassNotified> {
   List<String> divisions = [];
   LoadData() async {
     int DL = 0;
-    const String url = 'https://timber.forest.kerala.gov.in/api/auth/villages/';
+    const String url = '${ServerHelper.baseUrl}auth/villages/';
     Map data = {
       "village": village__,
     };

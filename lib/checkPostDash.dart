@@ -7,6 +7,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tigramnks/queryPageCheck.dart';
+import 'package:tigramnks/server/serverhelper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'ViewApplication.dart';
@@ -95,8 +96,7 @@ class _checkPostState extends State<checkPost> {
     App_no.clear();
 
     print("Scanning Application");
-    const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/ScanedListApplication';
+    const String url = '${ServerHelper.baseUrl}auth/ScanedListApplication';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -293,7 +293,7 @@ class _checkPostState extends State<checkPost> {
                                                         color: Colors.blue,
                                                         onPressed: () async {
                                                           await launch(
-                                                              "${"https://timber.forest.kerala.gov.in/api/auth/new_transit_pass_pdf/" + App_no[int.parse(value)]}/");
+                                                              "${"${ServerHelper.baseUrl}auth/new_transit_pass_pdf/" + App_no[int.parse(value)]}/");
                                                           // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                         },
                                                       ),
@@ -306,7 +306,7 @@ class _checkPostState extends State<checkPost> {
                                                   //     color: Colors.blue,
                                                   //     onPressed: () async {
                                                   //       await launch(
-                                                  //           "https://timber.forest.kerala.gov.in/api/auth/new_user_report/" +
+                                                  //           "${ServerHelper.baseUrl}auth/new_user_report/" +
                                                   //               Ids[int.parse(
                                                   //                   value)] +
                                                   //               "/");
@@ -324,7 +324,7 @@ class _checkPostState extends State<checkPost> {
                                                         color: Colors.blue,
                                                         onPressed: () async {
                                                           await launch(
-                                                              "${"https://timber.forest.kerala.gov.in/api/auth/qr_code_pdf/" + App_no[int.parse(value)]}/");
+                                                              "${"${ServerHelper.baseUrl}auth/qr_code_pdf/" + App_no[int.parse(value)]}/");
                                                           // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                         },
                                                       ),
@@ -431,8 +431,7 @@ class _checkPostState extends State<checkPost> {
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     ),
                     onTap: () async {
-                      const String url =
-                          'https://timber.forest.kerala.gov.in/api/auth/logout/';
+                      const String url = '${ServerHelper.baseUrl}auth/logout/';
                       await http.post(
                         Uri.parse(url),
                         headers: <String, String>{

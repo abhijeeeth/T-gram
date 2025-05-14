@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:tigramnks/OfficerDashboard.dart';
+import 'package:tigramnks/server/serverhelper.dart';
 
 class transitViewAndApprove extends StatefulWidget {
   String? userGroup;
@@ -84,7 +85,7 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
   String ID_type = "";
   String ID_PROOF = "";
   void TransitView() async {
-    String url = 'https://timber.forest.kerala.gov.in/api/auth/SeeTransit/';
+    String url = '${ServerHelper.baseUrl}auth/SeeTransit/';
     Map data = {
       "transit_number": Ids,
     };
@@ -486,7 +487,7 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
                                 }
 
                                 const String url =
-                                    'https://timber.forest.kerala.gov.in/api/auth/ApproveNewProductTransit/';
+                                    '${ServerHelper.baseUrl}auth/ApproveNewProductTransit/';
                                 Map data = {
                                   "transit_number": transitId,
                                   "action": "Approve",
@@ -597,7 +598,7 @@ class _transitViewAndApproveState extends State<transitViewAndApprove> {
                                   isShow = true;
                                 });
                                 const String url =
-                                    'https://timber.forest.kerala.gov.in/api/auth/ApproveNewProductTransit/';
+                                    '${ServerHelper.baseUrl}auth/ApproveNewProductTransit/';
                                 Map data = {
                                   "transit_number": transitId,
                                   "action": "Reject",

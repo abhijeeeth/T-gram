@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tigramnks/Images.dart';
 import 'package:tigramnks/OfficerDashboard.dart';
 import 'package:tigramnks/ViewApplication1.dart';
+import 'package:tigramnks/server/serverhelper.dart';
 
 class ViewApplication2 extends StatefulWidget {
   String sessionToken;
@@ -157,7 +158,7 @@ class _ViewApplication2State extends State<ViewApplication2> {
   List<Map<String, dynamic>> apiResponse = [];
 
   listDeputy() async {
-    String url = 'https://timber.forest.kerala.gov.in/api/auth/get_deputies/';
+    String url = '${ServerHelper.baseUrl}auth/get_deputies/';
     Map data = {"range": 75};
     var body = json.encode(data);
     final response = await http.post(Uri.parse(url),
@@ -178,7 +179,7 @@ class _ViewApplication2State extends State<ViewApplication2> {
 
   //---end vehical-----------
   ViewVehical() async {
-    String url = 'https://timber.forest.kerala.gov.in/api/auth/ViewApplication';
+    String url = '${ServerHelper.baseUrl}auth/ViewApplication';
     Map data = {"app_id": Ids};
     var body = json.encode(data);
     final response = await http.post(Uri.parse(url),
@@ -388,7 +389,7 @@ class _ViewApplication2State extends State<ViewApplication2> {
                   ),
                   onTap: () async {
                     const String url =
-                        'https://timber.forest.kerala.gov.in/api/auth/FormTwoAssignDeputy';
+                        '${ServerHelper.baseUrl}auth/FormTwoAssignDeputy';
                     Map data = {"app_id": Ids, "deputy_id": dropdownValue3};
                     print(data);
                     var body = json.encode(data);
@@ -932,7 +933,7 @@ class _ViewApplication2State extends State<ViewApplication2> {
                           // String license_Img_base= vehical_License_img.path != null ? 'data:image/png;base64,' + base64Encode(bytes) : '';
                           // print(license_Img_base);
                           const String url =
-                              'https://timber.forest.kerala.gov.in/api/auth/UpdateVehicle';
+                              '${ServerHelper.baseUrl}auth/UpdateVehicle';
                           // print (license_Img_base);
                           Map data = {
                             "app_id": int.parse(Ids),
@@ -1422,7 +1423,7 @@ class _ViewApplication2State extends State<ViewApplication2> {
                                         fontSize: 18.0);
                                   } else {
                                     const String url =
-                                        'https://timber.forest.kerala.gov.in/api/auth/new_approve_transit_pass';
+                                        '${ServerHelper.baseUrl}auth/new_approve_transit_pass';
                                     Map data = {
                                       "app_id": Ids,
                                       "type": "Approve",
@@ -1514,7 +1515,7 @@ class _ViewApplication2State extends State<ViewApplication2> {
                                               fontSize: 18.0);
                                         } else {
                                           const String url =
-                                              'https://timber.forest.kerala.gov.in/api/auth/approve_transit_pass';
+                                              '${ServerHelper.baseUrl}auth/approve_transit_pass';
                                           Map data = {
                                             "app_id": Ids,
                                             "type": "REJECT",
@@ -1606,7 +1607,7 @@ class _ViewApplication2State extends State<ViewApplication2> {
                                       onPressed: () async {
                                         {
                                           const String url =
-                                              'https://timber.forest.kerala.gov.in/api/auth/success_field_verification';
+                                              '${ServerHelper.baseUrl}auth/success_field_verification';
                                           Map data = {
                                             "app_id": Ids,
                                             "type": "success",
@@ -1700,7 +1701,7 @@ class _ViewApplication2State extends State<ViewApplication2> {
                                       onPressed: () async {
                                         {
                                           const String url =
-                                              'https://timber.forest.kerala.gov.in/api/auth/failed_field_verification';
+                                              '${ServerHelper.baseUrl}auth/failed_field_verification';
                                           Map data = {
                                             "app_id": Ids,
                                             "type": "failed",
@@ -1790,7 +1791,7 @@ class _ViewApplication2State extends State<ViewApplication2> {
                                       onPressed: () async {
                                         {
                                           const String url =
-                                              'https://timber.forest.kerala.gov.in/api/auth/need_field_verification';
+                                              '${ServerHelper.baseUrl}auth/need_field_verification';
                                           Map data = {
                                             "app_id": Ids,
                                             "type": "True",

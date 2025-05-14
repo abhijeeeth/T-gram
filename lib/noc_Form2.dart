@@ -10,6 +10,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:tigramnks/homePage.dart';
+import 'package:tigramnks/server/serverhelper.dart';
 
 class noc_Form2 extends StatefulWidget {
   String sessionToken;
@@ -1513,7 +1514,7 @@ class _noc_Form2State extends State<noc_Form2> {
                                   isShow = true;
                                 });
                                 const String url =
-                                    'https://timber.forest.kerala.gov.in/api/auth/Apply_for_noc/';
+                                    '${ServerHelper.baseUrl}auth/Apply_for_noc/';
                                 Map data = {
                                   "name": Name,
                                   "address": Address,

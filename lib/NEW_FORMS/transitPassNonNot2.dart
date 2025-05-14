@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:tigramnks/server/serverhelper.dart';
 import 'package:tigramnks/utils/file_upload_helper.dart';
 
 import '../homePage.dart';
@@ -761,8 +762,7 @@ class _transitPassNonNot2State extends State<transitPassNonNot2> {
   }
 
   Future<void> submitApplication() async {
-    final url = Uri.parse(
-        'https://timber.forest.kerala.gov.in/api/auth/new_application_form/');
+    final url = Uri.parse('${ServerHelper.baseUrl}auth/new_application_form/');
 
     var request = http.MultipartRequest('POST', url);
 

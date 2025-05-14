@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:tigramnks/homePage.dart';
+import 'package:tigramnks/server/serverhelper.dart';
 
 class transiView extends StatefulWidget {
   final int formOneIndex;
@@ -166,7 +167,7 @@ class _transiViewState extends State<transiView> {
   // }
 
   View_Record() async {
-    String url = 'https://timber.forest.kerala.gov.in/api/auth/CheckTransit/';
+    String url = '${ServerHelper.baseUrl}auth/CheckTransit/';
     Map data = {"app_id": Ids};
 
     var body = json.encode(data);
@@ -908,7 +909,7 @@ class _transiViewState extends State<transiView> {
                                       fontSize: 18.0);
                                 } else {
                                   const String url =
-                                      'https://timber.forest.kerala.gov.in/api/auth/apply_orign_transit/';
+                                      '${ServerHelper.baseUrl}auth/apply_orign_transit/';
                                   Map data = {
                                     "app_id": Ids,
                                     "dest_state": "Kerala",

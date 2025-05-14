@@ -11,6 +11,7 @@
 
 // import 'package:pie_chart/pie_chart.dart';
 // import 'package:http/http.dart' as http;
+
 // import 'package:url_launcher/url_launcher.dart';
 // // import 'package:syncfusion_flutter_charts/charts.dart';
 // // import 'package:syncfusion_flutter_charts/sparkcharts.dart';
@@ -183,7 +184,7 @@
 //   //-----------------------End-Variable-----------------------------------
 //   Table_1() async {
 //     const String url =
-//         ' https://timber.forest.kerala.gov.in/api/auth/sfd_table_one/';
+//         ' ${ServerHelper.baseUrl}auth/sfd_table_one/';
 //     Map data = {
 //       "division": SelectedRange1 == null
 //           ? ""
@@ -253,7 +254,7 @@
 //   //----------------End-Variable------------------------------------
 //   Table_2() async {
 //     const String url =
-//         ' https://timber.forest.kerala.gov.in/api/auth/sfd_table_two/';
+//         ' ${ServerHelper.baseUrl}auth/sfd_table_two/';
 //     Map data = {
 //       "division": SelectedRange1 == null
 //           ? ""
@@ -335,7 +336,7 @@
 //   //-----------------------End-Variable---------------------------------
 //   Table_3() async {
 //     const String url =
-//         ' https://timber.forest.kerala.gov.in/api/auth/sfd_table_three/';
+//         ' ${ServerHelper.baseUrl}auth/sfd_table_three/';
 //     Map data = {
 //       "division": SelectedRange1 == null
 //           ? ""
@@ -417,7 +418,7 @@
 //   //-----------------------End-Variable---------------------------------
 //   Table_4() async {
 //     const String url =
-//         ' https://timber.forest.kerala.gov.in/api/auth/sfd_table_four/';
+//         ' ${ServerHelper.baseUrl}auth/sfd_table_four/';
 //     Map data = {
 //       "division": SelectedRange1 == null
 //           ? ""
@@ -483,7 +484,7 @@
 //   //-----------------------End-Variable---------------------------------
 //   Table_5() async {
 //     const String url =
-//         ' https://timber.forest.kerala.gov.in/api/auth/sfd_table_five/';
+//         ' ${ServerHelper.baseUrl}auth/sfd_table_five/';
 //     Map data = {
 //       "division": SelectedRange1 == null
 //           ? ""
@@ -560,7 +561,7 @@
 //   //-----------------------End-Variable---------------------------------
 //   Table_6() async {
 //     const String url =
-//         ' https://timber.forest.kerala.gov.in/api/auth/sfd_table_six/';
+//         ' ${ServerHelper.baseUrl}auth/sfd_table_six/';
 //     Map data = {
 //       "division": SelectedRange1 == null
 //           ? ""
@@ -634,7 +635,7 @@
 //   //-----------------------End-Variable---------------------------------
 //   Table_7() async {
 //     const String url =
-//         ' https://timber.forest.kerala.gov.in/api/auth/sfd_table_seven/';
+//         ' ${ServerHelper.baseUrl}auth/sfd_table_seven/';
 //     Map data = {
 //       "division": SelectedRange1 == null
 //           ? ""
@@ -707,7 +708,7 @@
 //   //-----------------------End-Variable---------------------------------
 //   Table_8() async {
 //     const String url =
-//         ' https://timber.forest.kerala.gov.in/api/auth/sfd_table_eight/';
+//         ' ${ServerHelper.baseUrl}auth/sfd_table_eight/';
 //     Map data = {
 //       "division": SelectedRange1 == null
 //           ? ""
@@ -783,7 +784,7 @@
 //   //-----------------------End-Variable---------------------------------
 //   Table_9() async {
 //     const String url =
-//         ' https://timber.forest.kerala.gov.in/api/auth/sfd_table_nine/';
+//         ' ${ServerHelper.baseUrl}auth/sfd_table_nine/';
 //     Map data = {
 //       "division": SelectedRange1 == null
 //           ? ""
@@ -867,7 +868,7 @@
 //   //----------------------End-Variable--------------------
 //   Table_10() async {
 //     const String url =
-//         ' https://timber.forest.kerala.gov.in/api/auth/sfd_table_noc_one/';
+//         ' ${ServerHelper.baseUrl}auth/sfd_table_noc_one/';
 //     Map data = {
 //       "division": SelectedRange1 == null
 //           ? ""
@@ -961,7 +962,7 @@
 // //---------------------Pie-chart------------------
 //   void pie_chart() async {
 //     const String url =
-//         ' https://timber.forest.kerala.gov.in/api/auth/dashbord_chart';
+//         ' ${ServerHelper.baseUrl}auth/dashbord_chart';
 
 //     final response = await http.get(Uri.parse(url), headers: <String, String>{
 //       'Content-Type': 'application/json',

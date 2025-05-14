@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:tigramnks/homePage.dart';
+import 'package:tigramnks/server/serverhelper.dart';
 
 class woodshedAddReq extends StatefulWidget {
   int userId;
@@ -76,7 +77,7 @@ class _woodshedAddReqState extends State<woodshedAddReq> {
   LoadDistric() async {
     int RL = 0;
 
-    String url = 'https://timber.forest.kerala.gov.in/api/auth/ListDistrict';
+    String url = '${ServerHelper.baseUrl}auth/ListDistrict';
 
     //  Map<String, String> headers = {
     //  'Content-Type': 'application/json',
@@ -102,7 +103,7 @@ class _woodshedAddReqState extends State<woodshedAddReq> {
   }
 
   ListRange() async {
-    const String url = 'https://timber.forest.kerala.gov.in/api/auth/ListRange';
+    const String url = '${ServerHelper.baseUrl}auth/ListRange';
     final response = await http.get(Uri.parse(url), headers: {
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -378,7 +379,7 @@ class _woodshedAddReqState extends State<woodshedAddReq> {
                       isShow = true;
                     });
                     const String url =
-                        'https://timber.forest.kerala.gov.in/api/auth/Add_Requirement';
+                        '${ServerHelper.baseUrl}auth/Add_Requirement';
                     Map data = {
                       "id": userId,
                       "name": Name.text,

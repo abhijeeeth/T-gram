@@ -15,6 +15,7 @@ import 'package:tigramnks/Profile.dart';
 import 'package:tigramnks/QueryPage.dart';
 import 'package:tigramnks/itgramWoodBuy.dart';
 import 'package:tigramnks/login.dart';
+import 'package:tigramnks/server/serverhelper.dart';
 import 'package:tigramnks/tigramWoodShed.dart';
 import 'package:tigramnks/woodBuyerForm.dart';
 
@@ -612,7 +613,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       onTap: () async {
                         const String url =
-                            'https://timber.forest.kerala.gov.in/api/auth/logout/';
+                            '${ServerHelper.baseUrl}auth/logout/';
                         await http.post(
                           Uri.parse(url),
                           headers: <String, String>{
@@ -624,7 +625,7 @@ class _HomePageState extends State<HomePage> {
                             await SharedPreferences.getInstance();
                         prefs.remove('isLoggedIn');
                         Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (_) => login()));
+                            MaterialPageRoute(builder: (_) => const login()));
                       }),
                 ],
               ),
@@ -637,8 +638,7 @@ class _HomePageState extends State<HomePage> {
 
   String usertCat = "";
   void selectType() async {
-    const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/check_usr_category';
+    const String url = '${ServerHelper.baseUrl}auth/check_usr_category';
     Map data = {"id": userId};
 
     var body = json.encode(data);
@@ -1472,8 +1472,8 @@ class _YourDialogState extends State<YourDialog> {
   }
 
   Future<void> fetchData() async {
-    final response = await http.get(
-        Uri.parse('https://timber.forest.kerala.gov.in/api/auth/villages/'));
+    final response =
+        await http.get(Uri.parse('${ServerHelper.baseUrl}auth/villages/'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
@@ -1507,8 +1507,7 @@ Future<bool> loginAction() async {
 }
 
 callApiFunction(String Id, String token) async {
-  const String url =
-      'https://timber.forest.kerala.gov.in/api/auth/CheckTransit/';
+  const String url = '${ServerHelper.baseUrl}auth/CheckTransit/';
   Map data = {
     "app_id": Id,
   };

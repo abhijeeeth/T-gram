@@ -7,6 +7,7 @@
 // import 'package:toggle_switch/toggle_switch.dart';
 // import 'package:pie_chart/pie_chart.dart';
 // import 'package:http/http.dart' as http;
+
 // import 'package:url_launcher/url_launcher.dart';
 // import 'package:syncfusion_flutter_charts/charts.dart';
 // import 'package:syncfusion_flutter_charts/sparkcharts.dart';
@@ -186,7 +187,7 @@
 //   //-----------------------End-Variable-----------------------------------
 //   Table_1() async {
 //     const String url =
-//         ' https://timber.forest.kerala.gov.in/api/auth/dfo_table_one/';
+//         ' ${ServerHelper.baseUrl}auth/dfo_table_one/';
 //     Map data = {
 //       "area_range": SelectedRange == "All Range" ? "" : SelectedRange,
 //     };
@@ -246,7 +247,7 @@
 //   //----------------End-Variable------------------------------------
 //   Table_2() async {
 //     const String url =
-//         ' https://timber.forest.kerala.gov.in/api/auth/dfo_table_two/';
+//         ' ${ServerHelper.baseUrl}auth/dfo_table_two/';
 //     Map data = {
 //       "area_range": SelectedRange == "All Range" ? "" : SelectedRange,
 //     };
@@ -319,7 +320,7 @@
 //   //-----------------------End-Variable---------------------------------
 //   Table_3() async {
 //     const String url =
-//         ' https://timber.forest.kerala.gov.in/api/auth/dfo_table_three/';
+//         ' ${ServerHelper.baseUrl}auth/dfo_table_three/';
 //     Map data = {
 //       "area_range": SelectedRange == "All Range" ? "" : SelectedRange,
 //     };
@@ -392,7 +393,7 @@
 //   //-----------------------End-Variable---------------------------------
 //   Table_4() async {
 //     const String url =
-//         ' https://timber.forest.kerala.gov.in/api/auth/dfo_table_four/';
+//         ' ${ServerHelper.baseUrl}auth/dfo_table_four/';
 //     Map data = {
 //       "area_range": SelectedRange == "All Range" ? "" : SelectedRange,
 //     };
@@ -449,7 +450,7 @@
 //   //-----------------------End-Variable---------------------------------
 //   Table_5() async {
 //     const String url =
-//         ' https://timber.forest.kerala.gov.in/api/auth/dfo_table_five/';
+//         ' ${ServerHelper.baseUrl}auth/dfo_table_five/';
 //     Map data = {
 //       "area_range": SelectedRange == "All Range" ? "" : SelectedRange,
 //     };
@@ -517,7 +518,7 @@
 //   //-----------------------End-Variable---------------------------------
 //   Table_6() async {
 //     const String url =
-//         ' https://timber.forest.kerala.gov.in/api/auth/dfo_table_six/';
+//         ' ${ServerHelper.baseUrl}auth/dfo_table_six/';
 //     Map data = {
 //       "area_range": SelectedRange == "All Range" ? "" : SelectedRange,
 //     };
@@ -582,7 +583,7 @@
 //   //-----------------------End-Variable---------------------------------
 //   Table_7() async {
 //     const String url =
-//         ' https://timber.forest.kerala.gov.in/api/auth/dfo_table_seven/';
+//         ' ${ServerHelper.baseUrl}auth/dfo_table_seven/';
 //     Map data = {
 //       "area_range": SelectedRange == "All Range" ? "" : SelectedRange,
 //     };
@@ -646,7 +647,7 @@
 //   //-----------------------End-Variable---------------------------------
 //   Table_8() async {
 //     const String url =
-//         ' https://timber.forest.kerala.gov.in/api/auth/dfo_table_eight/';
+//         ' ${ServerHelper.baseUrl}auth/dfo_table_eight/';
 //     Map data = {
 //       "area_range": SelectedRange == "All Range" ? "" : SelectedRange,
 //     };
@@ -713,7 +714,7 @@
 //   //-----------------------End-Variable---------------------------------
 //   Table_9() async {
 //     const String url =
-//         ' https://timber.forest.kerala.gov.in/api/auth/dfo_table_nine/';
+//         ' ${ServerHelper.baseUrl}auth/dfo_table_nine/';
 //     Map data = {
 //       "area_range": SelectedRange == "All Range" ? "" : SelectedRange,
 //     };
@@ -788,7 +789,7 @@
 //   //----------------------End-Variable--------------------
 //   Table_10() async {
 //     const String url =
-//         ' https://timber.forest.kerala.gov.in/api/auth/dfo_table_noc_one/ ';
+//         ' ${ServerHelper.baseUrl}auth/dfo_table_noc_one/ ';
 //     Map data = {
 //       "area_range": SelectedRange == "All Range" ? "" : SelectedRange,
 //     };
@@ -886,7 +887,7 @@
 // //---------------------Pie-chart------------------
 //   void pie_chart() async {
 //     const String url =
-//         ' https://timber.forest.kerala.gov.in/api/auth/dashbord_chart';
+//         ' ${ServerHelper.baseUrl}auth/dashbord_chart';
 
 //     final response = await http.get(Uri.parse(url), headers: <String, String>{
 //       'Content-Type': 'application/json',
@@ -908,7 +909,7 @@
 //     print("hello");
 
 //     const String url =
-//         'https://timber.forest.kerala.gov.in/api/auth/ApprovedListViewApplication';
+//         '${ServerHelper.baseUrl}auth/ApprovedListViewApplication';
 //     final response = await http.get(Uri.parse(url), headers: <String, String>{
 //       'Content-Type': 'application/json',
 //       'Authorization': "token $sessionToken"

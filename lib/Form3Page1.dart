@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:tigramnks/Form3Page2.dart';
+import 'package:tigramnks/server/serverhelper.dart';
 
 class Form3Page1 extends StatefulWidget {
   final String Ids1;
@@ -51,8 +52,7 @@ class _Form3Page1State extends State<Form3Page1> {
   final List Sname = [];
 
   Future<void> ViewApplication() async {
-    const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/ViewApplication';
+    const String url = '${ServerHelper.baseUrl}auth/ViewApplication';
     Map data = {"app_id": Ids1};
     print(data);
     var body = json.encode(data);
@@ -118,8 +118,7 @@ class _Form3Page1State extends State<Form3Page1> {
   var holder_IDs = [];
   getSpecies() async {
     print("----------------ALL Species----------------");
-    const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/TreeSpeciesList';
+    const String url = '${ServerHelper.baseUrl}auth/TreeSpeciesList';
     var response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:tigramnks/server/serverhelper.dart';
 
 class Profile extends StatefulWidget {
   final String sessionToken;
@@ -39,8 +40,7 @@ class _ProfileState extends State<Profile> {
   }
 
   viewProfile() async {
-    const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/ViewProfile';
+    const String url = '${ServerHelper.baseUrl}auth/ViewProfile';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token ${widget.sessionToken}"

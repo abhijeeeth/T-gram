@@ -13,6 +13,7 @@ import 'package:tigramnks/QueryPage.dart';
 import 'package:tigramnks/SFReports.dart';
 import 'package:tigramnks/ViewApplication.dart';
 import 'package:tigramnks/login.dart';
+import 'package:tigramnks/server/serverhelper.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -114,8 +115,7 @@ class _SFDashboardState extends State<SFDashboard> {
 
 //---------------------Pie-chart------------------
   void pie_chart() async {
-    const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/dashbord_chart';
+    const String url = '${ServerHelper.baseUrl}auth/dashbord_chart';
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -134,8 +134,7 @@ class _SFDashboardState extends State<SFDashboard> {
 
 //------------------End--Pie--Chart--------------
 
-  String url =
-      " https://timber.forest.kerala.gov.in/api/auth/new_transit_pass_pdf/90/";
+  String url = " ${ServerHelper.baseUrl}auth/new_transit_pass_pdf/90/";
 
   //---------------Table ----------------------
 
@@ -270,7 +269,7 @@ class _SFDashboardState extends State<SFDashboard> {
     is_form_two.clear();
     //---------------clear---------------
     const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/sfdPendingListViewApplication';
+        '${ServerHelper.baseUrl}auth/sfdPendingListViewApplication';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -378,7 +377,7 @@ class _SFDashboardState extends State<SFDashboard> {
     is_form_two1.clear();
     //----------clear-----------
     const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/sfdApprovedListViewApplication';
+        '${ServerHelper.baseUrl}auth/sfdApprovedListViewApplication';
     Map data = {
       "division": SelectedRange1 == null
           ? ""
@@ -489,8 +488,7 @@ class _SFDashboardState extends State<SFDashboard> {
   void DeemedApp() async {
     print("Deemed Application");
     sr2.clear();
-    const String url =
-        ' https://timber.forest.kerala.gov.in/api/auth/DeemedApprovedList';
+    const String url = ' ${ServerHelper.baseUrl}auth/DeemedApprovedList';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -556,8 +554,7 @@ class _SFDashboardState extends State<SFDashboard> {
   void NocForm() async {
     print("Noc Application");
     sr3.clear();
-    const String url =
-        'https://timber.forest.kerala.gov.in/api/auth/NocListApplication/';
+    const String url = '${ServerHelper.baseUrl}auth/NocListApplication/';
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
@@ -973,7 +970,7 @@ class _SFDashboardState extends State<SFDashboard> {
                           icon: Icon(Icons.file_download),
                           onPressed: () async {
                             await launch(
-                                " https://timber.forest.kerala.gov.in/api/auth/summary_report/");
+                                " ${ServerHelper.baseUrl}auth/summary_report/");
                           },
                           label: Text("Download"),
                         ),
@@ -1274,14 +1271,14 @@ class _SFDashboardState extends State<SFDashboard> {
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    " https://timber.forest.kerala.gov.in/api/auth/new_transit_pass_pdf/" +
+                                                                    " ${ServerHelper.baseUrl}auth/new_transit_pass_pdf/" +
                                                                         Ids[int.parse(
                                                                             value)] +
                                                                         "/");
                                                                 // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                               },
                                                               // onPressed: ()async{
-                                                              //  await launch(" https://timber.forest.kerala.gov.in/api/auth/new_transit_pass_pdf/"+Ids[int.parse(value)]+"/");
+                                                              //  await launch(" ${ServerHelper.baseUrl}auth/new_transit_pass_pdf/"+Ids[int.parse(value)]+"/");
                                                               //   // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                               // },
                                                             ),
@@ -1295,7 +1292,7 @@ class _SFDashboardState extends State<SFDashboard> {
                                                             onPressed:
                                                                 () async {
                                                               await launch(
-                                                                  "https://timber.forest.kerala.gov.in/api/auth/new_user_report/" +
+                                                                  "${ServerHelper.baseUrl}auth/new_user_report/" +
                                                                       Ids[int.parse(
                                                                           value)] +
                                                                       "/");
@@ -1319,7 +1316,7 @@ class _SFDashboardState extends State<SFDashboard> {
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    " https://timber.forest.kerala.gov.in/api/auth/qr_code_pdf/" +
+                                                                    " ${ServerHelper.baseUrl}auth/qr_code_pdf/" +
                                                                         Ids[int.parse(
                                                                             value)] +
                                                                         "/");
@@ -1653,7 +1650,7 @@ class _SFDashboardState extends State<SFDashboard> {
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    "https://timber.forest.kerala.gov.in/api/auth/new_transit_pass_pdf/" +
+                                                                    "${ServerHelper.baseUrl}auth/new_transit_pass_pdf/" +
                                                                         Ids1[int.parse(
                                                                             value)] +
                                                                         "/");
@@ -1670,7 +1667,7 @@ class _SFDashboardState extends State<SFDashboard> {
                                                             onPressed:
                                                                 () async {
                                                               await launch(
-                                                                  "https://timber.forest.kerala.gov.in/api/auth/new_user_report/" +
+                                                                  "${ServerHelper.baseUrl}auth/new_user_report/" +
                                                                       Ids1[int.parse(
                                                                           value)] +
                                                                       "/");
@@ -1694,7 +1691,7 @@ class _SFDashboardState extends State<SFDashboard> {
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    "https://timber.forest.kerala.gov.in/api/auth/qr_code_pdf/" +
+                                                                    "${ServerHelper.baseUrl}auth/qr_code_pdf/" +
                                                                         Ids1[int.parse(
                                                                             value)] +
                                                                         "/");
@@ -1952,7 +1949,7 @@ class _SFDashboardState extends State<SFDashboard> {
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    " https://timber.forest.kerala.gov.in/api/auth/new_transit_pass_pdf/" +
+                                                                    " ${ServerHelper.baseUrl}auth/new_transit_pass_pdf/" +
                                                                         Ids[int.parse(
                                                                             value)] +
                                                                         "/");
@@ -1969,7 +1966,7 @@ class _SFDashboardState extends State<SFDashboard> {
                                                             onPressed:
                                                                 () async {
                                                               await launch(
-                                                                  " https://timber.forest.kerala.gov.in/api/auth/new_user_report/" +
+                                                                  " ${ServerHelper.baseUrl}auth/new_user_report/" +
                                                                       Ids2[int.parse(
                                                                           value)] +
                                                                       "/");
@@ -1993,7 +1990,7 @@ class _SFDashboardState extends State<SFDashboard> {
                                                               onPressed:
                                                                   () async {
                                                                 await launch(
-                                                                    " https://timber.forest.kerala.gov.in/api/auth/qr_code_pdf/" +
+                                                                    " ${ServerHelper.baseUrl}auth/qr_code_pdf/" +
                                                                         Ids[int.parse(
                                                                             value)] +
                                                                         "/");
@@ -2193,7 +2190,7 @@ class _SFDashboardState extends State<SFDashboard> {
                                                             onPressed:
                                                                 () async {
                                                               await launch(
-                                                                  "https://timber.forest.kerala.gov.in/api/auth/new_noc_pdf/" +
+                                                                  "${ServerHelper.baseUrl}auth/new_noc_pdf/" +
                                                                       Ids3[int.parse(
                                                                           value)] +
                                                                       "/");
@@ -2363,8 +2360,7 @@ class _SFDashboardState extends State<SFDashboard> {
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     ),
                     onTap: () async {
-                      const String url =
-                          'https://timber.forest.kerala.gov.in/api/auth/logout/';
+                      const String url = '${ServerHelper.baseUrl}auth/logout/';
                       await http.post(
                         Uri.parse(url),
                         headers: <String, String>{

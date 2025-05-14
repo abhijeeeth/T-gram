@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
+import 'package:tigramnks/server/serverhelper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tigramnks/Profile.dart';
 import 'package:tigramnks/QueryPage.dart';
@@ -102,7 +103,7 @@ class _FieldOfficerDashboardState extends State<FieldOfficerDashboard> {
                 onTap: () async {
                   if (Ids.text.isNotEmpty) {
                     await launch(
-                        " https://timber.forest.kerala.gov.in/api/auth/qr_code_pdf/${Ids.text}/");
+                        " ${ServerHelper.baseUrl}auth/qr_code_pdf/${Ids.text}/");
                   } else {
                     Fluttertoast.showToast(
                         msg: 'Login Successful',
@@ -142,7 +143,7 @@ class _FieldOfficerDashboardState extends State<FieldOfficerDashboard> {
               InkWell(
                 onTap: () async {
                   await launch(
-                      " https://timber.forest.kerala.gov.in/api/auth/new_transit_pass_pdf/${Ids.text}/");
+                      " ${ServerHelper.baseUrl}auth/new_transit_pass_pdf/${Ids.text}/");
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.40,
@@ -177,7 +178,7 @@ class _FieldOfficerDashboardState extends State<FieldOfficerDashboard> {
               InkWell(
                 onTap: () async {
                   await launch(
-                      " https://timber.forest.kerala.gov.in/api/auth/new_user_report/${Ids.text}/");
+                      " ${ServerHelper.baseUrl}auth/new_user_report/${Ids.text}/");
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.40,
@@ -207,7 +208,7 @@ class _FieldOfficerDashboardState extends State<FieldOfficerDashboard> {
               InkWell(
                 onTap: () async {
                   await launch(
-                      " https://timber.forest.kerala.gov.in/api/auth/qr_code_pdf/${Ids.text}/");
+                      " ${ServerHelper.baseUrl}auth/qr_code_pdf/${Ids.text}/");
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.40,
@@ -315,8 +316,7 @@ class _FieldOfficerDashboardState extends State<FieldOfficerDashboard> {
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     ),
                     onTap: () async {
-                      const String url =
-                          'https://timber.forest.kerala.gov.in/api/auth/logout/';
+                      const String url = '${ServerHelper.baseUrl}auth/logout/';
                       await http.post(
                         Uri.parse(url),
                         headers: <String, String>{
@@ -327,8 +327,8 @@ class _FieldOfficerDashboardState extends State<FieldOfficerDashboard> {
                       SharedPreferences prefs =
                           await SharedPreferences.getInstance();
                       prefs.remove('isLoggedIn');
-                      Navigator.pushReplacement(
-                          context, MaterialPageRoute(builder: (_) => login()));
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (_) => const login()));
                     }),
               ],
             ),

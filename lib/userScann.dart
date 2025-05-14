@@ -1,20 +1,17 @@
 import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'dart:io';
-import 'dart:developer';
-import 'package:http/http.dart' as http;
-import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:tigramnks/acknowlegeUser.dart';
-import 'package:tigramnks/checkPostDash.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
+import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:tigramnks/acknowlegeUser.dart';
+import 'package:tigramnks/server/serverhelper.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class userScan extends StatefulWidget {
   int userId;
@@ -86,8 +83,7 @@ class _userScanState extends State<userScan> {
     _remarkfile = (result.files.first.name);
     print(_remarkfile);
     if (_remarkfile != null) {
-      const String url =
-          'https://timber.forest.kerala.gov.in/api/auth/scaned_details';
+      const String url = '${ServerHelper.baseUrl}auth/scaned_details';
 //USER ACKNOLEGEMENT
       Map data = {
         "app_form_id": newString,
@@ -310,7 +306,7 @@ class _userScanState extends State<userScan> {
                                   requestCode.replaceAll(":8000", "");
                               await launch(modifiedCode);
                               // const String url =
-                              //     'https://timber.forest.kerala.gov.in/api/auth/scaned_details';
+                              //     '${ServerHelper.baseUrl}auth/scaned_details';
                               // Map data = {
                               //   "app_form_id": newString,
                               //   "checkpost_officer_id": userId,
