@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_interpolation_to_compose_strings
 
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -338,7 +339,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
       'Authorization': "token $sessionToken"
     });
     Map<String, dynamic> responseJSON = json.decode(response.body);
-    print(responseJSON);
+    log(responseJSON.toString());
     List list = responseJSON["data"];
 
     setState(() {
@@ -1388,13 +1389,13 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.white),
                                           )),
-                                          DataColumn(
-                                              label: Text(
-                                            'QR Code',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )),
+                                          // DataColumn(
+                                          //     label: Text(
+                                          //   'QR Code',
+                                          //   style: TextStyle(
+                                          //       fontWeight: FontWeight.bold,
+                                          //       color: Colors.white),
+                                          // )),
                                           DataColumn(
                                               label: Text(
                                             'Remark',
@@ -1574,31 +1575,31 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                               },
                                                             ),
                                                           ),
-                                                          DataCell(
-                                                            Visibility(
-                                                              visible: (Current_status1[
-                                                                              int.parse(value)]
-                                                                          .toString() ==
-                                                                      'A')
-                                                                  ? true
-                                                                  : false,
-                                                              child: IconButton(
-                                                                icon: Icon(Icons
-                                                                    .qr_code_outlined),
-                                                                color:
-                                                                    Colors.blue,
-                                                                onPressed:
-                                                                    () async {
-                                                                  await launch("https://timber.forest.kerala.gov.in/api/auth/qr_code_pdf/" +
-                                                                      replaceSlashesWithDashes(
-                                                                          App_no1[
-                                                                              int.parse(value)]) +
-                                                                      "/");
-                                                                  // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-                                                                },
-                                                              ),
-                                                            ),
-                                                          ),
+                                                          // DataCell(
+                                                          //   Visibility(
+                                                          //     visible: (Current_status1[
+                                                          //                     int.parse(value)]
+                                                          //                 .toString() ==
+                                                          //             'A')
+                                                          //         ? true
+                                                          //         : false,
+                                                          //     child: IconButton(
+                                                          //       icon: Icon(Icons
+                                                          //           .qr_code_outlined),
+                                                          //       color:
+                                                          //           Colors.blue,
+                                                          //       onPressed:
+                                                          //           () async {
+                                                          //         await launch("https://timber.forest.kerala.gov.in/api/auth/qr_code_pdf/" +
+                                                          //             replaceSlashesWithDashes(
+                                                          //                 App_no1[
+                                                          //                     int.parse(value)]) +
+                                                          //             "/");
+                                                          //         // _requestDownload("http://www.orimi.com/pdf-test.pdf");
+                                                          //       },
+                                                          //     ),
+                                                          //   ),
+                                                          // ),
                                                           DataCell(Text(OfficerRemark(
                                                                   Current_status1[
                                                                           int.parse(
