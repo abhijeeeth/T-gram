@@ -36,6 +36,7 @@ dependencies:
   jailbreak_root_detection: ^1.1.5
   flutter_keyboard_visibility: ^6.0.0
   lottie: ^3.3.1
+  package_info_plus: ^8.3.0
   
 
 dev_dependencies:

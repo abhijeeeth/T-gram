@@ -1,26 +1,25 @@
 import 'dart:convert';
-import 'dart:developer';
-import 'package:flutter/services.dart';
-import 'package:flutter/material.dart';
-import "package:flutter/cupertino.dart";
-import 'package:http/http.dart' as http;
-import 'package:tigramnks/server/serverhelper.dart';
-import 'package:jailbreak_root_detection/jailbreak_root_detection.dart';
 
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:http/http.dart' as http;
+import 'package:jailbreak_root_detection/jailbreak_root_detection.dart';
+import 'package:marquee/marquee.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tigramnks/DivisionDashboard.dart';
 import 'package:tigramnks/FieldOfficerDashboard.dart';
 import 'package:tigramnks/OfficerDashboard.dart';
 import 'package:tigramnks/SFDashboard.dart';
 import 'package:tigramnks/forgetPassword.dart';
 import 'package:tigramnks/homePage.dart';
+import 'package:tigramnks/server/serverhelper.dart';
 import 'package:tigramnks/signup.dart';
 import 'package:toggle_switch/toggle_switch.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:marquee/marquee.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'checkPostDash.dart';
-import 'main.dart';
 
 void main() {
   runApp(const login());
@@ -163,25 +162,21 @@ class _LoginDemoState extends State<LoginDemo> {
                     ],
                   )),
               Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(13.5),
-                  color: Colors.white,
-                  border: Border.all(color: Colors.blue[700]!, width: 1),
-                ),
                 margin: const EdgeInsets.only(top: 50, bottom: 15),
                 child: ToggleSwitch(
                   minWidth: double.infinity,
                   minHeight: 50,
                   initialLabelIndex: _radioValue,
-                  cornerRadius: 12.0,
+                  cornerRadius: 8.0,
                   activeFgColor: Colors.white,
-                  inactiveBgColor: Colors.white,
-                  inactiveFgColor: Colors.blue,
+                  inactiveBgColor: Colors.grey[200],
+                  inactiveFgColor: Colors.black54,
                   labels: const ['User', 'Officer'],
-                  fontSize: 18,
+                  fontSize: 16,
                   activeBgColors: const [
-                    [Colors.blue],
-                    [Colors.blue]
+                    [Color(0xFF02075D)],
+                    [Color(0xFF02075D)]
+                    //blinh
                   ],
                   onToggle: _handleRadioValueChange,
                 ),
@@ -194,49 +189,71 @@ class _LoginDemoState extends State<LoginDemo> {
                 }
                 return Container(); // Default return for type safety
               }),
+              Row(
+                children: [
+                  const SizedBox(width: 8.0),
+                  Expanded(
+                    child: FutureBuilder<PackageInfo>(
+                      future: PackageInfo.fromPlatform(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          if (snapshot.hasData) {
+                            final packageInfo = snapshot.data!;
+                            return Center(
+                              child: Text(
+                                "Version: ${packageInfo.version}+${packageInfo.buildNumber}",
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  color: Color.fromARGB(255, 63, 63, 63),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            );
+                          } else if (snapshot.hasError) {
+                            return const Center(
+                              child: Text(
+                                "Error loading version",
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            );
+                          }
+                        }
+                        // Show loading indicator while waiting
+                        return const Center(
+                          child: Text(
+                            "Loading version...",
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 5),
               Container(
                 width: double.infinity,
                 height: 25,
-                color: HexColor("#8b0000"),
+                color: HexColor("#004d40"),
                 alignment: Alignment.center,
                 margin: const EdgeInsets.only(bottom: 10),
                 child: Marquee(
-                  text: "      Kerala Forest Research Institute (KFRI)   ",
-                  // textAlign: Align.center,
+                  text: "Kerala Forest Research Institute (KFRI)",
                   style: const TextStyle(
-                    fontFamily: 'Cairo',
-                    fontStyle: FontStyle.normal,
+                    fontFamily: 'Arial',
+                    fontWeight: FontWeight.w500,
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: 14,
                   ),
                 ),
               ),
               const SizedBox(height: 7),
-              Container(
-                padding: const EdgeInsets.all(8.0), // Add padding for spacing
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey, // Add border color
-                    width: 1.0,
-                  ),
-                  borderRadius: BorderRadius.circular(10), // Add border radius
-                ),
-                child: const Row(
-                  children: [
-                    SizedBox(
-                        width:
-                            8.0), // Add spacing between icon and version text
-                    Text(
-                      "Version: 1.2.0",
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: Colors.blue, // Change the text color
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              )
             ],
           ),
         ));
@@ -582,12 +599,12 @@ class _UserState extends State<UserLogin> {
   Widget build(BuildContext context) {
     return Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12.0),
+          borderRadius: BorderRadius.circular(8.0),
           color: Colors.white,
           border: Border.all(color: Colors.red[600]!, width: 1.2),
           boxShadow: const [
             BoxShadow(
-              color: Colors.black,
+              color: Color.fromARGB(73, 0, 0, 0),
               blurRadius: 2.0,
               spreadRadius: 0.0,
               offset: Offset(2.0, 2.0), // shadow direction: bottom right
@@ -603,7 +620,7 @@ class _UserState extends State<UserLogin> {
               decoration: const InputDecoration(
                   border: OutlineInputBorder(
                     borderSide: BorderSide(width: 2),
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
                   ),
                   prefixIcon: Icon(Icons.email_outlined),
                   hintText: 'Enter E-mail/Mobile',
@@ -620,7 +637,7 @@ class _UserState extends State<UserLogin> {
             decoration: InputDecoration(
                 border: const OutlineInputBorder(
                   borderSide: BorderSide(width: 2),
-                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
                 ),
                 prefixIcon: const Icon(Icons.vpn_key_outlined),
                 suffixIcon: InkWell(
@@ -642,180 +659,227 @@ class _UserState extends State<UserLogin> {
             obscureText: isHiddenPassword,
             // obscuringCharacter: '*',
           ),
-          const SizedBox(
-            height: 10,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const forgetPassword()));
+                  },
+                  child: Text(
+                    'Forget Password',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontFamily: 'Cairo',
+                      fontStyle: FontStyle.normal,
+                      color: Colors.blue[700],
+                      fontSize: 16,
+                    ),
+                  )),
+            ],
           ),
-          TextButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const forgetPassword()));
-              },
-              child: Text(
-                'Forget Password',
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontFamily: 'Cairo',
-                  fontStyle: FontStyle.normal,
-                  color: Colors.blue[700],
-                  fontSize: 16,
-                ),
-              )),
-          Container(
-            margin: const EdgeInsets.only(top: 10.0, bottom: 0.0),
-            height: 40,
-            width: 120,
-            decoration: BoxDecoration(
-                color: Colors.yellow[700],
-                borderRadius: BorderRadius.circular(12)),
-            child: TextButton(
-                // color: Colors.amber,
-                child: const Text(
-                  'Login',
-                  style: TextStyle(
-                    fontFamily: 'Cairo',
-                    fontStyle: FontStyle.normal,
-                    fontSize: 20,
-                    color: Colors.black,
-                  ),
-                ),
-                onPressed: () async {
-                  if ((loginEmail.text.isEmpty) ||
-                      (loginPassword.text.isEmpty)) {
-                    Fluttertoast.showToast(
-                        msg: "Either User Name or password field is empty",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Colors.red,
-                        textColor: Colors.white,
-                        fontSize: 18.0);
-                  } else {
-                    print("----login----");
-                    const String url = '${ServerHelper.baseUrl}auth/NewLogin';
-                    Map data = {
-                      "email_or_phone": loginEmail.text.trim(),
-                      "password": loginPassword.text.trim()
-                    };
-
-                    var body = json.encode(data);
-
-                    final response = await http.post(Uri.parse(url),
-                        headers: <String, String>{
-                          'Content-Type': 'application/json'
-                        },
-                        body: body);
-
-                    Map<String, dynamic> responseJson =
-                        json.decode(response.body);
-                    print("----------------------login----------------");
-
-                    if (responseJson['status'] == "success") {
-                      setState(() {
-                        userId = responseJson['data']['id'];
-
-                        userName = responseJson['data']['name'];
-                        userEmail = responseJson["data"]["email"];
-                        userMobile = responseJson["data"]["phone"];
-                        userAddress = responseJson["data"]["address"];
-                        sessionToken = responseJson["token"];
-                        userProfile = responseJson["data"]["photo_proof_img"];
-                        userGroup = responseJson['data']['user_group'][0];
-                        userCato = responseJson['data']['usr_category'];
-                      });
-                      if (responseJson['data']['user_group'][0] == 'user') {
-                        prefs?.setString('LoginUser', loginEmail.text);
-                        prefs?.setString('LoginPass', loginPassword.text);
-                        prefs?.setBool('isLoggedIn', false);
-                        Fluttertoast.showToast(
-                            msg: 'Login Sucessfully',
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.CENTER,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: Colors.green,
-                            textColor: Colors.white,
-                            fontSize: 18.0);
-                        Navigator.pushReplacement(
-                            context,
-                            PageRouteBuilder(
-                                transitionDuration:
-                                    const Duration(milliseconds: 250),
-                                transitionsBuilder:
-                                    (context, animation, animationTime, child) {
-                                  return ScaleTransition(
-                                    alignment: Alignment.topCenter,
-                                    scale: animation,
-                                    child: child,
-                                  );
-                                },
-                                pageBuilder:
-                                    (context, animation, animationTime) {
-                                  return HomePage(
-                                    userId: userId!,
-                                    userName: userName,
-                                    userEmail: userEmail,
-                                    userMobile: userMobile,
-                                    userAddress: userAddress,
-                                    userProfile: userProfile,
-                                    sessionToken: sessionToken,
-                                    userGroup: userGroup,
-                                    userCato: userCato,
-                                  );
-                                }));
-                      } else {
-                        Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (_) => const login()));
-                        Fluttertoast.showToast(
-                            msg: 'Go to Officer Login',
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.CENTER,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: Colors.red,
-                            textColor: Colors.white,
-                            fontSize: 18.0);
-                        loginEmail.clear();
-                        loginPassword.clear();
-                      }
-                    } else {
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (_) => const login()));
-                      Fluttertoast.showToast(
-                          msg: 'Invalid credentials',
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.CENTER,
-                          timeInSecForIosWeb: 1,
-                          backgroundColor: Colors.red,
-                          textColor: Colors.white,
-                          fontSize: 18.0);
-                    }
-                  }
-                }),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          TextButton(
-              onPressed: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => const signup()));
-              },
-              child: RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(children: <TextSpan>[
-                  const TextSpan(
-                      text: "New User ? ",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Cairo',
-                      )),
-                  TextSpan(
-                      text: "Sign Up",
-                      style: TextStyle(
-                          color: Colors.blue[700],
+          Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 10.0, bottom: 0.0),
+                  height: 50,
+                  width: 120,
+                  decoration: BoxDecoration(
+                      color: Colors.yellow[700],
+                      borderRadius: BorderRadius.circular(8)),
+                  child: TextButton(
+                      // color: Colors.amber,
+                      child: const Text(
+                        'Login',
+                        style: TextStyle(
                           fontFamily: 'Cairo',
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold)),
-                ]),
-              )),
+                          fontStyle: FontStyle.normal,
+                          fontSize: 20,
+                          color: Colors.black,
+                        ),
+                      ),
+                      onPressed: () async {
+                        if ((loginEmail.text.isEmpty) ||
+                            (loginPassword.text.isEmpty)) {
+                          Fluttertoast.showToast(
+                              msg:
+                                  "Either User Name or password field is empty",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.red,
+                              textColor: Colors.white,
+                              fontSize: 18.0);
+                        } else {
+                          print("----login----");
+                          const String url =
+                              '${ServerHelper.baseUrl}auth/NewLogin';
+                          Map data = {
+                            "email_or_phone": loginEmail.text.trim(),
+                            "password": loginPassword.text.trim()
+                          };
+
+                          var body = json.encode(data);
+
+                          final response = await http.post(Uri.parse(url),
+                              headers: <String, String>{
+                                'Content-Type': 'application/json'
+                              },
+                              body: body);
+
+                          Map<String, dynamic> responseJson =
+                              json.decode(response.body);
+                          print("----------------------login----------------");
+
+                          if (responseJson['status'] == "success") {
+                            setState(() {
+                              userId = responseJson['data']['id'];
+
+                              userName = responseJson['data']['name'];
+                              userEmail = responseJson["data"]["email"];
+                              userMobile = responseJson["data"]["phone"];
+                              userAddress = responseJson["data"]["address"];
+                              sessionToken = responseJson["token"];
+                              userProfile =
+                                  responseJson["data"]["photo_proof_img"];
+                              userGroup = responseJson['data']['user_group'][0];
+                              userCato = responseJson['data']['usr_category'];
+                            });
+                            if (responseJson['data']['user_group'][0] ==
+                                'user') {
+                              prefs?.setString('LoginUser', loginEmail.text);
+                              prefs?.setString('LoginPass', loginPassword.text);
+                              prefs?.setBool('isLoggedIn', false);
+                              Fluttertoast.showToast(
+                                  msg: 'Login Sucessfully',
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.green,
+                                  textColor: Colors.white,
+                                  fontSize: 18.0);
+                              Navigator.pushReplacement(
+                                  context,
+                                  PageRouteBuilder(
+                                      transitionDuration:
+                                          const Duration(milliseconds: 250),
+                                      transitionsBuilder: (context, animation,
+                                          animationTime, child) {
+                                        return ScaleTransition(
+                                          alignment: Alignment.topCenter,
+                                          scale: animation,
+                                          child: child,
+                                        );
+                                      },
+                                      pageBuilder:
+                                          (context, animation, animationTime) {
+                                        return HomePage(
+                                          userId: userId!,
+                                          userName: userName,
+                                          userEmail: userEmail,
+                                          userMobile: userMobile,
+                                          userAddress: userAddress,
+                                          userProfile: userProfile,
+                                          sessionToken: sessionToken,
+                                          userGroup: userGroup,
+                                          userCato: userCato,
+                                        );
+                                      }));
+                            } else {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => const login()));
+                              Fluttertoast.showToast(
+                                  msg: 'Go to Officer Login',
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white,
+                                  fontSize: 18.0);
+                              loginEmail.clear();
+                              loginPassword.clear();
+                            }
+                          } else {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const login()));
+                            Fluttertoast.showToast(
+                                msg: 'Invalid credentials',
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                                fontSize: 18.0);
+                          }
+                        }
+                      }),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 10.0, bottom: 0.0),
+                  height: 50,
+                  width: 120,
+                  decoration: BoxDecoration(
+                      color: Colors.green[700],
+                      borderRadius: BorderRadius.circular(8)),
+                  child: TextButton(
+                    child: const Text(
+                      'Sign Up',
+                      style: TextStyle(
+                        fontFamily: 'Cairo',
+                        fontStyle: FontStyle.normal,
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const signup()),
+                      );
+                    },
+                  ),
+                )
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          //  TextButton(
+          //     onPressed: () {
+          //       Navigator.push(
+          //           context, MaterialPageRoute(builder: (_) => const signup()));
+          //     },
+          //     child: RichText(
+          //       textAlign: TextAlign.center,
+          //       text: TextSpan(children: <TextSpan>[
+          //         const TextSpan(
+          //             text: "New User ? ",
+          //             style: TextStyle(
+          //               color: Colors.black,
+          //               fontFamily: 'Cairo',
+          //             )),
+          //         TextSpan(
+          //             text: "Sign Up",
+          //             style: TextStyle(
+          //                 color: Colors.blue[700],
+          //                 fontFamily: 'Cairo',
+          //                 fontSize: 16,
+          //                 fontWeight: FontWeight.bold)),
+          //       ]),
+          //     )),
         ]));
   }
 }
@@ -1146,7 +1210,7 @@ class _OfficerState extends State<OfficerLogin> {
 
   bool validateEmail(String value) {
     Pattern pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regex = RegExp(pattern.toString());
     return (!regex.hasMatch(value)) ? false : true;
   }
@@ -1190,7 +1254,7 @@ class _OfficerState extends State<OfficerLogin> {
           ), //<---- Insert Gradient Here
           boxShadow: const [
             BoxShadow(
-              color: Colors.black,
+              color: Color.fromARGB(144, 0, 0, 0),
               blurRadius: 2.0,
               spreadRadius: 0.0,
               offset: Offset(2.0, 2.0), // shadow direction: bottom right
@@ -1207,7 +1271,7 @@ class _OfficerState extends State<OfficerLogin> {
                   color: Colors.grey,
                   width: 1,
                 ),
-                borderRadius: BorderRadius.circular(20)),
+                borderRadius: BorderRadius.circular(8)),
             padding: const EdgeInsets.only(
                 left: 10.0, right: 10.0, top: 10, bottom: 0),
             child: DropdownButton<String>(
@@ -1246,7 +1310,7 @@ class _OfficerState extends State<OfficerLogin> {
               decoration: const InputDecoration(
                   border: OutlineInputBorder(
                     borderSide: BorderSide(width: 2),
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
                   ),
                   prefixIcon: Icon(Icons.perm_identity_rounded),
                   hintText: 'Enter Email/Mobile',
@@ -1263,7 +1327,7 @@ class _OfficerState extends State<OfficerLogin> {
             decoration: InputDecoration(
                 border: const OutlineInputBorder(
                   borderSide: BorderSide(width: 2),
-                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
                 ),
                 prefixIcon: const Icon(Icons.vpn_key_outlined),
                 suffixIcon: InkWell(
@@ -1283,13 +1347,37 @@ class _OfficerState extends State<OfficerLogin> {
             obscureText: isHiddenPassword,
             // obscuringCharacter: '',
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const forgetPassword()));
+                  },
+                  child: Text(
+                    'Change Password',
+                    style: TextStyle(
+                      fontFamily: 'Cairo',
+                      fontStyle: FontStyle.normal,
+                      color: Colors.blue[700],
+                      fontSize: 16,
+                    ),
+                  )),
+            ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
           Container(
             margin: const EdgeInsets.only(top: 10.0, bottom: 0.0),
-            height: 40,
-            width: 120,
+            height: 50,
+            width: double.infinity,
             decoration: BoxDecoration(
                 color: Colors.yellow[700],
-                borderRadius: BorderRadius.circular(12)),
+                borderRadius: BorderRadius.circular(8)),
             child: TextButton(
                 // color: Colors.amber,
                 child: const Text(
@@ -1595,23 +1683,6 @@ class _OfficerState extends State<OfficerLogin> {
                   }
                 }),
           ),
-          const SizedBox(
-            height: 10,
-          ),
-          TextButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const forgetPassword()));
-              },
-              child: Text(
-                'Change Password',
-                style: TextStyle(
-                  fontFamily: 'Cairo',
-                  fontStyle: FontStyle.normal,
-                  color: Colors.blue[700],
-                  fontSize: 16,
-                ),
-              )),
           const SizedBox(
             height: 10,
           ),
