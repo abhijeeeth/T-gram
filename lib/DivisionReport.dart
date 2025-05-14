@@ -1,6 +1,7 @@
 // ignore_for_file: sort_child_properties_last
 
 import 'package:flutter/material.dart';
+import 'package:tigramnks/DivisionViewReport.dart';
 
 class DivisionReport extends StatefulWidget {
   final String? sessionToken;
@@ -109,14 +110,14 @@ class _DivisionReportState extends State<DivisionReport> {
                         }
 
                         int R1 = 1;
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (_) => DivisionViewReport(
-                        //               sessionToken: sessionToken ?? "",
-                        //               SelectedRange: SelectedRange,
-                        //               R1: R1,
-                        //             )));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => DivisionViewReport(
+                                      sessionToken: sessionToken ?? "",
+                                      SelectedRange: SelectedRange,
+                                      R1: R1,
+                                    )));
                       }),
                   elevation: 3,
                 ),
@@ -135,14 +136,14 @@ class _DivisionReportState extends State<DivisionReport> {
                         }
 
                         int R2 = 2;
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (_) => DivisionViewReport(
-                        //               sessionToken: sessionToken ?? "",
-                        //               SelectedRange: SelectedRange,
-                        //               R2: R2,
-                        //             )));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => DivisionViewReport(
+                                      sessionToken: sessionToken ?? "",
+                                      SelectedRange: SelectedRange,
+                                      R2: R2,
+                                    )));
                       }),
                   elevation: 3,
                 ),
@@ -161,14 +162,14 @@ class _DivisionReportState extends State<DivisionReport> {
                         }
 
                         int R3 = 3;
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (_) => DivisionViewReport(
-                        //               sessionToken: sessionToken ?? "",
-                        //               SelectedRange: SelectedRange,
-                        //               R3: R3,
-                        //             )));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => DivisionViewReport(
+                                      sessionToken: sessionToken ?? "",
+                                      SelectedRange: SelectedRange,
+                                      R3: R3,
+                                    )));
                       }),
                   elevation: 3,
                 ),
@@ -187,14 +188,14 @@ class _DivisionReportState extends State<DivisionReport> {
                         }
 
                         int R4 = 4;
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (_) => DivisionViewReport(
-                        //               sessionToken: sessionToken ?? "",
-                        //               SelectedRange: SelectedRange,
-                        //               R4: R4,
-                        //             )));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => DivisionViewReport(
+                                      sessionToken: sessionToken ?? "",
+                                      SelectedRange: SelectedRange,
+                                      R4: R4,
+                                    )));
                       }),
                   elevation: 3,
                 ),
@@ -214,14 +215,14 @@ class _DivisionReportState extends State<DivisionReport> {
                         }
 
                         int R5 = 5;
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (_) => DivisionViewReport(
-                        //               sessionToken: sessionToken ?? "",
-                        //               SelectedRange: SelectedRange,
-                        //               R5: R5,
-                        //             )));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => DivisionViewReport(
+                                      sessionToken: sessionToken ?? "",
+                                      SelectedRange: SelectedRange,
+                                      R5: R5,
+                                    )));
                       }),
                   elevation: 3,
                 ),
@@ -241,14 +242,14 @@ class _DivisionReportState extends State<DivisionReport> {
                         }
 
                         int R6 = 6;
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (_) => DivisionViewReport(
-                        //               sessionToken: sessionToken ?? "",
-                        //               SelectedRange: SelectedRange,
-                        //               R6: R6,
-                        //             )));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => DivisionViewReport(
+                                      sessionToken: sessionToken ?? "",
+                                      SelectedRange: SelectedRange,
+                                      R6: R6,
+                                    )));
                       }),
                   elevation: 3,
                 ),
@@ -267,14 +268,14 @@ class _DivisionReportState extends State<DivisionReport> {
                         }
 
                         int R7 = 7;
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (_) => DivisionViewReport(
-                        //               sessionToken: sessionToken ?? "",
-                        //               SelectedRange: SelectedRange,
-                        //               R7: R7,
-                        //             )));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => DivisionViewReport(
+                                      sessionToken: sessionToken ?? "",
+                                      SelectedRange: SelectedRange,
+                                      R7: R7,
+                                    )));
                       }),
                   elevation: 3,
                 ),
@@ -293,14 +294,14 @@ class _DivisionReportState extends State<DivisionReport> {
                         }
 
                         int R8 = 8;
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (_) => DivisionViewReport(
-                        //               sessionToken: sessionToken ?? "",
-                        //               SelectedRange: SelectedRange,
-                        //               R8: R8,
-                        //             )));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => DivisionViewReport(
+                                      sessionToken: sessionToken ?? "",
+                                      SelectedRange: SelectedRange,
+                                      R8: R8,
+                                    )));
                       }),
                   elevation: 3,
                 ),
@@ -320,14 +321,14 @@ class _DivisionReportState extends State<DivisionReport> {
                         }
 
                         int R9 = 9;
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (_) => DivisionViewReport(
-                        //               sessionToken: sessionToken ?? "",
-                        //               SelectedRange: SelectedRange,
-                        //               R9: R9,
-                        //             )));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => DivisionViewReport(
+                                      sessionToken: sessionToken ?? "",
+                                      SelectedRange: SelectedRange,
+                                      R9: R9,
+                                    )));
                       }),
                   elevation: 3,
                 ),
@@ -346,14 +347,14 @@ class _DivisionReportState extends State<DivisionReport> {
                         }
 
                         int R10 = 10;
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (_) => DivisionViewReport(
-                        //               sessionToken: sessionToken ?? "",
-                        //               SelectedRange: SelectedRange,
-                        //               R10: R10,
-                        //             )));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => DivisionViewReport(
+                                      sessionToken: sessionToken ?? "",
+                                      SelectedRange: SelectedRange,
+                                      R10: R10,
+                                    )));
                       }),
                   elevation: 3,
                 ),
