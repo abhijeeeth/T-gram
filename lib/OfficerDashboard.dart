@@ -1,27 +1,19 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_interpolation_to_compose_strings
 
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:hexcolor/hexcolor.dart';
-
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flutter/foundation.dart';
-import 'package:pie_chart/pie_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:http/http.dart' as http;
+import 'package:pie_chart/pie_chart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tigramnks/Form3Page1.dart';
 import 'package:tigramnks/NEW_FORMS/transitViewAndApprove.dart';
-import 'package:tigramnks/NocViewApplication.dart';
 import 'package:tigramnks/QueryPage.dart';
 import 'package:tigramnks/Reports.dart';
 import 'package:tigramnks/ViewApplication.dart';
 import 'package:tigramnks/login.dart';
 import 'package:toggle_switch/toggle_switch.dart';
-import 'package:http/http.dart' as http;
-import 'package:dio/dio.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OfficerDashboard extends StatefulWidget {
@@ -795,26 +787,33 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                   print("USERGROUP " + userGroup);
                   return Container(
                       width: MediaQuery.of(context).size.width,
-                      //height:  MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
+                        borderRadius: BorderRadius.circular(10),
                         color: Colors.white,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.blue,
-                            blurRadius: 2.0,
-                            spreadRadius: 1.0,
-                            // offset: Offset(2.0, 2.0),
-                            // shadow direction: bottom right
+                            color: Colors.blue.withOpacity(0.2),
+                            blurRadius: 6.0,
+                            spreadRadius: 2.0,
+                            offset: Offset(2.0, 2.0),
                           )
                         ],
                       ),
-                      margin: const EdgeInsets.only(
-                          left: 5, right: 5, top: 2, bottom: 10),
-                      padding: const EdgeInsets.only(
-                          left: 2, right: 2, top: 2, bottom: 2),
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 15),
+                      padding: const EdgeInsets.all(15),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
+                          Text(
+                            "Application Status Overview",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blueAccent,
+                            ),
+                          ),
+                          SizedBox(height: 20),
                           PieChart(
                             dataMap: {
                               "Approved": Approved,
@@ -822,37 +821,59 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                               "Pending": Pending
                             },
                             animationDuration: Duration(milliseconds: 800),
-                            chartLegendSpacing: 20,
+                            chartLegendSpacing: 30,
                             chartRadius:
-                                MediaQuery.of(context).size.width * 0.50,
+                                MediaQuery.of(context).size.width * 0.45,
                             initialAngleInDegree: 0,
                             chartType: ChartType.disc,
-                            colorList: [Colors.blue, Colors.red, Colors.orange],
-                            ringStrokeWidth: MediaQuery.of(context).size.width,
-                            centerText: "",
+                            colorList: [
+                              Colors.green,
+                              Colors.red,
+                              Colors.orange
+                            ],
+                            ringStrokeWidth: 32,
+                            centerText: "Status",
+                            centerTextStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Colors.black54,
+                            ),
                             legendOptions: LegendOptions(
-                              showLegendsInRow: false,
-                              legendPosition: LegendPosition.left,
+                              showLegendsInRow: true,
+                              legendPosition: LegendPosition.bottom,
                               showLegends: true,
                               legendTextStyle: TextStyle(
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
                               ),
                             ),
                             chartValuesOptions: ChartValuesOptions(
                               showChartValueBackground: true,
                               showChartValues: true,
-                              showChartValuesInPercentage: false,
+                              showChartValuesInPercentage: true,
                               showChartValuesOutside: false,
                               decimalPlaces: 1,
                             ),
                           ),
-                          // TextButton.icon(
-                          //   icon: Icon(Icons.file_download),
+                          SizedBox(height: 20),
+                          // ElevatedButton.icon(
+                          //   icon: Icon(Icons.download, color: Colors.white),
                           //   onPressed: () async {
                           //     await launch(
                           //         "https://timber.forest.kerala.gov.in/api/auth/summary_report/");
                           //   },
-                          //   label: Text("Download"),
+                          //   label: Text(
+                          //     "Download Report",
+                          //     style: TextStyle(fontSize: 16),
+                          //   ),
+                          //   style: ElevatedButton.styleFrom(
+                          //     backgroundColor: Colors.blueAccent,
+                          //     padding: EdgeInsets.symmetric(
+                          //         horizontal: 20, vertical: 10),
+                          //     shape: RoundedRectangleBorder(
+                          //       borderRadius: BorderRadius.circular(8),
+                          //     ),
+                          //   ),
                           // ),
                         ],
                       ));
@@ -950,13 +971,13 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white),
                                       )),
-                                      DataColumn(
-                                          label: Text(
-                                        'Approval\n    Date',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      )),
+                                      // DataColumn(
+                                      //     label: Text(
+                                      //   'Approval\n    Date',
+                                      //   style: TextStyle(
+                                      //       fontWeight: FontWeight.bold,
+                                      //       color: Colors.white),
+                                      // )),
                                       DataColumn(
                                           label: Text(
                                         'Action',
@@ -964,27 +985,29 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white),
                                       )),
-                                      DataColumn(
-                                          label: Text(
-                                        'Download\n      Tp',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      )),
-                                      DataColumn(
-                                          label: Text(
-                                        'Download\n Report',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      )),
-                                      DataColumn(
-                                          label: Text(
-                                        'QR Code',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      )),
+                                      // DataColumn(
+                                      //     label: Text(
+                                      //   'Download\n      Tp',
+                                      //   style: TextStyle(
+                                      //       fontWeight: FontWeight.bold,
+                                      //       color: Colors.white),
+                                      // )),
+                                      // DataColumn(
+                                      //     label: Text(
+                                      //   'Download\n Report',
+                                      //   style: TextStyle(
+                                      //       fontWeight: FontWeight.bold,
+                                      //       color: Colors.white),
+                                      // )),
+
+                                      //qr
+                                      // DataColumn(
+                                      //     label: Text(
+                                      //   'QR Code',
+                                      //   style: TextStyle(
+                                      //       fontWeight: FontWeight.bold,
+                                      //       color: Colors.white),
+                                      // )),
                                       DataColumn(
                                           label: Text(
                                         'Remark',
@@ -1064,20 +1087,20 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                               value)]
                                                                       .toString()))
                                                               .toString())),
-                                                      DataCell(Text((Tp_Number[
-                                                                      int.parse(
-                                                                          value)]
-                                                                  .toString() ==
-                                                              '0'
-                                                          ? "N/A"
-                                                          : Approved_date[int.parse(
-                                                                      value)] !=
-                                                                  null
-                                                              ? Approved_date[
-                                                                      int.parse(
-                                                                          value)]
-                                                                  .toString()
-                                                              : "N/A"))),
+                                                      // DataCell(Text((Tp_Number[
+                                                      //                 int.parse(
+                                                      //                     value)]
+                                                      //             .toString() ==
+                                                      //         '0'
+                                                      //     ? "N/A"
+                                                      //     : Approved_date[int.parse(
+                                                      //                 value)] !=
+                                                      //             null
+                                                      //         ? Approved_date[
+                                                      //                 int.parse(
+                                                      //                     value)]
+                                                      //             .toString()
+                                                      //         : "N/A"))),
                                                       DataCell(
                                                         Visibility(
                                                           visible: true,
@@ -1115,75 +1138,75 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                           ),
                                                         ),
                                                       ),
-                                                      DataCell(
-                                                        Visibility(
-                                                          visible: (Current_status[
-                                                                          int.parse(
-                                                                              value)]
-                                                                      .toString() ==
-                                                                  'A')
-                                                              ? true
-                                                              : false,
-                                                          child: IconButton(
-                                                            icon: Icon(Icons
-                                                                .file_download),
-                                                            color: Colors.blue,
-                                                            onPressed:
-                                                                () async {
-                                                              await launch("https://timber.forest.kerala.gov.in/api/auth/new_transit_pass_pdf/" +
-                                                                  replaceSlashesWithDashes(
-                                                                      App_no[int
-                                                                          .parse(
-                                                                              value)]) +
-                                                                  "/");
-                                                              // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-                                                            },
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      DataCell(
-                                                        IconButton(
-                                                          icon: Icon(Icons
-                                                              .file_download),
-                                                          color: Colors.blue,
-                                                          onPressed: () async {
-                                                            await launch("https://timber.forest.kerala.gov.in/api/auth/new_user_report/" +
-                                                                replaceSlashesWithDashes(
-                                                                    App_no[int
-                                                                        .parse(
-                                                                            value)]) +
-                                                                "/");
-                                                            // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-                                                          },
-                                                        ),
-                                                      ),
+                                                      // DataCell(
+                                                      //   Visibility(
+                                                      //     visible: (Current_status[
+                                                      //                     int.parse(
+                                                      //                         value)]
+                                                      //                 .toString() ==
+                                                      //             'A')
+                                                      //         ? true
+                                                      //         : false,
+                                                      //     child: IconButton(
+                                                      //       icon: Icon(Icons
+                                                      //           .file_download),
+                                                      //       color: Colors.blue,
+                                                      //       onPressed:
+                                                      //           () async {
+                                                      //         await launch("https://timber.forest.kerala.gov.in/api/auth/new_transit_pass_pdf/" +
+                                                      //             replaceSlashesWithDashes(
+                                                      //                 App_no[int
+                                                      //                     .parse(
+                                                      //                         value)]) +
+                                                      //             "/");
+                                                      //         // _requestDownload("http://www.orimi.com/pdf-test.pdf");
+                                                      //       },
+                                                      //     ),
+                                                      //   ),
+                                                      // ),
+                                                      // DataCell(
+                                                      //   IconButton(
+                                                      //     icon: Icon(Icons
+                                                      //         .file_download),
+                                                      //     color: Colors.blue,
+                                                      //     onPressed: () async {
+                                                      //       await launch("https://timber.forest.kerala.gov.in/api/auth/new_user_report/" +
+                                                      //           replaceSlashesWithDashes(
+                                                      //               App_no[int
+                                                      //                   .parse(
+                                                      //                       value)]) +
+                                                      //           "/");
+                                                      //       // _requestDownload("http://www.orimi.com/pdf-test.pdf");
+                                                      //     },
+                                                      //   ),
+                                                      // ),
 
-                                                      DataCell(
-                                                        Visibility(
-                                                          visible: (Current_status[
-                                                                          int.parse(
-                                                                              value)]
-                                                                      .toString() ==
-                                                                  'A')
-                                                              ? true
-                                                              : false,
-                                                          child: IconButton(
-                                                            icon: Icon(Icons
-                                                                .qr_code_outlined),
-                                                            color: Colors.blue,
-                                                            onPressed:
-                                                                () async {
-                                                              await launch("https://timber.forest.kerala.gov.in/api/auth/qr_code_pdf/" +
-                                                                  replaceSlashesWithDashes(
-                                                                      App_no[int
-                                                                          .parse(
-                                                                              value)]) +
-                                                                  "/");
-                                                              // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-                                                            },
-                                                          ),
-                                                        ),
-                                                      ),
+                                                      // DataCell(
+                                                      //   Visibility(
+                                                      //     visible: (Current_status[
+                                                      //                     int.parse(
+                                                      //                         value)]
+                                                      //                 .toString() ==
+                                                      //             'A')
+                                                      //         ? true
+                                                      //         : false,
+                                                      //     child: IconButton(
+                                                      //       icon: Icon(Icons
+                                                      //           .qr_code_outlined),
+                                                      //       color: Colors.blue,
+                                                      //       onPressed:
+                                                      //           () async {
+                                                      //         await launch("https://timber.forest.kerala.gov.in/api/auth/qr_code_pdf/" +
+                                                      //             replaceSlashesWithDashes(
+                                                      //                 App_no[int
+                                                      //                     .parse(
+                                                      //                         value)]) +
+                                                      //             "/");
+                                                      //         // _requestDownload("http://www.orimi.com/pdf-test.pdf");
+                                                      //       },
+                                                      //     ),
+                                                      //   ),
+                                                      // ),
                                                       DataCell(Text(OfficerRemark(
                                                               Current_status[
                                                                   int.parse(
