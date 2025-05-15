@@ -1462,18 +1462,23 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                       int.parse(
                                                                           value)]
                                                                   .toString())),
-                                                          DataCell(Text(OfficerStatus(
-                                                              userGroup,
-                                                              division1[
-                                                                  int.parse(
-                                                                      value)],
-                                                              verify_range_officer1[
-                                                                  int.parse(
-                                                                      value)],
+                                                          DataCell(Text(
                                                               field_status1[
                                                                       int.parse(
                                                                           value)]
-                                                                  .toString()))),
+                                                                  .toString())),
+                                                          // DataCell(Text(OfficerStatus(
+                                                          //     userGroup,
+                                                          //     division1[
+                                                          //         int.parse(
+                                                          //             value)],
+                                                          //     verify_range_officer1[
+                                                          //         int.parse(
+                                                          //             value)],
+                                                          //     field_status1[
+                                                          //             int.parse(
+                                                          //                 value)]
+                                                          //         .toString()))),
                                                           // DataCell(Text(AssignOfficer(
                                                           //         is_form_two1[
                                                           //             int.parse(
