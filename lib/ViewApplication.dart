@@ -3,8 +3,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-//import 'package:Tigram/CheckPassStatus.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:tigramnks/ViewApplication1.dart';
@@ -59,7 +59,6 @@ class _ViewApplicationState extends State<ViewApplication> {
   late String field_requre;
   late bool field_status;
 
-  // Initialize with empty strings instead of using 'late'
   String img_signature = '';
   String img_revenue_approval = '';
   String img_declaration = '';
@@ -68,7 +67,6 @@ class _ViewApplicationState extends State<ViewApplication> {
   String img_tree_ownership_detail = '';
   String img_aadhar_detail = '';
 
-  // Initialize vehicle-related fields with empty strings instead of late
   String vehical_reg_no = '';
   String driver_name = '';
   String driver_phone = '';
@@ -136,14 +134,13 @@ class _ViewApplicationState extends State<ViewApplication> {
   int All_Record = 0;
   String user_Loc = "";
 
-  //---end vehical-----------
   View_Record() async {
     String url = '${ServerHelper.baseUrl}auth/ViewApplication';
     Map data = {"app_id": Ids};
     print(data);
     var body = json.encode(data);
     print(body);
-    print(sessionToken); // Fixed missing semicolon here
+    print(sessionToken);
     print("Session Token: $sessionToken");
     final response = await http.post(Uri.parse(url),
         headers: <String, String>{
@@ -152,13 +149,10 @@ class _ViewApplicationState extends State<ViewApplication> {
         },
         body: body);
     Map<String, dynamic> responseJSON = json.decode(response.body);
-    // List list = responseJSON["data"];
-    // print(list);
     print("-----------------View -Application--------------");
     print(responseJSON);
     setState(() {
       try {
-        // Handle null values for application data
         Name =
             responseJSON['data']['applications'][0]['name']?.toString() ?? '';
         Address =
@@ -252,69 +246,46 @@ class _ViewApplicationState extends State<ViewApplication> {
 
     setState(() {
       try {
-        img_signature = responseJSON['data']['image_documents'][0]
-                ['signature_img'] ??
-            ''; //signature
+        img_signature =
+            responseJSON['data']['image_documents'][0]['signature_img'] ?? '';
         img_revenue_approval = responseJSON['data']['image_documents'][0]
                 ['revenue_approval'] ??
-            ''; //Land proof
+            '';
         img_declaration = responseJSON['data']['image_documents'][0]
                     ['declaration']
                 ?.toString() ??
-            ''; //Possession
+            '';
         img_revenue_application = responseJSON['data']['image_documents'][0]
                 ['revenue_application'] ??
-            ''; //Always null not using
-        img_location_sktech = responseJSON['data']['image_documents'][0]
-                ['location_sktech'] ??
-            ''; //Always null not using
+            '';
+        img_location_sktech =
+            responseJSON['data']['image_documents'][0]['location_sktech'] ?? '';
         img_tree_ownership_detail = responseJSON['data']['applications'][0]
                 ['proof_of_ownership_of_tree'] ??
-            ''; //Proof_OwnerShip
-        img_aadhar_detail = responseJSON['data']['image_documents'][0]
-                ['aadhar_detail'] ??
-            ''; //ID proof
+            '';
+        img_aadhar_detail =
+            responseJSON['data']['image_documents'][0]['aadhar_detail'] ?? '';
       } catch (e) {
         print("Error while accessing image documents: $e");
-        // Keep the default empty string values
       }
     });
 
-    //---------------------Species--list----------------------------------------
-    print(
-        "------------------------------------Species--list----------------------------");
-    // Tree_species = responseJSON['data']['species_list'];
     Tree_species = treeSpecies.split(",");
     print("HHHHH $Tree_species");
     print(responseJSON['data']['timber_log'].length);
     for (int i = 0; i < responseJSON['data']['timber_log'].length; i++) {
       c.add(i);
-      // n_list.add(i);
       species.add(responseJSON['data']['timber_log'][i]['species_of_tree']);
       length.add(responseJSON['data']['timber_log'][i]['length']);
       breadth.add(responseJSON['data']['timber_log'][i]['breadth']);
       volume.add(responseJSON['data']['timber_log'][i]['volume']);
       latit.add(responseJSON['data']['timber_log'][i]['latitude']);
       longit.add(responseJSON['data']['timber_log'][i]['longitude']);
-      print(species.toString());
-      /*print(length);
-      print(breadth);
-      print(volume);
-      print(latit);
-      print(longit);*/
     }
-    print('-------log Details------');
-
-    //------------------End-Species-List----------------------------------------
-    //for(int i=0;i<Tree_species.length;i++){
-    //  species_nm.add(Tree_species[i]['name']);
-    // }
     n_list = c;
     treelog = responseJSON['data']['timber_log'];
     log_details = treelog;
-    //-----------------------Vehical-Details------------------------------------
-    print(
-        "------------------------------------Vehical-Details----------------------------");
+
     if (responseJSON['data']['isvehicle'] != "Not Applicable") {
       vehical_reg_no =
           responseJSON['data']['vehicle']['vehicle_reg_no'].toString();
@@ -325,35 +296,9 @@ class _ViewApplicationState extends State<ViewApplication> {
       license_image =
           responseJSON['data']['vehicle']['license_image'].toString();
     }
-    //----------------------------------End-Vehical-Details---------------------
   }
 
-//------------Update Log Details----------------------------------------------
-  /*Updatelogs() async{
-    final String url = 'http://65.1.132.43:8080/api/auth/UpdateTimberlog';
-    Map data = {
-      "app_id":Ids,
-      "log_details":log_details//[{"species":"test","length":"25","breadth":"650","volume":750,"latitude":"85.25","longitude":"8580.2"},{"species":"test","length":"25","breadth":"650","volume":750,"latitude":"85.25","longitude":"8580.2"}]
-    };
-    print(data);
-    var body = json.encode(data);
-    print(body);
-    var response = await http.post(url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': "token $sessionToken"
-        },
-        body: body);
-    print(response);
-    Map<String, dynamic> responseJson = json.decode(response.body);
-    print("----------------------Update Logs----------------");
-    print(responseJson);
-  }*/
-//------------------End Update log Details--------------------------------------
-
-  //----------------------
   bool X = false;
-  // Using the already defined mapController
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   List values = [];
   Future<Widget> AddMap(BuildContext context) async {
@@ -374,10 +319,8 @@ class _ViewApplicationState extends State<ViewApplication> {
                     zoomControlsEnabled: true,
                     zoomGesturesEnabled: true,
                     mapType: MapType.normal,
-                    //padding: EdgeInsets.only(bottom: 75.0, top: 0, right: 0, left: 0),
                     initialCameraPosition: const CameraPosition(
                         target: LatLng(10.8505, 76.2711), zoom: 14),
-                    //polygons: myPolygon(),
                     onMapCreated: onMapCreated,
                     markers: markers.isEmpty
                         ? <Marker>{}
@@ -389,36 +332,28 @@ class _ViewApplicationState extends State<ViewApplication> {
                         Marker marker = Marker(
                           markerId: markerId,
                           draggable: true,
-                          position:
-                              latlang, //With this parameter you automatically obtain latitude and longitude
+                          position: latlang,
                           infoWindow: InfoWindow(
-                            title:
-                                "Tree Location", //+(values.length +1).toString(),
+                            title: "Tree Location",
                             snippet:
                                 "( Latitude : ${latlang.latitude.toStringAsPrecision(8)} , Longitude : ${latlang.longitude.toStringAsPrecision(8)})",
                           ),
                           icon: BitmapDescriptor.defaultMarker,
                         );
-                        //values.add(latlang.latitude.toStringAsPrecision(8)+" , "+ latlang.longitude.toStringAsPrecision(9));
                         setState(() {
                           markers[markerId] = marker;
                         });
-                        print(
-                            "---------------------Latitude/longitude----------------------");
                       });
                       values.add(latlang.latitude.toStringAsPrecision(8));
                       values.add(latlang.longitude.toStringAsPrecision(8));
-                      print(values);
-                      mapController.animateCamera(CameraUpdate.newLatLngZoom(
-                          latlang,
-                          15.0)); //we will call this function when pressed on the map
+                      mapController.animateCamera(
+                          CameraUpdate.newLatLngZoom(latlang, 15.0));
                     },
                   ),
                 ),
                 title: const Text('Map'),
                 actions: <Widget>[
                   ElevatedButton(
-                    //  color: Colors.yellow,
                     child: const Text(
                       'OK ',
                       style: TextStyle(
@@ -447,15 +382,11 @@ class _ViewApplicationState extends State<ViewApplication> {
       mapController = controller;
     });
   }
-  //----------------------
-
-//---------------- Get-log-Details----------------------------------------------
 
   late String dropdownValue3;
   Map<String, TextEditingController> textEditingControllers = {};
   TextEditingController leng = TextEditingController();
   TextEditingController Girth = TextEditingController();
-  // TextEditingController volume = TextEditingController();
   TextEditingController latitude = TextEditingController();
   TextEditingController longitude = TextEditingController();
   var b = 1;
@@ -463,27 +394,13 @@ class _ViewApplicationState extends State<ViewApplication> {
   List log_details = [];
   List d = [];
 
-  /* List  Length=[];
-  List  Girth=[];
-  List  Volume=[];
-  List  Latitude=[];
-  List  Longitude=[];*/
-
   Map<String, String> logs = {};
   final List<TextEditingController> _controllers = [];
   late double v;
-  // double _getVolume(double girth, double length) {
-  //   v = (girth / 4) * (girth / 4) * length;
-  //   return v;
-  // }
+
   double _getVolume(double girth, double length) {
-    // Convert girth from cm to meters
     double girthInMeters = girth * 0.01;
-
-    // Calculate the radius from the girth
     double radius = girthInMeters / (2 * pi);
-
-    // Calculate the volume of the cylinder
     double volume = pi * pow(radius, 2) * length;
 
     return volume;
@@ -495,7 +412,6 @@ class _ViewApplicationState extends State<ViewApplication> {
         context: context,
         builder: (context) {
           bool isChecked = false;
-          // Initialize dropdown with default value to prevent null error
           dropdownValue3 = Tree_species.isNotEmpty ? Tree_species[0] : '';
 
           return StatefulBuilder(builder: (context, setState) {
@@ -553,45 +469,6 @@ class _ViewApplicationState extends State<ViewApplication> {
                         decoration: const InputDecoration(
                             hintText: "Please Enter girth(cm)"),
                       ),
-                      // Row(
-                      //   children: [
-                      //     Text('Select Tree Location',),
-                      //     Spacer(),
-                      //     IconButton(icon:Icon(Icons.location_on,color: Colors.lightBlue), onPressed: (){
-                      //       setState(() {
-                      //         AddMap(context);
-                      //       });
-                      //     }),
-                      //   ],
-                      // ),
-                      /* RichText(
-                        textAlign: TextAlign.left,
-                        text: TextSpan(children: <TextSpan>[
-                          TextSpan(
-                              text: "Latitude : ",
-                              style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
-                          TextSpan(
-                              text: values.length==0?'':values[0].toString(),
-                              style: TextStyle(
-                                color: Colors.blueAccent[700],
-                                fontSize: 14,
-                              )),
-                        ]),
-                      ),
-                      RichText(
-                        textAlign: TextAlign.left,
-                        text: TextSpan(children: <TextSpan>[
-                          TextSpan(
-                              text: "Longitude : ",
-                              style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
-                          TextSpan(
-                              text: values.length==0?'':values[1].toString(),
-                              style: TextStyle(
-                                color: Colors.blueAccent[700],
-                                fontSize: 14,
-                              )),
-                        ]),
-                      ),*/
                     ],
                   )),
               title: const Text('Trees Logs'),
@@ -620,18 +497,11 @@ class _ViewApplicationState extends State<ViewApplication> {
                     log_details.add(logs);
                     int n = log_details.length;
                     n_list = [];
-                    //
-                    //  List n_list =[];
                     print(n);
                     for (int i = 0; i < n; i++) {
                       n_list.add(i);
                     }
-                    print("----n_list--");
-                    print(n_list);
-                    print(species);
-                    print(d);
                     if (_formKey.currentState!.validate()) {
-                      // Do something like updating SharedPreferences or User Settings etc.
                       Navigator.of(context).pop();
                     }
                   },
@@ -647,7 +517,6 @@ class _ViewApplicationState extends State<ViewApplication> {
         context: context,
         builder: (context) {
           bool isChecked = false;
-          // Handle potential null values when setting form fields
           try {
             dropdownValue3 =
                 log_details[index]['species_of_trees']?.toString() ??
@@ -659,7 +528,6 @@ class _ViewApplicationState extends State<ViewApplication> {
             longitude.text = log_details[index]['longitude']?.toString() ?? '';
           } catch (e) {
             print("Error setting EditInformationDialog fields: $e");
-            // Set defaults
             dropdownValue3 = '';
             leng.text = '';
             Girth.text = '';
@@ -702,7 +570,6 @@ class _ViewApplicationState extends State<ViewApplication> {
                       ),
                       TextFormField(
                         keyboardType: TextInputType.number,
-                        //initialValue: log_details[index]['length'],
                         controller: leng,
                         validator: (value) {
                           return value!.isNotEmpty ? null : "Enter Height";
@@ -719,49 +586,6 @@ class _ViewApplicationState extends State<ViewApplication> {
                         decoration: const InputDecoration(
                             hintText: "Please Enter girth(cm)"),
                       ),
-                      // Row(
-                      //   children: [
-                      //     Text(
-                      //       'Update Tree Location',
-                      //     ),
-                      //     Spacer(),
-                      //     IconButton(
-                      //         icon: Icon(Icons.location_on,
-                      //             color: Colors.lightBlue),
-                      //         onPressed: () {
-                      //           values.clear();
-                      //           AddMap(context);
-                      //         }),
-                      //   ],
-                      // ),
-                      /*RichText(
-                        textAlign: TextAlign.left,
-                        text: TextSpan(children: <TextSpan>[
-                          TextSpan(
-                              text: "Latitude : ",
-                              style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
-                          TextSpan(
-                              text: values.length==0?latitude.text:values[0].toString(),
-                              style: TextStyle(
-                                color: Colors.blueAccent[700],
-                                fontSize: 14,
-                              )),
-                        ]),
-                      ),
-                      RichText(
-                        textAlign: TextAlign.left,
-                        text: TextSpan(children: <TextSpan>[
-                          TextSpan(
-                              text: "Longitude : ",
-                              style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
-                          TextSpan(
-                              text: values.length==0?longitude.text:values[1].toString(),
-                              style: TextStyle(
-                                color: Colors.blueAccent[700],
-                                fontSize: 14,
-                              )),
-                        ]),
-                      ),*/
                     ],
                   )),
               title: const Text('Trees Logs'),
@@ -787,7 +611,6 @@ class _ViewApplicationState extends State<ViewApplication> {
                       "latitude": 00,
                       "longitude": 00
                     };
-                    // log_details.elementAt(int.parse(source));
                     log_details[index] = logs;
                     int n = log_details.length;
                     n_list = [];
@@ -795,12 +618,7 @@ class _ViewApplicationState extends State<ViewApplication> {
                     for (int i = 0; i < n; i++) {
                       n_list.add(i);
                     }
-                    print("----n_list--");
-                    print(n_list);
-                    print(species);
-                    print(d);
                     if (_formKey.currentState!.validate()) {
-                      // Do something like updating SharedPreferences or User Settings etc.
                       leng.clear();
                       Girth.clear();
                       Navigator.of(context).pop();
@@ -813,16 +631,6 @@ class _ViewApplicationState extends State<ViewApplication> {
         });
   }
 
-//---------------End- Log- Details----------------------------------------------
-//---------------------------Assign--Log-details--------------------------------
-
-//---------------------------End-Assign-log-Details-----------------------------
-
-  /*final List<Map<String, String>> TreeLogs = [
-    {"Sr.No": "1", "Length": "35", "Breadth": "16", "Volume":"1239"},
-    {"Sr.No": "2", "Length": "60", "Breadth": "20", "Volume":"1291"},
-    {"Sr.No": "3", "Length": "142", "Breadth": "35", "Volume":"2230"},
-  ];*/
   Future<bool> _onBackPressed() async {
     bool returnValue = false;
     await showDialog(
@@ -832,7 +640,7 @@ class _ViewApplicationState extends State<ViewApplication> {
         actions: <Widget>[
           GestureDetector(
             onTap: () {
-              returnValue = false; // User selects "NO"
+              returnValue = false;
               Navigator.of(context).pop();
             },
             child: const Text("NO"),
@@ -840,7 +648,7 @@ class _ViewApplicationState extends State<ViewApplication> {
           const SizedBox(height: 16),
           GestureDetector(
             onTap: () {
-              returnValue = true; // User selects "YES"
+              returnValue = true;
               Navigator.of(context).pop();
             },
             child: const Text("YES"),
@@ -855,36 +663,51 @@ class _ViewApplicationState extends State<ViewApplication> {
   bool Edit = false;
   bool userEdit = false;
 
-  // Improved method to display information fields without cards
-  Widget _buildInfoField(String title, String content) {
+  Widget _buildInfoField(String title, String content, {IconData? icon}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-              fontSize: 16,
-            ),
+          Row(
+            children: [
+              if (icon != null)
+                Icon(icon, color: Colors.blue.shade700, size: 20),
+              if (icon != null) const SizedBox(width: 6),
+              Text(
+                title,
+                style: GoogleFonts.roboto(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                  fontSize: 16,
+                  letterSpacing: 0.2,
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 6),
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: Colors.grey[100],
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.grey.shade300),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade200),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.07),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
             child: Text(
               content.isNotEmpty ? content : "Not provided",
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
+              style: GoogleFonts.openSans(
+                fontWeight: FontWeight.w600,
                 color: content.isNotEmpty ? Colors.blue.shade700 : Colors.grey,
                 fontSize: 15,
+                letterSpacing: 0.1,
               ),
             ),
           ),
@@ -893,19 +716,18 @@ class _ViewApplicationState extends State<ViewApplication> {
     );
   }
 
-  // Improved DataTable for species information
   Widget _buildSpeciesTable() {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 16),
+      margin: const EdgeInsets.symmetric(vertical: 18),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         color: Colors.white,
         boxShadow: const [
           BoxShadow(
-            color: Colors.black26,
-            blurRadius: 5.0,
-            spreadRadius: 0.5,
-            offset: Offset(0, 2),
+            color: Color(0x1A000000),
+            blurRadius: 8.0,
+            spreadRadius: 1,
+            offset: Offset(0, 3),
           )
         ],
       ),
@@ -913,22 +735,28 @@ class _ViewApplicationState extends State<ViewApplication> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
-              color: Colors.orange.shade700,
+              gradient: LinearGradient(
+                colors: [Colors.orange.shade700, Colors.orange.shade400],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              ),
               borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(12),
-                topRight: Radius.circular(12),
+                topLeft: Radius.circular(16),
+                topRight: Radius.circular(16),
               ),
             ),
-            child: const Row(
+            child: Row(
               children: [
+                const Icon(Icons.nature, color: Colors.white, size: 22),
+                const SizedBox(width: 10),
                 Text(
                   'Species Information',
-                  style: TextStyle(
+                  style: GoogleFonts.roboto(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 18,
+                    fontSize: 19,
                   ),
                 ),
               ],
@@ -938,10 +766,12 @@ class _ViewApplicationState extends State<ViewApplication> {
             scrollDirection: Axis.horizontal,
             child: DataTable(
               dividerThickness: 1,
-              columnSpacing: 20,
-              headingTextStyle: const TextStyle(
+              columnSpacing: 24,
+              headingRowColor: WidgetStateProperty.all(Colors.blue.shade50),
+              headingTextStyle: GoogleFonts.roboto(
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: Colors.blueGrey.shade900,
+                fontSize: 15,
               ),
               columns: const [
                 DataColumn(label: Text('S.No')),
@@ -968,19 +798,18 @@ class _ViewApplicationState extends State<ViewApplication> {
     );
   }
 
-  // Improved edit mode table
   Widget _buildEditableSpeciesTable() {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 16),
+      margin: const EdgeInsets.symmetric(vertical: 18),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         color: Colors.white,
         boxShadow: const [
           BoxShadow(
-            color: Colors.black26,
-            blurRadius: 5.0,
-            spreadRadius: 0.5,
-            offset: Offset(0, 2),
+            color: Color(0x1A000000),
+            blurRadius: 8.0,
+            spreadRadius: 1,
+            offset: Offset(0, 3),
           )
         ],
       ),
@@ -988,22 +817,28 @@ class _ViewApplicationState extends State<ViewApplication> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
-              color: Colors.blue.shade700,
+              gradient: LinearGradient(
+                colors: [Colors.blue.shade700, Colors.blue.shade400],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              ),
               borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(12),
-                topRight: Radius.circular(12),
+                topLeft: Radius.circular(16),
+                topRight: Radius.circular(16),
               ),
             ),
             child: Row(
               children: [
-                const Text(
+                const Icon(Icons.edit, color: Colors.white, size: 22),
+                const SizedBox(width: 10),
+                Text(
                   'Edit Species Information',
-                  style: TextStyle(
+                  style: GoogleFonts.roboto(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 18,
+                    fontSize: 19,
                   ),
                 ),
                 const Spacer(),
@@ -1021,10 +856,12 @@ class _ViewApplicationState extends State<ViewApplication> {
             scrollDirection: Axis.horizontal,
             child: DataTable(
               dividerThickness: 1,
-              columnSpacing: 20,
-              headingTextStyle: const TextStyle(
+              columnSpacing: 24,
+              headingRowColor: WidgetStateProperty.all(Colors.blue.shade50),
+              headingTextStyle: GoogleFonts.roboto(
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: Colors.blueGrey.shade900,
+                fontSize: 15,
               ),
               columns: const [
                 DataColumn(label: Text('S.No')),
@@ -1108,14 +945,19 @@ class _ViewApplicationState extends State<ViewApplication> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(18.0),
             child: ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
+                backgroundColor: Colors.green.shade600,
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                elevation: 4,
+                textStyle: GoogleFonts.roboto(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
                 ),
               ),
               icon: const Icon(Icons.save),
@@ -1130,7 +972,6 @@ class _ViewApplicationState extends State<ViewApplication> {
     );
   }
 
-  // Method to save log details
   Future<void> _saveLogDetails() async {
     if (log_details.isEmpty) {
       Fluttertoast.showToast(
@@ -1169,7 +1010,6 @@ class _ViewApplicationState extends State<ViewApplication> {
         textColor: Colors.white,
       );
 
-      // Reset edit mode
       setState(() {
         Edit = false;
         userEdit = false;
@@ -1193,184 +1033,226 @@ class _ViewApplicationState extends State<ViewApplication> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onBackPressed,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text("Application View"),
-          backgroundColor: HexColor("#0499f2"),
-          elevation: 0,
-          actions: [
-            if (userGroup == 'deputy range officer' || userGroup == 'user')
-              IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () {
-                  setState(() {
-                    if (userGroup == 'deputy range officer') {
-                      Edit = true;
-                    } else if (userGroup == 'user') {
-                      userEdit = true;
-                    }
-                  });
-                },
-              ),
-          ],
+      child: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFFE3F2FD), Color(0xFFB3E5FC)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
         ),
-        body: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : _errorMessage.isNotEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.error_outline,
-                            color: Colors.red, size: 60),
-                        const SizedBox(height: 16),
-                        Text(
-                          _errorMessage,
-                          style: const TextStyle(color: Colors.red),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: _fetchApplicationData,
-                          child: const Text('Retry'),
-                        ),
-                      ],
-                    ),
-                  )
-                : RefreshIndicator(
-                    onRefresh: _fetchApplicationData,
-                    child: SingleChildScrollView(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Container(
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.2),
-                                    spreadRadius: 1,
-                                    blurRadius: 6,
-                                    offset: const Offset(0, 3),
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Application Details',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black87,
-                                    ),
-                                  ),
-                                  const Divider(thickness: 1.5),
-                                  const SizedBox(height: 8),
-                                  _buildInfoField('Name', Name),
-                                  _buildInfoField('Address', Address),
-                                  _buildInfoField(
-                                      'List showing the species of tree or trees proposed to be cut, etc.',
-                                      treeSpecies),
-                                  _buildInfoField(
-                                      'Survey No. and extent of field',
-                                      SurveyNo),
-                                  _buildInfoField(
-                                      'Village/Taluka/Block and District',
-                                      VillageName),
-                                  _buildInfoField(
-                                      'Proof of ownership of the trees',
-                                      OwnershipProof),
-                                  _buildInfoField(
-                                      'Purpose for which trees are proposed to be cut',
-                                      purpose),
-                                ],
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            title: const Text("Application View"),
+            backgroundColor: HexColor("#0499f2"),
+            elevation: 2,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(18)),
+            ),
+            actions: [
+              if (userGroup == 'deputy range officer' || userGroup == 'user')
+                IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () {
+                    setState(() {
+                      if (userGroup == 'deputy range officer') {
+                        Edit = true;
+                      } else if (userGroup == 'user') {
+                        userEdit = true;
+                      }
+                    });
+                  },
+                ),
+            ],
+          ),
+          body: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : _errorMessage.isNotEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.error_outline,
+                              color: Colors.red, size: 60),
+                          const SizedBox(height: 16),
+                          Text(
+                            _errorMessage,
+                            style: const TextStyle(color: Colors.red),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 16),
+                          ElevatedButton.icon(
+                            icon: const Icon(Icons.refresh),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue.shade700,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
                               ),
                             ),
-
-                            const SizedBox(height: 16),
-
-                            // Show editable or read-only table based on edit mode
-                            if (Edit || userEdit)
-                              _buildEditableSpeciesTable()
-                            else if (c.isNotEmpty)
-                              _buildSpeciesTable()
-                            else
+                            onPressed: _fetchApplicationData,
+                            label: const Text('Retry'),
+                          ),
+                        ],
+                      ),
+                    )
+                  : RefreshIndicator(
+                      onRefresh: _fetchApplicationData,
+                      child: SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: Padding(
+                          padding: const EdgeInsets.all(18.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
                               Container(
-                                width: double.infinity,
-                                padding: const EdgeInsets.all(16),
+                                padding: const EdgeInsets.all(20),
                                 decoration: BoxDecoration(
-                                  color: Colors.grey[100],
-                                  borderRadius: BorderRadius.circular(8),
-                                  border:
-                                      Border.all(color: Colors.grey.shade300),
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(18),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.13),
+                                      spreadRadius: 2,
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
                                 ),
-                                child: const Center(
-                                  child: Text(
-                                    'No species information available',
-                                    style: TextStyle(
-                                      fontStyle: FontStyle.italic,
-                                      color: Colors.grey,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        const Icon(Icons.info_outline,
+                                            color: Colors.blue, size: 22),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          'Application Details',
+                                          style: GoogleFonts.roboto(
+                                            fontSize: 21,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black87,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const Divider(thickness: 1.5),
+                                    const SizedBox(height: 8),
+                                    _buildInfoField('Name', Name,
+                                        icon: Icons.person),
+                                    _buildInfoField('Address', Address,
+                                        icon: Icons.home),
+                                    _buildInfoField(
+                                        'List showing the species of tree or\ntrees proposed to be cut, etc.',
+                                        treeSpecies,
+                                        icon: Icons.nature),
+                                    _buildInfoField(
+                                        'Survey No. and extent of field',
+                                        SurveyNo,
+                                        icon: Icons.pin_drop),
+                                    _buildInfoField(
+                                        'Village/Taluka/Block and District',
+                                        VillageName,
+                                        icon: Icons.location_city),
+                                    _buildInfoField(
+                                        'Proof of ownership of the trees',
+                                        OwnershipProof,
+                                        icon: Icons.verified_user),
+                                    _buildInfoField(
+                                        'Purpose for which trees are proposed\nto be cut',
+                                        purpose,
+                                        icon: Icons.assignment),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 18),
+                              if (Edit || userEdit)
+                                _buildEditableSpeciesTable()
+                              else if (c.isNotEmpty)
+                                _buildSpeciesTable()
+                              else
+                                Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(18),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[100],
+                                    borderRadius: BorderRadius.circular(10),
+                                    border:
+                                        Border.all(color: Colors.grey.shade300),
+                                  ),
+                                  child: const Center(
+                                    child: Text(
+                                      'No species information available',
+                                      style: TextStyle(
+                                        fontStyle: FontStyle.italic,
+                                        color: Colors.grey,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: FloatingActionButton.extended(
-          backgroundColor: HexColor("#0499f2"),
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => ViewApplication1(
-                        sessionToken: sessionToken,
-                        userGroup: userGroup,
-                        userId: userId,
-                        Ids: Ids,
-                        Range: Range,
-                        userName: userName,
-                        userEmail: userEmail,
-                        img_signature: img_signature,
-                        img_revenue_approval: img_revenue_approval,
-                        img_declaration: img_declaration,
-                        img_revenue_application: img_revenue_application,
-                        img_location_sktech: img_location_sktech,
-                        img_tree_ownership_detail: img_tree_ownership_detail,
-                        img_aadhar_detail: img_aadhar_detail,
-                        verify_officer: verify_officer,
-                        deputy_range_officer: deputy_range_officer,
-                        verify_range_officer: verify_range_officer,
-                        is_form_two: is_form_two,
-                        assigned_deputy2_id: assigned_deputy2_id,
-                        assigned_deputy1_id: assigned_deputy1_id,
-                        assigned_range_id: assigned_range_id,
-                        verify_deputy2: verify_deputy2,
-                        division_officer: division_officer,
-                        other_state: other_state,
-                        verify_forest1: verify_forest1,
-                        field_requre: field_requre,
-                        field_status: field_status,
-                        species: species,
-                        length: length,
-                        breadth: breadth,
-                        volume: volume,
-                        log_details: log_details,
-                        treeSpecies: treeSpecies,
-                        user_Loc: user_Loc)));
-          },
-          icon: const Icon(Icons.navigate_next),
-          label: const Text('Next'),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+          floatingActionButton: FloatingActionButton.extended(
+            backgroundColor: HexColor("#0499f2"),
+            elevation: 6,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => ViewApplication1(
+                          sessionToken: sessionToken,
+                          userGroup: userGroup,
+                          userId: userId,
+                          Ids: Ids,
+                          Range: Range,
+                          userName: userName,
+                          userEmail: userEmail,
+                          img_signature: img_signature,
+                          img_revenue_approval: img_revenue_approval,
+                          img_declaration: img_declaration,
+                          img_revenue_application: img_revenue_application,
+                          img_location_sktech: img_location_sktech,
+                          img_tree_ownership_detail: img_tree_ownership_detail,
+                          img_aadhar_detail: img_aadhar_detail,
+                          verify_officer: verify_officer,
+                          deputy_range_officer: deputy_range_officer,
+                          verify_range_officer: verify_range_officer,
+                          is_form_two: is_form_two,
+                          assigned_deputy2_id: assigned_deputy2_id,
+                          assigned_deputy1_id: assigned_deputy1_id,
+                          assigned_range_id: assigned_range_id,
+                          verify_deputy2: verify_deputy2,
+                          division_officer: division_officer,
+                          other_state: other_state,
+                          verify_forest1: verify_forest1,
+                          field_requre: field_requre,
+                          field_status: field_status,
+                          species: species,
+                          length: length,
+                          breadth: breadth,
+                          volume: volume,
+                          log_details: log_details,
+                          treeSpecies: treeSpecies,
+                          user_Loc: user_Loc)));
+            },
+            icon: const Icon(Icons.navigate_next),
+            label: Text(
+              'Next',
+              style: GoogleFonts.roboto(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                letterSpacing: 0.2,
+              ),
+            ),
+          ),
         ),
       ),
     );

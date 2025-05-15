@@ -189,51 +189,22 @@ class _ViewApplication1State extends State<ViewApplication1> {
       this.treeSpecies,
       this.user_Loc);
 
-// Future<bool> _onBackPressed() {
-//   return showDialog(
-//     context: context,
-//     builder: (context) => new AlertDialog(
-//       title: new Text('Are you sure?'),
-//       content: new Text('Do you want to exit an App'),
-//       actions: <Widget>[
-//         new GestureDetector(
-//           onTap: () => Navigator.of(context).pop(false),
-//           child: Text("NO"),
-//         ),
-//         SizedBox(height: 16),
-//         new GestureDetector(
-//           onTap: () => Navigator.of(context).pop(true),
-//           child: Text("YES"),
-//         ),
-//       ],
-//     ),
-//   ) ??
-//       false;r
-// }
-
   @override
   Widget build(BuildContext context) {
     List images = [
-      // img_signature,
       img_revenue_approval,
       img_declaration,
-      // img_revenue_application,
-      // img_location_sktech,
       img_tree_ownership_detail,
       img_aadhar_detail,
     ];
 
-    print(img_signature);
     List<String> imageNm = [
-      // "Signature",
       "Land Proof",
       "Possession Proof",
-      // "Revenue Application",
-      // "location Sketch",
       "Proof of OwnerShip",
       "Id Proof",
     ];
-    print(images.toString());
+
     Future<bool> onBackPressed() async {
       return await showDialog(
             context: context,
@@ -258,145 +229,218 @@ class _ViewApplication1State extends State<ViewApplication1> {
     return WillPopScope(
         onWillPop: onBackPressed,
         child: Scaffold(
+          extendBodyBehindAppBar: true,
           appBar: AppBar(
-            title: Text('Application View'),
-
-            //backgroundColor: Colors.blueGrey,
+            title: Text('Application View',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22,
+                  letterSpacing: 1.2,
+                  color: Colors.white,
+                )),
             elevation: 0,
-            // automaticallyImplyLeading: false,
+            backgroundColor: Colors.transparent,
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [HexColor("#0499f2"), Colors.blue.shade900],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+            ),
           ),
-          body: Column(children: <Widget>[
-            SizedBox(
-              child: Padding(
-                  padding: const EdgeInsets.only(
-                      right: 15.0, top: 10, bottom: 0, left: 15),
+          body: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.white, HexColor("#e3f2fd")],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+            child: Column(children: <Widget>[
+              SizedBox(height: kToolbarHeight + 10),
+              SizedBox(height: 30),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade50.withOpacity(0.7),
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.blue.shade100.withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
                   child: Text(
-                    '------ATTACHMENTS GALLERY--------',
+                    'ATTACHMENTS GALLERY',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.blue),
-                  )),
-            ),
-            Expanded(
-              child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200,
-                      childAspectRatio: 0.9,
-                      crossAxisSpacing: 20,
-                      mainAxisSpacing: 20),
-                  itemCount: images.length,
-                  padding: const EdgeInsets.all(8),
-                  itemBuilder: (BuildContext context, int index) {
-                    // return Card(
-                    //   elevation: 5,
-                    //   semanticContainer: true,
-                    //   clipBehavior: Clip.antiAliasWithSaveLayer,
-                    //   margin: EdgeInsets.only(top: 10),
-                    //   child: InkWell(
-                    //     onTap: () {
-                    //       print(images);
-                    //       Navigator.push(
-                    //           context,
-                    //           MaterialPageRoute(
-                    //               builder: (_) => ImageView(
-                    //                     Images: images[index].toString(),
-                    //                   )));
-                    //     },
-                    //     child: Container(
-                    //       decoration: BoxDecoration(
-                    //         image: DecorationImage(
-                    //           image: NetworkImage(images[index].toString()),
-                    //           fit: BoxFit.fitWidth,
-                    //           alignment: Alignment.center,
-                    //         ),
-                    //       ),
-                    //       child: ListTile(
-                    //         title: Text(
-                    //           Image_nm[index].toString(),
-                    //           textAlign: TextAlign.center,
-                    //           style: TextStyle(
-                    //               backgroundColor: Colors.black,
-                    //               color: Colors.white),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ),
-                    //   shape: RoundedRectangleBorder(
-                    //     borderRadius: BorderRadius.circular(20),
-                    //   ),
-                    // );
-                    return Card(
-                      elevation: 5,
-                      semanticContainer: true,
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      margin: EdgeInsets.only(top: 10),
-                      child: InkWell(
-                        onTap: () {
-                          print("PDFFFFF");
-                          final url = images[index].toString();
-                          if (url.toLowerCase().endsWith('.pdf')) {
-                            // Open a PDF viewer
-                            PdfLauncher.launchPdfUrl(url);
-                            // PdfLauncher.launchPdfUrl(url + "/$sessionToken");
-                          } else {
-                            // Display the image
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    // ImageView(Images: url + "/$sessionToken"),
-                                    ImageView(Images: url),
+                        fontWeight: FontWeight.bold,
+                        color: HexColor("#0499f2"),
+                        fontSize: 18,
+                        letterSpacing: 1.5),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: GridView.builder(
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 220,
+                        childAspectRatio: 0.85,
+                        crossAxisSpacing: 18,
+                        mainAxisSpacing: 18),
+                    itemCount: images.length,
+                    padding: const EdgeInsets.all(12),
+                    itemBuilder: (BuildContext context, int index) {
+                      return TweenAnimationBuilder<double>(
+                        tween: Tween<double>(begin: 0.95, end: 1.0),
+                        duration: Duration(milliseconds: 350),
+                        curve: Curves.easeOutBack,
+                        builder: (context, scale, child) {
+                          return Transform.scale(
+                            scale: scale,
+                            child: Card(
+                              elevation: 12,
+                              shadowColor: Colors.blueGrey.withOpacity(0.25),
+                              semanticContainer: true,
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              margin: EdgeInsets.only(top: 10),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(26),
                               ),
-                            );
-                          }
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                  images[index] + "/$sessionToken".toString()),
-                              fit: BoxFit.fitWidth,
-                              alignment: Alignment.center,
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(26),
+                                splashColor:
+                                    HexColor("#0499f2").withOpacity(0.18),
+                                highlightColor:
+                                    Colors.blue.shade50.withOpacity(0.12),
+                                onTap: () {
+                                  final url = images[index].toString();
+                                  if (url.toLowerCase().endsWith('.pdf')) {
+                                    PdfLauncher.launchPdfUrl(url);
+                                  } else {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => ImageView(Images: url),
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(26),
+                                        border: Border.all(
+                                          color: Colors.blue.shade100,
+                                          width: 2,
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.blueGrey
+                                                .withOpacity(0.10),
+                                            blurRadius: 10,
+                                            offset: Offset(0, 3),
+                                          ),
+                                        ],
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(26),
+                                        child: images[index]
+                                                .toString()
+                                                .toLowerCase()
+                                                .endsWith('.pdf')
+                                            ? Container(
+                                                color: Colors.grey.shade100,
+                                                child: Center(
+                                                  child: Icon(
+                                                    Icons.picture_as_pdf,
+                                                    size: 62,
+                                                    color: Colors.red.shade400,
+                                                  ),
+                                                ),
+                                              )
+                                            : _ShimmerImage(
+                                                imageUrl: images[index] +
+                                                    "/$sessionToken",
+                                              ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      bottom: 0,
+                                      left: 0,
+                                      right: 0,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.black.withOpacity(0.68),
+                                          borderRadius: BorderRadius.only(
+                                            bottomLeft: Radius.circular(26),
+                                            bottomRight: Radius.circular(26),
+                                          ),
+                                        ),
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 8, horizontal: 6),
+                                        child: Text(
+                                          imageNm[index].toString(),
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 15,
+                                            letterSpacing: 1.1,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    if (images[index]
+                                        .toString()
+                                        .toLowerCase()
+                                        .endsWith('.pdf'))
+                                      Positioned(
+                                        top: 14,
+                                        right: 14,
+                                        child: CircleAvatar(
+                                          backgroundColor:
+                                              Colors.white.withOpacity(0.90),
+                                          radius: 18,
+                                          child: Icon(
+                                            Icons.picture_as_pdf,
+                                            size: 28,
+                                            color: Colors.red.shade400,
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
-                          child: Column(
-                            children: <Widget>[
-                              ListTile(
-                                title: Text(
-                                  imageNm[index].toString(),
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    backgroundColor: Colors.black,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              if (images[index]
-                                  .toString()
-                                  .toLowerCase()
-                                  .endsWith('.pdf'))
-                                Icon(
-                                  Icons.picture_as_pdf,
-                                  size: 50,
-                                  color:
-                                      Colors.red, // Choose your preferred color
-                                ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    );
-                  }),
-            )
-          ]),
+                          );
+                        },
+                      );
+                    }),
+              )
+            ]),
+          ),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-          floatingActionButton: FloatingActionButton(
-            // isExtended: true,
-            child: Icon(Icons.navigate_next),
+          floatingActionButton: FloatingActionButton.extended(
+            icon: Icon(Icons.navigate_next, color: Colors.white),
+            label: Text(
+              "Next",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.1,
+              ),
+            ),
             backgroundColor: HexColor("#0499f2"),
+            elevation: 6,
             onPressed: () {
               Navigator.push(
                   context,
@@ -429,12 +473,48 @@ class _ViewApplication1State extends State<ViewApplication1> {
                           volume: volume,
                           log_details: log_details,
                           treeSpecies: treeSpecies,
-                          user_Loc: user_Loc
-                          //sessionToken:sessionToken,
-                          )));
+                          user_Loc: user_Loc)));
             },
           ),
         ));
+  }
+}
+
+class _ShimmerImage extends StatelessWidget {
+  final String imageUrl;
+  const _ShimmerImage({required this.imageUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.network(
+      imageUrl,
+      fit: BoxFit.cover,
+      width: double.infinity,
+      height: double.infinity,
+      loadingBuilder: (context, child, progress) {
+        if (progress == null) return child;
+        return Container(
+          color: Colors.grey.shade200,
+          child: Center(
+            child: SizedBox(
+              width: 40,
+              height: 40,
+              child: CircularProgressIndicator(
+                value: progress.expectedTotalBytes != null
+                    ? progress.cumulativeBytesLoaded /
+                        progress.expectedTotalBytes!
+                    : null,
+                strokeWidth: 3,
+                color: HexColor("#0499f2"),
+              ),
+            ),
+          ),
+        );
+      },
+      errorBuilder: (context, error, stackTrace) => Center(
+        child: Icon(Icons.broken_image, color: Colors.grey, size: 40),
+      ),
+    );
   }
 }
 

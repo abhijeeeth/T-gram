@@ -1385,7 +1385,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                           )),
                                           DataColumn(
                                               label: Text(
-                                            'Download\n       Tp',
+                                            '  Download\nCutting Pass',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.white),
