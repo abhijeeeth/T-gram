@@ -263,7 +263,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
       Remark.add(list[i]['disapproved_reason'].toString());
       Remark_date.add(list[i]['range_officer_date'].toString());
       Tp_Issue_Date.add(list[i]['created_date'].toString());
-      Tp_Number.add(list[i]['transit_pass_id'].toString());
+      Tp_Number.add(list[i]['days_left_for_approval'].toString());
       verify_range.add(list[i]['verify_office']);
       depty_range_officer.add(list[i]['depty_range_officer']);
       verify_range_officer.add(list[i]['application_status']);
@@ -1082,17 +1082,20 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                           ? "Notified"
                                                           : "Non-Notified")),
                                                       DataCell(Text(Tp_Number[
-                                                                      int.parse(
-                                                                          value)]
-                                                                  .toString() ==
-                                                              '0'
-                                                          ? "N/A"
-                                                          : daysBetween(DateTime.parse(
-                                                                  Tp_Issue_Date[
-                                                                          int.parse(
-                                                                              value)]
-                                                                      .toString()))
-                                                              .toString())),
+                                                              int.parse(value)]
+                                                          .toString())),
+                                                      // DataCell(Text(Tp_Number[
+                                                      //                 int.parse(
+                                                      //                     value)]
+                                                      //             .toString() ==
+                                                      //         '0'
+                                                      //     ? "N/A"
+                                                      //     : daysBetween(DateTime.parse(
+                                                      //             Tp_Issue_Date[
+                                                      //                     int.parse(
+                                                      //                         value)]
+                                                      //                 .toString()))
+                                                      //         .toString())),
                                                       // DataCell(Text((Tp_Number[
                                                       //                 int.parse(
                                                       //                     value)]
