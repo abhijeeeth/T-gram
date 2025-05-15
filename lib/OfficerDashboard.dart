@@ -244,7 +244,8 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
       'Authorization': "token $sessionToken"
     });
     Map<String, dynamic> responseJSON = json.decode(response.body);
-    print(responseJSON);
+    log("Pending Application");
+    log(responseJSON.toString());
     List list = responseJSON["data"];
     setState(() {
       allApplication = list.length;
@@ -273,7 +274,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
       reason_range_officer.add(list[i]['reason_range_officer']);
       reason_division.add(list[i]['reason_division_officer']);
       disapproved_reason.add(list[i]['disapproved_reason']);
-      field_status.add(list[i]['status']);
+      field_status.add(list[i]['current_app_status']);
       verify_office_date.add(list[i]['verify_office_date']);
       deputy_officer_date.add(list[i]['deputy_officer_date']);
       range_officer_date.add(list[i]['range_officer_date']);
@@ -389,7 +390,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
       assigned_deputy2_by_id1.add(list[i]['assigned_deputy2_name']);
       log_updated_by_use1.add(list[i]['log_updated_by_user']);
       verify_forest1_1.add(list[i]['verify_forest1']);
-      field_status1.add(list[i]['status'].toString());
+      field_status1.add(list[i]['current_app_status'].toString());
     }
   }
 
@@ -1048,16 +1049,21 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                       DataCell(Text(App_Date[
                                                               int.parse(value)]
                                                           .toString())),
-                                                      DataCell(Text(OfficerStatus(
-                                                          userGroup,
-                                                          division[
-                                                              int.parse(value)],
-                                                          verify_range_officer[
-                                                              int.parse(value)],
+                                                      DataCell(Text(
                                                           field_status[
                                                                   int.parse(
                                                                       value)]
-                                                              .toString()))),
+                                                              .toString())),
+                                                      // DataCell(Text(OfficerStatus(
+                                                      //     userGroup,
+                                                      //     division[
+                                                      //         int.parse(value)],
+                                                      //     verify_range_officer[
+                                                      //         int.parse(value)],
+                                                      //     field_status[
+                                                      //             int.parse(
+                                                      //                 value)]
+                                                      //         .toString()))),
                                                       DataCell(Text(AssignOfficer(
                                                           is_form_two[int.parse(
                                                                   value)] ??
