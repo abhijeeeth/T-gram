@@ -78,8 +78,10 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
       'Content-Type': 'application/json',
       'Authorization': "token $sessionToken"
     });
+
     Map<String, dynamic> responseJSON = json.decode(response.body);
     print(responseJSON);
+    print("token $sessionToken");
     setState(() {
       Approved = responseJSON['data']['per_approved'];
       Rejected = responseJSON['data']['per_rejected'];
@@ -259,7 +261,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
       Action.add(list[i][''].toString());
       Remark.add(list[i]['disapproved_reason'].toString());
       Remark_date.add(list[i]['range_officer_date'].toString());
-      Tp_Issue_Date.add(list[i]['transit_pass_created_date'].toString());
+      Tp_Issue_Date.add(list[i]['created_date'].toString());
       Tp_Number.add(list[i]['transit_pass_id'].toString());
       verify_range.add(list[i]['verify_office']);
       depty_range_officer.add(list[i]['depty_range_officer']);
