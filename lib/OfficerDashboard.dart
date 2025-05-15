@@ -1390,13 +1390,13 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.white),
                                           )),
-                                          DataColumn(
-                                              label: Text(
-                                            'Download\n  Report',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )),
+                                          // DataColumn(
+                                          //     label: Text(
+                                          //   'Download\n  Report',
+                                          //   style: TextStyle(
+                                          //       fontWeight: FontWeight.bold,
+                                          //       color: Colors.white),
+                                          // )),
                                           // DataColumn(
                                           //     label: Text(
                                           //   'QR Code',
@@ -1571,23 +1571,23 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                               ),
                                                             ),
                                                           ),
-                                                          DataCell(
-                                                            IconButton(
-                                                              icon: Icon(Icons
-                                                                  .file_download),
-                                                              color:
-                                                                  Colors.blue,
-                                                              onPressed:
-                                                                  () async {
-                                                                await launch("${ServerHelper.baseUrl}auth/new_user_report/" +
-                                                                    replaceSlashesWithDashes(
-                                                                        App_no1[
-                                                                            int.parse(value)]) +
-                                                                    "/");
-                                                                // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-                                                              },
-                                                            ),
-                                                          ),
+                                                          // DataCell(
+                                                          //   IconButton(
+                                                          //     icon: Icon(Icons
+                                                          //         .file_download),
+                                                          //     color:
+                                                          //         Colors.blue,
+                                                          //     onPressed:
+                                                          //         () async {
+                                                          //       await launch("${ServerHelper.baseUrl}auth/new_user_report/" +
+                                                          //           replaceSlashesWithDashes(
+                                                          //               App_no1[
+                                                          //                   int.parse(value)]) +
+                                                          //           "/");
+                                                          //       // _requestDownload("http://www.orimi.com/pdf-test.pdf");
+                                                          //     },
+                                                          //   ),
+                                                          // ),
                                                           // DataCell(
                                                           //   Visibility(
                                                           //     visible: (Current_status1[
