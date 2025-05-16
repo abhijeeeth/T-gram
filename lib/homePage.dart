@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -612,20 +613,95 @@ class _HomePageState extends State<HomePage> {
                         style: TextStyle(color: Colors.black, fontSize: 20),
                       ),
                       onTap: () async {
-                        const String url =
-                            '${ServerHelper.baseUrl}auth/logout/';
-                        await http.post(
-                          Uri.parse(url),
-                          headers: <String, String>{
-                            'Content-Type': 'application/json',
-                            'Authorization': "token $sessionToken"
-                          },
-                        );
-                        SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-                        prefs.remove('isLoggedIn');
-                        Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (_) => const login()));
+                        // Show logout confirmation dialog
+                        bool confirmLogout = await showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Confirm Logout'),
+                                content: const Text(
+                                    'Are you sure you want to logout?'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(false),
+                                    child: const Text("Cancel"),
+                                  ),
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(true),
+                                    child: const Text("Logout"),
+                                  ),
+                                ],
+                              ),
+                            ) ??
+                            false;
+
+                        if (confirmLogout) {
+                          // Close the drawer
+                          Navigator.pop(context);
+
+                          // Show loading dialog
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (BuildContext context) {
+                              return const Center(
+                                child: Dialog(
+                                  elevation: 0,
+                                  backgroundColor: Colors.transparent,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      CupertinoActivityIndicator(
+                                        radius: 20,
+                                      ),
+                                      SizedBox(height: 20),
+                                      Text('Logging out...',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold))
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+
+                          try {
+                            // Perform logout
+                            const String url =
+                                '${ServerHelper.baseUrl}auth/logout/';
+                            await http.post(
+                              Uri.parse(url),
+                              headers: <String, String>{
+                                'Content-Type': 'application/json',
+                                'Authorization': "token $sessionToken"
+                              },
+                            );
+
+                            // Clear local storage
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            await prefs.remove('isLoggedIn');
+
+                            // Navigate to login screen
+                            Navigator.of(context, rootNavigator: true)
+                                .pop(); // Dismiss the loading dialog
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const login()));
+                          } catch (e) {
+                            // Handle errors
+                            Navigator.of(context, rootNavigator: true)
+                                .pop(); // Dismiss the loading dialog
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Logout failed: ${e.toString()}'),
+                              ),
+                            );
+                          }
+                        }
                       }),
                 ],
               ),
