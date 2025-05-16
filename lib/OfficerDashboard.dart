@@ -933,9 +933,12 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                     _buildBar(
                                       context,
                                       label: "Approved",
-                                      value: Approved /
-                                          (Approved + Rejected + Pending) *
-                                          100,
+                                      value: (Approved + Rejected + Pending) ==
+                                              0
+                                          ? 0
+                                          : (Approved /
+                                              (Approved + Rejected + Pending) *
+                                              100),
                                       color: Color.fromARGB(255, 28, 110, 99),
                                       max: (Approved + Rejected + Pending) == 0
                                           ? 1
@@ -944,9 +947,12 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                     _buildBar(
                                       context,
                                       label: "Rejected",
-                                      value: Rejected /
-                                          (Approved + Rejected + Pending) *
-                                          100,
+                                      value: (Approved + Rejected + Pending) ==
+                                              0
+                                          ? 0
+                                          : (Rejected /
+                                              (Approved + Rejected + Pending) *
+                                              100),
                                       color: Colors.red,
                                       max: (Approved + Rejected + Pending) == 0
                                           ? 1
@@ -955,9 +961,12 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                     _buildBar(
                                       context,
                                       label: "Pending",
-                                      value: Pending /
-                                          (Approved + Rejected + Pending) *
-                                          100,
+                                      value: (Approved + Rejected + Pending) ==
+                                              0
+                                          ? 0
+                                          : (Pending /
+                                              (Approved + Rejected + Pending) *
+                                              100),
                                       color: Colors.orange,
                                       max: (Approved + Rejected + Pending) == 0
                                           ? 1
