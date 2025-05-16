@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -502,9 +501,14 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.all(0),
                 children: [
                   UserAccountsDrawerHeader(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       gradient: LinearGradient(
-                          colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+                        colors: [
+                          Color.fromARGB(255, 28, 110, 99),
+                          Color.fromARGB(207, 28, 110, 99),
+                          Color.fromARGB(195, 105, 138, 132)
+                        ],
+                      ),
                     ),
                     accountEmail: Text(userEmail),
                     accountName: Text(userName),

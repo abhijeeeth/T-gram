@@ -5,7 +5,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:pie_chart/pie_chart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -739,7 +738,9 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
   List<List<Color>> getActiveBgColors(String userGroup) {
     if (userGroup == "forest range officer") {
       return [
-        [Colors.blueAccent],
+        [
+          Color.fromARGB(255, 28, 110, 99),
+        ],
         [Colors.orange],
         [Colors.green],
         [Colors.cyan],
@@ -763,9 +764,13 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          title: const Text(" Officer Dashboard"),
-
-          //backgroundColor: Colors.blueGrey,
+          title: const Text(
+            " Officer Dashboard",
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          backgroundColor: Color.fromARGB(255, 28, 110, 99),
           elevation: 0,
         ),
         body: SingleChildScrollView(
@@ -779,7 +784,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                   cornerRadius: 8.0,
                   activeFgColor: Colors.white,
                   inactiveBgColor: Colors.grey[200],
-                  inactiveFgColor: Colors.blue,
+                  inactiveFgColor: Color.fromARGB(255, 28, 110, 99),
                   labels: getLabels(userGroup),
                   activeBgColors: getActiveBgColors(userGroup),
                   onToggle: (index) => _handleRadioValueChange(index!),
@@ -788,98 +793,186 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
               LayoutBuilder(builder: (context, constraints) {
                 if (tab == 0) {
                   print("USERGROUP " + userGroup);
-                  return Container(
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.blue.withOpacity(0.2),
-                            blurRadius: 6.0,
-                            spreadRadius: 2.0,
-                            offset: Offset(2.0, 2.0),
-                          )
-                        ],
-                      ),
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 15),
-                      padding: const EdgeInsets.all(15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            "Application Status Overview",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blueAccent,
-                            ),
-                          ),
-                          SizedBox(height: 20),
-                          PieChart(
-                            dataMap: {
-                              "Approved": Approved,
-                              "Rejected": Rejected,
-                              "Pending": Pending
-                            },
-                            animationDuration: Duration(milliseconds: 800),
-                            chartLegendSpacing: 30,
-                            chartRadius:
-                                MediaQuery.of(context).size.width * 0.45,
-                            initialAngleInDegree: 0,
-                            chartType: ChartType.disc,
-                            colorList: [
-                              Colors.green,
-                              Colors.red,
-                              Colors.orange
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                          width: MediaQuery.of(context).size.width,
+                          // height: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                            boxShadow: [
+                              // BoxShadow(
+                              //   color: Colors.blue.withOpacity(0.2),
+                              //   blurRadius: 6.0,
+                              //   spreadRadius: 2.0,
+                              //   offset: Offset(2.0, 2.0),
+                              // )
                             ],
-                            ringStrokeWidth: 32,
-                            centerText: "Status",
-                            centerTextStyle: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: Colors.black54,
-                            ),
-                            legendOptions: LegendOptions(
-                              showLegendsInRow: true,
-                              legendPosition: LegendPosition.bottom,
-                              showLegends: true,
-                              legendTextStyle: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14,
-                              ),
-                            ),
-                            chartValuesOptions: ChartValuesOptions(
-                              showChartValueBackground: true,
-                              showChartValues: true,
-                              showChartValuesInPercentage: true,
-                              showChartValuesOutside: false,
-                              decimalPlaces: 1,
-                            ),
                           ),
-                          SizedBox(height: 20),
-                          // ElevatedButton.icon(
-                          //   icon: Icon(Icons.download, color: Colors.white),
-                          //   onPressed: () async {
-                          //     await launch(
-                          //         "${ServerHelper.baseUrl}auth/summary_report/");
-                          //   },
-                          //   label: Text(
-                          //     "Download Report",
-                          //     style: TextStyle(fontSize: 16),
-                          //   ),
-                          //   style: ElevatedButton.styleFrom(
-                          //     backgroundColor: Colors.blueAccent,
-                          //     padding: EdgeInsets.symmetric(
-                          //         horizontal: 20, vertical: 10),
-                          //     shape: RoundedRectangleBorder(
-                          //       borderRadius: BorderRadius.circular(8),
-                          //     ),
-                          //   ),
-                          // ),
-                        ],
-                      ));
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 15),
+                          // padding: const EdgeInsets.all(15),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                "Application Status Overview Pie Chart",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 28, 110, 99),
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                              PieChart(
+                                dataMap: {
+                                  "Approved": Approved,
+                                  "Rejected": Rejected,
+                                  "Pending": Pending
+                                },
+                                animationDuration: Duration(milliseconds: 800),
+                                chartLegendSpacing: 30,
+                                chartRadius:
+                                    MediaQuery.of(context).size.width * 0.45,
+                                initialAngleInDegree: 0,
+                                chartType: ChartType.disc,
+                                colorList: [
+                                  Color.fromARGB(255, 28, 110, 99),
+                                  Colors.red,
+                                  Colors.orange
+                                ],
+                                ringStrokeWidth: 32,
+                                centerText: "Status",
+                                centerTextStyle: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Colors.black54,
+                                ),
+                                legendOptions: LegendOptions(
+                                  showLegendsInRow: true,
+                                  legendPosition: LegendPosition.bottom,
+                                  showLegends: true,
+                                  legendTextStyle: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                chartValuesOptions: ChartValuesOptions(
+                                  showChartValueBackground: true,
+                                  showChartValues: true,
+                                  showChartValuesInPercentage: true,
+                                  showChartValuesOutside: false,
+                                  decimalPlaces: 1,
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                              // ElevatedButton.icon(
+                              //   icon: Icon(Icons.download, color: Colors.white),
+                              //   onPressed: () async {
+                              //     await launch(
+                              //         "${ServerHelper.baseUrl}auth/summary_report/");
+                              //   },
+                              //   label: Text(
+                              //     "Download Report",
+                              //     style: TextStyle(fontSize: 16),
+                              //   ),
+                              //   style: ElevatedButton.styleFrom(
+                              //     backgroundColor: Colors.blueAccent,
+                              //     padding: EdgeInsets.symmetric(
+                              //         horizontal: 20, vertical: 10),
+                              //     shape: RoundedRectangleBorder(
+                              //       borderRadius: BorderRadius.circular(8),
+                              //     ),
+                              //   ),
+                              // ),
+                            ],
+                          )),
+                      Divider(
+                        color: const Color.fromARGB(131, 158, 158, 158),
+                        height: 0.5,
+                      ),
+                      Container(
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                            boxShadow: [
+                              // BoxShadow(
+                              //   color: Colors.blue.withOpacity(0.2),
+                              //   blurRadius: 6.0,
+                              //   spreadRadius: 2.0,
+                              //   offset: Offset(2.0, 2.0),
+                              // )
+                            ],
+                          ),
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 15),
+                          // padding: const EdgeInsets.all(15),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                "Application Status Overview Bar Graph",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 28, 110, 99),
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                              // Bar Graph
+                              SizedBox(
+                                height: 250,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    _buildBar(
+                                      context,
+                                      label: "Approved",
+                                      value: Approved /
+                                          (Approved + Rejected + Pending) *
+                                          100,
+                                      color: Color.fromARGB(255, 28, 110, 99),
+                                      max: (Approved + Rejected + Pending) == 0
+                                          ? 1
+                                          : (Approved + Rejected + Pending),
+                                    ),
+                                    _buildBar(
+                                      context,
+                                      label: "Rejected",
+                                      value: Rejected /
+                                          (Approved + Rejected + Pending) *
+                                          100,
+                                      color: Colors.red,
+                                      max: (Approved + Rejected + Pending) == 0
+                                          ? 1
+                                          : (Approved + Rejected + Pending),
+                                    ),
+                                    _buildBar(
+                                      context,
+                                      label: "Pending",
+                                      value: Pending /
+                                          (Approved + Rejected + Pending) *
+                                          100,
+                                      color: Colors.orange,
+                                      max: (Approved + Rejected + Pending) == 0
+                                          ? 1
+                                          : (Approved + Rejected + Pending),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                            ],
+                          ))
+
+                      // Helper widget for bar
+                    ],
+                  );
                 } else if (tab == 1) {
                   return Container(
                       height: MediaQuery.of(context).size.height * 0.79,
@@ -2259,9 +2352,13 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                 children: [
                   UserAccountsDrawerHeader(
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          colors: [HexColor("#26f596"), HexColor("#0499f2")]),
-                    ),
+                        gradient: LinearGradient(
+                      colors: [
+                        Color.fromARGB(255, 28, 110, 99),
+                        Color.fromARGB(207, 28, 110, 99),
+                        Color.fromARGB(195, 105, 138, 132)
+                      ],
+                    )),
                     accountEmail: Text(userEmail),
                     accountName: Text(userName),
                     currentAccountPicture: CircleAvatar(
@@ -2444,6 +2541,41 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildBar(BuildContext context,
+      {required String label,
+      required double value,
+      required Color color,
+      required double max}) {
+    const double barMaxHeight = 180;
+    final double barHeight = max == 0 ? 0 : (value / max) * barMaxHeight;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Text(
+          value.toStringAsFixed(1),
+          style: TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 16, color: color),
+        ),
+        SizedBox(height: 4),
+        Container(
+          width: 40,
+          height: barHeight,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(6), topRight: Radius.circular(6)),
+          ),
+        ),
+        SizedBox(height: 8),
+        Text(
+          label,
+          style: TextStyle(
+              fontWeight: FontWeight.w500, fontSize: 14, color: Colors.black87),
+        ),
+      ],
     );
   }
 }
