@@ -25,13 +25,10 @@ class OfficerDashboard extends StatefulWidget {
   String userEmail;
   String userGroup;
   String dropdownValue;
-  String userMobile;
-  String userAddress;
+  String? userMobile;
+  String? userAddress;
   List Range;
 
-  // var userMobile;
-
-  // var userAddress;
   OfficerDashboard(
       {super.key,
       required this.userId,
@@ -40,9 +37,10 @@ class OfficerDashboard extends StatefulWidget {
       required this.sessionToken,
       required this.userGroup,
       required this.dropdownValue,
-      required this.userMobile,
-      required this.userAddress,
+      this.userMobile,
+      this.userAddress,
       required this.Range});
+
   @override
   _OfficerDashboardState createState() => _OfficerDashboardState(userId,
       userName, userEmail, sessionToken, userGroup, dropdownValue, Range);
