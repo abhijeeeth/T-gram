@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -571,8 +572,8 @@ class _UserState extends State<UserLogin> {
                       userGroup: userGroup,
                       dropdownValue: dropdownValue ?? '',
                       Range: Range,
-                      //  userMobile:userMobile,
-                      //  userImage:userImage,
+                      userMobile: userMobile,
+                      userAddress: userAddress,
                     );
                   }));
         }
@@ -1166,7 +1167,8 @@ class _OfficerState extends State<OfficerLogin> {
                       userGroup: userGroup,
                       Range: Range,
                       dropdownValue: dropdownValue!,
-                      //  userMobile:userMobile,
+                      userMobile: userMobile,
+                      userAddress: userAddress,
                       //  userImage:userImage,
                     );
                   }));
@@ -1425,20 +1427,27 @@ class _OfficerState extends State<OfficerLogin> {
 
                     Map<String, dynamic> responseJson =
                         json.decode(response.body);
+                    log("----------------------login----------------");
+                    log(response.body);
 
                     if (responseJson['status'] == "success") {
                       setState(() {
                         userId = responseJson['data']['id'];
-
                         userName = responseJson['data']['name'];
                         userEmail = responseJson["data"]["email"];
                         sessionToken = responseJson['token'];
                         userGroup = responseJson['data']['user_group'][0];
-                        userMobile = responseJson["data"]["phone"];
-                        userAddress = responseJson["data"]["address"];
-                        userProfile = responseJson["data"]["photo_proof_img"];
+                        // Make sure to handle the phone and address fields safely
+                        userMobile =
+                            responseJson["data"]["phone"]?.toString() ?? '';
+                        userAddress =
+                            responseJson["data"]["address"]?.toString() ?? '';
+                        userProfile = responseJson["data"]["photo_proof_img"] ??
+                            'no_photo';
                       });
-
+                      log(userMobile.toString());
+                      log(userMobile.toString());
+                      log(userMobile.toString());
                       if (dropdownValue != null &&
                           responseJson['data']['user_group'][0]
                                   .toString()
@@ -1660,8 +1669,8 @@ class _OfficerState extends State<OfficerLogin> {
                                       userGroup: userGroup,
                                       dropdownValue: dropdownValue!,
                                       Range: Range,
-                                      //  userMobile:userMobile,
-                                      //  userImage:userImage,
+                                      userMobile: userMobile,
+                                      userAddress: userAddress,
                                     );
                                   }));
                         }

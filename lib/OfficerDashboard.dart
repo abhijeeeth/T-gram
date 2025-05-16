@@ -25,11 +25,13 @@ class OfficerDashboard extends StatefulWidget {
   String userEmail;
   String userGroup;
   String dropdownValue;
+  String userMobile;
+  String userAddress;
   List Range;
 
-  var userMobile;
+  // var userMobile;
 
-  var userAddress;
+  // var userAddress;
   OfficerDashboard(
       {super.key,
       required this.userId,
@@ -38,6 +40,8 @@ class OfficerDashboard extends StatefulWidget {
       required this.sessionToken,
       required this.userGroup,
       required this.dropdownValue,
+      required this.userMobile,
+      required this.userAddress,
       required this.Range});
   @override
   _OfficerDashboardState createState() => _OfficerDashboardState(userId,
@@ -2309,6 +2313,8 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                       userId: userId,
                                       dropdownValue: dropdownValue,
                                       Range: Range,
+                                      userMobile: widget.userMobile,
+                                      userAddress: widget.userAddress,
                                     )));
                       }),
                   ListTile(
@@ -2330,8 +2336,10 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                       sessionToken: sessionToken,
                                       userName: userName,
                                       userEmail: userEmail,
-                                      userMobile: widget.userMobile,
-                                      userAddress: widget.userAddress,
+                                      userMobile:
+                                          widget.userMobile ?? "987654312",
+                                      userAddress:
+                                          widget.userAddress ?? "Address",
                                     )));
                       }),
                   ListTile(
