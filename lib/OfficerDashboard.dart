@@ -285,7 +285,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
       verify_deputy2.add(list[i]['verify_deputy2']);
       reason_deputy2.add(list[i]['reason_deputy2']);
       deputy2_date.add(list[i]['deputy2_date']);
-      is_form_two.add(list[i]['is_form_two']);
+      is_form_two.add(list[i]['is_form_two']); //anandhu
       assigned_deputy1_by_id.add(list[i]['assigned_deputy1_name']);
       assigned_deputy2_by_id.add(list[i]['assigned_deputy2_name']);
       log_updated_by_use.add(list[i]['log_updated_by_user']);
@@ -1665,11 +1665,32 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                     Colors.blue,
                                                                 onPressed:
                                                                     () async {
-                                                                  await launch("${ServerHelper.baseUrl}auth/new_transit_pass_pdf/" +
-                                                                      replaceSlashesWithDashes(
-                                                                          App_no1[
-                                                                              int.parse(value)]) +
-                                                                      "/");
+                                                                  String url;
+                                                                  if (is_form_two1[
+                                                                          int.parse(
+                                                                              value)] ==
+                                                                      true) {
+                                                                    String
+                                                                        appNo =
+                                                                        App_no1[int.parse(value)]
+                                                                            .toString();
+                                                                    String last6 = appNo.length >=
+                                                                            6
+                                                                        ? appNo.substring(
+                                                                            appNo.length -
+                                                                                6)
+                                                                        : appNo;
+                                                                    url = "${ServerHelper.baseUrl}auth/generate_pdf_form1/" +
+                                                                        last6;
+                                                                  } else {
+                                                                    url = "${ServerHelper.baseUrl}auth/generate_pdf_form2/" +
+                                                                        App_no1[int.parse(value)]
+                                                                            .toString()
+                                                                            .substring(App_no1[int.parse(value)].toString().length -
+                                                                                6);
+                                                                  }
+                                                                  await launch(
+                                                                      url);
                                                                   // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                                 },
                                                               ),

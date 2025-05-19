@@ -534,7 +534,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                     inactiveFgColor: Colors.blue,
                     labels: const ['Transit \n Pass  ', ' Cutting \n Pass'],
                     activeBgColors: const [
-                      [Colors.orange],
+                      [Colors.green],
                       [Colors.green]
                     ],
                     onToggle: _handleRadioValueChange,
@@ -549,7 +549,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                           color: Colors.white,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.deepOrangeAccent,
+                              color: Colors.green,
                               blurRadius: 2.0,
                               spreadRadius: 1.0,
                               //offset: Offset(2.0, 2.0), // shadow direction: bottom right
@@ -579,7 +579,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                           showBottomBorder: true,
                                           headingRowColor:
                                               MaterialStateColor.resolveWith(
-                                                  (states) => Colors.orange),
+                                                  (states) => Colors.green),
                                           columns: [
                                             DataColumn(
                                               label: Text(
@@ -634,13 +634,13 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.white),
                                             )),
-                                            DataColumn(
-                                                label: Text(
-                                              'Download\n Report',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white),
-                                            )),
+                                            // DataColumn(
+                                            //     label: Text(
+                                            //   'Download\n Report',
+                                            //   style: TextStyle(
+                                            //       fontWeight: FontWeight.bold,
+                                            //       color: Colors.white),
+                                            // )),
                                             // DataColumn(
                                             //     label: Text(
                                             //   'Action',
@@ -710,32 +710,32 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                                 ),
                                                               ),
                                                             ),
-                                                            DataCell(
-                                                              Visibility(
-                                                                visible: (App_Status_0[int.parse(value)]
-                                                                            .toString() ==
-                                                                        'Approved')
-                                                                    ? true
-                                                                    : false,
-                                                                child:
-                                                                    IconButton(
-                                                                  icon: new Icon(
-                                                                      Icons
-                                                                          .file_download),
-                                                                  color: Colors
-                                                                      .blue,
-                                                                  onPressed:
-                                                                      () async {
-                                                                    // _downloadFile(down,"TransitPass.pdf");
-                                                                    //   downloadFile();
-                                                                    await launch("${ServerHelper.baseUrl}auth/new_user_report/" +
-                                                                        App_no_0[
-                                                                            int.parse(value)] +
-                                                                        "/");
-                                                                  },
-                                                                ),
-                                                              ),
-                                                            ),
+                                                            // DataCell(
+                                                            //   Visibility(
+                                                            //     visible: (App_Status_0[int.parse(value)]
+                                                            //                 .toString() ==
+                                                            //             'Approved')
+                                                            //         ? true
+                                                            //         : false,
+                                                            //     child:
+                                                            //         IconButton(
+                                                            //       icon: new Icon(
+                                                            //           Icons
+                                                            //               .file_download),
+                                                            //       color: Colors
+                                                            //           .blue,
+                                                            //       onPressed:
+                                                            //           () async {
+                                                            //         // _downloadFile(down,"TransitPass.pdf");
+                                                            //         //   downloadFile();
+                                                            //         await launch("${ServerHelper.baseUrl}auth/new_user_report/" +
+                                                            //             App_no_0[
+                                                            //                 int.parse(value)] +
+                                                            //             "/");
+                                                            //       },
+                                                            //     ),
+                                                            //   ),
+                                                            // ),
                                                             // DataCell(
                                                             //   Visibility(
                                                             //     visible: true,
@@ -804,7 +804,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                           color: Colors.white,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.deepOrangeAccent,
+                              color: Colors.green,
                               blurRadius: 2.0,
                               spreadRadius: 1.0,
                               //offset: Offset(2.0, 2.0), // shadow direction: bottom right
@@ -834,7 +834,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                           showBottomBorder: true,
                                           headingRowColor:
                                               MaterialStateColor.resolveWith(
-                                                  (states) => Colors.orange),
+                                                  (states) => Colors.green),
                                           columns: [
                                             DataColumn(
                                               label: Text(
