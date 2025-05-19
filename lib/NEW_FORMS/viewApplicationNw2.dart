@@ -734,6 +734,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                   ),
                   onTap: () {
                     Map<String, dynamic> logs = {
+                      //bling
                       "id": logId_[index],
                       "species_of_tree": dropdownValue4,
                       "length": leng.text,
@@ -741,6 +742,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                               (double.parse(
                                   Girth.text == "" ? '0' : Girth.text)),
                               (double.parse(leng.text == "" ? '0' : leng.text)))
+                          .toStringAsFixed(2)
                           .toString(),
                       "breadth": Girth.text,
                       "latitude": 00,
@@ -2136,6 +2138,20 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                               columns: const [
                                 DataColumn(
                                     label: Text(
+                                  'Edit',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue),
+                                )),
+                                DataColumn(
+                                    label: Text(
+                                  'Delete',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.red),
+                                )),
+                                DataColumn(
+                                    label: Text(
                                   'S.No',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -2169,14 +2185,41 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                       fontWeight: FontWeight.bold,
                                       color: Colors.blue),
                                 )),
-                                DataColumn(
-                                  label: Row(
-                                    children: <Widget>[],
-                                  ),
-                                ),
                               ],
                               rows: n_list
                                   .map(((index) => DataRow(cells: [
+                                        // Edit button
+                                        DataCell(
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.edit_rounded,
+                                              color: Colors.blue,
+                                            ),
+                                            onPressed: () async {
+                                              await EditInformationDialog(
+                                                  context, index);
+                                              setState(() {
+                                                DataRow;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                        // Delete button
+                                        DataCell(
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.remove_circle,
+                                              color: Colors.red,
+                                            ),
+                                            onPressed: () {
+                                              log_details.removeAt(index);
+                                              n_list.removeLast();
+                                              setState(() {
+                                                DataRow;
+                                              });
+                                            },
+                                          ),
+                                        ),
                                         DataCell(Text((index + 1).toString())),
                                         DataCell(SizedBox(
                                             width: 180,
@@ -2212,39 +2255,6 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                                   : log_details[index]['volume']
                                                       .toString(),
                                             ))),
-                                        // DataCell(Container(width:100,child:Text(log_details[index]['latitude'].toString(),))),
-                                        // DataCell(Container(width:100,child:Text(log_details[index]['longitude'].toString(),))),
-                                        DataCell(Row(
-                                          children: <Widget>[
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.remove_circle,
-                                                color: Colors.red,
-                                              ),
-                                              onPressed: () {
-                                                log_details.removeAt(index);
-                                                n_list.removeLast();
-
-                                                setState(() {
-                                                  DataRow;
-                                                });
-                                              },
-                                            ), //--------------Remove Button
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.edit_rounded,
-                                                color: Colors.blue,
-                                              ),
-                                              onPressed: () async {
-                                                await EditInformationDialog(
-                                                    context, index);
-                                                setState(() {
-                                                  DataRow;
-                                                });
-                                              },
-                                            )
-                                          ],
-                                        )),
                                       ])))
                                   .toList(),
                             ),
