@@ -2,10 +2,12 @@
 
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tigramnks/NEW_FORMS/transitViewAndApprove.dart';
@@ -48,6 +50,7 @@ class OfficerDashboard extends StatefulWidget {
 class _OfficerDashboardState extends State<OfficerDashboard> {
   @override
   void initState() {
+    permission();
     super.initState();
     print(userId);
     pie_chart();
@@ -88,6 +91,71 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
       Rejected = responseJSON['data']['per_rejected'];
       Pending = responseJSON['data']['per_submitted'];
     });
+  }
+
+  Future<void> downloadFormIPdf(int appId) async {
+    // If not Android, show message and exit function
+    if (!Platform.isAndroid) {
+      Fluttertoast.showToast(
+          msg: "Downloads are only supported on Android devices");
+      return;
+    }
+
+    const String url = '${ServerHelper.baseUrl}auth/generate_form_i_pdf/';
+
+    try {
+      // Request storage permissions
+      var storageStatus = await Permission.storage.request();
+      if (!storageStatus.isGranted) {
+        Fluttertoast.showToast(
+            msg: "Storage permission is required to download PDF");
+        return;
+      }
+
+      // For Android 11+ (API 30+), also request manage external storage permission
+      if (await Permission.manageExternalStorage.request().isGranted) {
+        log("Manage external storage permission granted");
+      }
+
+      // Make API request
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': "token $sessionToken"
+        },
+        body: jsonEncode({'app_id': appId}),
+      );
+
+      log('PDF download response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final bytes = response.bodyBytes;
+        final fileName = 'FormI$appId.pdf';
+
+        // Android download directory path
+        const downloadsDir = '/storage/emulated/0/Download';
+
+        // Create directory if it doesn't exist
+        final directory = Directory(downloadsDir);
+        if (!await directory.exists()) {
+          await directory.create(recursive: true);
+        }
+
+        final filePath = '$downloadsDir/$fileName';
+        final file = File(filePath);
+        await file.writeAsBytes(bytes);
+
+        log('File saved to: $filePath');
+        Fluttertoast.showToast(msg: "PDF downloaded to $filePath");
+      } else {
+        Fluttertoast.showToast(
+            msg: "Failed to download PDF: ${response.statusCode}");
+      }
+    } catch (e) {
+      log('Error during PDF download: $e');
+      Fluttertoast.showToast(msg: "Error: $e");
+    }
   }
 
   String replaceSlashesWithDashes(String input) {
@@ -1663,34 +1731,33 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                     .file_download),
                                                                 color:
                                                                     Colors.blue,
-                                                                onPressed:
-                                                                    () async {
-                                                                  String url;
-                                                                  if (is_form_two1[
-                                                                          int.parse(
-                                                                              value)] ==
-                                                                      true) {
-                                                                    String
-                                                                        appNo =
-                                                                        App_no1[int.parse(value)]
-                                                                            .toString();
-                                                                    String last6 = appNo.length >=
-                                                                            6
-                                                                        ? appNo.substring(
-                                                                            appNo.length -
-                                                                                6)
-                                                                        : appNo;
-                                                                    url = "${ServerHelper.baseUrl}auth/generate_pdf_form1/" +
-                                                                        last6;
-                                                                  } else {
-                                                                    url = "${ServerHelper.baseUrl}auth/generate_pdf_form2/" +
-                                                                        App_no1[int.parse(value)]
-                                                                            .toString()
-                                                                            .substring(App_no1[int.parse(value)].toString().length -
-                                                                                6);
-                                                                  }
-                                                                  await launch(
-                                                                      url);
+                                                                onPressed: () {
+                                                                  downloadFormIPdf(
+                                                                    int.parse(App_no1[int.parse(
+                                                                            value)]
+                                                                        .toString()
+                                                                        .substring(App_no1[int.parse(value)].toString().length -
+                                                                            6)),
+                                                                  );
+                                                                  // String url;
+                                                                  // if (is_form_two1[
+                                                                  //         int.parse(
+                                                                  //             value)] ==
+                                                                  //     true) {
+                                                                  //   downloadFormIPdf(
+                                                                  //     App_no1[int
+                                                                  //         .parse(
+                                                                  //             value)],
+                                                                  //   );
+                                                                  // } else {
+                                                                  //   downloadFormIPdf(
+                                                                  //     App_no1[int
+                                                                  //         .parse(
+                                                                  //             value)],
+                                                                  //   );
+                                                                  // }
+                                                                  // await launch(
+                                                                  //     url);
                                                                   // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                                 },
                                                               ),
@@ -2607,5 +2674,14 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
         ),
       ],
     );
+  }
+
+  void permission() async {
+    if (Platform.isAndroid) {
+      PermissionStatus status = await Permission.storage.status;
+      if (!status.isGranted) {
+        await Permission.storage.request();
+      }
+    }
   }
 }

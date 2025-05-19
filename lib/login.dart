@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:jailbreak_root_detection/jailbreak_root_detection.dart';
 import 'package:marquee/marquee.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tigramnks/DivisionDashboard.dart';
 import 'package:tigramnks/FieldOfficerDashboard.dart';
@@ -72,6 +73,44 @@ class _LoginDemoState extends State<LoginDemo> {
   void initState() {
     super.initState();
     initPlatformState();
+    _requestStoragePermission();
+  }
+
+  // Request storage permission
+  Future<void> _requestStoragePermission() async {
+    PermissionStatus status;
+
+    // For Android 13 and above (SDK 33+), we need to request specific permissions
+    if (await Permission.storage.isRestricted ||
+        await Permission.storage.isDenied) {
+      status = await Permission.storage.request();
+
+      if (status.isGranted) {
+        // await Permission.storage.request();
+        Fluttertoast.showToast(
+          msg: 'Storage permission granted',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );
+      } else if (status.isDenied) {
+        await Permission.storage.request();
+        Fluttertoast.showToast(
+          msg:
+              'Storage permission denied. Some features may not work properly.',
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+        );
+      } else if (status.isPermanentlyDenied) {
+        Fluttertoast.showToast(
+          msg:
+              'Storage permission permanently denied. Please enable it from app settings.',
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+        );
+        // You could open app settings here
+        await openAppSettings();
+      }
+    }
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -1212,7 +1251,7 @@ class _OfficerState extends State<OfficerLogin> {
 
   bool validateEmail(String value) {
     Pattern pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regex = RegExp(pattern.toString());
     return (!regex.hasMatch(value)) ? false : true;
   }
