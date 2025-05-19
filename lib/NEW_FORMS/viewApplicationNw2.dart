@@ -2200,8 +2200,17 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                                         DataCell(SizedBox(
                                             width: 100,
                                             child: Text(
-                                              log_details[index]['volume']
-                                                  .toString(),
+                                              double.tryParse(log_details[index]
+                                                              ['volume']
+                                                          .toString()) !=
+                                                      null
+                                                  ? double.parse(
+                                                          log_details[index]
+                                                                  ['volume']
+                                                              .toString())
+                                                      .toStringAsFixed(2)
+                                                  : log_details[index]['volume']
+                                                      .toString(),
                                             ))),
                                         // DataCell(Container(width:100,child:Text(log_details[index]['latitude'].toString(),))),
                                         // DataCell(Container(width:100,child:Text(log_details[index]['longitude'].toString(),))),
