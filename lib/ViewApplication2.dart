@@ -323,6 +323,7 @@ class _ViewApplication2State extends State<ViewApplication2> {
                 log_details: const [],
                 // treeSpecies: [],
                 user_Loc: "", treeSpecies: '',
+                additionalDocuments: const [],
               )),
     );
     return true;

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer' as log;
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:tigramnks/ViewApplication1.dart';
 import 'package:tigramnks/server/serverhelper.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ViewApplication extends StatefulWidget {
   String userGroup;
@@ -123,6 +125,9 @@ class _ViewApplicationState extends State<ViewApplication> {
   final List Sbreath = [];
   final List Svol = [];
 
+  // Add a list to hold additional documents
+  List<Map<String, dynamic>> additionalDocuments = [];
+
   String Name = '';
   String Address = '';
   String SurveyNo = '';
@@ -138,6 +143,7 @@ class _ViewApplicationState extends State<ViewApplication> {
     String url = '${ServerHelper.baseUrl}auth/ViewApplication';
     Map data = {"app_id": Ids};
     print(data);
+
     var body = json.encode(data);
     print(body);
     print(sessionToken);
@@ -148,6 +154,12 @@ class _ViewApplicationState extends State<ViewApplication> {
           'Authorization': "token $sessionToken"
         },
         body: body);
+    print('Request URL: $url');
+    print('Request Headers: ${{
+      'Content-Type': 'application/json',
+      'Authorization': "token $sessionToken"
+    }}');
+    print('Request Body: $body');
     Map<String, dynamic> responseJSON = json.decode(response.body);
     print("-----------------View -Application--------------");
     print(responseJSON);
@@ -241,6 +253,26 @@ class _ViewApplicationState extends State<ViewApplication> {
         }
       } catch (e) {
         print("Error while accessing species location: $e");
+      }
+
+      // Parse additional_documents
+      try {
+        additionalDocuments = [];
+        if (responseJSON['data']['additional_documents'] != null) {
+          for (var doc in responseJSON['data']['additional_documents']) {
+            additionalDocuments.add({
+              'id': doc['id'],
+              'app_form_id': doc['app_form_id'],
+              'category': doc['category'],
+              'document': doc['document'],
+              'name': doc['name'],
+              'uploaded_at': doc['uploaded_at'],
+            });
+          }
+        }
+        log.log("Additional Documents: $additionalDocuments.");
+      } catch (e) {
+        print("Error while accessing additional documents: $e");
       }
     });
 
@@ -972,6 +1004,90 @@ class _ViewApplicationState extends State<ViewApplication> {
     );
   }
 
+  Widget _buildAdditionalDocuments() {
+    if (additionalDocuments.isEmpty) {
+      return Container();
+    }
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 18),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        color: Colors.white,
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x1A000000),
+            blurRadius: 8.0,
+            spreadRadius: 1,
+            offset: Offset(0, 3),
+          )
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(18),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.teal.shade700, Colors.teal.shade400],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              ),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16),
+                topRight: Radius.circular(16),
+              ),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.attach_file, color: Colors.white, size: 22),
+                const SizedBox(width: 10),
+                Text(
+                  'Additional Documents',
+                  style: GoogleFonts.roboto(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 19,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: additionalDocuments.length,
+            itemBuilder: (context, index) {
+              final doc = additionalDocuments[index];
+              return ListTile(
+                leading: const Icon(Icons.picture_as_pdf, color: Colors.red),
+                title: Text(doc['name'] ?? ''),
+                subtitle: Text(doc['uploaded_at'] ?? ''),
+                trailing: IconButton(
+                  icon: const Icon(Icons.open_in_new),
+                  onPressed: () async {
+                    // Open PDF in browser or PDF viewer
+                    final url =
+                        '${ServerHelper.baseUrl}media/${doc['document']}';
+                    if (await canLaunchUrl(Uri.parse(url))) {
+                      await launchUrl(Uri.parse(url),
+                          mode: LaunchMode.externalApplication);
+                    } else {
+                      Fluttertoast.showToast(
+                        msg: "Could not open document",
+                        toastLength: Toast.LENGTH_SHORT,
+                      );
+                    }
+                  },
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> _saveLogDetails() async {
     if (log_details.isEmpty) {
       Fluttertoast.showToast(
@@ -1167,6 +1283,8 @@ class _ViewApplicationState extends State<ViewApplication> {
                                 ),
                               ),
                               const SizedBox(height: 18),
+                              // Insert additional documents widget here
+                              _buildAdditionalDocuments(),
                               if (Edit || userEdit)
                                 _buildEditableSpeciesTable()
                               else if (c.isNotEmpty)
@@ -1208,40 +1326,43 @@ class _ViewApplicationState extends State<ViewApplication> {
                   context,
                   MaterialPageRoute(
                       builder: (_) => ViewApplication1(
-                          sessionToken: sessionToken,
-                          userGroup: userGroup,
-                          userId: userId,
-                          Ids: Ids,
-                          Range: Range,
-                          userName: userName,
-                          userEmail: userEmail,
-                          img_signature: img_signature,
-                          img_revenue_approval: img_revenue_approval,
-                          img_declaration: img_declaration,
-                          img_revenue_application: img_revenue_application,
-                          img_location_sktech: img_location_sktech,
-                          img_tree_ownership_detail: img_tree_ownership_detail,
-                          img_aadhar_detail: img_aadhar_detail,
-                          verify_officer: verify_officer,
-                          deputy_range_officer: deputy_range_officer,
-                          verify_range_officer: verify_range_officer,
-                          is_form_two: is_form_two,
-                          assigned_deputy2_id: assigned_deputy2_id,
-                          assigned_deputy1_id: assigned_deputy1_id,
-                          assigned_range_id: assigned_range_id,
-                          verify_deputy2: verify_deputy2,
-                          division_officer: division_officer,
-                          other_state: other_state,
-                          verify_forest1: verify_forest1,
-                          field_requre: field_requre,
-                          field_status: field_status,
-                          species: species,
-                          length: length,
-                          breadth: breadth,
-                          volume: volume,
-                          log_details: log_details,
-                          treeSpecies: treeSpecies,
-                          user_Loc: user_Loc)));
+                            sessionToken: sessionToken,
+                            userGroup: userGroup,
+                            userId: userId,
+                            Ids: Ids,
+                            Range: Range,
+                            userName: userName,
+                            userEmail: userEmail,
+                            img_signature: img_signature,
+                            img_revenue_approval: img_revenue_approval,
+                            img_declaration: img_declaration,
+                            img_revenue_application: img_revenue_application,
+                            img_location_sktech: img_location_sktech,
+                            img_tree_ownership_detail:
+                                img_tree_ownership_detail,
+                            img_aadhar_detail: img_aadhar_detail,
+                            verify_officer: verify_officer,
+                            deputy_range_officer: deputy_range_officer,
+                            verify_range_officer: verify_range_officer,
+                            is_form_two: is_form_two,
+                            assigned_deputy2_id: assigned_deputy2_id,
+                            assigned_deputy1_id: assigned_deputy1_id,
+                            assigned_range_id: assigned_range_id,
+                            verify_deputy2: verify_deputy2,
+                            division_officer: division_officer,
+                            other_state: other_state,
+                            verify_forest1: verify_forest1,
+                            field_requre: field_requre,
+                            field_status: field_status,
+                            species: species,
+                            length: length,
+                            breadth: breadth,
+                            volume: volume,
+                            log_details: log_details,
+                            treeSpecies: treeSpecies,
+                            user_Loc: user_Loc,
+                            additionalDocuments: additionalDocuments,
+                          )));
             },
             icon: const Icon(Icons.navigate_next),
             label: Text(
