@@ -350,232 +350,302 @@ class _ViewApplication1State extends State<ViewApplication1> {
                     ),
                   ),
                   Expanded(
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: GridView.builder(
-                              gridDelegate:
-                                  SliverGridDelegateWithMaxCrossAxisExtent(
-                                      maxCrossAxisExtent: 220,
-                                      childAspectRatio: 0.85,
-                                      crossAxisSpacing: 18,
-                                      mainAxisSpacing: 18),
-                              itemCount: images.length,
-                              padding: const EdgeInsets.all(12),
-                              itemBuilder: (BuildContext context, int index) {
-                                return TweenAnimationBuilder<double>(
-                                  tween: Tween<double>(begin: 0.95, end: 1.0),
-                                  duration: Duration(milliseconds: 350),
-                                  curve: Curves.easeOutBack,
-                                  builder: (context, scale, child) {
-                                    return Transform.scale(
-                                      scale: scale,
-                                      child: Card(
-                                        elevation: 12,
-                                        shadowColor:
-                                            Colors.blueGrey.withOpacity(0.25),
-                                        semanticContainer: true,
-                                        clipBehavior:
-                                            Clip.antiAliasWithSaveLayer,
-                                        margin: EdgeInsets.only(top: 10),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(26),
-                                        ),
-                                        child: InkWell(
-                                          borderRadius:
-                                              BorderRadius.circular(26),
-                                          splashColor: HexColor("#0499f2")
-                                              .withOpacity(0.18),
-                                          highlightColor: Colors.blue.shade50
-                                              .withOpacity(0.12),
-                                          onTap: () {
-                                            final url =
-                                                images[index].toString();
-                                            if (url
-                                                .toLowerCase()
-                                                .endsWith('.pdf')) {
-                                              PdfLauncher.launchPdfUrl(url);
+                    child: Builder(
+                      builder: (context) {
+                        final List<Map<String, dynamic>> allAttachments = [
+                          for (int i = 0; i < images.length; i++)
+                            {
+                              'type': 'main',
+                              'url': images[i].toString(),
+                              'name': imageNm[i],
+                            },
+                          ...additionalDocuments.map((doc) => {
+                                'type': 'additional',
+                                'url':
+                                    '${baseUrl}media/upload/Additional_documents/${doc['document']}',
+                                'name': doc['name'] ?? 'Document',
+                                'uploaded_at': doc['uploaded_at'],
+                                'isPdf': doc['document']
+                                    .toString()
+                                    .toLowerCase()
+                                    .endsWith('.pdf'),
+                                'document': doc['document'],
+                              }),
+                        ];
+
+                        return GridView.builder(
+                          gridDelegate:
+                              SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 240,
+                            childAspectRatio: 0.80,
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 16,
+                          ),
+                          itemCount: allAttachments.length,
+                          padding: const EdgeInsets.all(12),
+                          itemBuilder: (context, index) {
+                            final item = allAttachments[index];
+                            final isMain = item['type'] == 'main';
+                            final url = item['url'];
+                            final isPdf = isMain
+                                ? url.toLowerCase().endsWith('.pdf')
+                                : (item['isPdf'] ?? false);
+                            String? formattedDate;
+                            if (!isMain && item['uploaded_at'] != null) {
+                              try {
+                                final dt = DateTime.parse(item['uploaded_at']);
+                                formattedDate =
+                                    "${dt.day.toString().padLeft(2, '0')}-${dt.month.toString().padLeft(2, '0')}-${dt.year}";
+                              } catch (_) {
+                                formattedDate = item['uploaded_at'];
+                              }
+                            }
+                            return TweenAnimationBuilder<double>(
+                              tween: Tween<double>(begin: 0.95, end: 1.0),
+                              duration: Duration(milliseconds: 350),
+                              curve: Curves.easeOutBack,
+                              builder: (context, scale, child) {
+                                return Transform.scale(
+                                  scale: scale,
+                                  child: Card(
+                                    elevation: isMain ? 12 : 6,
+                                    shadowColor: Colors.blueGrey
+                                        .withOpacity(isMain ? 0.25 : 0.18),
+                                    semanticContainer: true,
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    margin:
+                                        EdgeInsets.only(top: isMain ? 10 : 6),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          isMain ? 26 : 22),
+                                    ),
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(
+                                          isMain ? 26 : 22),
+                                      splashColor: HexColor("#0499f2")
+                                          .withOpacity(isMain ? 0.18 : 0.13),
+                                      highlightColor: Colors.blue.shade50
+                                          .withOpacity(isMain ? 0.12 : 0.09),
+                                      onTap: () async {
+                                        if (isPdf) {
+                                          if (isMain) {
+                                            PdfLauncher.launchPdfUrl(url);
+                                          } else {
+                                            if (await canLaunchUrl(
+                                                Uri.parse(url))) {
+                                              await launchUrl(Uri.parse(url),
+                                                  mode: LaunchMode
+                                                      .externalApplication);
                                             } else {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (_) =>
-                                                      ImageView(Images: url),
-                                                ),
+                                              Fluttertoast.showToast(
+                                                msg: "Could not open document",
+                                                toastLength: Toast.LENGTH_SHORT,
                                               );
                                             }
-                                          },
-                                          child: Stack(
-                                            children: [
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(26),
-                                                  border: Border.all(
-                                                    color: Colors.blue.shade100,
-                                                    width: 2,
-                                                  ),
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.blueGrey
-                                                          .withOpacity(0.10),
-                                                      blurRadius: 10,
-                                                      offset: Offset(0, 3),
-                                                    ),
-                                                  ],
-                                                ),
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(26),
-                                                  child: images[index]
-                                                          .toString()
-                                                          .toLowerCase()
-                                                          .endsWith('.pdf')
-                                                      ? Container(
-                                                          color: Colors
-                                                              .grey.shade100,
-                                                          child: Center(
-                                                            child: Icon(
-                                                              Icons
-                                                                  .picture_as_pdf,
-                                                              size: 62,
-                                                              color: Colors
-                                                                  .red.shade400,
-                                                            ),
-                                                          ),
-                                                        )
-                                                      : _ShimmerImage(
-                                                          imageUrl: images[
-                                                                  index] +
-                                                              "/$sessionToken",
-                                                        ),
-                                                ),
-                                              ),
-                                              Positioned(
-                                                bottom: 0,
-                                                left: 0,
-                                                right: 0,
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.black
-                                                        .withOpacity(0.68),
-                                                    borderRadius:
-                                                        BorderRadius.only(
-                                                      bottomLeft:
-                                                          Radius.circular(26),
-                                                      bottomRight:
-                                                          Radius.circular(26),
-                                                    ),
-                                                  ),
-                                                  padding: EdgeInsets.symmetric(
-                                                      vertical: 8,
-                                                      horizontal: 6),
-                                                  child: Text(
-                                                    imageNm[index].toString(),
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      fontSize: 15,
-                                                      letterSpacing: 1.1,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              if (images[index]
-                                                  .toString()
-                                                  .toLowerCase()
-                                                  .endsWith('.pdf'))
-                                                Positioned(
-                                                  top: 14,
-                                                  right: 14,
-                                                  child: CircleAvatar(
-                                                    backgroundColor: Colors
-                                                        .white
-                                                        .withOpacity(0.90),
-                                                    radius: 18,
-                                                    child: IconButton(
-                                                      icon: Icon(
-                                                        Icons.download,
-                                                        size: 20,
-                                                        color: Colors.blue,
-                                                      ),
-                                                      onPressed: () {
-                                                        final url =
-                                                            images[index]
-                                                                .toString();
-                                                        final fileName =
-                                                            url.split('/').last;
-                                                        downloadPdf(
-                                                            url, fileName);
-                                                      },
-                                                    ),
-                                                  ),
-                                                ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              }),
-                        ),
-                        if (additionalDocuments.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12.0, vertical: 8),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Additional Documents",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: HexColor("#0499f2"),
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          ),
-                        if (additionalDocuments.isNotEmpty)
-                          SizedBox(
-                            // height: 180,
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: List.generate(
-                                    additionalDocuments.length, (index) {
-                                  final doc = additionalDocuments[index];
-                                  final url =
-                                      '${baseUrl}media/upload/Additional_documents/${doc['document']}';
-                                  return ListTile(
-                                    leading: const Icon(Icons.picture_as_pdf,
-                                        color: Colors.red),
-                                    title: Text(doc['name'] ?? ''),
-                                    subtitle: Text(doc['uploaded_at'] ?? ''),
-                                    trailing: IconButton(
-                                      icon: const Icon(Icons.open_in_new),
-                                      onPressed: () async {
-                                        if (await canLaunchUrl(
-                                            Uri.parse(url))) {
-                                          await launchUrl(Uri.parse(url),
-                                              mode: LaunchMode
-                                                  .externalApplication);
+                                          }
                                         } else {
-                                          Fluttertoast.showToast(
-                                            msg: "Could not open document",
-                                            toastLength: Toast.LENGTH_SHORT,
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (_) =>
+                                                  ImageView(Images: url),
+                                            ),
                                           );
                                         }
                                       },
+                                      child: Stack(
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      isMain ? 26 : 22),
+                                              border: Border.all(
+                                                color: Colors.blue.shade100,
+                                                width: isMain ? 2 : 1.5,
+                                              ),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.blueGrey
+                                                      .withOpacity(
+                                                          isMain ? 0.10 : 0.08),
+                                                  blurRadius: isMain ? 10 : 8,
+                                                  offset:
+                                                      Offset(0, isMain ? 3 : 2),
+                                                ),
+                                              ],
+                                            ),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      isMain ? 26 : 22),
+                                              child: isPdf
+                                                  ? Container(
+                                                      color:
+                                                          Colors.grey.shade100,
+                                                      child: Center(
+                                                        child: Icon(
+                                                          Icons.picture_as_pdf,
+                                                          size:
+                                                              isMain ? 62 : 54,
+                                                          color: Colors
+                                                              .red.shade400,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : _ShimmerImage(
+                                                      imageUrl: isMain
+                                                          ? (url +
+                                                              "/$sessionToken")
+                                                          : url),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            bottom: 0,
+                                            left: 0,
+                                            right: 0,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.black.withOpacity(
+                                                    isMain ? 0.68 : 0.72),
+                                                borderRadius: BorderRadius.only(
+                                                  bottomLeft: Radius.circular(
+                                                      isMain ? 26 : 22),
+                                                  bottomRight: Radius.circular(
+                                                      isMain ? 26 : 22),
+                                                ),
+                                              ),
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 8, horizontal: 6),
+                                              child: isMain
+                                                  ? Text(
+                                                      item['name'],
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        fontSize: 15,
+                                                        letterSpacing: 1.1,
+                                                      ),
+                                                    )
+                                                  : Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Icon(
+                                                              item['name'] !=
+                                                                          null &&
+                                                                      item['name']
+                                                                          .toString()
+                                                                          .trim()
+                                                                          .isNotEmpty
+                                                                  ? Icons
+                                                                      .description
+                                                                  : Icons
+                                                                      .insert_drive_file,
+                                                              color: Colors
+                                                                  .white70,
+                                                              size: 18,
+                                                            ),
+                                                            SizedBox(width: 6),
+                                                            Flexible(
+                                                              child: Text(
+                                                                item['name'] ??
+                                                                    'Document',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  fontSize: 15,
+                                                                  letterSpacing:
+                                                                      1.0,
+                                                                ),
+                                                                maxLines: 2,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        if (formattedDate !=
+                                                            null)
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    top: 2.0),
+                                                            child: Text(
+                                                              formattedDate,
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .white70,
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                      ],
+                                                    ),
+                                            ),
+                                          ),
+                                          if (isPdf)
+                                            Positioned(
+                                              top: isMain ? 14 : 12,
+                                              right: isMain ? 14 : 12,
+                                              child: Tooltip(
+                                                message: "Download PDF",
+                                                child: CircleAvatar(
+                                                  backgroundColor: Colors.white
+                                                      .withOpacity(
+                                                          isMain ? 0.90 : 0.93),
+                                                  radius: isMain ? 18 : 17,
+                                                  child: IconButton(
+                                                    icon: Icon(
+                                                      Icons.download,
+                                                      size: isMain ? 20 : 18,
+                                                      color: Colors.blue,
+                                                    ),
+                                                    onPressed: () async {
+                                                      final fileName =
+                                                          url.split('/').last;
+                                                      await downloadPdf(
+                                                          url, fileName);
+                                                    },
+                                                    tooltip: "Download PDF",
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                        ],
+                                      ),
                                     ),
-                                  );
-                                }),
-                              ),
-                            ),
-                          ),
-                      ],
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        );
+                      },
                     ),
                   ),
                 ]),
