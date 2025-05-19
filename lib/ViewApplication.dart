@@ -10,7 +10,6 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:tigramnks/ViewApplication1.dart';
 import 'package:tigramnks/server/serverhelper.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ViewApplication extends StatefulWidget {
   String userGroup;
@@ -1004,89 +1003,89 @@ class _ViewApplicationState extends State<ViewApplication> {
     );
   }
 
-  Widget _buildAdditionalDocuments() {
-    if (additionalDocuments.isEmpty) {
-      return Container();
-    }
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 18),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        color: Colors.white,
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x1A000000),
-            blurRadius: 8.0,
-            spreadRadius: 1,
-            offset: Offset(0, 3),
-          )
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(18),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.teal.shade700, Colors.teal.shade400],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-              ),
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(16),
-                topRight: Radius.circular(16),
-              ),
-            ),
-            child: Row(
-              children: [
-                const Icon(Icons.attach_file, color: Colors.white, size: 22),
-                const SizedBox(width: 10),
-                Text(
-                  'Additional Documents',
-                  style: GoogleFonts.roboto(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 19,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: additionalDocuments.length,
-            itemBuilder: (context, index) {
-              final doc = additionalDocuments[index];
-              return ListTile(
-                leading: const Icon(Icons.picture_as_pdf, color: Colors.red),
-                title: Text(doc['name'] ?? ''),
-                subtitle: Text(doc['uploaded_at'] ?? ''),
-                trailing: IconButton(
-                  icon: const Icon(Icons.open_in_new),
-                  onPressed: () async {
-                    // Open PDF in browser or PDF viewer
-                    final url =
-                        '${ServerHelper.baseUrl}media/${doc['document']}';
-                    if (await canLaunchUrl(Uri.parse(url))) {
-                      await launchUrl(Uri.parse(url),
-                          mode: LaunchMode.externalApplication);
-                    } else {
-                      Fluttertoast.showToast(
-                        msg: "Could not open document",
-                        toastLength: Toast.LENGTH_SHORT,
-                      );
-                    }
-                  },
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _buildAdditionalDocuments() {
+  //   if (additionalDocuments.isEmpty) {
+  //     return Container();
+  //   }
+  //   return Container(
+  //     margin: const EdgeInsets.symmetric(vertical: 18),
+  //     decoration: BoxDecoration(
+  //       borderRadius: BorderRadius.circular(16),
+  //       color: Colors.white,
+  //       boxShadow: const [
+  //         BoxShadow(
+  //           color: Color(0x1A000000),
+  //           blurRadius: 8.0,
+  //           spreadRadius: 1,
+  //           offset: Offset(0, 3),
+  //         )
+  //       ],
+  //     ),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Container(
+  //           padding: const EdgeInsets.all(18),
+  //           decoration: BoxDecoration(
+  //             gradient: LinearGradient(
+  //               colors: [Colors.teal.shade700, Colors.teal.shade400],
+  //               begin: Alignment.centerLeft,
+  //               end: Alignment.centerRight,
+  //             ),
+  //             borderRadius: const BorderRadius.only(
+  //               topLeft: Radius.circular(16),
+  //               topRight: Radius.circular(16),
+  //             ),
+  //           ),
+  //           child: Row(
+  //             children: [
+  //               const Icon(Icons.attach_file, color: Colors.white, size: 22),
+  //               const SizedBox(width: 10),
+  //               Text(
+  //                 'Additional Documents',
+  //                 style: GoogleFonts.roboto(
+  //                   color: Colors.white,
+  //                   fontWeight: FontWeight.bold,
+  //                   fontSize: 19,
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //         ListView.builder(
+  //           shrinkWrap: true,
+  //           physics: const NeverScrollableScrollPhysics(),
+  //           itemCount: additionalDocuments.length,
+  //           itemBuilder: (context, index) {
+  //             final doc = additionalDocuments[index];
+  //             return ListTile(
+  //               leading: const Icon(Icons.picture_as_pdf, color: Colors.red),
+  //               title: Text(doc['name'] ?? ''),
+  //               subtitle: Text(doc['uploaded_at'] ?? ''),
+  //               trailing: IconButton(
+  //                 icon: const Icon(Icons.open_in_new),
+  //                 onPressed: () async {
+  //                   // Open PDF in browser or PDF viewer
+  //                   final url =
+  //                       '${ServerHelper.baseUrl}media/${doc['document']}';
+  //                   if (await canLaunchUrl(Uri.parse(url))) {
+  //                     await launchUrl(Uri.parse(url),
+  //                         mode: LaunchMode.externalApplication);
+  //                   } else {
+  //                     Fluttertoast.showToast(
+  //                       msg: "Could not open document",
+  //                       toastLength: Toast.LENGTH_SHORT,
+  //                     );
+  //                   }
+  //                 },
+  //               ),
+  //             );
+  //           },
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Future<void> _saveLogDetails() async {
     if (log_details.isEmpty) {
@@ -1284,7 +1283,7 @@ class _ViewApplicationState extends State<ViewApplication> {
                               ),
                               const SizedBox(height: 18),
                               // Insert additional documents widget here
-                              _buildAdditionalDocuments(),
+                              // _buildAdditionalDocuments(),
                               if (Edit || userEdit)
                                 _buildEditableSpeciesTable()
                               else if (c.isNotEmpty)
