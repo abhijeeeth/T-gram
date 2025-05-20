@@ -390,7 +390,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
       deputy_officer_date.add(list[i]['deputy_officer_date']);
       range_officer_date.add(list[i]['range_officer_date']);
       division_date.add(list[i]['division_officer_date']);
-      // Remark.add(list[i]['transit_pass_created_date']);
+      Remark.add(list[i]['remark']);
       other_State.add(list[i]['other_state']);
       verify_deputy2.add(list[i]['verify_deputy2']);
       reason_deputy2.add(list[i]['reason_deputy2']);
@@ -417,7 +417,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
     days_left_transit1.clear();
     Approved_date1.clear();
     Action1.clear();
-    Remark1.clear();
+    Remark.clear();
     Remark_date1.clear();
     Tp_Issue_Date1.clear();
     Tp_Number1.clear();
@@ -488,6 +488,8 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
       range_officer_date1.add(list[i]['range_officer_date']);
       division_date1.add(list[i]['division_officer_date']);
       // Remark.add(list[i]['transit_pass_created_date']);
+      Remark.add(list[i]['remark']);
+      log(Remark.toString());
       other_State1.add(list[i]['other_state']);
 
       verify_deputy2_1.add(list[i]['verify_deputy2']);
@@ -581,6 +583,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
       reason_division2.add(list[i]['reason_division_officer']);
       division_date2.add(list[i]['division_officer_date']);
       // Remark.add(list[i]['transit_pass_created_date']);
+      Remark.add(list[i]['remark']);
       other_State2.add(list[i]['other_state']);
     }
   }
@@ -630,6 +633,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
       Tp_Issue_Date3.add(list[i]['transit_pass_created_date'].toString());
       Tp_Number3.add(list[i]['transit_pass_created_date'].toString());
       // Remark.add(list[i]['transit_pass_created_date']);
+      Remark.add(list[i]['remark']);
     }
   }
 
@@ -1430,25 +1434,8 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                       //     ),
                                                       //   ),
                                                       // ),
-                                                      DataCell(Text(OfficerRemark(
-                                                              Current_status[
-                                                                  int.parse(
-                                                                      value)],
-                                                              disapproved_reason[
-                                                                  int.parse(
-                                                                      value)],
-                                                              reason_division[
-                                                                  int.parse(
-                                                                      value)],
-                                                              reason_range_officer[
-                                                                  int.parse(
-                                                                      value)],
-                                                              reason_depty_ranger_office[
-                                                                  int.parse(
-                                                                      value)],
-                                                              reason_office[
-                                                                  int.parse(
-                                                                      value)])
+                                                      DataCell(Text(Remark[
+                                                              int.parse(value)]
                                                           .toString())),
                                                       DataCell(Text(OfficerDate(
                                                               Current_status[
@@ -1843,27 +1830,9 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                           //     ),
                                                           //   ),
                                                           // ),
-                                                          DataCell(Text(OfficerRemark(
-                                                                  Current_status1[
-                                                                          int.parse(
-                                                                              value)]
-                                                                      .toString(),
-                                                                  disapproved_reason1[
-                                                                          int.parse(
-                                                                              value)]
-                                                                      .toString(),
-                                                                  reason_division1[
-                                                                      int.parse(
-                                                                          value)],
-                                                                  reason_range_officer1[
-                                                                      int.parse(
-                                                                          value)],
-                                                                  reason_depty_ranger_office1[
-                                                                      int.parse(
-                                                                          value)],
-                                                                  reason_office1[
-                                                                      int.parse(
-                                                                          value)])
+                                                          DataCell(Text(Remark[
+                                                                  int.parse(
+                                                                      value)]
                                                               .toString())),
                                                           DataCell(Text(OfficerDate(
                                                                   Current_status1[
@@ -2223,27 +2192,10 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                           //     ),
                                                           //   ),
                                                           // ),
-                                                          DataCell(Text(OfficerRemark(
-                                                              Current_status2[
-                                                                      int.parse(
-                                                                          value)]
-                                                                  .toString(),
-                                                              disapproved_reason2[
-                                                                      int.parse(
-                                                                          value)]
-                                                                  .toString(),
-                                                              reason_division2[
+                                                          DataCell(Text(Remark[
                                                                   int.parse(
-                                                                      value)],
-                                                              reason_range_officer2[
-                                                                  int.parse(
-                                                                      value)],
-                                                              reason_depty_ranger_office2[
-                                                                  int.parse(
-                                                                      value)],
-                                                              reason_office2[
-                                                                  int.parse(
-                                                                      value)]))),
+                                                                      value)]
+                                                              .toString())),
                                                           DataCell(Text(OfficerDate(
                                                               Current_status2[
                                                                   int.parse(
