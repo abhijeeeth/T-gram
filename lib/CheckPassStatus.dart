@@ -932,13 +932,13 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.white),
                                             )),
-                                            DataColumn(
-                                                label: Text(
-                                              'Download\n Report',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white),
-                                            )),
+                                            // DataColumn(
+                                            //     label: Text(
+                                            //   'Download\n Report',
+                                            //   style: TextStyle(
+                                            //       fontWeight: FontWeight.bold,
+                                            //       color: Colors.white),
+                                            // )),
                                             DataColumn(
                                                 label: Text(
                                               'Action',
@@ -1152,30 +1152,31 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                                 ),
                                                               ),
                                                             ),
-                                                            DataCell(
-                                                              Visibility(
-                                                                visible:
-                                                                    (App_Status[int.parse(value)].toString() ==
-                                                                            'A')
-                                                                        ? true
-                                                                        : false,
-                                                                child:
-                                                                    IconButton(
-                                                                  icon: new Icon(
-                                                                      Icons
-                                                                          .file_download),
-                                                                  color: Colors
-                                                                      .blue,
-                                                                  onPressed:
-                                                                      () async {
-                                                                    await launch("${ServerHelper.baseUrl}auth/new_user_report/" +
-                                                                        Ids[int.parse(
-                                                                            value)] +
-                                                                        "/");
-                                                                  },
-                                                                ),
-                                                              ),
-                                                            ),
+                                                            // DataCell(
+                                                            //   Visibility(
+                                                            //     visible:
+                                                            //         (App_Status[int.parse(value)].toString() ==
+                                                            //                 'A')
+                                                            //             ? true
+                                                            //             : false,
+                                                            //     child:
+                                                            //         IconButton(
+                                                            //       icon: new Icon(
+                                                            //           Icons
+                                                            //               .file_download),
+                                                            //       color: Colors
+                                                            //           .blue,
+                                                            //       onPressed:
+                                                            //           () async {
+                                                            //         await launch("${ServerHelper.baseUrl}auth/new_user_report/" +
+                                                            //             Ids[int.parse(
+                                                            //                 value)] +
+                                                            //             "/");
+                                                            //       },
+                                                            //     ),
+                                                            //   ),
+                                                            // ),
+
                                                             DataCell(
                                                               Visibility(
                                                                 visible: true,

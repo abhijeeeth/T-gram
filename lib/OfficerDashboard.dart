@@ -842,7 +842,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
         'Pending',
         'Approved/Rejected',
         'Deemed Approved',
-        'Transit Approval'
+        // 'Transit Approval'
       ];
     } else {
       return ['Report', 'Pending', 'Approved/Rejected', 'Deemed Approved'];
@@ -1038,7 +1038,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                               SizedBox(height: 20),
                               // Bar Graph
                               SizedBox(
-                                height: 250,
+                                // height: 250,
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
@@ -1748,45 +1748,35 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                             ),
                                                           ),
                                                           DataCell(
-                                                            Visibility(
-                                                              visible: (Current_status1[
-                                                                              int.parse(value)]
-                                                                          .toString() ==
-                                                                      'A')
-                                                                  ? true
-                                                                  : false,
-                                                              child: IconButton(
-                                                                icon: Icon(Icons
-                                                                    .file_download),
-                                                                color:
-                                                                    Colors.blue,
-                                                                onPressed: () {
-                                                                  downloadFormIPdf(
-                                                                    int.parse(App_no1[int.parse(
+                                                            (Current_status1[int.parse(
                                                                             value)]
-                                                                        .toString()
-                                                                        .substring(App_no1[int.parse(value)].toString().length -
-                                                                            6)),
-                                                                    is_form_two1[
-                                                                        int.parse(
-                                                                            value)],
-                                                                  );
-
-                                                                  // downloadFormIPdf(
-                                                                  //   int.parse(App_no1[int.parse(
-                                                                  //           value)]
-                                                                  //       .toString()
-                                                                  //       .substring(App_no1[int.parse(value)].toString().length -
-                                                                  //           6)),
-                                                                  // );
-                                                                  // String url;
-
-                                                                  // await launch(
-                                                                  //     url);
-                                                                  // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-                                                                },
-                                                              ),
-                                                            ),
+                                                                        .toString() ==
+                                                                    'R')
+                                                                ? SizedBox
+                                                                    .shrink()
+                                                                : Visibility(
+                                                                    visible:
+                                                                        (Current_status1[int.parse(value)].toString() ==
+                                                                            'A'),
+                                                                    child:
+                                                                        IconButton(
+                                                                      icon: Icon(
+                                                                          Icons
+                                                                              .file_download),
+                                                                      color: Colors
+                                                                          .blue,
+                                                                      onPressed:
+                                                                          () {
+                                                                        downloadFormIPdf(
+                                                                          int.parse(App_no1[int.parse(value)]
+                                                                              .toString()
+                                                                              .substring(App_no1[int.parse(value)].toString().length - 6)),
+                                                                          is_form_two1[
+                                                                              int.parse(value)],
+                                                                        );
+                                                                      },
+                                                                    ),
+                                                                  ),
                                                           ),
                                                           // DataCell(
                                                           //   IconButton(
@@ -2636,7 +2626,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
       required double value,
       required Color color,
       required double max}) {
-    const double barMaxHeight = 180;
+    const double barMaxHeight = 90;
     final double barHeight = max == 0 ? 0 : (value / max) * barMaxHeight;
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
