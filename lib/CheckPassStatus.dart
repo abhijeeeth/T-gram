@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:core';
+import 'dart:developer';
 import 'dart:io'
     show
         Directory,
@@ -16,6 +17,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:http/http.dart' as http;
+import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:schedulers/schedulers.dart';
@@ -106,12 +108,173 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
 
     FlutterDownloader.registerCallback(downloadingCallback);
   }
-
   String IDS = "";
 
   int progress = 0;
 
   ReceivePort _receivePort = ReceivePort();
+  Future<void> downloadFormIIPdf(int appId, String notified) async {
+    // If not Android, show message and exit function
+    if (!Platform.isAndroid) {
+      // Fluttertoast.showToast(
+      //     msg: "Downloads are only supported on Android devices");
+      return;
+    }
+
+    String url = notified == 'Yes'
+        ? '${ServerHelper.baseUrl}auth/generate_form_i_pdf/'
+        : '${ServerHelper.baseUrl}auth/generate_form_ii_pdf/';
+
+    try {
+      // Request storage permissions
+
+      // Make API request
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': "token $sessionToken"
+        },
+        body: jsonEncode({'app_id': appId}),
+      );
+
+      log('PDF download response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        // Save PDF to app's internal documents directory first
+        final Directory appDocDir = await getApplicationDocumentsDirectory();
+        final String filePath =
+            '${appDocDir.path}/FormI_${appId}_${DateTime.now().millisecondsSinceEpoch}.pdf';
+        final File file = File(filePath);
+
+        await file.writeAsBytes(response.bodyBytes);
+
+        // Try to open the file using open_filex
+        final result = await OpenFilex.open(filePath);
+        log("File opened with result: ${result.message}");
+
+        // Move file to appropriate directory based on the platform
+        if (Platform.isAndroid) {
+          await moveFileToDownloads(filePath); // Move to Downloads for Android
+          //Fluttertoast.showToast(msg: "PDF downloaded to Downloads folder");
+        } else if (Platform.isIOS) {
+          await moveFileToDocuments(filePath); // Save to Documents for iOS
+          // Fluttertoast.showToast(msg: "PDF saved to Documents folder");
+        } else {
+          log("Unknown platform: PDF saved to app directory");
+          //Fluttertoast.showToast(msg: "PDF saved to app directory");
+        }
+      }
+    } catch (e) {
+      log('Error during PDF download: $e');
+      //  Fluttertoast.showToast(msg: "Error: $e");
+    }
+  }
+
+  Future<void> downloadFormIPdf(
+    String appId,
+  ) async {
+    // If not Android, show message and exit function
+    if (!Platform.isAndroid) {
+      // Fluttertoast.showToast(
+      //     msg: "Downloads are only supported on Android devices");
+      return;
+    }
+
+    String url = '${ServerHelper.baseUrl}auth/generate_transit_pass_pdf/';
+
+    try {
+      // Request storage permissions
+
+      // Make API request
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': "token $sessionToken"
+        },
+        body: jsonEncode({'transit_number': appId}),
+      );
+
+      log('PDF download response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        // Save PDF to app's internal documents directory first
+        final Directory appDocDir = await getApplicationDocumentsDirectory();
+        final String filePath =
+            '${appDocDir.path}/FormI_${appId}_${DateTime.now().millisecondsSinceEpoch}.pdf';
+        final File file = File(filePath);
+
+        await file.writeAsBytes(response.bodyBytes);
+
+        // Try to open the file using open_filex
+        final result = await OpenFilex.open(filePath);
+        log("File opened with result: ${result.message}");
+
+        // Move file to appropriate directory based on the platform
+        if (Platform.isAndroid) {
+          await moveFileToDownloads(filePath); // Move to Downloads for Android
+          // Fluttertoast.showToast(msg: "PDF downloaded to Downloads folder");
+        } else if (Platform.isIOS) {
+          await moveFileToDocuments(filePath); // Save to Documents for iOS
+          // Fluttertoast.showToast(msg: "PDF saved to Documents folder");
+        } else {
+          log("Unknown platform: PDF saved to app directory");
+          // Fluttertoast.showToast(msg: "PDF saved to app directory");
+        }
+      }
+    } catch (e) {
+      log('Error during PDF download: $e');
+      // Fluttertoast.showToast(msg: "Error: $e");
+    }
+  }
+
+  Future<void> moveFileToDocuments(String sourcePath) async {
+    try {
+      final File sourceFile = File(sourcePath);
+      final String fileName = sourcePath.split('/').last;
+
+      // Get the Documents directory path
+      final Directory documentsDir = await getApplicationDocumentsDirectory();
+      final String documentPath = '${documentsDir.path}/$fileName';
+
+      // Copy the file to Documents directory
+      await sourceFile.copy(documentPath);
+
+      // Delete the original file from temporary storage
+      //await sourceFile.delete();
+
+      log('File moved to Documents: $documentPath');
+    } catch (e) {
+      log('Error moving file to Documents: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> moveFileToDownloads(String sourcePath) async {
+    try {
+      final File sourceFile = File(sourcePath);
+      final String fileName = sourcePath.split('/').last;
+
+      // Get the Downloads directory path
+      final Directory? downloadsDir = await getExternalStorageDirectory();
+      if (downloadsDir == null)
+        throw Exception('Could not access Downloads directory');
+
+      final String downloadPath = '${downloadsDir.path}/$fileName';
+
+      // Copy the file to Downloads directory
+      await sourceFile.copy(downloadPath);
+
+      // Delete the original file from temporary storage
+      // await sourceFile.delete();
+
+      log('File moved to Downloads: $downloadPath');
+    } catch (e) {
+      log('Error moving file to Downloads: $e');
+      rethrow;
+    }
+  }
 
   static downloadingCallback(id, status, progress) {
     SendPort? sendPort = IsolateNameServer.lookupPortByName("downloading");
@@ -687,6 +850,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                             ),
                                                             // DataCell(Text("")),
                                                             DataCell(
+                                                              //blimga
                                                               Visibility(
                                                                 visible: (App_Status_0[int.parse(value)]
                                                                             .toString() ==
@@ -701,11 +865,12 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                                   color: Colors
                                                                       .blue,
                                                                   onPressed:
-                                                                      () async {
-                                                                    await launch("${ServerHelper.baseUrl}auth/new_transit_pass_pdf/" +
-                                                                        App_no_0[
-                                                                            int.parse(value)] +
-                                                                        "/");
+                                                                      () {
+                                                                    downloadFormIPdf(
+                                                                      App_no_0[int.parse(
+                                                                              value)]
+                                                                          .toString(),
+                                                                    );
                                                                   },
                                                                 ),
                                                               ),
@@ -1129,11 +1294,11 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                                 : "Non-Notified")),
                                                             DataCell(
                                                               Visibility(
-                                                                visible:
-                                                                    (App_Status[int.parse(value)].toString() ==
-                                                                            'A')
-                                                                        ? true
-                                                                        : false,
+                                                                visible: (App_Status[int.parse(value)]
+                                                                            .toString() ==
+                                                                        'Yes')
+                                                                    ? true
+                                                                    : false,
                                                                 child:
                                                                     IconButton(
                                                                   icon: new Icon(
@@ -1142,11 +1307,21 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                                   color: Colors
                                                                       .blue,
                                                                   onPressed:
-                                                                      () async {
-                                                                    await launch("${ServerHelper.baseUrl}auth/new_transit_pass_pdf/" +
-                                                                        Ids[int.parse(
-                                                                            value)] +
-                                                                        "/");
+                                                                      () {
+                                                                    downloadFormIIPdf(
+                                                                      int.parse(App_no[int.parse(
+                                                                              value)]
+                                                                          .toString()
+                                                                          .substring(App_no[int.parse(value)].toString().length -
+                                                                              6)),
+                                                                      Tp_status[
+                                                                          int.parse(
+                                                                              value)],
+                                                                    );
+                                                                    // await launch("${ServerHelper.baseUrl}auth/new_transit_pass_pdf/" +
+                                                                    //     Ids[int.parse(
+                                                                    //         value)] +
+                                                                    //     "/");
                                                                     // _requestDownload("http://www.orimi.com/pdf-test.pdf");
                                                                   },
                                                                 ),
