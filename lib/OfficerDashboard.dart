@@ -7,6 +7,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:open_filex/open_filex.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -93,7 +95,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
     });
   }
 
-  Future<void> downloadFormIPdf(int appId) async {
+  Future<void> downloadFormIPdf(int appId, bool notified) async {
     // If not Android, show message and exit function
     if (!Platform.isAndroid) {
       Fluttertoast.showToast(
@@ -101,21 +103,12 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
       return;
     }
 
-    const String url = '${ServerHelper.baseUrl}auth/generate_form_i_pdf/';
+    String url = notified == true
+        ? '${ServerHelper.baseUrl}auth/generate_form_i_pdf/'
+        : '${ServerHelper.baseUrl}auth/generate_form_ii_pdf/';
 
     try {
       // Request storage permissions
-      var storageStatus = await Permission.storage.request();
-      if (!storageStatus.isGranted) {
-        Fluttertoast.showToast(
-            msg: "Storage permission is required to download PDF");
-        return;
-      }
-
-      // For Android 11+ (API 30+), also request manage external storage permission
-      if (await Permission.manageExternalStorage.request().isGranted) {
-        log("Manage external storage permission granted");
-      }
 
       // Make API request
       final response = await http.post(
@@ -130,31 +123,80 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
       log('PDF download response body: ${response.body}');
 
       if (response.statusCode == 200) {
-        final bytes = response.bodyBytes;
-        final fileName = 'FormI$appId.pdf';
+        // Save PDF to app's internal documents directory first
+        final Directory appDocDir = await getApplicationDocumentsDirectory();
+        final String filePath =
+            '${appDocDir.path}/FormI_${appId}_${DateTime.now().millisecondsSinceEpoch}.pdf';
+        final File file = File(filePath);
 
-        // Android download directory path
-        const downloadsDir = '/storage/emulated/0/Download';
+        await file.writeAsBytes(response.bodyBytes);
 
-        // Create directory if it doesn't exist
-        final directory = Directory(downloadsDir);
-        if (!await directory.exists()) {
-          await directory.create(recursive: true);
+        // Try to open the file using open_filex
+        final result = await OpenFilex.open(filePath);
+        log("File opened with result: ${result.message}");
+
+        // Move file to appropriate directory based on the platform
+        if (Platform.isAndroid) {
+          await moveFileToDownloads(filePath); // Move to Downloads for Android
+          Fluttertoast.showToast(msg: "PDF downloaded to Downloads folder");
+        } else if (Platform.isIOS) {
+          await moveFileToDocuments(filePath); // Save to Documents for iOS
+          Fluttertoast.showToast(msg: "PDF saved to Documents folder");
+        } else {
+          log("Unknown platform: PDF saved to app directory");
+          Fluttertoast.showToast(msg: "PDF saved to app directory");
         }
-
-        final filePath = '$downloadsDir/$fileName';
-        final file = File(filePath);
-        await file.writeAsBytes(bytes);
-
-        log('File saved to: $filePath');
-        Fluttertoast.showToast(msg: "PDF downloaded to $filePath");
-      } else {
-        Fluttertoast.showToast(
-            msg: "Failed to download PDF: ${response.statusCode}");
       }
     } catch (e) {
       log('Error during PDF download: $e');
       Fluttertoast.showToast(msg: "Error: $e");
+    }
+  }
+
+  Future<void> moveFileToDocuments(String sourcePath) async {
+    try {
+      final File sourceFile = File(sourcePath);
+      final String fileName = sourcePath.split('/').last;
+
+      // Get the Documents directory path
+      final Directory documentsDir = await getApplicationDocumentsDirectory();
+      final String documentPath = '${documentsDir.path}/$fileName';
+
+      // Copy the file to Documents directory
+      await sourceFile.copy(documentPath);
+
+      // Delete the original file from temporary storage
+      //await sourceFile.delete();
+
+      log('File moved to Documents: $documentPath');
+    } catch (e) {
+      log('Error moving file to Documents: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> moveFileToDownloads(String sourcePath) async {
+    try {
+      final File sourceFile = File(sourcePath);
+      final String fileName = sourcePath.split('/').last;
+
+      // Get the Downloads directory path
+      final Directory? downloadsDir = await getExternalStorageDirectory();
+      if (downloadsDir == null)
+        throw Exception('Could not access Downloads directory');
+
+      final String downloadPath = '${downloadsDir.path}/$fileName';
+
+      // Copy the file to Downloads directory
+      await sourceFile.copy(downloadPath);
+
+      // Delete the original file from temporary storage
+      // await sourceFile.delete();
+
+      log('File moved to Downloads: $downloadPath');
+    } catch (e) {
+      log('Error moving file to Downloads: $e');
+      rethrow;
     }
   }
 
@@ -1738,24 +1780,20 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                         .toString()
                                                                         .substring(App_no1[int.parse(value)].toString().length -
                                                                             6)),
+                                                                    is_form_two1[
+                                                                        int.parse(
+                                                                            value)],
                                                                   );
+
+                                                                  // downloadFormIPdf(
+                                                                  //   int.parse(App_no1[int.parse(
+                                                                  //           value)]
+                                                                  //       .toString()
+                                                                  //       .substring(App_no1[int.parse(value)].toString().length -
+                                                                  //           6)),
+                                                                  // );
                                                                   // String url;
-                                                                  // if (is_form_two1[
-                                                                  //         int.parse(
-                                                                  //             value)] ==
-                                                                  //     true) {
-                                                                  //   downloadFormIPdf(
-                                                                  //     App_no1[int
-                                                                  //         .parse(
-                                                                  //             value)],
-                                                                  //   );
-                                                                  // } else {
-                                                                  //   downloadFormIPdf(
-                                                                  //     App_no1[int
-                                                                  //         .parse(
-                                                                  //             value)],
-                                                                  //   );
-                                                                  // }
+
                                                                   // await launch(
                                                                   //     url);
                                                                   // _requestDownload("http://www.orimi.com/pdf-test.pdf");
