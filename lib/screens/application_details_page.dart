@@ -1,7 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:tigramnks/sqflite/localstorage.dart';
+import 'package:tigramnks/sqflite/dbhelper.dart'; // Add DbHelper import
 
 class ApplicationDetailsPage extends StatefulWidget {
   final String applicationId;
@@ -20,6 +18,7 @@ class _ApplicationDetailsPageState extends State<ApplicationDetailsPage> {
   List<dynamic>? _speciesLocationData;
   List<dynamic>? _imageDocuments;
   String? _error;
+  final DbHelper _dbHelper = DbHelper(); // Create instance of DbHelper
 
   @override
   void initState() {
@@ -29,27 +28,40 @@ class _ApplicationDetailsPageState extends State<ApplicationDetailsPage> {
 
   Future<void> _loadApplicationData() async {
     try {
-      // Load all data from local storage
-      final String? rawData =
-          await LocalStorage.getApplicationData(widget.applicationId);
-      final appDetails =
-          await LocalStorage.getApplicationDetails(widget.applicationId);
-      final timberLog = await LocalStorage.getTimberLog(widget.applicationId);
-      final speciesLocation =
-          await LocalStorage.getSpeciesLocation(widget.applicationId);
-      final imageDocuments =
-          await LocalStorage.getImageDocuments(widget.applicationId);
+      // Convert string ID to integer for database queries
+      final int appId = int.parse(widget.applicationId);
 
-      setState(() {
-        if (rawData != null) {
-          _applicationData = json.decode(rawData);
-        }
-        _applicationDetails = appDetails;
-        _timberLogData = timberLog;
-        _speciesLocationData = speciesLocation;
-        _imageDocuments = imageDocuments;
-        _isLoading = false;
-      });
+      // Get complete application data from database
+      final completeData = await _dbHelper.getCompleteApplicationData(appId);
+
+      if (completeData['status'] == 'Success') {
+        final data = completeData['data'];
+
+        setState(() {
+          // Application details is the first item in the applications array
+          _applicationDetails = data['applications'][0];
+
+          // Store raw data for reference
+          _applicationData = data;
+
+          // Get timber logs
+          _timberLogData = data['timber_log'];
+
+          // Get image documents
+          _imageDocuments = data['image_documents'];
+
+          // For species location, we can use timber logs as they have location data
+          _speciesLocationData = data['timber_log'];
+
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _error =
+              "Failed to load application data: ${completeData['message']}";
+          _isLoading = false;
+        });
+      }
     } catch (e) {
       setState(() {
         _error = "Failed to load application data: $e";
@@ -111,14 +123,25 @@ class _ApplicationDetailsPageState extends State<ApplicationDetailsPage> {
                 style: Theme.of(context).textTheme.titleLarge),
             const Divider(),
             _buildDetailItem('Application ID',
-                _applicationDetails!['app_id']?.toString() ?? 'N/A'),
-            _buildDetailItem('Application Type',
-                _applicationDetails!['app_type']?.toString() ?? 'N/A'),
+                _applicationDetails!['id']?.toString() ?? 'N/A'),
+            _buildDetailItem('Application No',
+                _applicationDetails!['application_no']?.toString() ?? 'N/A'),
             _buildDetailItem('Applicant Name',
-                _applicationDetails!['applicant_name']?.toString() ?? 'N/A'),
+                _applicationDetails!['name']?.toString() ?? 'N/A'),
             _buildDetailItem(
-                'Status', _applicationDetails!['status']?.toString() ?? 'N/A'),
-            // Add more fields as needed
+                'Status',
+                _applicationDetails!['application_status']?.toString() ??
+                    'N/A'),
+            _buildDetailItem('Address',
+                _applicationDetails!['address']?.toString() ?? 'N/A'),
+            _buildDetailItem('District',
+                _applicationDetails!['district']?.toString() ?? 'N/A'),
+            _buildDetailItem('Village',
+                _applicationDetails!['village']?.toString() ?? 'N/A'),
+            _buildDetailItem('Survey No',
+                _applicationDetails!['survey_no']?.toString() ?? 'N/A'),
+            _buildDetailItem('Purpose',
+                _applicationDetails!['purpose']?.toString() ?? 'N/A'),
           ],
         ),
       ),
@@ -143,9 +166,9 @@ class _ApplicationDetailsPageState extends State<ApplicationDetailsPage> {
               itemBuilder: (context, index) {
                 final log = _timberLogData![index];
                 return ListTile(
-                  title: Text('Species: ${log['species_name'] ?? 'N/A'}'),
+                  title: Text('Species: ${log['species_of_tree'] ?? 'N/A'}'),
                   subtitle: Text(
-                      'Quantity: ${log['quantity'] ?? 'N/A'} | Volume: ${log['volume'] ?? 'N/A'}'),
+                      'Volume: ${log['volume'] ?? 'N/A'} | Dimensions: ${log['length'] ?? 'N/A'} x ${log['breadth'] ?? 'N/A'}'),
                 );
               },
             ),
@@ -174,7 +197,7 @@ class _ApplicationDetailsPageState extends State<ApplicationDetailsPage> {
                 final location = _speciesLocationData![index];
                 return ListTile(
                   title:
-                      Text('Location: ${location['location_name'] ?? 'N/A'}'),
+                      Text('Species: ${location['species_of_tree'] ?? 'N/A'}'),
                   subtitle: Text(
                       'Coordinates: ${location['latitude'] ?? 'N/A'}, ${location['longitude'] ?? 'N/A'}'),
                 );
@@ -208,15 +231,30 @@ class _ApplicationDetailsPageState extends State<ApplicationDetailsPage> {
               itemCount: _imageDocuments!.length,
               itemBuilder: (context, index) {
                 final document = _imageDocuments![index];
+                // Find first non-null image in the document
+                String? imageUrl;
+                for (var key in document.keys) {
+                  if ((key.contains('img') ||
+                          key.contains('detail') ||
+                          key.contains('application') ||
+                          key.contains('sktech') ||
+                          key.contains('approval')) &&
+                      document[key] != null &&
+                      document[key].toString().isNotEmpty) {
+                    imageUrl = document[key];
+                    break;
+                  }
+                }
+
                 return Card(
                   clipBehavior: Clip.antiAlias,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: document['image_url'] != null
+                        child: imageUrl != null
                             ? Image.network(
-                                document['image_url'],
+                                imageUrl,
                                 fit: BoxFit.cover,
                                 width: double.infinity,
                                 errorBuilder: (ctx, error, _) => const Center(
@@ -229,7 +267,7 @@ class _ApplicationDetailsPageState extends State<ApplicationDetailsPage> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          document['document_name'] ?? 'Document',
+                          'Document ${index + 1}',
                           style: const TextStyle(fontSize: 12),
                           overflow: TextOverflow.ellipsis,
                         ),
