@@ -93,7 +93,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
     setState(() {
       Approved = responseJSON['data']['per_approved'];
       Rejected = responseJSON['data']['per_rejected'];
-      Pending = responseJSON['data']['per_submitted'];
+      Pending = responseJSON['data']['per_pending'];
     });
   }
 
@@ -2673,7 +2673,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
       required double value,
       required Color color,
       required double max}) {
-    const double barMaxHeight = 45;
+    const double barMaxHeight = 90;
     final double barHeight = max == 0 ? 0 : (value / max) * barMaxHeight;
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
