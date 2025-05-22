@@ -373,9 +373,7 @@ class DbHelper {
         }
       }
 
-      // Use replace strategy to handle primary key conflicts
-      return await db.insert('applications', filteredData,
-          conflictAlgorithm: ConflictAlgorithm.replace);
+      return await db.insert('applications', filteredData);
     } catch (e) {
       print("Error inserting application: $e");
       return -1;
@@ -419,8 +417,7 @@ class DbHelper {
 
   Future<int> insertImageDocument(Map<String, dynamic> document) async {
     Database db = await database;
-    return await db.insert('image_documents', document,
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    return await db.insert('image_documents', document);
   }
 
   Future<List<Map<String, dynamic>>> getImageDocuments(int appFormId) async {
@@ -434,8 +431,7 @@ class DbHelper {
 
   Future<int> insertTimberLog(Map<String, dynamic> log) async {
     Database db = await database;
-    return await db.insert('timber_logs', log,
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    return await db.insert('timber_logs', log);
   }
 
   Future<List<Map<String, dynamic>>> getTimberLogs(int appFormId) async {
@@ -459,8 +455,7 @@ class DbHelper {
 
   Future<int> insertAdditionalDocument(Map<String, dynamic> document) async {
     Database db = await database;
-    return await db.insert('additional_documents', document,
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    return await db.insert('additional_documents', document);
   }
 
   Future<List<Map<String, dynamic>>> getAdditionalDocuments(

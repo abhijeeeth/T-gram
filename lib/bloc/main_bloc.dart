@@ -50,31 +50,26 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           DbHelper dbHelper = DbHelper();
           await dbHelper.ensureDatabaseCreated(); // Ensure database is ready
 
-          // Generic function to handle saving different data types
-          Future<void> saveDataCollection(
-              String key, Function insertMethod) async {
-            if (responseJSON['data']?[key] != null) {
-              for (var item in responseJSON['data'][key]) {
-                await insertMethod(item);
+          if (responseJSON['data']?['applications'] != null) {
+            for (var app in responseJSON['data']['applications']) {
+              var result = await dbHelper.insertApplication(app);
+              if (result == -1) {
+                print("Failed to insert application: ${app['id']}");
               }
             }
           }
-
-          // Save applications
-          await saveDataCollection('applications', (app) async {
-            var result = await dbHelper.insertApplication(app);
-            if (result == -1) {
-              print("Failed to insert application: ${app['id']}");
+          if (responseJSON['data']?['image_documents'] != null) {
+            for (var doc in responseJSON['data']['image_documents']) {
+              await dbHelper.insertImageDocument(doc);
             }
-          });
-
-          // Save image documents
-          await saveDataCollection(
-              'image_documents', (doc) => dbHelper.insertImageDocument(doc));
+          }
 
           // Save timber logs
-          await saveDataCollection(
-              'timber_log', (log) => dbHelper.insertTimberLog(log));
+          if (responseJSON['data']?['timber_log'] != null) {
+            for (var log in responseJSON['data']['timber_log']) {
+              await dbHelper.insertTimberLog(log);
+            }
+          }
 
           // Save species list
           if (responseJSON['data']?['trees_species_list'] != null) {
@@ -85,9 +80,11 @@ class MainBloc extends Bloc<MainEvent, MainState> {
             }
           }
 
-          // Save additional documents
-          await saveDataCollection('additional_documents',
-              (doc) => dbHelper.insertAdditionalDocument(doc));
+          if (responseJSON['data']?['additional_documents'] != null) {
+            for (var doc in responseJSON['data']['additional_documents']) {
+              await dbHelper.insertAdditionalDocument(doc);
+            }
+          }
 
           print("Application data successfully saved to SQLite database");
         } catch (dbError) {
