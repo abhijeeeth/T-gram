@@ -468,6 +468,16 @@ class DbHelper {
     );
   }
 
+  Future<bool> applicationExistsByNo(String applicationNo) async {
+    Database db = await database;
+    List<Map<String, dynamic>> result = await db.query(
+      'applications',
+      where: 'application_no = ?',
+      whereArgs: [applicationNo],
+    );
+    return result.isNotEmpty;
+  }
+
   Future<void> saveCompleteData(Map<String, dynamic> data) async {
     final db = await database;
     await db.transaction((txn) async {

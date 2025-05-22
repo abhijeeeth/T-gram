@@ -9,6 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:tigramnks/bloc/main_bloc.dart';
 import 'package:tigramnks/server/serverhelper.dart';
+import 'package:tigramnks/sqflite/dbhelper.dart'; // Import DbHelper
 import 'package:url_launcher/url_launcher.dart';
 
 class PendingApplicationsPage extends StatefulWidget {
@@ -42,6 +43,12 @@ class _PendingApplicationsPageState extends State<PendingApplicationsPage> {
   String userGroup;
   List Range;
   bool isLoading = true;
+
+  // Add DbHelper instance
+  final DbHelper _dbHelper = DbHelper();
+
+  // Add map to track downloaded applications
+  final Map<String, bool> _isApplicationDownloaded = {};
 
   _PendingApplicationsPageState(this.userId, this.userName, this.userEmail,
       this.sessionToken, this.userGroup, this.Range);
@@ -215,6 +222,9 @@ class _PendingApplicationsPageState extends State<PendingApplicationsPage> {
         isLoading = false;
         filteredApplicationCount = filteredIndices.length;
       });
+
+      // Check which applications are already downloaded
+      checkDownloadedApplications();
     } catch (e) {
       log("Error fetching pending applications: $e");
       setState(() {
@@ -225,6 +235,21 @@ class _PendingApplicationsPageState extends State<PendingApplicationsPage> {
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
       );
+    }
+  }
+
+  // Add function to check which applications are already downloaded
+  Future<void> checkDownloadedApplications() async {
+    try {
+      for (int i = 0; i < App_no.length; i++) {
+        String appNo = App_no[i].toString();
+        bool exists = await _dbHelper.applicationExistsByNo(appNo);
+        setState(() {
+          _isApplicationDownloaded[appNo] = exists;
+        });
+      }
+    } catch (e) {
+      log("Error checking downloaded applications: $e");
     }
   }
 
@@ -390,7 +415,7 @@ class _PendingApplicationsPageState extends State<PendingApplicationsPage> {
                               )),
                               DataColumn(
                                   label: Text(
-                                'Action',
+                                'Download\nFor Offline',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white),
@@ -443,39 +468,47 @@ class _PendingApplicationsPageState extends State<PendingApplicationsPage> {
                                             Text(Tp_Number[index].toString())),
                                         DataCell(
                                           IconButton(
-                                            icon: Icon(Icons.visibility),
-                                            color: Colors.blue,
-                                            onPressed: () {
-                                              String IDS =
-                                                  Ids[index].toString();
-                                              // Navigator.push(
-                                              //     context,
-                                              //     MaterialPageRoute(
-                                              //         builder: (_) =>
-                                              //             ViewApplication(
-                                              //                 sessionToken:
-                                              //                     sessionToken,
-                                              //                 userGroup:
-                                              //                     userGroup,
-                                              //                 userId: userId,
-                                              //                 Ids: IDS,
-                                              //                 Range: Range,
-                                              //                 userName:
-                                              //                     userName,
-                                              //                 userEmail:
-                                              //                     userEmail)));
-                                              context.read<MainBloc>().add(
-                                                  SaveLocallyFieldVerifyData(
-                                                      sessionToken:
-                                                          sessionToken,
-                                                      userGroup: userGroup,
-                                                      userId: userId.toString(),
-                                                      Ids:
-                                                          Ids[index].toString(),
-                                                      Range: Range.toString(),
-                                                      userName: userName,
-                                                      userEmail: userEmail));
-                                            },
+                                            icon: _isApplicationDownloaded[
+                                                        App_no[index]] ==
+                                                    true
+                                                ? Icon(Icons
+                                                    .check_circle) // Show check if already downloaded
+                                                : Icon(Icons.download),
+                                            color: _isApplicationDownloaded[
+                                                        App_no[index]] ==
+                                                    true
+                                                ? Colors
+                                                    .green // Green for downloaded
+                                                : Colors.blue,
+                                            onPressed: _isApplicationDownloaded[
+                                                        App_no[index]] ==
+                                                    true
+                                                ? null // Disable button if already downloaded
+                                                : () {
+                                                    String IDS =
+                                                        Ids[index].toString();
+                                                    context.read<MainBloc>().add(
+                                                        SaveLocallyFieldVerifyData(
+                                                            sessionToken:
+                                                                sessionToken,
+                                                            userGroup:
+                                                                userGroup,
+                                                            userId: userId
+                                                                .toString(),
+                                                            Ids: Ids[index]
+                                                                .toString(),
+                                                            Range: Range
+                                                                .toString(),
+                                                            userName: userName,
+                                                            userEmail:
+                                                                userEmail));
+
+                                                    // Update UI after download
+                                                    setState(() {
+                                                      _isApplicationDownloaded[
+                                                          App_no[index]] = true;
+                                                    });
+                                                  },
                                           ),
                                         ),
                                         DataCell(
