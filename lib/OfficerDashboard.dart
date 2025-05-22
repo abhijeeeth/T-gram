@@ -18,6 +18,7 @@ import 'package:tigramnks/QueryPage.dart';
 import 'package:tigramnks/Reports.dart';
 import 'package:tigramnks/ViewApplication.dart';
 import 'package:tigramnks/login.dart';
+import 'package:tigramnks/screens/applications_list_page.dart';
 import 'package:tigramnks/server/serverhelper.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -2535,6 +2536,29 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                       userGroup: userGroup,
                                       userId: userId,
                                       userName: userName,
+                                    )));
+                      }),
+                  ListTile(
+                      leading: Icon(
+                        Icons.offline_share,
+                        color: Colors.black,
+                        size: 25,
+                      ),
+                      title: Text(
+                        'Downloaded List',
+                        style: TextStyle(color: Colors.black, fontSize: 20),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => ApplicationsListPage(
+                                    // sessionToken: sessionToken,
+                                    // Range: Range,
+                                    // userEmail: userEmail,
+                                    // userGroup: userGroup,
+                                    // userId: userId,
+                                    // userName: userName,
                                     )));
                       }),
                   ListTile(
