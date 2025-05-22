@@ -94,7 +94,11 @@ class _PendingApplicationsPageState extends State<PendingApplicationsPage> {
   final List field_status = [];
   final List status = []; // Added to store status field
 
+  // Add a list to store indices of applications with status == false
+  final List<int> filteredIndices = [];
+
   int allApplication = 0;
+  int filteredApplicationCount = 0; // Track count of filtered applications
 
   // Fetch pending applications data
   Future<void> fetchPendingApplications() async {
@@ -140,6 +144,7 @@ class _PendingApplicationsPageState extends State<PendingApplicationsPage> {
     verify_forest1.clear();
     field_status.clear();
     status.clear(); // Clear the status list
+    filteredIndices.clear(); // Clear filtered indices
 
     print("Fetching Pending Applications");
     const String url = '${ServerHelper.baseUrl}auth/PendingListViewApplication';
@@ -199,9 +204,15 @@ class _PendingApplicationsPageState extends State<PendingApplicationsPage> {
         log_updated_by_use.add(list[i]['log_updated_by_user']);
         verify_forest1.add(list[i]['verify_forest1']);
         status.add(list[i]['status']); // Added to capture status field
+
+        // Add index to filtered list if status is false
+        if (list[i]['status'] == false) {
+          filteredIndices.add(i);
+        }
       }
       setState(() {
         isLoading = false;
+        filteredApplicationCount = filteredIndices.length;
       });
     } catch (e) {
       log("Error fetching pending applications: $e");
@@ -278,7 +289,7 @@ class _PendingApplicationsPageState extends State<PendingApplicationsPage> {
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
-          : allApplication == 0
+          : filteredApplicationCount == 0
               ? Center(
                   child: Text(
                     "No pending applications found",
@@ -405,44 +416,37 @@ class _PendingApplicationsPageState extends State<PendingApplicationsPage> {
                                     color: Colors.white),
                               )),
                             ],
-                            rows: sr
-                                .map(((value) => DataRow(
+                            rows: filteredIndices
+                                .map(((index) => DataRow(
                                       cells: <DataCell>[
-                                        DataCell((Text((int.parse(value) + 1)
-                                            .toString()))),
-                                        DataCell(Text(App_no[int.parse(value)]
-                                            .toString())),
-                                        DataCell(Text(App_Name[int.parse(value)]
-                                            .toString())),
-                                        DataCell(Text(App_Date[int.parse(value)]
-                                            .toString())),
+                                        DataCell((Text(
+                                            (filteredIndices.indexOf(index) + 1)
+                                                .toString()))),
+                                        DataCell(
+                                            Text(App_no[index].toString())),
+                                        DataCell(
+                                            Text(App_Name[index].toString())),
+                                        DataCell(
+                                            Text(App_Date[index].toString())),
                                         DataCell(Text(
-                                            field_status[int.parse(value)]
-                                                .toString())),
+                                            field_status[index].toString())),
                                         DataCell(Text(AssignOfficer(
-                                            is_form_two[int.parse(value)] ??
-                                                false,
-                                            assigned_deputy2_by_id[
-                                                int.parse(value)],
-                                            assigned_deputy1_by_id[
-                                                int.parse(value)],
-                                            log_updated_by_use[
-                                                int.parse(value)]))),
-                                        DataCell(Text(
-                                            is_form_two[int.parse(value)] ==
-                                                    true
-                                                ? "Notified"
-                                                : "Non-Notified")),
-                                        DataCell(Text(
-                                            Tp_Number[int.parse(value)]
-                                                .toString())),
+                                            is_form_two[index] ?? false,
+                                            assigned_deputy2_by_id[index],
+                                            assigned_deputy1_by_id[index],
+                                            log_updated_by_use[index]))),
+                                        DataCell(Text(is_form_two[index] == true
+                                            ? "Notified"
+                                            : "Non-Notified")),
+                                        DataCell(
+                                            Text(Tp_Number[index].toString())),
                                         DataCell(
                                           IconButton(
                                             icon: Icon(Icons.visibility),
                                             color: Colors.blue,
                                             onPressed: () {
-                                              String IDS = Ids[int.parse(value)]
-                                                  .toString();
+                                              String IDS =
+                                                  Ids[index].toString();
                                               Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
@@ -462,20 +466,15 @@ class _PendingApplicationsPageState extends State<PendingApplicationsPage> {
                                             },
                                           ),
                                         ),
-                                        DataCell(Text(Remark[int.parse(value)]
-                                            .toString())),
+                                        DataCell(
+                                            Text(Remark[index].toString())),
                                         DataCell(Text(OfficerDate(
-                                                Current_status[
-                                                    int.parse(value)],
-                                                verify_office_date[
-                                                    int.parse(value)],
-                                                division_date[int.parse(value)],
-                                                range_officer_date[
-                                                    int.parse(value)],
-                                                deputy_officer_date[
-                                                    int.parse(value)],
-                                                verify_office_date[
-                                                    int.parse(value)])
+                                                Current_status[index],
+                                                verify_office_date[index],
+                                                division_date[index],
+                                                range_officer_date[index],
+                                                deputy_officer_date[index],
+                                                verify_office_date[index])
                                             .toString())),
                                         DataCell(
                                           IconButton(
@@ -486,8 +485,7 @@ class _PendingApplicationsPageState extends State<PendingApplicationsPage> {
                                               await launch(
                                                   "https://timber.forest.kerala.gov.in/app/location_views/" +
                                                       replaceSlashesWithDashes(
-                                                          App_no[int.parse(
-                                                              value)]) +
+                                                          App_no[index]) +
                                                       "/");
                                             },
                                           ),
