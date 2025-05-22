@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:tigramnks/bloc/main_bloc.dart';
 import 'package:tigramnks/login.dart';
 import 'package:tigramnks/utils/db_initializer.dart';

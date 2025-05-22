@@ -111,7 +111,7 @@ class _LoginDemoState extends State<LoginDemo> {
         await openAppSettings();
       }
     }
-                  }
+  }
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {

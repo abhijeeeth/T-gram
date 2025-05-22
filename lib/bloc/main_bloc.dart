@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:tigramnks/server/serverhelper.dart';
+import 'package:tigramnks/sqflite/dbhelper.dart'; // Add this import
 import 'package:tigramnks/utils/local_storage.dart';
 
 // Define the Bloc
@@ -46,6 +47,18 @@ class MainBloc extends Bloc<MainEvent, MainState> {
 
         // Store the full response data
         await LocalStorage.saveApplicationData(event.Ids, response.body);
+
+        // Save data to SQLite database
+        try {
+          DbHelper dbHelper = DbHelper();
+          await dbHelper.ensureDatabaseCreated(); // Ensure database is ready
+          await dbHelper
+              .saveCompleteData(responseJSON); // Save the data to SQLite
+          print("Application data successfully saved to SQLite database");
+        } catch (dbError) {
+          print("Error saving to SQLite database: $dbError");
+          // Continue execution even if database save fails
+        }
 
         // Extract and store specific data categories separately for easier access
         if (responseJSON['data'] != null) {
