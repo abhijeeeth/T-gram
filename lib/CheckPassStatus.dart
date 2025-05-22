@@ -108,6 +108,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
 
     FlutterDownloader.registerCallback(downloadingCallback);
   }
+
   String IDS = "";
 
   int progress = 0;

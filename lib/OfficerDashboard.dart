@@ -13,6 +13,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tigramnks/NEW_FORMS/transitViewAndApprove.dart';
+import 'package:tigramnks/PendingApplicationsPage.dart';
 import 'package:tigramnks/QueryPage.dart';
 import 'package:tigramnks/Reports.dart';
 import 'package:tigramnks/ViewApplication.dart';
@@ -104,8 +105,8 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
     }
 
     String url = notified == true
-        ? '${ServerHelper.baseUrl}auth/generate_form_i_pdf/'
-        : '${ServerHelper.baseUrl}auth/generate_form_ii_pdf/';
+        ? '${ServerHelper.baseUrl}auth/generate_form_ii_pdf/'
+        : '${ServerHelper.baseUrl}auth/generate_form_i_pdf/';
 
     try {
       // Request storage permissions
@@ -126,7 +127,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
         // Save PDF to app's internal documents directory first
         final Directory appDocDir = await getApplicationDocumentsDirectory();
         final String filePath =
-            '${appDocDir.path}/FormI_${appId}_${DateTime.now().millisecondsSinceEpoch}.pdf';
+            '${appDocDir.path}/Form_${appId}_${DateTime.now().millisecondsSinceEpoch}.pdf';
         final File file = File(filePath);
 
         await file.writeAsBytes(response.bodyBytes);
@@ -1768,9 +1769,8 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                                                       onPressed:
                                                                           () {
                                                                         downloadFormIPdf(
-                                                                          int.parse(App_no1[int.parse(value)]
-                                                                              .toString()
-                                                                              .substring(App_no1[int.parse(value)].toString().length - 6)),
+                                                                          int.parse(
+                                                                              Ids1[int.parse(value)].toString()),
                                                                           is_form_two1[
                                                                               int.parse(value)],
                                                                         );
@@ -2515,6 +2515,29 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                     )));
                       }),
                   ListTile(
+                      leading: Icon(
+                        Icons.offline_share,
+                        color: Colors.black,
+                        size: 25,
+                      ),
+                      title: Text(
+                        'Download Field Verification',
+                        style: TextStyle(color: Colors.black, fontSize: 20),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => PendingApplicationsPage(
+                                      sessionToken: sessionToken,
+                                      Range: Range,
+                                      userEmail: userEmail,
+                                      userGroup: userGroup,
+                                      userId: userId,
+                                      userName: userName,
+                                    )));
+                      }),
+                  ListTile(
                     leading: Icon(
                       Icons.logout,
                       color: Colors.black,
@@ -2626,7 +2649,7 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
       required double value,
       required Color color,
       required double max}) {
-    const double barMaxHeight = 90;
+    const double barMaxHeight = 45;
     final double barHeight = max == 0 ? 0 : (value / max) * barMaxHeight;
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
