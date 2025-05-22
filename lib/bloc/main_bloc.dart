@@ -72,7 +72,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         }
 
         emit(FieldVerifyDataSavedState(success: true));
-
       } else {
         throw Exception(
             'Failed to fetch application data: ${response.statusCode}');

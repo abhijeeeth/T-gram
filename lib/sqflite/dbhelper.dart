@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DbHelper {
@@ -16,13 +18,89 @@ class DbHelper {
     return _database!;
   }
 
+  // Modified database initialization with better error handling
   Future<Database> _initDatabase() async {
-    String path = join(await getDatabasesPath(), 'tigram_database.db');
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _onCreate,
-    );
+    try {
+      // Get the proper directory for storing the database
+      Directory documentsDirectory = await getApplicationDocumentsDirectory();
+      String path = join(documentsDirectory.path, 'tigram_database.db');
+
+      // Ensure the directory exists
+      await Directory(dirname(path)).create(recursive: true);
+
+      print("Database path: $path");
+
+      // Open the database with explicit onCreate callback
+      return await openDatabase(
+        path,
+        version: 1,
+        onCreate: _onCreate,
+        onOpen: (db) {
+          print("Database opened successfully!");
+        },
+      );
+    } catch (e) {
+      print("Error initializing database: $e");
+      rethrow;
+    }
+  }
+
+  // Check if database exists and is accessible
+  Future<bool> isDatabaseCreated() async {
+    try {
+      Directory documentsDirectory = await getApplicationDocumentsDirectory();
+      String path = join(documentsDirectory.path, 'tigram_database.db');
+      return await databaseExists(path);
+    } catch (e) {
+      print("Error checking database existence: $e");
+      return false;
+    }
+  }
+
+  // Force database creation
+  Future<Database> ensureDatabaseCreated() async {
+    if (_database != null) {
+      return _database!;
+    }
+
+    try {
+      // Close any existing instance
+      if (_database != null) {
+        await _database!.close();
+        _database = null;
+      }
+
+      // Initialize fresh
+      _database = await _initDatabase();
+
+      // Verify tables exist by trying a simple query
+      await _database!
+          .query('sqlite_master', where: 'type = ?', whereArgs: ['table']);
+      print("Database verified and ready for use");
+
+      return _database!;
+    } catch (e) {
+      print("Error ensuring database creation: $e");
+      rethrow;
+    }
+  }
+
+  // Get database path for debugging
+  Future<String> getDatabasePath() async {
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    return join(documentsDirectory.path, 'tigram_database.db');
+  }
+
+  // Helper to delete the database (for troubleshooting)
+  Future<void> deleteDatabase() async {
+    try {
+      String path = await getDatabasePath();
+      await databaseFactory.deleteDatabase(path);
+      _database = null;
+      print("Database deleted successfully");
+    } catch (e) {
+      print("Error deleting database: $e");
+    }
   }
 
   Future<void> _onCreate(Database db, int version) async {
@@ -146,6 +224,102 @@ class DbHelper {
         FOREIGN KEY (app_form_id) REFERENCES applications (id)
       )
     ''');
+  }
+
+  // Initialize and validate database - call this early in your app startup
+  Future<bool> initializeDatabase() async {
+    try {
+      // Force database creation
+      final db = await ensureDatabaseCreated();
+
+      // Verify all tables exist
+      final tables = await _getTables(db);
+      print("Database tables: $tables");
+
+      // Check for required tables
+      final requiredTables = [
+        'applications',
+        'image_documents',
+        'timber_logs',
+        'species',
+        'additional_documents'
+      ];
+
+      final allTablesExist = requiredTables
+          .every((table) => tables.any((t) => t['name'] == table));
+
+      if (!allTablesExist) {
+        print("WARNING: Some required tables are missing!");
+        // Force recreation
+        await deleteDatabase();
+        await ensureDatabaseCreated();
+        return false;
+      }
+
+      print("Database initialized successfully with all required tables");
+      return true;
+    } catch (e) {
+      print("Error initializing database: $e");
+      return false;
+    }
+  }
+
+  // Get list of all tables in the database
+  Future<List<Map<String, dynamic>>> _getTables(Database db) async {
+    return await db.rawQuery(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'android_%'");
+  }
+
+  // Check if a table exists
+  Future<bool> tableExists(String tableName) async {
+    try {
+      final db = await database;
+      final tables = await _getTables(db);
+      return tables.any((t) => t['name'] == tableName);
+    } catch (e) {
+      print("Error checking if table exists: $e");
+      return false;
+    }
+  }
+
+  // Helper method to recreate database from scratch
+  Future<bool> resetDatabase() async {
+    try {
+      await deleteDatabase();
+      await ensureDatabaseCreated();
+      return true;
+    } catch (e) {
+      print("Error resetting database: $e");
+      return false;
+    }
+  }
+
+  // Get database statistics for debugging
+  Future<Map<String, dynamic>> getDatabaseStats() async {
+    try {
+      final db = await database;
+      final tables = await _getTables(db);
+
+      Map<String, dynamic> stats = {
+        'dbPath': await getDatabasePath(),
+        'tables': tables.length,
+        'tableNames': tables.map((t) => t['name']).toList(),
+        'counts': <String, int>{},
+      };
+
+      // Get count of records in each table
+      for (var table in tables) {
+        final tableName = table['name'] as String;
+        final countResult =
+            await db.rawQuery('SELECT COUNT(*) as count FROM $tableName');
+        stats['counts'][tableName] = Sqflite.firstIntValue(countResult) ?? 0;
+      }
+
+      return stats;
+    } catch (e) {
+      print("Error getting database stats: $e");
+      return {'error': e.toString()};
+    }
   }
 
   // CRUD operations for Applications

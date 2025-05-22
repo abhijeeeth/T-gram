@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:tigramnks/bloc/main_bloc.dart';
 import 'package:tigramnks/login.dart';
+import 'package:tigramnks/utils/db_initializer.dart';
 
 // Add this class for SSL certificate bypass
 class MyHttpOverrides extends HttpOverrides {
@@ -21,17 +22,28 @@ void _setHttpOverrides() {
   HttpOverrides.global = MyHttpOverrides();
 }
 
-void main() async {
-  // Set overrides before anything else
-  _setHttpOverrides();
-
-  // Then initialize Flutter
+// Example usage in main.dart
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await FlutterDownloader.initialize(
-      debug: true // optional: set false to disable printing logs to console
-      );
-  runApp(const MyApp());
+  runApp(
+    DatabaseInitializer.wrapWithDatabaseInitialization(
+      child: const MyApp(),
+      loadingWidget: const MaterialApp(
+        home: Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+        ),
+      ),
+      errorWidget: const MaterialApp(
+        home: Scaffold(
+          body: Center(
+            child:
+                Text('Failed to initialize database. Please restart the app.'),
+          ),
+        ),
+      ),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
