@@ -3,8 +3,8 @@ import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tigramnks/server/serverhelper.dart';
+import 'package:tigramnks/utils/local_storage.dart';
 
 // Define the Bloc
 class MainBloc extends Bloc<MainEvent, MainState> {
@@ -13,11 +13,10 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     // TODO: implement event handler
   }
 
-  FutureOr<void> _savbeLocallyFieldVerifyData(
+  FutureOr _savbeLocallyFieldVerifyData(
       SaveLocallyFieldVerifyData event, Emitter<MainState> emit) async {
     try {
       // Store the basic user data
-      final prefs = await SharedPreferences.getInstance();
       Map<String, dynamic> userData = {
         'sessionToken': event.sessionToken,
         'userGroup': event.userGroup,
@@ -28,8 +27,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         'userEmail': event.userEmail,
       };
 
-      await prefs.setString(
-          'user_field_data_${event.Ids}', json.encode(userData));
+      await LocalStorage.saveUserData(event.Ids, userData);
 
       // Fetch application details from server
       String url = '${ServerHelper.baseUrl}auth/ViewApplication';
@@ -47,33 +45,34 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         Map<String, dynamic> responseJSON = json.decode(response.body);
 
         // Store the full response data
-        await prefs.setString('application_data_${event.Ids}', response.body);
+        await LocalStorage.saveApplicationData(event.Ids, response.body);
 
         // Extract and store specific data categories separately for easier access
         if (responseJSON['data'] != null) {
           if (responseJSON['data']['applications'] != null &&
               responseJSON['data']['applications'].isNotEmpty) {
-            await prefs.setString('application_details_${event.Ids}',
-                json.encode(responseJSON['data']['applications'][0]));
+            await LocalStorage.saveApplicationDetails(
+                event.Ids, responseJSON['data']['applications'][0]);
           }
 
           if (responseJSON['data']['timber_log'] != null) {
-            await prefs.setString('timber_log_${event.Ids}',
-                json.encode(responseJSON['data']['timber_log']));
+            await LocalStorage.saveTimberLog(
+                event.Ids, responseJSON['data']['timber_log']);
           }
 
           if (responseJSON['data']['species_location'] != null) {
-            await prefs.setString('species_location_${event.Ids}',
-                json.encode(responseJSON['data']['species_location']));
+            await LocalStorage.saveSpeciesLocation(
+                event.Ids, responseJSON['data']['species_location']);
           }
 
           if (responseJSON['data']['image_documents'] != null) {
-            await prefs.setString('image_documents_${event.Ids}',
-                json.encode(responseJSON['data']['image_documents']));
+            await LocalStorage.saveImageDocuments(
+                event.Ids, responseJSON['data']['image_documents']);
           }
         }
 
         emit(FieldVerifyDataSavedState(success: true));
+
       } else {
         throw Exception(
             'Failed to fetch application data: ${response.statusCode}');

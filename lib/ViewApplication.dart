@@ -161,7 +161,9 @@ class _ViewApplicationState extends State<ViewApplication> {
     print('Request Body: $body');
     Map<String, dynamic> responseJSON = json.decode(response.body);
     print("-----------------View -Application--------------");
-    print(responseJSON);
+    log.log("'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''");
+    log.log(responseJSON.toString());
+    log.log("'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''");
     setState(() {
       try {
         Name =

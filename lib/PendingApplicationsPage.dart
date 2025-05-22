@@ -4,9 +4,10 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:tigramnks/ViewApplication.dart';
+import 'package:tigramnks/bloc/main_bloc.dart';
 import 'package:tigramnks/server/serverhelper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -447,22 +448,33 @@ class _PendingApplicationsPageState extends State<PendingApplicationsPage> {
                                             onPressed: () {
                                               String IDS =
                                                   Ids[index].toString();
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (_) =>
-                                                          ViewApplication(
-                                                              sessionToken:
-                                                                  sessionToken,
-                                                              userGroup:
-                                                                  userGroup,
-                                                              userId: userId,
-                                                              Ids: IDS,
-                                                              Range: Range,
-                                                              userName:
-                                                                  userName,
-                                                              userEmail:
-                                                                  userEmail)));
+                                              // Navigator.push(
+                                              //     context,
+                                              //     MaterialPageRoute(
+                                              //         builder: (_) =>
+                                              //             ViewApplication(
+                                              //                 sessionToken:
+                                              //                     sessionToken,
+                                              //                 userGroup:
+                                              //                     userGroup,
+                                              //                 userId: userId,
+                                              //                 Ids: IDS,
+                                              //                 Range: Range,
+                                              //                 userName:
+                                              //                     userName,
+                                              //                 userEmail:
+                                              //                     userEmail)));
+                                              context.read<MainBloc>().add(
+                                                  SaveLocallyFieldVerifyData(
+                                                      sessionToken:
+                                                          sessionToken,
+                                                      userGroup: userGroup,
+                                                      userId: userId.toString(),
+                                                      Ids:
+                                                          Ids[index].toString(),
+                                                      Range: Range.toString(),
+                                                      userName: userName,
+                                                      userEmail: userEmail));
                                             },
                                           ),
                                         ),
