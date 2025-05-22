@@ -18,7 +18,6 @@ class DbHelper {
     return _database!;
   }
 
-  // Modified database initialization with better error handling
   Future<Database> _initDatabase() async {
     try {
       // Get the proper directory for storing the database
@@ -33,8 +32,9 @@ class DbHelper {
       // Open the database with explicit onCreate callback
       return await openDatabase(
         path,
-        version: 1,
+        version: 2, // Increment version number
         onCreate: _onCreate,
+        onUpgrade: _onUpgrade, // Add upgrade handler
         onOpen: (db) {
           print("Database opened successfully!");
         },
@@ -42,64 +42,6 @@ class DbHelper {
     } catch (e) {
       print("Error initializing database: $e");
       rethrow;
-    }
-  }
-
-  // Check if database exists and is accessible
-  Future<bool> isDatabaseCreated() async {
-    try {
-      Directory documentsDirectory = await getApplicationDocumentsDirectory();
-      String path = join(documentsDirectory.path, 'tigram_database.db');
-      return await databaseExists(path);
-    } catch (e) {
-      print("Error checking database existence: $e");
-      return false;
-    }
-  }
-
-  // Force database creation
-  Future<Database> ensureDatabaseCreated() async {
-    if (_database != null) {
-      return _database!;
-    }
-
-    try {
-      // Close any existing instance
-      if (_database != null) {
-        await _database!.close();
-        _database = null;
-      }
-
-      // Initialize fresh
-      _database = await _initDatabase();
-
-      // Verify tables exist by trying a simple query
-      await _database!
-          .query('sqlite_master', where: 'type = ?', whereArgs: ['table']);
-      print("Database verified and ready for use");
-
-      return _database!;
-    } catch (e) {
-      print("Error ensuring database creation: $e");
-      rethrow;
-    }
-  }
-
-  // Get database path for debugging
-  Future<String> getDatabasePath() async {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    return join(documentsDirectory.path, 'tigram_database.db');
-  }
-
-  // Helper to delete the database (for troubleshooting)
-  Future<void> deleteDatabase() async {
-    try {
-      String path = await getDatabasePath();
-      await databaseFactory.deleteDatabase(path);
-      _database = null;
-      print("Database deleted successfully");
-    } catch (e) {
-      print("Error deleting database: $e");
     }
   }
 
@@ -148,7 +90,21 @@ class DbHelper {
         verify_office_date TEXT,
         current_app_status TEXT,
         created_date TEXT,
-        declaration_signed INTEGER
+        declaration_signed INTEGER,
+        depty_range_officer INTEGER,
+        reason_depty_ranger_office TEXT,
+        deputy_officer_date TEXT,
+        verify_range_officer INTEGER,
+        reason_range_officer TEXT,
+        range_officer_date TEXT,
+        division_officer INTEGER,
+        reason_division_officer TEXT,
+        division_officer_date TEXT,
+        payment TEXT,
+        appsecond_one_date TEXT,
+        appsecond_two_date TEXT,
+        transit_pass_created_date TEXT,
+        transit_pass_created INTEGER
       )
     ''');
 
@@ -226,17 +182,103 @@ class DbHelper {
     ''');
   }
 
-  // Initialize and validate database - call this early in your app startup
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      print("Upgrading database from version $oldVersion to $newVersion");
+      try {
+        // Add missing columns to applications table
+        List<String> columnsToAdd = [
+          'depty_range_officer INTEGER',
+          'reason_depty_ranger_office TEXT',
+          'deputy_officer_date TEXT',
+          'verify_range_officer INTEGER',
+          'reason_range_officer TEXT',
+          'range_officer_date TEXT',
+          'division_officer INTEGER',
+          'reason_division_officer TEXT',
+          'division_officer_date TEXT',
+          'payment TEXT',
+          'appsecond_one_date TEXT',
+          'appsecond_two_date TEXT',
+          'transit_pass_created_date TEXT',
+          'transit_pass_created INTEGER'
+        ];
+
+        for (var column in columnsToAdd) {
+          try {
+            var parts = column.split(' ');
+            await db.execute(
+                'ALTER TABLE applications ADD COLUMN ${parts[0]} ${parts[1]}');
+            print("Added column ${parts[0]} to applications table");
+          } catch (e) {
+            print("Error adding column to applications table: $e");
+            // Continue with next column even if one fails
+          }
+        }
+      } catch (e) {
+        print("Error during database upgrade: $e");
+      }
+    }
+  }
+
+  Future<bool> isDatabaseCreated() async {
+    try {
+      Directory documentsDirectory = await getApplicationDocumentsDirectory();
+      String path = join(documentsDirectory.path, 'tigram_database.db');
+      return await databaseExists(path);
+    } catch (e) {
+      print("Error checking database existence: $e");
+      return false;
+    }
+  }
+
+  Future<Database> ensureDatabaseCreated() async {
+    if (_database != null) {
+      return _database!;
+    }
+
+    try {
+      if (_database != null) {
+        await _database!.close();
+        _database = null;
+      }
+
+      _database = await _initDatabase();
+
+      await _database!
+          .query('sqlite_master', where: 'type = ?', whereArgs: ['table']);
+      print("Database verified and ready for use");
+
+      return _database!;
+    } catch (e) {
+      print("Error ensuring database creation: $e");
+      rethrow;
+    }
+  }
+
+  Future<String> getDatabasePath() async {
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    return join(documentsDirectory.path, 'tigram_database.db');
+  }
+
+  Future<void> deleteDatabase() async {
+    try {
+      String path = await getDatabasePath();
+      await databaseFactory.deleteDatabase(path);
+      _database = null;
+      print("Database deleted successfully");
+    } catch (e) {
+      print("Error deleting database: $e");
+    }
+  }
+
   Future<bool> initializeDatabase() async {
     try {
-      // Force database creation
       final db = await ensureDatabaseCreated();
 
-      // Verify all tables exist
       final tables = await _getTables(db);
       print("Database tables: $tables");
 
-      // Check for required tables
       final requiredTables = [
         'applications',
         'image_documents',
@@ -250,7 +292,6 @@ class DbHelper {
 
       if (!allTablesExist) {
         print("WARNING: Some required tables are missing!");
-        // Force recreation
         await deleteDatabase();
         await ensureDatabaseCreated();
         return false;
@@ -264,13 +305,11 @@ class DbHelper {
     }
   }
 
-  // Get list of all tables in the database
   Future<List<Map<String, dynamic>>> _getTables(Database db) async {
     return await db.rawQuery(
         "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'android_%'");
   }
 
-  // Check if a table exists
   Future<bool> tableExists(String tableName) async {
     try {
       final db = await database;
@@ -282,7 +321,6 @@ class DbHelper {
     }
   }
 
-  // Helper method to recreate database from scratch
   Future<bool> resetDatabase() async {
     try {
       await deleteDatabase();
@@ -294,7 +332,6 @@ class DbHelper {
     }
   }
 
-  // Get database statistics for debugging
   Future<Map<String, dynamic>> getDatabaseStats() async {
     try {
       final db = await database;
@@ -307,7 +344,6 @@ class DbHelper {
         'counts': <String, int>{},
       };
 
-      // Get count of records in each table
       for (var table in tables) {
         final tableName = table['name'] as String;
         final countResult =
@@ -322,10 +358,26 @@ class DbHelper {
     }
   }
 
-  // CRUD operations for Applications
   Future<int> insertApplication(Map<String, dynamic> application) async {
     Database db = await database;
-    return await db.insert('applications', application);
+    try {
+      var tableInfo = await db.rawQuery("PRAGMA table_info(applications)");
+      var existingColumns =
+          tableInfo.map((col) => col['name'].toString()).toSet();
+
+      var filteredData = Map<String, dynamic>.from(application);
+      for (var key in application.keys) {
+        if (!existingColumns.contains(key)) {
+          filteredData.remove(key);
+          print("Removed non-existent column from data: $key");
+        }
+      }
+
+      return await db.insert('applications', filteredData);
+    } catch (e) {
+      print("Error inserting application: $e");
+      return -1;
+    }
   }
 
   Future<List<Map<String, dynamic>>> getApplications() async {
@@ -363,7 +415,6 @@ class DbHelper {
     return await db.delete('applications', where: 'id = ?', whereArgs: [id]);
   }
 
-  // CRUD operations for Image Documents
   Future<int> insertImageDocument(Map<String, dynamic> document) async {
     Database db = await database;
     return await db.insert('image_documents', document);
@@ -378,7 +429,6 @@ class DbHelper {
     );
   }
 
-  // CRUD operations for Timber Logs
   Future<int> insertTimberLog(Map<String, dynamic> log) async {
     Database db = await database;
     return await db.insert('timber_logs', log);
@@ -393,7 +443,6 @@ class DbHelper {
     );
   }
 
-  // CRUD operations for Species
   Future<int> insertSpecies(String name) async {
     Database db = await database;
     return await db.insert('species', {'name': name});
@@ -404,7 +453,6 @@ class DbHelper {
     return await db.query('species');
   }
 
-  // CRUD operations for Additional Documents
   Future<int> insertAdditionalDocument(Map<String, dynamic> document) async {
     Database db = await database;
     return await db.insert('additional_documents', document);
@@ -420,36 +468,29 @@ class DbHelper {
     );
   }
 
-  // Save complete data from API response
   Future<void> saveCompleteData(Map<String, dynamic> data) async {
-    // Begin transaction
     final db = await database;
     await db.transaction((txn) async {
-      // Save applications
       for (var app in data['data']['applications']) {
         await txn.insert('applications', app,
             conflictAlgorithm: ConflictAlgorithm.replace);
       }
 
-      // Save image documents
       for (var doc in data['data']['image_documents']) {
         await txn.insert('image_documents', doc,
             conflictAlgorithm: ConflictAlgorithm.replace);
       }
 
-      // Save timber logs
       for (var log in data['data']['timber_log']) {
         await txn.insert('timber_logs', log,
             conflictAlgorithm: ConflictAlgorithm.replace);
       }
 
-      // Save species list
       for (var species in data['data']['trees_species_list']) {
         await txn.insert('species', {'name': species['name']},
             conflictAlgorithm: ConflictAlgorithm.replace);
       }
 
-      // Save additional documents
       for (var doc in data['data']['additional_documents']) {
         await txn.insert('additional_documents', doc,
             conflictAlgorithm: ConflictAlgorithm.replace);
@@ -457,7 +498,6 @@ class DbHelper {
     });
   }
 
-  // Get complete data for an application
   Future<Map<String, dynamic>> getCompleteApplicationData(
       int applicationId) async {
     final db = await database;

@@ -45,18 +45,55 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       if (response.statusCode == 200) {
         Map<String, dynamic> responseJSON = json.decode(response.body);
 
-        // Store the full response data
-        await LocalStorage.saveApplicationData(event.Ids, response.body);
-
         // Save data to SQLite database
         try {
           DbHelper dbHelper = DbHelper();
           await dbHelper.ensureDatabaseCreated(); // Ensure database is ready
-          await dbHelper
-              .saveCompleteData(responseJSON); // Save the data to SQLite
+
+          if (responseJSON['data']?['applications'] != null) {
+            for (var app in responseJSON['data']['applications']) {
+              var result = await dbHelper.insertApplication(app);
+              if (result == -1) {
+                print("Failed to insert application: ${app['id']}");
+              }
+            }
+          }
+          if (responseJSON['data']?['image_documents'] != null) {
+            for (var doc in responseJSON['data']['image_documents']) {
+              await dbHelper.insertImageDocument(doc);
+            }
+          }
+
+          // Save timber logs
+          if (responseJSON['data']?['timber_log'] != null) {
+            for (var log in responseJSON['data']['timber_log']) {
+              await dbHelper.insertTimberLog(log);
+            }
+          }
+
+          // Save species list
+          if (responseJSON['data']?['trees_species_list'] != null) {
+            for (var species in responseJSON['data']['trees_species_list']) {
+              if (species['name'] != null) {
+                await dbHelper.insertSpecies(species['name']);
+              }
+            }
+          }
+
+          if (responseJSON['data']?['additional_documents'] != null) {
+            for (var doc in responseJSON['data']['additional_documents']) {
+              await dbHelper.insertAdditionalDocument(doc);
+            }
+          }
+
           print("Application data successfully saved to SQLite database");
         } catch (dbError) {
           print("Error saving to SQLite database: $dbError");
+          // Log more details to help diagnose the issue
+          if (dbError.toString().contains('no column named')) {
+            print(
+                "Database schema mismatch. Try upgrading the database or reinstalling the app.");
+          }
           // Continue execution even if database save fails
         }
 
