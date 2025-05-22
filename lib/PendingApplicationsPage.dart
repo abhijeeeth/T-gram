@@ -92,6 +92,7 @@ class _PendingApplicationsPageState extends State<PendingApplicationsPage> {
   final List log_updated_by_use = [];
   final List verify_forest1 = [];
   final List field_status = [];
+  final List status = []; // Added to store status field
 
   int allApplication = 0;
 
@@ -138,6 +139,7 @@ class _PendingApplicationsPageState extends State<PendingApplicationsPage> {
     log_updated_by_use.clear();
     verify_forest1.clear();
     field_status.clear();
+    status.clear(); // Clear the status list
 
     print("Fetching Pending Applications");
     const String url = '${ServerHelper.baseUrl}auth/PendingListViewApplication';
@@ -196,6 +198,7 @@ class _PendingApplicationsPageState extends State<PendingApplicationsPage> {
         assigned_deputy2_by_id.add(list[i]['assigned_deputy2_name']);
         log_updated_by_use.add(list[i]['log_updated_by_user']);
         verify_forest1.add(list[i]['verify_forest1']);
+        status.add(list[i]['status']); // Added to capture status field
       }
       setState(() {
         isLoading = false;
