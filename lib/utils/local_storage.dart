@@ -8,7 +8,7 @@ class LocalStorage {
     preferences.setString('token', token!);
   }
 
-  static getToken() async {
+  static getTokene() async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.getString('token');
   }
@@ -125,5 +125,37 @@ class LocalStorage {
   static clearAll() async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     await preferences.clear();
+  }
+
+  static savEmail(String userEmail) {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString('user_email', userEmail);
+    });
+  }
+
+  static getEmail() async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.getString('user_email');
+  }
+
+  static removeEmail() async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.remove('user_email');
+  }
+
+  static userGroup(String userGroup) {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString('user_group', userGroup);
+    });
+  }
+
+  static getUserGroup() async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.getString('user_group');
+  }
+
+  static removeUserGroup() async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.remove('user_group');
   }
 }

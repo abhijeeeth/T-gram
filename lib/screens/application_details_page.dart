@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'; // Add this import
 import 'package:tigramnks/sqflite/dbhelper.dart';
+import 'package:tigramnks/utils/local_storage.dart';
+import 'package:tigramnks/viewApplicationOffine.dart';
 
 // Define theme colors
 class AppColors {
@@ -27,11 +29,28 @@ class _ApplicationDetailsPageState extends State<ApplicationDetailsPage> {
   List<dynamic>? _imageDocuments;
   String? _error;
   final DbHelper _dbHelper = DbHelper();
+  String? userGroupFuture;
+  String? userEmail;
+  String? sessionToken;
 
   @override
   void initState() {
     super.initState();
     _loadApplicationData();
+
+    @override
+    void initState() {
+      super.initState();
+      _loadApplicationData();
+      userGroupFuture = LocalStorage.getUserGroup();
+      userEmail = LocalStorage.getEmail();
+      sessionToken = LocalStorage.getTokene();
+
+      // Log the loaded values
+      debugPrint('User Group: $userGroupFuture');
+      debugPrint('User Email: $userEmail');
+      debugPrint('Session Token: $sessionToken');
+    }
   }
 
   Future<void> _loadApplicationData() async {
@@ -97,6 +116,41 @@ class _ApplicationDetailsPageState extends State<ApplicationDetailsPage> {
         color: Colors.grey[100],
         child: _buildBody(),
       ),
+      floatingActionButton: _applicationDetails != null
+          ? FloatingActionButton.extended(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Viewapplicationoffine(
+                      sessionToken: LocalStorage.getTokene()
+                          .toString(), // Replace with actual session token
+                      userId: _applicationDetails!['user_id'] ?? 0,
+                      Ids: widget.applicationId,
+                      Range: _timberLogData ?? [],
+                      userName: _applicationDetails!['name'] ?? 'Unknown',
+                      userEmail:
+                          userEmail.toString(), // Replace with actual email
+                      img_signature: '', // Replace with actual signature
+                      userGroup: userGroupFuture
+                          .toString(), // Replace with actual user group
+                      field_status: true, // Replace with actual field status
+                      log_details: _timberLogData ?? [],
+                      treeSpecies: _timberLogData?.isNotEmpty == true
+                          ? _timberLogData![0]['species_of_tree'] ?? 'Unknown'
+                          : 'Unknown',
+                    ),
+                  ),
+                );
+              },
+              backgroundColor: AppColors.primaryColor,
+              icon: const Icon(Icons.visibility, color: Colors.white),
+              label: const Text(
+                'View Offline',
+                style: TextStyle(color: Colors.white),
+              ),
+            )
+          : null,
     );
   }
 

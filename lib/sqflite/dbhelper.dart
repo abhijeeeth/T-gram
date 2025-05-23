@@ -180,6 +180,25 @@ class DbHelper {
         FOREIGN KEY (app_form_id) REFERENCES applications (id)
       )
     ''');
+
+    // Transit passes table
+    await db.execute('''
+      CREATE TABLE transit_passes (
+        id INTEGER PRIMARY KEY,
+        species_of_tree TEXT,
+        length REAL,
+        breadth REAL,
+        volume REAL,
+        latitude TEXT,
+        longitude TEXT,
+        log_qr_code TEXT,
+        log_qr_code_img TEXT,
+        is_transited INTEGER,
+        appform INTEGER,
+        transit INTEGER,
+        FOREIGN KEY (appform) REFERENCES applications (id)
+      )
+    ''');
   }
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -214,6 +233,30 @@ class DbHelper {
             print("Error adding column to applications table: $e");
             // Continue with next column even if one fails
           }
+        }
+
+        // Create transit_passes table if it doesn't exist
+        try {
+          await db.execute('''
+            CREATE TABLE IF NOT EXISTS transit_passes (
+              id INTEGER PRIMARY KEY,
+              species_of_tree TEXT,
+              length REAL,
+              breadth REAL,
+              volume REAL,
+              latitude TEXT,
+              longitude TEXT,
+              log_qr_code TEXT,
+              log_qr_code_img TEXT,
+              is_transited INTEGER,
+              appform INTEGER,
+              transit INTEGER,
+              FOREIGN KEY (appform) REFERENCES applications (id)
+            )
+          ''');
+          print("Created transit_passes table");
+        } catch (e) {
+          print("Error creating transit_passes table: $e");
         }
       } catch (e) {
         print("Error during database upgrade: $e");
@@ -284,7 +327,8 @@ class DbHelper {
         'image_documents',
         'timber_logs',
         'species',
-        'additional_documents'
+        'additional_documents',
+        'transit_passes'
       ];
 
       final allTablesExist = requiredTables
@@ -412,6 +456,7 @@ class DbHelper {
     await db.delete('timber_logs', where: 'appform_id = ?', whereArgs: [id]);
     await db.delete('additional_documents',
         where: 'app_form_id = ?', whereArgs: [id]);
+    await db.delete('transit_passes', where: 'appform = ?', whereArgs: [id]);
     return await db.delete('applications', where: 'id = ?', whereArgs: [id]);
   }
 
@@ -468,6 +513,40 @@ class DbHelper {
     );
   }
 
+  Future<int> insertTransitPass(Map<String, dynamic> transitPass) async {
+    Database db = await database;
+    return await db.insert('transit_passes', transitPass);
+  }
+
+  Future<List<Map<String, dynamic>>> getTransitPasses(int appFormId) async {
+    Database db = await database;
+    return await db.query(
+      'transit_passes',
+      where: 'appform = ?',
+      whereArgs: [appFormId],
+    );
+  }
+
+  Future<List<Map<String, dynamic>>> getAllTransitPasses() async {
+    Database db = await database;
+    return await db.query('transit_passes');
+  }
+
+  Future<int> updateTransitPass(Map<String, dynamic> transitPass) async {
+    Database db = await database;
+    return await db.update(
+      'transit_passes',
+      transitPass,
+      where: 'id = ?',
+      whereArgs: [transitPass['id']],
+    );
+  }
+
+  Future<int> deleteTransitPass(int id) async {
+    Database db = await database;
+    return await db.delete('transit_passes', where: 'id = ?', whereArgs: [id]);
+  }
+
   Future<bool> applicationExistsByNo(String applicationNo) async {
     Database db = await database;
     List<Map<String, dynamic>> result = await db.query(
@@ -505,6 +584,14 @@ class DbHelper {
         await txn.insert('additional_documents', doc,
             conflictAlgorithm: ConflictAlgorithm.replace);
       }
+
+      // Handle transit passes if they exist in the data
+      if (data['data']['transit_passes'] != null) {
+        for (var transitPass in data['data']['transit_passes']) {
+          await txn.insert('transit_passes', transitPass,
+              conflictAlgorithm: ConflictAlgorithm.replace);
+        }
+      }
     });
   }
 
@@ -520,6 +607,7 @@ class DbHelper {
     final imageDocuments = await getImageDocuments(applicationId);
     final timberLogs = await getTimberLogs(applicationId);
     final additionalDocuments = await getAdditionalDocuments(applicationId);
+    final transitPasses = await getTransitPasses(applicationId);
     final species = await getAllSpecies();
 
     return {
@@ -530,6 +618,7 @@ class DbHelper {
         'image_documents': imageDocuments,
         'timber_log': timberLogs,
         'additional_documents': additionalDocuments,
+        'transit_passes': transitPasses,
         'trees_species_list': species.map((s) => {'name': s['name']}).toList(),
       }
     };

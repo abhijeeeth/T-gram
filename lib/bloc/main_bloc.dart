@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:http/http.dart' as http;
@@ -11,6 +12,7 @@ import 'package:tigramnks/utils/local_storage.dart';
 class MainBloc extends Bloc<MainEvent, MainState> {
   MainBloc() : super(MainState()) {
     on<SaveLocallyFieldVerifyData>(_savbeLocallyFieldVerifyData);
+    on<FetchSpeciesList>(_fetchSpeciesList);
     // TODO: implement event handler
   }
 
@@ -43,6 +45,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           body: body);
 
       if (response.statusCode == 200) {
+        add(FetchSpeciesList(Ids: event.Ids, sessionToken: event.sessionToken));
         Map<String, dynamic> responseJSON = json.decode(response.body);
 
         // Save data to SQLite database
@@ -131,6 +134,48 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       emit(FieldVerifyDataSavedState(success: false, error: e.toString()));
     }
   }
+
+  FutureOr<void> _fetchSpeciesList(
+      FetchSpeciesList event, Emitter<MainState> emit) async {
+    try {
+      String url = '${ServerHelper.baseUrl}auth/get_req_log/';
+      Map data = {"app_id": event.Ids};
+      var body = json.encode(data);
+      final response = await http.post(Uri.parse(url),
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Authorization': "token ${event.sessionToken}"
+          },
+          body: body);
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseJSON = json.decode(response.body);
+        log("Response JSON: $responseJSON");
+        // Extract log details
+        List<dynamic> logs = responseJSON['data'] ?? [];
+
+        // Save logs to the transit_passes table in SQLite
+        try {
+          DbHelper dbHelper = DbHelper();
+          await dbHelper.ensureDatabaseCreated();
+          for (var logEntry in logs) {
+            await dbHelper.insertTransitPass(logEntry);
+          }
+          print("Transit passes successfully saved to SQLite database");
+        } catch (dbError) {
+          print("Error saving transit passes to SQLite database: $dbError");
+        }
+
+        // Optionally, emit a state with the logs
+        // emit(SpeciesListFetchedState(logs: logs));
+      } else {
+        throw Exception('Failed to fetch log data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching species list: $e');
+      //emit(SpeciesListFetchedState(logs: [], error: e.toString()));
+    }
+  }
 }
 
 // Define the events
@@ -166,5 +211,17 @@ class SaveLocallyFieldVerifyData extends MainEvent {
     required this.Range,
     required this.userName,
     required this.userEmail,
+  });
+}
+
+//Fetch Species List
+class FetchSpeciesList extends MainEvent {
+  final String sessionToken;
+
+  final String Ids;
+
+  FetchSpeciesList({
+    required this.sessionToken,
+    required this.Ids,
   });
 }

@@ -19,6 +19,7 @@ import 'package:tigramnks/forgetPassword.dart';
 import 'package:tigramnks/homePage.dart';
 import 'package:tigramnks/server/serverhelper.dart';
 import 'package:tigramnks/signup.dart';
+import 'package:tigramnks/utils/local_storage.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 import 'checkPostDash.dart';
@@ -1470,6 +1471,12 @@ class _OfficerState extends State<OfficerLogin> {
                     log(response.body);
 
                     if (responseJson['status'] == "success") {
+                      await LocalStorage.saveToken(responseJson['token']);
+                      await LocalStorage.savEmail(
+                          responseJson["data"]["email"]);
+                      await LocalStorage.userGroup(
+                          responseJson['data']['user_group'][0]);
+                      log(responseJson['token'].toString());
                       setState(() {
                         userId = responseJson['data']['id'];
                         userName = responseJson['data']['name'];
@@ -1484,7 +1491,12 @@ class _OfficerState extends State<OfficerLogin> {
                         userProfile = responseJson["data"]["photo_proof_img"] ??
                             'no_photo';
                       });
-                      log(userMobile.toString());
+
+                      // saveneeded() async {
+
+                      // }
+
+                      log(sessionToken.toString());
                       log(userMobile.toString());
                       log(userMobile.toString());
                       if (dropdownValue != null &&
