@@ -36,16 +36,172 @@ class _ApplicationsListPageState extends State<ApplicationsListPage> {
     }
   }
 
+  Future<void> _showDatabaseInfo() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final stats = await _dbHelper.getDatabaseStats();
+      setState(() {
+        _isLoading = false;
+      });
+
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(
+            'Database Information',
+            style: TextStyle(
+              color: Theme.of(context).primaryColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Database Path:',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                Text('${stats['dbPath']}',
+                    style: const TextStyle(fontSize: 12)),
+                const SizedBox(height: 12),
+                Text('Tables (${stats['tables']})',
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                ...((stats['tableNames'] as List).map((table) => Padding(
+                      padding: const EdgeInsets.only(left: 8.0, bottom: 4.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('$table:'),
+                          Text(
+                            '${stats['counts'][table]} records',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ))),
+                const SizedBox(height: 16),
+                Center(
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.delete_forever, color: Colors.white),
+                    label: const Text('Delete All Data',
+                        style: TextStyle(color: Colors.white)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Confirm Deletion'),
+                            content: const Text(
+                                'Are you sure you want to delete ALL data? This action cannot be undone.'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                style: TextButton.styleFrom(
+                                  foregroundColor: Colors.red,
+                                ),
+                                onPressed: () async {
+                                  // Close both dialogs first
+                                  Navigator.of(context)
+                                      .pop(); // Close confirmation dialog
+                                  Navigator.of(context)
+                                      .pop(); // Close database info dialog
+
+                                  setState(() {
+                                    _isLoading = true;
+                                  });
+
+                                  try {
+                                    await _dbHelper.resetDatabase();
+
+                                    setState(() {
+                                      _isLoading = false;
+                                    });
+
+                                    // Just refresh the list without showing any SnackBar
+                                    _loadApplications();
+                                  } catch (e) {
+                                    setState(() {
+                                      _isLoading = false;
+                                      _error = "Failed to reset database: $e";
+                                    });
+                                  }
+                                },
+                                child: const Text(
+                                  'Delete Everything',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ), 
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Close'),
+            ),
+          ],
+        ),
+      );
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+        _error = "Failed to get database information: $e";
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(_error ?? "Error fetching database information"),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Applications'),
+        title: const Text('Download Field Verification List',
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            )),
         elevation: 0,
         backgroundColor: Theme.of(context).primaryColor,
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(Icons.delete, color: Colors.white),
+            onPressed: _showDatabaseInfo,
+          ),
+          IconButton(
+            icon: const Icon(Icons.refresh, color: Colors.white),
             onPressed: _loadApplications,
           ),
         ],
