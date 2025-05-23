@@ -32,7 +32,7 @@ class DbHelper {
       // Open the database with explicit onCreate callback
       return await openDatabase(
         path,
-        version: 2, // Increment version number
+        version: 3, // Increment version number to 3
         onCreate: _onCreate,
         onUpgrade: _onUpgrade, // Add upgrade handler
         onOpen: (db) {
@@ -199,6 +199,30 @@ class DbHelper {
         FOREIGN KEY (appform) REFERENCES applications (id)
       )
     ''');
+
+    // Application locations table
+    await db.execute('''
+      CREATE TABLE application_locations (
+        id INTEGER PRIMARY KEY,
+        app_form_id INTEGER,
+        location_img1 TEXT,
+        location_img2 TEXT,
+        location_img3 TEXT,
+        location_img4 TEXT,
+        summary TEXT,
+        log_details TEXT,
+        image1_lat TEXT,
+        image2_lat TEXT,
+        image3_lat TEXT,
+        image4_lat TEXT,
+        image1_log TEXT,
+        image2_log TEXT,
+        image3_log TEXT,
+        image4_log TEXT,
+        created_at TEXT,
+        FOREIGN KEY (app_form_id) REFERENCES applications (id)
+      )
+    ''');
   }
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -260,6 +284,38 @@ class DbHelper {
         }
       } catch (e) {
         print("Error during database upgrade: $e");
+      }
+    }
+
+    if (oldVersion < 3) {
+      print("Upgrading database from version $oldVersion to $newVersion");
+      try {
+        // Create application_locations table if it doesn't exist
+        await db.execute('''
+          CREATE TABLE IF NOT EXISTS application_locations (
+            id INTEGER PRIMARY KEY,
+            app_form_id INTEGER,
+            location_img1 TEXT,
+            location_img2 TEXT,
+            location_img3 TEXT,
+            location_img4 TEXT,
+            summary TEXT,
+            log_details TEXT,
+            image1_lat TEXT,
+            image2_lat TEXT,
+            image3_lat TEXT,
+            image4_lat TEXT,
+            image1_log TEXT,
+            image2_log TEXT,
+            image3_log TEXT,
+            image4_log TEXT,
+            created_at TEXT,
+            FOREIGN KEY (app_form_id) REFERENCES applications (id)
+          )
+        ''');
+        print("Created application_locations table");
+      } catch (e) {
+        print("Error creating application_locations table: $e");
       }
     }
   }
@@ -328,7 +384,8 @@ class DbHelper {
         'timber_logs',
         'species',
         'additional_documents',
-        'transit_passes'
+        'transit_passes',
+        'application_locations'
       ];
 
       final allTablesExist = requiredTables
@@ -457,6 +514,8 @@ class DbHelper {
     await db.delete('additional_documents',
         where: 'app_form_id = ?', whereArgs: [id]);
     await db.delete('transit_passes', where: 'appform = ?', whereArgs: [id]);
+    await db.delete('application_locations',
+        where: 'app_form_id = ?', whereArgs: [id]);
     return await db.delete('applications', where: 'id = ?', whereArgs: [id]);
   }
 
@@ -547,6 +606,58 @@ class DbHelper {
     return await db.delete('transit_passes', where: 'id = ?', whereArgs: [id]);
   }
 
+  Future<int> insertApplicationLocation(
+      Map<String, dynamic> locationData) async {
+    Database db = await database;
+    try {
+      // Add timestamp if not provided
+      if (!locationData.containsKey('created_at')) {
+        locationData['created_at'] = DateTime.now().toIso8601String();
+      }
+      return await db.insert('application_locations', locationData);
+    } catch (e) {
+      print("Error inserting application location: $e");
+      return -1;
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getApplicationLocations(
+      int appFormId) async {
+    Database db = await database;
+    return await db.query(
+      'application_locations',
+      where: 'app_form_id = ?',
+      whereArgs: [appFormId],
+    );
+  }
+
+  Future<Map<String, dynamic>?> getApplicationLocation(int id) async {
+    Database db = await database;
+    List<Map<String, dynamic>> result = await db.query(
+      'application_locations',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    return result.isNotEmpty ? result.first : null;
+  }
+
+  Future<int> updateApplicationLocation(
+      Map<String, dynamic> locationData) async {
+    Database db = await database;
+    return await db.update(
+      'application_locations',
+      locationData,
+      where: 'id = ?',
+      whereArgs: [locationData['id']],
+    );
+  }
+
+  Future<int> deleteApplicationLocation(int id) async {
+    Database db = await database;
+    return await db
+        .delete('application_locations', where: 'id = ?', whereArgs: [id]);
+  }
+
   Future<bool> applicationExistsByNo(String applicationNo) async {
     Database db = await database;
     List<Map<String, dynamic>> result = await db.query(
@@ -592,6 +703,14 @@ class DbHelper {
               conflictAlgorithm: ConflictAlgorithm.replace);
         }
       }
+
+      // Handle application locations if they exist in the data
+      if (data['data']['application_locations'] != null) {
+        for (var location in data['data']['application_locations']) {
+          await txn.insert('application_locations', location,
+              conflictAlgorithm: ConflictAlgorithm.replace);
+        }
+      }
     });
   }
 
@@ -609,6 +728,7 @@ class DbHelper {
     final additionalDocuments = await getAdditionalDocuments(applicationId);
     final transitPasses = await getTransitPasses(applicationId);
     final species = await getAllSpecies();
+    final locationData = await getApplicationLocations(applicationId);
 
     return {
       'status': 'Success',
@@ -620,6 +740,7 @@ class DbHelper {
         'additional_documents': additionalDocuments,
         'transit_passes': transitPasses,
         'trees_species_list': species.map((s) => {'name': s['name']}).toList(),
+        'application_locations': locationData,
       }
     };
   }
