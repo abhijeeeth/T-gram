@@ -2,6 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:tigramnks/screens/application_details_page.dart';
 import 'package:tigramnks/sqflite/dbhelper.dart';
 
+// Define a consistent color scheme
+class AppColors {
+  static const Color primary = Color.fromARGB(255, 28, 110, 99);
+  static const Color primaryLight = Color.fromARGB(255, 60, 150, 136);
+  static const Color primaryDark = Color.fromARGB(255, 18, 80, 72);
+  static const Color accent = Color.fromARGB(255, 255, 152, 0);
+  static const Color background = Color.fromARGB(255, 245, 250, 248);
+  static const Color cardBg = Colors.white;
+  static const Color textPrimary = Color.fromARGB(255, 50, 50, 50);
+  static const Color textSecondary = Color.fromARGB(255, 100, 100, 100);
+}
+
 class ApplicationsListPage extends StatefulWidget {
   const ApplicationsListPage({super.key});
 
@@ -9,16 +21,28 @@ class ApplicationsListPage extends StatefulWidget {
   _ApplicationsListPageState createState() => _ApplicationsListPageState();
 }
 
-class _ApplicationsListPageState extends State<ApplicationsListPage> {
+class _ApplicationsListPageState extends State<ApplicationsListPage>
+    with SingleTickerProviderStateMixin {
   bool _isLoading = true;
   List<Map<String, dynamic>> _applications = [];
   String? _error;
   final DbHelper _dbHelper = DbHelper();
+  late AnimationController _animationController;
 
   @override
   void initState() {
     super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
     _loadApplications();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadApplications() async {
@@ -50,53 +74,108 @@ class _ApplicationsListPageState extends State<ApplicationsListPage> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text(
-            'Database Information',
-            style: TextStyle(
-              color: Theme.of(context).primaryColor,
-              fontWeight: FontWeight.bold,
-            ),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: const Row(
+            children: [
+              Icon(Icons.storage, color: AppColors.primary),
+              SizedBox(width: 8),
+              Text(
+                'Database Information',
+                style: TextStyle(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Database Path:',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                Text('${stats['dbPath']}',
-                    style: const TextStyle(fontSize: 12)),
-                const SizedBox(height: 12),
-                Text('Tables (${stats['tables']})',
-                    style: const TextStyle(fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
-                ...((stats['tableNames'] as List).map((table) => Padding(
-                      padding: const EdgeInsets.only(left: 8.0, bottom: 4.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('$table:'),
-                          Text(
-                            '${stats['counts'][table]} records',
-                            style: TextStyle(
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Database Path:',
+                          style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ))),
+                              color: AppColors.primary)),
+                      Text('${stats['dbPath']}',
+                          style: const TextStyle(
+                              fontSize: 12, color: AppColors.textSecondary)),
+                    ],
+                  ),
+                ),
                 const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.background,
+                    borderRadius: BorderRadius.circular(8),
+                    border:
+                        Border.all(color: AppColors.primary.withOpacity(0.3)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Tables (${stats['tables']})',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primary)),
+                      const SizedBox(height: 8),
+                      ...((stats['tableNames'] as List).map((table) => Padding(
+                            padding:
+                                const EdgeInsets.only(left: 8.0, bottom: 8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('$table:',
+                                    style: const TextStyle(
+                                        color: AppColors.textPrimary)),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primary,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Text(
+                                    '${stats['counts'][table]} records',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ))),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
                 Center(
                   child: ElevatedButton.icon(
                     icon: const Icon(Icons.delete_forever, color: Colors.white),
                     label: const Text('Delete All Data',
-                        style: TextStyle(color: Colors.white)),
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
                       foregroundColor: Colors.white,
+                      elevation: 3,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                     ),
                     onPressed: () {
@@ -104,19 +183,38 @@ class _ApplicationsListPageState extends State<ApplicationsListPage> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: const Text('Confirm Deletion'),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16)),
+                            title: const Row(
+                              children: [
+                                Icon(Icons.warning, color: Colors.red),
+                                SizedBox(width: 8),
+                                Text(
+                                  'Confirm Deletion',
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ],
+                            ),
                             content: const Text(
                                 'Are you sure you want to delete ALL data? This action cannot be undone.'),
                             actions: [
                               TextButton(
+                                style: TextButton.styleFrom(
+                                  foregroundColor: AppColors.textSecondary,
+                                ),
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
                                 child: const Text('Cancel'),
                               ),
-                              TextButton(
-                                style: TextButton.styleFrom(
-                                  foregroundColor: Colors.red,
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red,
+                                  foregroundColor: Colors.white,
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
                                 ),
                                 onPressed: () async {
                                   // Close both dialogs first
@@ -148,7 +246,7 @@ class _ApplicationsListPageState extends State<ApplicationsListPage> {
                                 child: const Text(
                                   'Delete Everything',
                                   style: TextStyle(fontWeight: FontWeight.bold),
-                                ), 
+                                ),
                               ),
                             ],
                           );
@@ -161,9 +259,13 @@ class _ApplicationsListPageState extends State<ApplicationsListPage> {
             ),
           ),
           actions: [
-            TextButton(
+            TextButton.icon(
+              icon: const Icon(Icons.close),
+              label: const Text('Close'),
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.primary,
+              ),
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Close'),
             ),
           ],
         ),
@@ -186,23 +288,39 @@ class _ApplicationsListPageState extends State<ApplicationsListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Download Field Verification List',
-            style: TextStyle(
-              fontSize: 20,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            )),
         elevation: 0,
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: AppColors.primary,
+        title: const Text(
+          'Field Verification List',
+          style: TextStyle(
+            fontSize: 20,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.delete, color: Colors.white),
+            icon: const Icon(Icons.info_outline, color: Colors.white),
+            tooltip: 'Database Info',
             onPressed: _showDatabaseInfo,
           ),
           IconButton(
-            icon: const Icon(Icons.refresh, color: Colors.white),
-            onPressed: _loadApplications,
+            icon: AnimatedBuilder(
+              animation: _animationController,
+              builder: (context, child) {
+                return Transform.rotate(
+                  angle: _animationController.value * 6.28,
+                  child: const Icon(Icons.refresh, color: Colors.white),
+                );
+              },
+            ),
+            tooltip: 'Refresh',
+            onPressed: () {
+              _animationController.forward(from: 0);
+              _loadApplications();
+            },
           ),
         ],
       ),
@@ -212,19 +330,87 @@ class _ApplicationsListPageState extends State<ApplicationsListPage> {
 
   Widget _buildBody() {
     if (_isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(color: AppColors.primary),
+            SizedBox(height: 16),
+            Text(
+              'Loading applications...',
+              style: TextStyle(
+                  color: AppColors.primary, fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+      );
     }
 
     if (_error != null) {
       return Center(
-          child: Text(_error!, style: const TextStyle(color: Colors.red)));
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, color: Colors.red, size: 48),
+            const SizedBox(height: 16),
+            Text(_error!, style: const TextStyle(color: Colors.red)),
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.refresh),
+              label: const Text('Try Again'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: _loadApplications,
+            ),
+          ],
+        ),
+      );
     }
 
     if (_applications.isEmpty) {
-      return const Center(child: Text('No applications found'));
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.folder_open, color: AppColors.primary, size: 64),
+            const SizedBox(height: 16),
+            const Text(
+              'No applications found',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary,
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Sync your device to download applications',
+              style: TextStyle(color: AppColors.textSecondary),
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.refresh),
+              label: const Text('Refresh'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+              ),
+              onPressed: _loadApplications,
+            ),
+          ],
+        ),
+      );
     }
 
     return RefreshIndicator(
+      color: AppColors.primary,
+      backgroundColor: Colors.white,
       onRefresh: _loadApplications,
       child: Container(
         decoration: BoxDecoration(
@@ -232,8 +418,8 @@ class _ApplicationsListPageState extends State<ApplicationsListPage> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
+              AppColors.background,
               Colors.grey.shade100,
-              Colors.grey.shade200,
             ],
           ),
         ),
@@ -246,11 +432,11 @@ class _ApplicationsListPageState extends State<ApplicationsListPage> {
             final statusColor = _getStatusColor(status);
 
             return Card(
-              elevation: 4,
-              shadowColor: Colors.black38,
+              elevation: 3,
+              shadowColor: Colors.black26,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16.0),
-                side: BorderSide(color: Colors.grey.shade300, width: 1),
+                side: BorderSide(color: Colors.grey.shade200, width: 1),
               ),
               margin:
                   const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
@@ -262,7 +448,7 @@ class _ApplicationsListPageState extends State<ApplicationsListPage> {
                     end: Alignment.bottomRight,
                     colors: [
                       Colors.white,
-                      Colors.grey.shade50,
+                      AppColors.background.withOpacity(0.3),
                     ],
                   ),
                 ),
@@ -291,7 +477,7 @@ class _ApplicationsListPageState extends State<ApplicationsListPage> {
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
-                                  color: Color(0xFF2D3748),
+                                  color: AppColors.textPrimary,
                                 ),
                               ),
                             ),
@@ -326,87 +512,41 @@ class _ApplicationsListPageState extends State<ApplicationsListPage> {
                           thickness: 1,
                           color: Colors.grey.shade200,
                         ),
-                        Row(
-                          children: [
-                            Icon(Icons.numbers,
-                                size: 16,
-                                color: Theme.of(context)
-                                    .primaryColor
-                                    .withOpacity(0.7)),
-                            const SizedBox(width: 8),
-                            Text(
-                              'Application ID: ${application['application_no'] ?? 'N/A'}',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey.shade700,
-                              ),
-                            ),
-                          ],
-                        ),
+                        _buildInfoRow(Icons.numbers,
+                            'Application ID: ${application['application_no'] ?? 'N/A'}'),
                         const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Icon(Icons.location_on,
-                                size: 16,
-                                color: Theme.of(context)
-                                    .primaryColor
-                                    .withOpacity(0.7)),
-                            const SizedBox(width: 8),
-                            Text(
-                              'Village: ${application['village'] ?? 'N/A'}',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey.shade700,
-                              ),
-                            ),
-                          ],
-                        ),
+                        _buildInfoRow(Icons.location_on,
+                            'Village: ${application['village'] ?? 'N/A'}'),
                         const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Icon(Icons.calendar_today,
-                                size: 16,
-                                color: Theme.of(context)
-                                    .primaryColor
-                                    .withOpacity(0.7)),
-                            const SizedBox(width: 8),
-                            Text(
-                              'Created: ${application['created_date'] ?? 'N/A'}',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey.shade700,
-                              ),
-                            ),
-                          ],
-                        ),
+                        _buildInfoRow(Icons.calendar_today,
+                            'Created: ${application['created_date'] ?? 'N/A'}'),
                         const SizedBox(height: 16),
                         Container(
                           alignment: Alignment.centerRight,
                           child: Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 6),
+                                horizontal: 16, vertical: 8),
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: AppColors.primary.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                  color: Theme.of(context).primaryColor),
+                              border: Border.all(color: AppColors.primary),
                             ),
-                            child: Row(
+                            child: const Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
                                   'View Details',
                                   style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
+                                    color: AppColors.primary,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 13,
                                   ),
                                 ),
-                                const SizedBox(width: 4),
+                                SizedBox(width: 4),
                                 Icon(
                                   Icons.arrow_forward,
                                   size: 16,
-                                  color: Theme.of(context).primaryColor,
+                                  color: AppColors.primary,
                                 ),
                               ],
                             ),
@@ -424,12 +564,28 @@ class _ApplicationsListPageState extends State<ApplicationsListPage> {
     );
   }
 
+  Widget _buildInfoRow(IconData icon, String text) {
+    return Row(
+      children: [
+        Icon(icon, size: 16, color: AppColors.primary),
+        const SizedBox(width: 8),
+        Text(
+          text,
+          style: const TextStyle(
+            fontSize: 14,
+            color: AppColors.textSecondary,
+          ),
+        ),
+      ],
+    );
+  }
+
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case 'approved':
         return const Color(0xFF2E7D32); // Deeper green
       case 'pending':
-        return const Color(0xFFEF6C00); // Deeper orange
+        return AppColors.accent; // Orange accent color
       case 'rejected':
       case 'disapproved':
         return const Color(0xFFC62828); // Deeper red
