@@ -13,6 +13,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   MainBloc() : super(MainState()) {
     on<SaveLocallyFieldVerifyData>(_savbeLocallyFieldVerifyData);
     on<FetchSpeciesList>(_fetchSpeciesList);
+    on<UploadData>(_uploadData);
     // TODO: implement event handler
   }
 
@@ -176,6 +177,69 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       //emit(SpeciesListFetchedState(logs: [], error: e.toString()));
     }
   }
+
+  FutureOr<void> _uploadData(UploadData event, Emitter<MainState> emit) async {
+    try {
+      log('Uploading data: ${event.data}');
+      // Extract required fields from event.data
+      final String sessionToken = event.data['sessionToken'];
+      final String Ids = event.data['app_id'];
+      final String base64ImagePic1 = event.data['base64ImagePic1'];
+      final String base64ImagePic2 = event.data['base64ImagePic2'];
+      final String base64ImagePic3 = event.data['base64ImagePic3'];
+      final String base64ImagePic4 = event.data['base64ImagePic4'];
+      final String summary = event.data['summary'];
+      final dynamic logDetails = event.data['log_details'];
+      final dynamic latImage1 = event.data['image1_lat'];
+      final dynamic latImage2 = event.data['image2_lat'];
+      final dynamic latImage3 = event.data['image3_lat'];
+      final dynamic latImage4 = event.data['image4_lat'];
+      final dynamic longImage1 = event.data['image1_log'];
+      final dynamic longImage2 = event.data['image2_log'];
+      final dynamic longImage3 = event.data['image3_log'];
+      final dynamic longImage4 = event.data['image4_log'];
+
+      const String url = '${ServerHelper.baseUrl}auth/field_verify/';
+      Map<String, dynamic> data = {
+        "app_id": Ids,
+        "location_img1": {"mime": "image/jpeg", "data": base64ImagePic1},
+        "location_img2": {"mime": "image/jpeg", "data": base64ImagePic2},
+        "location_img3": {"mime": "image/jpeg", "data": base64ImagePic3},
+        "location_img4": {"mime": "image/jpeg", "data": base64ImagePic4},
+        "summary": event.data['summary'],
+        "log_details": logDetails,
+        "image1_lat": latImage1,
+        "image2_lat": latImage2,
+        "image3_lat": latImage3,
+        "image4_lat": latImage4,
+        "image1_log": longImage1,
+        "image2_log": longImage2,
+        "image3_log": longImage3,
+        "image4_log": longImage4,
+      };
+      var body = json.encode(data);
+
+      final response = await http.post(Uri.parse(url),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': "token $sessionToken"
+          },
+          body: body);
+
+      Map<String, dynamic> responseJson = json.decode(response.body);
+      print(body.toString());
+
+      if (responseJson['message'] !=
+          "Successfully uploaded images and location details.") {
+        emit(FieldVerifyDataSavedState(
+            success: false, error: "Something went wrong"));
+      } else {
+        emit(FieldVerifyDataSavedState(success: true));
+      }
+    } catch (e) {
+      emit(FieldVerifyDataSavedState(success: false, error: e.toString()));
+    }
+  }
 }
 
 // Define the events
@@ -224,4 +288,10 @@ class FetchSpeciesList extends MainEvent {
     required this.sessionToken,
     required this.Ids,
   });
+}
+
+class UploadData extends MainEvent {
+  final Map<String, dynamic> data;
+
+  UploadData({required this.data});
 }

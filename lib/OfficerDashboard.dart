@@ -13,13 +13,10 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tigramnks/NEW_FORMS/transitViewAndApprove.dart';
-import 'package:tigramnks/PendingApplicationsPage.dart';
 import 'package:tigramnks/QueryPage.dart';
 import 'package:tigramnks/Reports.dart';
 import 'package:tigramnks/ViewApplication.dart';
 import 'package:tigramnks/login.dart';
-import 'package:tigramnks/pages/application_locations_list_page.dart';
-import 'package:tigramnks/screens/applications_list_page.dart';
 import 'package:tigramnks/server/serverhelper.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -2516,70 +2513,71 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                           widget.userAddress ?? "Address",
                                     )));
                       }),
-                  ListTile(
-                      leading: Icon(
-                        Icons.offline_share,
-                        color: Colors.black,
-                        size: 25,
-                      ),
-                      title: Text(
-                        'Download Field Verification',
-                        style: TextStyle(color: Colors.black, fontSize: 20),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => PendingApplicationsPage(
-                                      sessionToken: sessionToken,
-                                      Range: Range,
-                                      userEmail: userEmail,
-                                      userGroup: userGroup,
-                                      userId: userId,
-                                      userName: userName,
-                                    )));
-                      }),
-                  ListTile(
-                      leading: Icon(
-                        Icons.offline_share,
-                        color: Colors.black,
-                        size: 25,
-                      ),
-                      title: Text(
-                        'Downloaded List',
-                        style: TextStyle(color: Colors.black, fontSize: 20),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => ApplicationsListPage(
-                                    // sessionToken: sessionToken,
-                                    // Range: Range,
-                                    // userEmail: userEmail,
-                                    // userGroup: userGroup,
-                                    // userId: userId,
-                                    // userName: userName,
-                                    )));
-                      }),
-                  ListTile(
-                      leading: Icon(
-                        Icons.offline_share,
-                        color: Colors.black,
-                        size: 25,
-                      ),
-                      title: Text(
-                        ' List',
-                        style: TextStyle(color: Colors.black, fontSize: 20),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const ApplicationLocationsListPage()),
-                        );
-                      }),
+                  // ListTile(
+                  //     leading: Icon(
+                  //       Icons.offline_share,
+                  //       color: Colors.black,
+                  //       size: 25,
+                  //     ),
+                  //     title: Text(
+                  //       'Download Field Verification',
+                  //       style: TextStyle(color: Colors.black, fontSize: 20),
+                  //     ),
+                  //     onTap: () {
+                  //       Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //               builder: (_) => PendingApplicationsPage(
+                  //                     sessionToken: sessionToken,
+                  //                     Range: Range,
+                  //                     userEmail: userEmail,
+                  //                     userGroup: userGroup,
+                  //                     userId: userId,
+                  //                     userName: userName,
+                  //                   )));
+                  //     }),
+                  // ListTile(
+                  //     leading: Icon(
+                  //       Icons.offline_share,
+                  //       color: Colors.black,
+                  //       size: 25,
+                  //     ),
+                  //     title: Text(
+                  //       'Downloaded List',
+                  //       style: TextStyle(color: Colors.black, fontSize: 20),
+                  //     ),
+                  //     onTap: () {
+                  //       Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //               builder: (_) => ApplicationsListPage(
+                  //                   // sessionToken: sessionToken,
+                  //                   // Range: Range,
+                  //                   // userEmail: userEmail,
+                  //                   // userGroup: userGroup,
+                  //                   // userId: userId,
+                  //                   // userName: userName,
+                  //                   )));
+                  //     }),
+                  // ListTile(
+                  //     leading: Icon(
+                  //       Icons.offline_share,
+                  //       color: Colors.black,
+                  //       size: 25,
+                  //     ),
+                  //     title: Text(
+                  //       ' List',
+                  //       style: TextStyle(color: Colors.black, fontSize: 20),
+                  //     ),
+                  //     onTap: () {
+                  //       Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //             builder: (context) =>
+                  //                 const ApplicationLocationsListPage()),
+                  //       );
+                  //     }),
+
                   ListTile(
                     leading: Icon(
                       Icons.logout,

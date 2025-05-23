@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tigramnks/bloc/main_bloc.dart';
 
 import '../sqflite/dbhelper.dart';
 
@@ -92,25 +94,138 @@ class _ApplicationLocationsListPageState
       onRefresh: _loadLocations,
       child: ListView.builder(
         itemCount: _locations.length,
+        padding: const EdgeInsets.all(12),
         itemBuilder: (context, index) {
           final location = _locations[index];
           return Card(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: ListTile(
-              title: Text('Location ID: ${location['id']}'),
-              subtitle: Column(
+            margin: const EdgeInsets.only(bottom: 16),
+            elevation: 3,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: const Color.fromARGB(255, 28, 110, 99),
+                  width: 1.5,
+                ),
+              ),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Application ID: ${location['app_form_id']}'),
-                  Text('Created: ${location['created_at'] ?? 'N/A'}'),
-                  if (location['summary'] != null)
-                    Text('Summary: ${location['summary']}'),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 28, 110, 99),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10.5),
+                        topRight: Radius.circular(10.5),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.location_on, color: Colors.white),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Location ID: ${location['id']}',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.apps,
+                              color: Color.fromARGB(255, 28, 110, 99),
+                              size: 20,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Application ID: ${location['app_form_id']}',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.access_time,
+                              color: Color.fromARGB(255, 28, 110, 99),
+                              size: 20,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Created: ${location['created_at'] ?? 'N/A'}',
+                              style: const TextStyle(fontSize: 14),
+                            ),
+                          ],
+                        ),
+                        if (location['summary'] != null) ...[
+                          const SizedBox(height: 8),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Icon(
+                                Icons.description,
+                                color: Color.fromARGB(255, 28, 110, 99),
+                                size: 20,
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  'Summary: ${location['summary']}',
+                                  style: const TextStyle(fontSize: 14),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                        const SizedBox(height: 8),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: ElevatedButton.icon(
+                            icon: const Icon(Icons.upload, size: 18),
+                            label: const Text('Upload Details'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  const Color.fromARGB(255, 28, 110, 99),
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            // onPressed: () => _showLocationDetails(location),
+                            onPressed: () {
+                              context
+                                  .read<MainBloc>()
+                                  .add(UploadData(data: location));
+                              // _showLocationDetails(location);
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
-              isThreeLine: true,
-              onTap: () {
-                _showLocationDetails(location);
-              },
             ),
           );
         },

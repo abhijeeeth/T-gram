@@ -444,6 +444,7 @@ class _ViewApplication1State extends State<ViewApplication1> {
                                             }
                                           }
                                         } else {
+                                          // Show image in ImageView and also download it
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -451,6 +452,49 @@ class _ViewApplication1State extends State<ViewApplication1> {
                                                   ImageView(Images: url),
                                             ),
                                           );
+                                          try {
+                                            final dio = Dio();
+                                            Directory? downloadsDir;
+                                            if (Platform.isAndroid) {
+                                              downloadsDir =
+                                                  await getExternalStorageDirectory();
+                                              final Directory? extDir =
+                                                  await getExternalStorageDirectory();
+                                              if (extDir != null) {
+                                                const downloadsPath =
+                                                    "/storage/emulated/0/Download";
+                                                downloadsDir =
+                                                    Directory(downloadsPath);
+                                              }
+                                            } else if (Platform.isIOS) {
+                                              downloadsDir =
+                                                  await getApplicationDocumentsDirectory();
+                                            }
+                                            final fileName = url
+                                                .split('/')
+                                                .last
+                                                .split('?')
+                                                .first;
+                                            final filePath =
+                                                '${downloadsDir?.path}/$fileName';
+                                            await dio.download(url, filePath);
+                                            Fluttertoast.showToast(
+                                              msg:
+                                                  "Image downloaded to $filePath",
+                                              toastLength: Toast.LENGTH_SHORT,
+                                              gravity: ToastGravity.BOTTOM,
+                                              backgroundColor: Colors.green,
+                                              textColor: Colors.white,
+                                            );
+                                          } catch (e) {
+                                            Fluttertoast.showToast(
+                                              msg: "Failed to download image",
+                                              toastLength: Toast.LENGTH_SHORT,
+                                              gravity: ToastGravity.BOTTOM,
+                                              backgroundColor: Colors.red,
+                                              textColor: Colors.white,
+                                            );
+                                          }
                                         }
                                       },
                                       child: Stack(
@@ -749,34 +793,38 @@ class _ShimmerImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.network(
-      imageUrl,
-      fit: BoxFit.cover,
-      width: double.infinity,
-      height: double.infinity,
-      loadingBuilder: (context, child, progress) {
-        if (progress == null) return child;
-        return Container(
-          color: Colors.grey.shade200,
-          child: Center(
-            child: SizedBox(
-              width: 40,
-              height: 40,
-              child: CircularProgressIndicator(
-                value: progress.expectedTotalBytes != null
-                    ? progress.cumulativeBytesLoaded /
-                        progress.expectedTotalBytes!
-                    : null,
-                strokeWidth: 3,
-                color: HexColor("#0499f2"),
+    return Stack(
+      children: [
+        Image.network(
+          imageUrl,
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: double.infinity,
+          loadingBuilder: (context, child, progress) {
+            if (progress == null) return child;
+            return Container(
+              color: Colors.grey.shade200,
+              child: Center(
+                child: SizedBox(
+                  width: 40,
+                  height: 40,
+                  child: CircularProgressIndicator(
+                    value: progress.expectedTotalBytes != null
+                        ? progress.cumulativeBytesLoaded /
+                            progress.expectedTotalBytes!
+                        : null,
+                    strokeWidth: 3,
+                    color: HexColor("#0499f2"),
+                  ),
+                ),
               ),
-            ),
+            );
+          },
+          errorBuilder: (context, error, stackTrace) => Center(
+            child: Icon(Icons.broken_image, color: Colors.grey, size: 40),
           ),
-        );
-      },
-      errorBuilder: (context, error, stackTrace) => Center(
-        child: Icon(Icons.broken_image, color: Colors.grey, size: 40),
-      ),
+        ),
+      ],
     );
   }
 }
