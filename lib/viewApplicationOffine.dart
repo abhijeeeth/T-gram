@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tigramnks/OfficerDashboard.dart';
 import 'package:tigramnks/sqflite/dbhelper.dart';
 
 class Viewapplicationoffine extends StatefulWidget {
@@ -562,20 +561,20 @@ class _viewApplicationNw2State extends State<Viewapplicationoffine> {
                       fontSize: 18.0,
                     );
 
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => OfficerDashboard(
-                          sessionToken: widget.sessionToken,
-                          userName: widget.userName,
-                          userEmail: widget.userEmail,
-                          userGroup: widget.userGroup,
-                          userId: widget.userId,
-                          dropdownValue: "",
-                          Range: widget.Range,
-                        ),
-                      ),
-                    );
+                    // Navigator.pushReplacement(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (_) => OfficerDashboard(
+                    //       sessionToken: widget.sessionToken,
+                    //       userName: widget.userName,
+                    //       userEmail: widget.userEmail,
+                    //       userGroup: widget.userGroup,
+                    //       userId: widget.userId,
+                    //       dropdownValue: "",
+                    //       Range: widget.Range,
+                    //     ),
+                    //   ),
+                    // );
                   }
                 },
                 style: ElevatedButton.styleFrom(

@@ -18,6 +18,7 @@ import 'package:tigramnks/QueryPage.dart';
 import 'package:tigramnks/Reports.dart';
 import 'package:tigramnks/ViewApplication.dart';
 import 'package:tigramnks/login.dart';
+import 'package:tigramnks/pages/application_locations_list_page.dart';
 import 'package:tigramnks/screens/applications_list_page.dart';
 import 'package:tigramnks/server/serverhelper.dart';
 import 'package:toggle_switch/toggle_switch.dart';
@@ -2560,6 +2561,24 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
                                     // userId: userId,
                                     // userName: userName,
                                     )));
+                      }),
+                  ListTile(
+                      leading: Icon(
+                        Icons.offline_share,
+                        color: Colors.black,
+                        size: 25,
+                      ),
+                      title: Text(
+                        ' List',
+                        style: TextStyle(color: Colors.black, fontSize: 20),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const ApplicationLocationsListPage()),
+                        );
                       }),
                   ListTile(
                     leading: Icon(
