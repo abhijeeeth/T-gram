@@ -610,13 +610,40 @@ class DbHelper {
       Map<String, dynamic> locationData) async {
     Database db = await database;
     try {
-      // Add timestamp if not provided
-      if (!locationData.containsKey('created_at')) {
-        locationData['created_at'] = DateTime.now().toIso8601String();
+      // Create a copy of the data to avoid modifying the original
+      var data = Map<String, dynamic>.from(locationData);
+
+      // Check if app_id is used instead of app_form_id
+      if (data.containsKey('app_id') && !data.containsKey('app_form_id')) {
+        print("Mapping 'app_id' to 'app_form_id' for compatibility");
+        data['app_form_id'] = data['app_id'];
+        data.remove('app_id');
       }
-      return await db.insert('application_locations', locationData);
+
+      // Add timestamp if not provided
+      if (!data.containsKey('created_at')) {
+        data['created_at'] = DateTime.now().toIso8601String();
+      }
+
+      // Verify all required columns exist
+      var tableInfo =
+          await db.rawQuery("PRAGMA table_info(application_locations)");
+      var existingColumns =
+          tableInfo.map((col) => col['name'].toString()).toSet();
+      var invalidColumns =
+          data.keys.where((key) => !existingColumns.contains(key)).toList();
+
+      if (invalidColumns.isNotEmpty) {
+        print("Warning: Removing invalid columns: $invalidColumns");
+        for (var key in invalidColumns) {
+          data.remove(key);
+        }
+      }
+
+      return await db.insert('application_locations', data);
     } catch (e) {
       print("Error inserting application location: $e");
+      print("Data tried to insert: ${locationData.keys}");
       return -1;
     }
   }

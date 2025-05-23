@@ -7,10 +7,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:tigramnks/OfficerDashboard.dart';
-import 'package:tigramnks/server/serverhelper.dart';
 import 'package:tigramnks/sqflite/dbhelper.dart';
 
 class Viewapplicationoffine extends StatefulWidget {
@@ -528,28 +526,16 @@ class _viewApplicationNw2State extends State<Viewapplicationoffine> {
                       isShow = true;
                     });
 
-                    const String url =
-                        '${ServerHelper.baseUrl}auth/field_verify/';
-                    Map data = {
+                    // Store data to local database (application_locations)
+                    final dbHelper = DbHelper();
+                    Map<String, dynamic> data = {
                       "app_id": widget.Ids,
-                      "location_img1": {
-                        "mime": "image/jpeg",
-                        "data": base64ImagePic1
-                      },
-                      "location_img2": {
-                        "mime": "image/jpeg",
-                        "data": base64ImagePic2
-                      },
-                      "location_img3": {
-                        "mime": "image/jpeg",
-                        "data": base64ImagePic3
-                      },
-                      "location_img4": {
-                        "mime": "image/jpeg",
-                        "data": base64ImagePic4
-                      },
+                      "location_img1": base64ImagePic1,
+                      "location_img2": base64ImagePic2,
+                      "location_img3": base64ImagePic3,
+                      "location_img4": base64ImagePic4,
                       "summary": summary.text,
-                      "log_details": log_details_,
+                      "log_details": jsonEncode(log_details_),
                       "image1_lat": latImage1,
                       "image2_lat": latImage2,
                       "image3_lat": latImage3,
@@ -558,25 +544,17 @@ class _viewApplicationNw2State extends State<Viewapplicationoffine> {
                       "image2_log": longImage2,
                       "image3_log": longImage3,
                       "image4_log": longImage4,
+                      "created_at": DateTime.now().toIso8601String(),
                     };
-                    var body = json.encode(data);
 
-                    final response = await http.post(Uri.parse(url),
-                        headers: {
-                          'Content-Type': 'application/json',
-                          'Authorization': "token ${widget.sessionToken}"
-                        },
-                        body: body);
-
-                    Map<String, dynamic> responseJson =
-                        json.decode(response.body);
+                    await dbHelper.insertApplicationLocation(data);
 
                     setState(() {
                       isShow = false;
                     });
 
                     Fluttertoast.showToast(
-                      msg: responseJson['message'].toString(),
+                      msg: "Field verification data saved locally.",
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.CENTER,
                       backgroundColor: Colors.blue,
