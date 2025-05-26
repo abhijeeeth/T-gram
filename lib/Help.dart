@@ -11,8 +11,10 @@ class _HelpState extends State<Help> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text("FAQ"),
+        backgroundColor: Colors.white,
       ),
       body: ListView(
         padding: const EdgeInsets.all(10),
@@ -129,7 +131,9 @@ class _HelpState extends State<Help> {
   Widget _buildFAQItem(String question, String answer) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 5),
+      color: Colors.white,
       child: ExpansionTile(
+        backgroundColor: Colors.white,
         title: Text(
           question,
           style: const TextStyle(fontWeight: FontWeight.bold),
@@ -139,7 +143,7 @@ class _HelpState extends State<Help> {
             padding: const EdgeInsets.all(10),
             child: Text(
               answer,
-              style: const TextStyle(color: Colors.blue),
+              style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
             ),
           ),
         ],

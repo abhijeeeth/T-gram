@@ -671,7 +671,9 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
+          backgroundColor: Colors.white,
           appBar: AppBar(
+            backgroundColor: Colors.white,
             title: Text('Forms'),
             // actions: [
             //   IconButton(

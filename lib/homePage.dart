@@ -118,10 +118,12 @@ class _HomePageState extends State<HomePage> {
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           title: const Text("TIGRAM"),
 
           //backgroundColor: Colors.blueGrey,
+          backgroundColor: Colors.white,
           elevation: 0,
         ),
         body: Center(

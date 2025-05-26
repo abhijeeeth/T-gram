@@ -62,7 +62,9 @@ class _QueryPageState extends State<QueryPage> {
       appBar: AppBar(
         title: const Text("QR Scanner"),
         elevation: 0,
+        backgroundColor: Colors.white,
       ),
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           Expanded(

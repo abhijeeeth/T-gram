@@ -58,17 +58,20 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text("Profile"),
+        backgroundColor: Colors.white,
         centerTitle: true,
         elevation: 0,
       ),
       body: Card(
+        color: Colors.white,
         margin: const EdgeInsets.all(16),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
-        elevation: 0,
+        elevation: 0.2,
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
