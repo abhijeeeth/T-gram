@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:convert';
+import 'dart:developer' as developer;
 import 'dart:io' show File;
 import 'dart:math';
 
@@ -2415,6 +2416,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
                               "image4_log": longImage4,
                             };
                             var body = json.encode(data);
+                            developer.log(data.toString());
 
                             final response = await http.post(Uri.parse(url),
                                 headers: {

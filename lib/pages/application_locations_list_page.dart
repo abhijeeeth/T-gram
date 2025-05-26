@@ -35,6 +35,9 @@ class _ApplicationLocationsListPageState
       final db = await _dbHelper.database;
       final results = await db.query('application_locations');
 
+      // Log the data
+      debugPrint('Loaded locations: $results');
+
       setState(() {
         _locations = results;
         _isLoading = false;

@@ -180,28 +180,27 @@ class MainBloc extends Bloc<MainEvent, MainState> {
 
   FutureOr<void> _uploadData(UploadData event, Emitter<MainState> emit) async {
     try {
-      log('Uploading data: ${event.data}');
-      // Extract required fields from event.data
-      final String sessionToken = event.data['sessionToken'];
-      final String Ids = event.data['app_id'];
-      final String base64ImagePic1 = event.data['base64ImagePic1'];
-      final String base64ImagePic2 = event.data['base64ImagePic2'];
-      final String base64ImagePic3 = event.data['base64ImagePic3'];
-      final String base64ImagePic4 = event.data['base64ImagePic4'];
-      final String summary = event.data['summary'];
-      final dynamic logDetails = event.data['log_details'];
-      final dynamic latImage1 = event.data['image1_lat'];
-      final dynamic latImage2 = event.data['image2_lat'];
-      final dynamic latImage3 = event.data['image3_lat'];
-      final dynamic latImage4 = event.data['image4_lat'];
-      final dynamic longImage1 = event.data['image1_log'];
-      final dynamic longImage2 = event.data['image2_log'];
-      final dynamic longImage3 = event.data['image3_log'];
-      final dynamic longImage4 = event.data['image4_log'];
+      final String sessionToken = ServerHelper.token.toString();
+      log('Uploading data: $sessionToken');
+      final String ids = event.data['id'].toString();
+      final String base64ImagePic1 = event.data['location_img1'];
+      final String base64ImagePic2 = event.data['location_img2'];
+      final String base64ImagePic3 = event.data['location_img3'];
+      final String base64ImagePic4 = event.data['location_img4'];
+      final dynamic logDetails =
+          event.data['log_details']; // Expecting a List<Map<String, dynamic>>
+      final String latImage1 = event.data['image1_lat'];
+      final String latImage2 = event.data['image2_lat'];
+      final String latImage3 = event.data['image3_lat'];
+      final String latImage4 = event.data['image4_lat'];
+      final String longImage1 = event.data['image1_log'];
+      final String longImage2 = event.data['image2_log'];
+      final String longImage3 = event.data['image3_log'];
+      final String longImage4 = event.data['image4_log'];
 
       const String url = '${ServerHelper.baseUrl}auth/field_verify/';
-      Map<String, dynamic> data = {
-        "app_id": Ids,
+      Map data = {
+        "app_id": ids,
         "location_img1": {"mime": "image/jpeg", "data": base64ImagePic1},
         "location_img2": {"mime": "image/jpeg", "data": base64ImagePic2},
         "location_img3": {"mime": "image/jpeg", "data": base64ImagePic3},
@@ -217,6 +216,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         "image3_log": longImage3,
         "image4_log": longImage4,
       };
+      log(data.toString());
       var body = json.encode(data);
 
       final response = await http.post(Uri.parse(url),
@@ -227,14 +227,15 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           body: body);
 
       Map<String, dynamic> responseJson = json.decode(response.body);
-      print(body.toString());
+      log(body.toString());
+      log('Response: ${responseJson.toString()}');
 
-      if (responseJson['message'] !=
-          "Successfully uploaded images and location details.") {
-        emit(FieldVerifyDataSavedState(
-            success: false, error: "Something went wrong"));
-      } else {
+      if (response.statusCode == 200) {
         emit(FieldVerifyDataSavedState(success: true));
+      } else {
+        emit(FieldVerifyDataSavedState(
+            success: false,
+            error: responseJson['message'] ?? "Something went wrong"));
       }
     } catch (e) {
       emit(FieldVerifyDataSavedState(success: false, error: e.toString()));

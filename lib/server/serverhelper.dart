@@ -10,4 +10,6 @@ class ServerHelper {
   static const String baseUrl = "https://f4020lwv-8000.inc1.devtunnels.ms/api/";
   static const String withoutapiurl =
       "https://f4020lwv-8000.inc1.devtunnels.ms/";
+
+  static String? token;
 }

@@ -377,6 +377,7 @@ class _UserState extends State<UserLogin> {
           userName = responseJson['data']['name'];
           userEmail = responseJson["data"]["email"];
           sessionToken = responseJson['token'];
+          ServerHelper.token = sessionToken;
           userGroup = responseJson['data']['user_group'][0];
           userMobile = responseJson["data"]["phone"];
           userAddress = responseJson["data"]["address"];
@@ -786,6 +787,7 @@ class _UserState extends State<UserLogin> {
                               userMobile = responseJson["data"]["phone"];
                               userAddress = responseJson["data"]["address"];
                               sessionToken = responseJson["token"];
+                              ServerHelper.token = sessionToken;
                               userProfile =
                                   responseJson["data"]["photo_proof_img"];
                               userGroup = responseJson['data']['user_group'][0];
@@ -971,6 +973,7 @@ class _OfficerState extends State<OfficerLogin> {
           userName = responseJson['data']['name'];
           userEmail = responseJson["data"]["email"];
           sessionToken = responseJson['token'];
+          ServerHelper.token = sessionToken;
           userGroup = responseJson['data']['user_group'][0];
           userMobile = responseJson["data"]["phone"];
           userAddress = responseJson["data"]["address"];
@@ -1482,6 +1485,7 @@ class _OfficerState extends State<OfficerLogin> {
                         userName = responseJson['data']['name'];
                         userEmail = responseJson["data"]["email"];
                         sessionToken = responseJson['token'];
+                        ServerHelper.token = sessionToken;
                         userGroup = responseJson['data']['user_group'][0];
                         // Make sure to handle the phone and address fields safely
                         userMobile =
