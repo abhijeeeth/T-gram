@@ -1159,7 +1159,7 @@ class _ViewApplicationState extends State<ViewApplication> {
           ),
         ),
         child: Scaffold(
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.white,
           appBar: AppBar(
             title: const Text("Application View"),
             backgroundColor: HexColor("#0499f2"),

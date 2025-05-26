@@ -290,6 +290,7 @@ class _ViewApplication1State extends State<ViewApplication1> {
           children: [
             Scaffold(
               extendBodyBehindAppBar: true,
+              backgroundColor: Colors.white,
               appBar: AppBar(
                 title: Text('Application View',
                     style: TextStyle(
@@ -312,12 +313,12 @@ class _ViewApplication1State extends State<ViewApplication1> {
               ),
               body: Container(
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Colors.white, HexColor("#e3f2fd")],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                ),
+                    // gradient: LinearGradient(
+                    //   colors: [Colors.white, HexColor("#e3f2fd")],
+                    //   begin: Alignment.topCenter,
+                    //   end: Alignment.bottomCenter,
+                    // ),
+                    ),
                 child: Column(children: <Widget>[
                   SizedBox(height: kToolbarHeight + 10),
                   SizedBox(height: 30),

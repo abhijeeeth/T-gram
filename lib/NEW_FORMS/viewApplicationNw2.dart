@@ -817,7 +817,9 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
+          backgroundColor: Colors.white,
           title: const Text("View Application"),
         ),
         body: SingleChildScrollView(
@@ -3243,6 +3245,7 @@ class _viewApplicationNw2State extends State<viewApplicationNw2> {
   Widget buildApplicationStatus() {
     return Card(
         margin: const EdgeInsets.all(8.0),
+        color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
