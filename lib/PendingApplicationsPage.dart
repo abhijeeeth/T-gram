@@ -101,6 +101,7 @@ class _PendingApplicationsPageState extends State<PendingApplicationsPage> {
   final List verify_forest1 = [];
   final List field_status = [];
   final List status = []; // Added to store status field
+  final List range = []; // Added for range data
 
   // Add a list to store indices of applications with status == false
   final List<int> filteredIndices = [];
@@ -152,6 +153,7 @@ class _PendingApplicationsPageState extends State<PendingApplicationsPage> {
     verify_forest1.clear();
     field_status.clear();
     status.clear(); // Clear the status list
+    range.clear(); // Clear the range list
     filteredIndices.clear(); // Clear filtered indices
 
     print("Fetching Pending Applications");
@@ -189,7 +191,9 @@ class _PendingApplicationsPageState extends State<PendingApplicationsPage> {
         verify_range.add(list[i]['verify_office']);
         depty_range_officer.add(list[i]['depty_range_officer']);
         verify_range_officer.add(list[i]['application_status']);
-        division.add(list[i]['d']);
+        division.add(list[i]['r']);
+        range.add(list[i]['r']); // Added to store range data
+
         tp_expiry_date.add(list[i]['tp_expiry_date']);
         reason_office.add(list[i]['reason_office']);
         reason_depty_ranger_office.add(list[i]['reason_depty_ranger_office']);
@@ -214,7 +218,8 @@ class _PendingApplicationsPageState extends State<PendingApplicationsPage> {
         status.add(list[i]['status']); // Added to capture status field
 
         // Add index to filtered list if status is false
-        if (list[i]['status'] == false) {
+        if (list[i]['status'] == false && list[i]['r_id'] != null ||
+            list[i]['d_id'] != null) {
           filteredIndices.add(i);
         }
       }

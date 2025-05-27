@@ -1,2781 +1,2333 @@
-// // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_interpolation_to_compose_strings
-
-// import 'dart:convert';
-// import 'dart:developer';
-// import 'dart:io';
-
-// import 'package:flutter/material.dart';
-// import 'package:fluttertoast/fluttertoast.dart';
-// import 'package:http/http.dart' as http;
-// import 'package:open_filex/open_filex.dart';
-// import 'package:path_provider/path_provider.dart';
-// import 'package:permission_handler/permission_handler.dart';
-// import 'package:pie_chart/pie_chart.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:tigramnks/NEW_FORMS/transitViewAndApprove.dart';
-// import 'package:tigramnks/QueryPage.dart';
-// import 'package:tigramnks/Reports.dart';
-// import 'package:tigramnks/ViewApplication.dart';
-// import 'package:tigramnks/login.dart';
-// import 'package:tigramnks/server/serverhelper.dart';
-// import 'package:toggle_switch/toggle_switch.dart';
-// import 'package:url_launcher/url_launcher.dart';
-
-// class OfficerDashboard extends StatefulWidget {
-//   String sessionToken;
-//   int userId;
-//   String userName;
-//   String userEmail;
-//   String userGroup;
-//   String dropdownValue;
-//   String? userMobile;
-//   String? userAddress;
-//   List Range;
-
-//   OfficerDashboard(
-//       {super.key,
-//       required this.userId,
-//       required this.userName,
-//       required this.userEmail,
-//       required this.sessionToken,
-//       required this.userGroup,
-//       required this.dropdownValue,
-//       this.userMobile,
-//       this.userAddress,
-//       required this.Range});
-
-//   @override
-//   _OfficerDashboardState createState() => _OfficerDashboardState(userId,
-//       userName, userEmail, sessionToken, userGroup, dropdownValue, Range);
-// }
-
-// class _OfficerDashboardState extends State<OfficerDashboard> {
-//   @override
-//   void initState() {
-//     permission();
-//     super.initState();
-//     print(userId);
-//     pie_chart();
-//     PendingApp();
-//     ApprovedApp();
-//     DeemedApp();
-//     NocForm();
-//   }
-
-//   String sessionToken;
-//   int userId;
-//   String userName;
-//   String userEmail;
-//   String userGroup;
-//   String dropdownValue;
-//   List Range;
-//   double Approved = 0;
-//   double Rejected = 0;
-//   double Pending = 0;
-
-//   _OfficerDashboardState(this.userId, this.userName, this.userEmail,
-//       this.sessionToken, this.userGroup, this.dropdownValue, this.Range);
-
-// //---------------------Pie-chart------------------
-//   void pie_chart() async {
-//     const String url = '${ServerHelper.baseUrl}auth/dashbord_chart';
-
-//     final response = await http.get(Uri.parse(url), headers: <String, String>{
-//       'Content-Type': 'application/json',
-//       'Authorization': "token $sessionToken"
-//     });
-
-//     Map<String, dynamic> responseJSON = json.decode(response.body);
-//     print(responseJSON);
-//     print("token $sessionToken");
-//     setState(() {
-//       Approved = responseJSON['data']['per_approved'];
-//       Rejected = responseJSON['data']['per_rejected'];
-//       Pending = responseJSON['data']['per_submitted'];
-//     });
-//   }
-
-//   Future<void> downloadFormIIPdf(int appId) async {
-//     // If not Android, show message and exit function
-//     if (!Platform.isAndroid) {
-//       Fluttertoast.showToast(
-//           msg: "Downloads are only supported on Android devices");
-//       return;
-//     }
-
-//     const String url = '${ServerHelper.baseUrl}auth/generate_form_ii_pdf/';
-
-//     try {
-//       // Request storage permissions
-
-//       // Make API request
-//       final response = await http.post(
-//         Uri.parse(url),
-//         headers: {
-//           'Content-Type': 'application/json',
-//           'Authorization': "token $sessionToken"
-//         },
-//         body: jsonEncode({'app_id': appId}),
-//       );
-
-//       log('PDF download response body: ${response.body}');
-
-//       if (response.statusCode == 200) {
-//         // Save PDF to app's internal documents directory first
-//         final Directory appDocDir = await getApplicationDocumentsDirectory();
-//         final String filePath =
-//             '${appDocDir.path}/FormI_${appId}_${DateTime.now().millisecondsSinceEpoch}.pdf';
-//         final File file = File(filePath);
-
-//         await file.writeAsBytes(response.bodyBytes);
-
-//         // Try to open the file using open_filex
-//         final result = await OpenFilex.open(filePath);
-//         log("File opened with result: ${result.message}");
-
-//         // Move file to appropriate directory based on the platform
-//         if (Platform.isAndroid) {
-//           await moveFileToDownloads(filePath); // Move to Downloads for Android
-//           Fluttertoast.showToast(msg: "PDF downloaded to Downloads folder");
-//         } else if (Platform.isIOS) {
-//           await moveFileToDocuments(filePath); // Save to Documents for iOS
-//           Fluttertoast.showToast(msg: "PDF saved to Documents folder");
-//         } else {
-//           log("Unknown platform: PDF saved to app directory");
-//           Fluttertoast.showToast(msg: "PDF saved to app directory");
-//         }
-//       }
-//     } catch (e) {
-//       log('Error during PDF download: $e');
-//       Fluttertoast.showToast(msg: "Error: $e");
-//     }
-//   }
-
-//   Future<void> downloadFormIPdf(int appId, bool notified) async {
-//     // If not Android, show message and exit function
-//     if (!Platform.isAndroid) {
-//       Fluttertoast.showToast(
-//           msg: "Downloads are only supported on Android devices");
-//       return;
-//     }
-
-//     String url = notified == true
-//         ? '${ServerHelper.baseUrl}auth/generate_form_i_pdf/'
-//         : '${ServerHelper.baseUrl}auth/generate_form_ii_pdf/';
-
-//     try {
-//       // Request storage permissions
-
-//       // Make API request
-//       final response = await http.post(
-//         Uri.parse(url),
-//         headers: {
-//           'Content-Type': 'application/json',
-//           'Authorization': "token $sessionToken"
-//         },
-//         body: jsonEncode({'app_id': appId}),
-//       );
-
-//       log('PDF download response body: ${response.body}');
-
-//       if (response.statusCode == 200) {
-//         // Save PDF to app's internal documents directory first
-//         final Directory appDocDir = await getApplicationDocumentsDirectory();
-//         final String filePath =
-//             '${appDocDir.path}/FormI_${appId}_${DateTime.now().millisecondsSinceEpoch}.pdf';
-//         final File file = File(filePath);
-
-//         await file.writeAsBytes(response.bodyBytes);
-
-//         // Try to open the file using open_filex
-//         final result = await OpenFilex.open(filePath);
-//         log("File opened with result: ${result.message}");
-
-//         // Move file to appropriate directory based on the platform
-//         if (Platform.isAndroid) {
-//           await moveFileToDownloads(filePath); // Move to Downloads for Android
-//           Fluttertoast.showToast(msg: "PDF downloaded to Downloads folder");
-//         } else if (Platform.isIOS) {
-//           await moveFileToDocuments(filePath); // Save to Documents for iOS
-//           Fluttertoast.showToast(msg: "PDF saved to Documents folder");
-//         } else {
-//           log("Unknown platform: PDF saved to app directory");
-//           Fluttertoast.showToast(msg: "PDF saved to app directory");
-//         }
-//       }
-//     } catch (e) {
-//       log('Error during PDF download: $e');
-//       Fluttertoast.showToast(msg: "Error: $e");
-//     }
-//   }
-
-//   Future<void> moveFileToDocuments(String sourcePath) async {
-//     try {
-//       final File sourceFile = File(sourcePath);
-//       final String fileName = sourcePath.split('/').last;
-
-//       // Get the Documents directory path
-//       final Directory documentsDir = await getApplicationDocumentsDirectory();
-//       final String documentPath = '${documentsDir.path}/$fileName';
-
-//       // Copy the file to Documents directory
-//       await sourceFile.copy(documentPath);
-
-//       // Delete the original file from temporary storage
-//       //await sourceFile.delete();
-
-//       log('File moved to Documents: $documentPath');
-//     } catch (e) {
-//       log('Error moving file to Documents: $e');
-//       rethrow;
-//     }
-//   }
-
-//   Future<void> moveFileToDownloads(String sourcePath) async {
-//     try {
-//       final File sourceFile = File(sourcePath);
-//       final String fileName = sourcePath.split('/').last;
-
-//       // Get the Downloads directory path
-//       final Directory? downloadsDir = await getExternalStorageDirectory();
-//       if (downloadsDir == null)
-//         throw Exception('Could not access Downloads directory');
-
-//       final String downloadPath = '${downloadsDir.path}/$fileName';
-
-//       // Copy the file to Downloads directory
-//       await sourceFile.copy(downloadPath);
-
-//       // Delete the original file from temporary storage
-//       // await sourceFile.delete();
-
-//       log('File moved to Downloads: $downloadPath');
-//     } catch (e) {
-//       log('Error moving file to Downloads: $e');
-//       rethrow;
-//     }
-//   }
-
-//   String replaceSlashesWithDashes(String input) {
-//     return input.replaceAll('/', '-');
-//   }
-
-//   List<Color> colors = [Colors.blue, Colors.red, Colors.orange];
-
-// //------------------End--Pie--Chart--------------
-
-//   String url = "http://65.1.132.43:8080/api/auth/new_transit_pass_pdf/90/";
-
-//   //---------------Table ----------------------
-//   //---------pending-------------
-//   final List Ids = [];
-//   final List sr = [];
-//   final List App_no = [];
-//   final List App_Name = [];
-//   final List App_Date = [];
-//   final List Current_status = [];
-//   final List days_left_transit = [];
-//   final List Approved_date = [];
-//   final List Action = [];
-//   //------------
-//   final List reason_office = [];
-//   final List reason_depty_ranger_office = [];
-//   final List reason_range_officer = [];
-//   final List disapproved_reason = [];
-//   final List reason_division = [];
-//   //------------
-//   //------------
-//   final List verify_office_date = [];
-//   final List deputy_officer_date = [];
-//   final List range_officer_date = [];
-//   final List division_date = [];
-//   //final List disapproved_reason=[];
-//   //------------
-//   final List Remark = [];
-//   final List Remark_date = [];
-//   final List Tp_status = [];
-//   final List Tp_Issue_Date = [];
-//   final List Tp_Number = [];
-//   final List verify_range = [];
-//   final List depty_range_officer = [];
-//   final List verify_range_officer = [];
-//   final List division = [];
-//   final List tp_expiry_date = [];
-//   final List other_State = [];
-
-//   final List verify_deputy2 = [];
-//   final List reason_deputy2 = [];
-//   final List deputy2_date = [];
-
-//   final List is_form_two = [];
-
-//   final List assigned_deputy1_by_id = [];
-//   final List assigned_deputy2_by_id = [];
-
-//   final List log_updated_by_use = [];
-//   final List verify_forest1 = [];
-//   //------------------------
-
-//   List list1 = [];
-//   int allApplication = 0;
-// //-----------Approved------------------------
-//   int allApplication1 = 0;
-//   final List Ids1 = [];
-//   final List sr1 = [];
-//   final List App_no1 = [];
-//   final List App_Name1 = [];
-//   final List App_Date1 = [];
-//   final List Current_status1 = [];
-//   final List days_left_transit1 = [];
-//   final List Approved_date1 = [];
-//   final List Action1 = [];
-//   final List Remark1 = [];
-//   final List Remark_date1 = [];
-//   final List Tp_status1 = [];
-//   final List Tp_Issue_Date1 = [];
-//   final List Tp_Number1 = [];
-//   final List verify_range1 = [];
-//   final List depty_range_officer1 = [];
-//   final List verify_range_officer1 = [];
-//   final List division1 = [];
-//   final List tp_expiry_date1 = [];
-//   //------------
-//   final List reason_office1 = [];
-//   final List reason_depty_ranger_office1 = [];
-//   final List reason_range_officer1 = [];
-//   final List disapproved_reason1 = [];
-//   final List reason_division1 = [];
-//   //------------
-//   final List verify_office_date1 = [];
-//   final List deputy_officer_date1 = [];
-//   final List range_officer_date1 = [];
-//   final List division_date1 = [];
-
-//   final List other_State1 = [];
-
-//   final List verify_deputy2_1 = [];
-//   final List reason_deputy2_1 = [];
-//   final List deputy2_date_1 = [];
-
-//   final List is_form_two1 = [];
-//   final List is_form3_1 = [];
-
-//   final List assigned_deputy1_by_id1 = [];
-//   final List assigned_deputy2_by_id1 = [];
-//   final List log_updated_by_use1 = [];
-//   final List verify_forest1_1 = [];
-//   final List field_status = [];
-//   final List field_status1 = [];
-//   //------------------------------------------
-//   void PendingApp() async {
-//     sr.clear();
-//     App_no.clear();
-//     App_Name.clear();
-//     App_Date.clear();
-//     Current_status.clear();
-//     days_left_transit.clear();
-//     Approved_date.clear();
-//     Action.clear();
-//     Remark.clear();
-//     Remark_date.clear();
-//     Tp_Issue_Date.clear();
-//     Tp_Number.clear();
-//     verify_range.clear();
-//     depty_range_officer.clear();
-//     verify_range_officer.clear();
-//     tp_expiry_date.clear();
-//     reason_office.clear();
-//     reason_depty_ranger_office.clear();
-//     reason_range_officer.clear();
-//     disapproved_reason.clear();
-//     verify_office_date.clear();
-//     deputy_officer_date.clear();
-//     range_officer_date.clear();
-//     division.clear();
-//     reason_division.clear();
-//     division_date.clear();
-//     other_State.clear();
-//     verify_deputy2.clear();
-//     reason_deputy2.clear();
-//     deputy2_date.clear();
-//     is_form_two.clear();
-//     assigned_deputy1_by_id.clear();
-//     assigned_deputy2_by_id.clear();
-//     log_updated_by_use.clear();
-//     verify_forest1.clear();
-//     field_status.clear();
-//     print("Pending Application");
-//     const String url = '${ServerHelper.baseUrl}auth/PendingListViewApplication';
-//     final response = await http.get(Uri.parse(url), headers: <String, String>{
-//       'Content-Type': 'application/json',
-//       'Authorization': "token $sessionToken"
-//     });
-//     Map<String, dynamic> responseJSON = json.decode(response.body);
-//     log("Pending Application");
-//     log(responseJSON.toString());
-//     List list = responseJSON["data"];
-//     setState(() {
-//       allApplication = list.length;
-//     });
-//     for (var i = 0; i < allApplication; i++) {
-//       sr.add(i.toString());
-//       Ids.add(list[i]['id'].toString());
-//       App_no.add(list[i]['application_no']);
-//       App_Name.add(list[i]['name'].toString());
-//       App_Date.add(list[i]['created_date'].toString());
-//       Current_status.add(list[i]['application_status'].toString());
-//       days_left_transit.add(list[i]['6'].toString());
-//       Approved_date.add(list[i]['tp_expiry_status'].toString());
-//       Action.add(list[i][''].toString());
-//       Remark.add(list[i]['disapproved_reason'].toString());
-//       Remark_date.add(list[i]['range_officer_date'].toString());
-//       Tp_Issue_Date.add(list[i]['created_date'].toString());
-//       Tp_Number.add(list[i]['days_left_for_approval'].toString());
-//       verify_range.add(list[i]['verify_office']);
-//       depty_range_officer.add(list[i]['depty_range_officer']);
-//       verify_range_officer.add(list[i]['application_status']);
-//       division.add(list[i]['d']);
-//       tp_expiry_date.add(list[i]['tp_expiry_date']);
-//       reason_office.add(list[i]['reason_office']);
-//       reason_depty_ranger_office.add(list[i]['reason_depty_ranger_office']);
-//       reason_range_officer.add(list[i]['reason_range_officer']);
-//       reason_division.add(list[i]['reason_division_officer']);
-//       disapproved_reason.add(list[i]['disapproved_reason']);
-//       field_status.add(list[i]['current_app_status']);
-//       verify_office_date.add(list[i]['verify_office_date']);
-//       deputy_officer_date.add(list[i]['deputy_officer_date']);
-//       range_officer_date.add(list[i]['range_officer_date']);
-//       division_date.add(list[i]['division_officer_date']);
-//       // Remark.add(list[i]['transit_pass_created_date']);
-//       other_State.add(list[i]['other_state']);
-//       verify_deputy2.add(list[i]['verify_deputy2']);
-//       reason_deputy2.add(list[i]['reason_deputy2']);
-//       deputy2_date.add(list[i]['deputy2_date']);
-//       is_form_two.add(list[i]['is_form_two']); //anandhu
-//       assigned_deputy1_by_id.add(list[i]['assigned_deputy1_name']);
-//       assigned_deputy2_by_id.add(list[i]['assigned_deputy2_name']);
-//       log_updated_by_use.add(list[i]['log_updated_by_user']);
-//       verify_forest1.add(list[i]['verify_forest1']);
-//     }
-//     print("--------------- Pending Application----------------");
-//     print("---------------log----------");
-//     print(log_updated_by_use);
-//     // print(Ids + App_no + App_Date + App_Name + Current_status);
-//   }
-
-// //-----------Approved-------------
-//   void ApprovedApp() async {
-//     sr1.clear();
-//     App_no1.clear();
-//     App_Name1.clear();
-//     App_Date1.clear();
-//     Current_status1.clear();
-//     days_left_transit1.clear();
-//     Approved_date1.clear();
-//     Action1.clear();
-//     Remark1.clear();
-//     Remark_date1.clear();
-//     Tp_Issue_Date1.clear();
-//     Tp_Number1.clear();
-//     verify_range1.clear();
-//     depty_range_officer1.clear();
-//     verify_range_officer1.clear();
-//     tp_expiry_date1.clear();
-//     reason_office1.clear();
-//     reason_depty_ranger_office1.clear();
-//     reason_range_officer1.clear();
-//     disapproved_reason1.clear();
-//     verify_office_date1.clear();
-//     deputy_officer_date1.clear();
-//     range_officer_date1.clear();
-//     division1.clear();
-//     reason_division1.clear();
-//     division_date1.clear();
-//     other_State1.clear();
-//     verify_deputy2_1.clear();
-//     reason_deputy2_1.clear();
-//     deputy2_date_1.clear();
-//     is_form_two1.clear();
-//     assigned_deputy1_by_id1.clear();
-//     assigned_deputy2_by_id1.clear();
-//     log_updated_by_use1.clear();
-//     verify_forest1_1.clear();
-//     print("Approved Application");
-//     const String url =
-//         '${ServerHelper.baseUrl}auth/ApprovedListViewApplication';
-//     final response = await http.get(Uri.parse(url), headers: <String, String>{
-//       'Content-Type': 'application/json',
-//       'Authorization': "token $sessionToken"
-//     });
-//     Map<String, dynamic> responseJSON = json.decode(response.body);
-//     log(responseJSON.toString());
-//     List list = responseJSON["data"];
-
-//     setState(() {
-//       allApplication1 = list.length;
-//     });
-//     print(list.length);
-//     for (var i = 0; i < allApplication1; i++) {
-//       sr1.add(i.toString());
-//       Ids1.add(list[i]['id'].toString());
-//       App_no1.add(list[i]['application_no']);
-//       App_Name1.add(list[i]['name'].toString());
-//       App_Date1.add(list[i]['created_date'].toString());
-//       Current_status1.add(list[i]['application_status'].toString());
-//       days_left_transit1.add(list[i]['application_status'].toString());
-//       Approved_date1.add(list[i]['verify_office_date'].toString());
-//       Action1.add(list[i][''].toString());
-//       Remark1.add(list[i]['reason_office'].toString());
-//       Remark_date1.add(list[i]['range_officer_date'].toString());
-//       Tp_Issue_Date1.add(list[i]['transit_pass_created_date'].toString());
-//       Tp_Number1.add(list[i]['transit_pass_id'].toString());
-//       verify_range1.add(list[i]['verify_office']);
-//       depty_range_officer1.add(list[i]['depty_range_officer']);
-//       verify_range_officer1.add(list[i]['approved_by_r']);
-//       division1.add(list[i]['d']);
-//       tp_expiry_date1.add(list[i]['tp_expiry_date']);
-//       reason_office1.add(list[i]['reason_office']);
-//       reason_depty_ranger_office1.add(list[i]['reason_depty_ranger_office']);
-//       reason_range_officer1.add(list[i]['reason_range_officer']);
-//       reason_division1.add(list[i]['reason_division_officer']);
-//       disapproved_reason1.add(list[i]['disapproved_reason']);
-//       verify_office_date1.add(list[i]['verify_office_date']);
-//       deputy_officer_date1.add(list[i]['deputy_officer_date']);
-//       range_officer_date1.add(list[i]['range_officer_date']);
-//       division_date1.add(list[i]['division_officer_date']);
-//       // Remark.add(list[i]['transit_pass_created_date']);
-//       other_State1.add(list[i]['other_state']);
-
-//       verify_deputy2_1.add(list[i]['verify_deputy2']);
-//       reason_deputy2_1.add(list[i]['reason_deputy2']);
-//       deputy2_date_1.add(list[i]['deputy2_date']);
-
-//       is_form_two1.add(list[i]['is_form_two']);
-//       is_form3_1.add(list[i]['is_form3']);
-
-//       assigned_deputy1_by_id1.add(list[i]['assigned_deputy1_name']);
-//       assigned_deputy2_by_id1.add(list[i]['assigned_deputy2_name']);
-//       log_updated_by_use1.add(list[i]['log_updated_by_user']);
-//       verify_forest1_1.add(list[i]['verify_forest1']);
-//       field_status1.add(list[i]['current_app_status'].toString());
-//     }
-//   }
-
-// //--end-Approve-------------------
-//   //---------------------------Deemed-Approve-----------------------------
-//   //----------------------
-//   int allApplication2 = 0;
-//   final List Ids2 = [];
-//   final List sr2 = [];
-//   final List App_no2 = [];
-//   final List App_Name2 = [];
-//   final List App_Date2 = [];
-//   final List Current_status2 = [];
-//   final List days_left_transit2 = [];
-//   final List Approved_date2 = [];
-//   final List Action2 = [];
-//   final List Remark2 = [];
-//   final List Remark_date2 = [];
-//   final List Tp_status2 = [];
-//   final List Tp_Issue_Date2 = [];
-//   final List Tp_Number2 = [];
-//   final List DeemedApproved2 = [];
-
-//   final List reason_office2 = [];
-//   final List reason_depty_ranger_office2 = [];
-//   final List reason_range_officer2 = [];
-//   final List disapproved_reason2 = [];
-//   final List reason_division2 = [];
-//   //------------
-//   final List verify_office_date2 = [];
-//   final List deputy_officer_date2 = [];
-//   final List range_officer_date2 = [];
-//   final List division_date2 = [];
-
-//   final List other_State2 = [];
-//   final List division2 = [];
-
-//   //---------------------
-//   void DeemedApp() async {
-//     sr2.clear();
-//     print("Deemed Application");
-//     const String url = '${ServerHelper.baseUrl}auth/DeemedApprovedList';
-//     final response = await http.get(Uri.parse(url), headers: <String, String>{
-//       'Content-Type': 'application/json',
-//       'Authorization': "token $sessionToken"
-//     });
-//     Map<String, dynamic> responseJSON = json.decode(response.body);
-
-//     List list = responseJSON["data"];
-//     setState(() {
-//       allApplication2 = list.length;
-//     });
-//     for (var i = 0; i < allApplication2; i++) {
-//       sr2.add(i.toString());
-//       Ids2.add(list[i]['id'].toString());
-//       App_no2.add(list[i]['application_no']);
-//       App_Name2.add(list[i]['name'].toString());
-//       App_Date2.add(list[i]['created_date'].toString());
-//       Current_status2.add(list[i]['application_status'].toString());
-//       Approved_date2.add(list[i]['transit_pass_created_date'].toString());
-//       Action2.add(list[i][''].toString());
-//       Remark2.add(list[i]['reason_office']);
-//       Remark_date2.add(list[i]['verify_office_date']);
-//       Tp_Issue_Date2.add(list[i]['transit_pass_created_date']);
-//       Tp_Number2.add(list[i]['transit_pass_id'].toString());
-//       DeemedApproved2.add(list[i]['deemed_approval']);
-
-//       reason_office2.add(list[i]['reason_office']);
-//       reason_depty_ranger_office2.add(list[i]['reason_depty_ranger_office']);
-//       reason_range_officer2.add(list[i]['reason_range_officer']);
-//       disapproved_reason2.add(list[i]['disapproved_reason']);
-//       verify_office_date2.add(list[i]['verify_office_date']);
-//       deputy_officer_date2.add(list[i]['deputy_officer_date']);
-//       range_officer_date2.add(list[i]['range_officer_date']);
-
-//       division2.add(list[i]['division_officer']);
-//       reason_division2.add(list[i]['reason_division_officer']);
-//       division_date2.add(list[i]['division_officer_date']);
-//       // Remark.add(list[i]['transit_pass_created_date']);
-//       other_State2.add(list[i]['other_state']);
-//     }
-//   }
-
-//   int allApplication3 = 0;
-//   final List Ids3 = [];
-//   final List sr3 = [];
-//   final List App_no3 = [];
-//   final List App_Name3 = [];
-//   final List App_Date3 = [];
-//   final List Current_status3 = [];
-//   final List days_left_transit3 = [];
-//   final List Approved_date3 = [];
-//   final List Action3 = [];
-//   final List Remark3 = [];
-//   final List Remark_date3 = [];
-//   final List Tp_status3 = [];
-//   final List Tp_Issue_Date3 = [];
-//   final List Tp_Number3 = [];
-//   //--------------------
-
-//   void NocForm() async {
-//     sr3.clear();
-//     const String url = '${ServerHelper.baseUrl}auth/GetOfficerTransitPasses/';
-//     final response = await http.get(Uri.parse(url), headers: <String, String>{
-//       'Content-Type': 'application/json',
-//       'Authorization': "token $sessionToken"
-//     });
-//     Map<String, dynamic> responseJSON = json.decode(response.body);
-
-//     List list = responseJSON["transits"];
-//     setState(() {
-//       allApplication3 = list.length;
-//     });
-//     for (var i = 0; i < allApplication3; i++) {
-//       sr3.add(i.toString());
-//       Ids3.add(list[i]['app_form'].toString());
-//       App_no3.add(list[i]['transit_number']);
-//       App_Name3.add(list[i]['name'].toString());
-//       App_Date3.add(list[i]['transit_req_date'].toString());
-//       Current_status3.add(list[i]['transit_status'].toString());
-//       days_left_transit3.add(list[i]['application_status'].toString());
-//       Approved_date3.add(list[i]['verify_office_date'].toString());
-//       Action3.add(list[i][''].toString());
-//       Remark3.add(list[i]['reason_office'].toString());
-//       Remark_date3.add(list[i]['range_officer_date'].toString());
-//       Tp_Issue_Date3.add(list[i]['transit_pass_created_date'].toString());
-//       Tp_Number3.add(list[i]['transit_pass_created_date'].toString());
-//       // Remark.add(list[i]['transit_pass_created_date']);
-//     }
-//   }
-
-//   //-----------------------End-Noc-Form-----------------------------------
-//   //---------------End---Table-----------------
-//   int _radioValue = 0;
-//   bool flag = true;
-//   var tab = 0;
-//   @override
-//   void _handleRadioValueChange(int value) async {
-//     pie_chart();
-//     setState(() {
-//       _radioValue = value;
-//       if (_radioValue == 0) {
-//         setState(() {
-//           tab = 0;
-//           flag = true;
-//           pie_chart();
-//         });
-//       } else if (_radioValue == 1) {
-//         setState(() {
-//           tab = 1;
-//           flag = false;
-//           PendingApp();
-//         });
-//       } else if (_radioValue == 2) {
-//         setState(() {
-//           tab = 2;
-//           ApprovedApp();
-//         });
-//       } else if (_radioValue == 3) {
-//         setState(() {
-//           tab = 3;
-//           DeemedApp();
-//         });
-//       } else if (_radioValue == 4) {
-//         setState(() {
-//           tab = 4;
-//           NocForm();
-//         });
-//       }
-//     });
-//   }
-
-//   String OfficerRemark(String AppStatus, String disapproved, String division,
-//       String forest, String deputy, String revenue) {
-//     if (AppStatus == 'R') {
-//       return disapproved;
-//     } else if (division.isNotEmpty) {
-//       return division;
-//     } else if (forest.isNotEmpty) {
-//       return forest;
-//     } else if (deputy.isNotEmpty) {
-//       return deputy;
-//     } else if (revenue.isNotEmpty) {
-//       return revenue;
-//     } else {
-//       return "N/A";
-//     }
-//   }
-
-//   String OfficerDate(String AppStatus, dynamic disapproved, dynamic division,
-//       dynamic forest, dynamic deputy, dynamic revenue) {
-//     if (AppStatus == 'R') {
-//       return disapproved != null ? disapproved.toString() : "N/A";
-//     } else if (division != null) {
-//       return division.toString();
-//     } else if (forest != null) {
-//       return forest.toString();
-//     } else if (deputy != null) {
-//       return deputy.toString();
-//     } else if (revenue != null) {
-//       return revenue.toString();
-//     } else {
-//       return "N/A";
-//     }
-//   }
-
-//   // Modify the OfficerStatus method to handle null values
-//   String OfficerStatus(
-//       String user, dynamic divisionNo, String rangeApprove, String status) {
-//     if (user == "deputy range officer") {
-//       if (status == "false") {
-//         if (rangeApprove == "R") {
-//           return "Rejected by range officer ";
-//         } else if (rangeApprove == "A") {
-//           return "Approved by range officer,\n deputy officer field varification pending";
-//         } else if (rangeApprove == "P") {
-//           return "deputy officer field varification pending";
-//         } else {
-//           return "";
-//         }
-//       } else {
-//         return "Recommended by Deputy Range Officer,\n Range Officer Recommendation pending";
-//       }
-//     } else if (user == "forest range officer") {
-//       if (status == "false") {
-//         if (rangeApprove == "R") {
-//           return "Rejected by range officer ";
-//         } else if (divisionNo != null) {
-//           return "Approved by range officer,\n deputy officer field varification pending";
-//         } else if (rangeApprove == "A") {
-//           return "Approved by range officer";
-//         } else if (rangeApprove == "P") {
-//           return "Range officer Recomendation \n pending";
-//         } else {
-//           return "";
-//         }
-//       } else {
-//         return "field varification pending";
-//       }
-//     } else {
-//       return "";
-//     }
-//   }
-
-//   String AssignOfficer(bool isForm2, String? assignDeputy2,
-//       String? assignDeputy1, bool? logUpdatedByUser) {
-//     if (isForm2 == true) {
-//       if (assignDeputy2 != null) {
-//         return assignDeputy2;
-//       } else if (assignDeputy1 != null) {
-//         if (logUpdatedByUser == true) {
-//           return 'Yet to Assign for Stage 2';
-//         } else {
-//           return assignDeputy1;
-//         }
-//       } else {
-//         return 'Yet to Assign for Stage 1';
-//       }
-//     }
-//     return 'N/A';
-//   }
-
-//   bool getForm(bool isform, bool otherState, bool divisionOfficer,
-//       bool verifyRangeOfficer, String appStatus) {
-//     bool canApply3 = false;
-//     if (appStatus == 'A') {
-//       return canApply3;
-//     }
-//     if (isform == true) {
-//       if (otherState == false) {
-//         if (divisionOfficer == true && appStatus != 'P') {
-//           canApply3 = true;
-//           return canApply3;
-//         } else {
-//           return canApply3;
-//         }
-//       } else {
-//         if (verifyRangeOfficer == true && appStatus != 'P') {
-//           canApply3 = true;
-//           return canApply3;
-//         } else {
-//           return canApply3;
-//         }
-//       }
-//     }
-//     return canApply3;
-//   }
-
-//   int daysBetween(DateTime from) {
-//     DateTime a = DateTime.now();
-//     from = DateTime(from.year, from.month, from.day);
-//     DateTime to = DateTime(a.year, a.month, a.day);
-//     int b = 7 - (to.difference(from).inHours / 24).round();
-//     if (b < 0) {
-//       return 0;
-//     } else {
-//       return b;
-//     }
-//   }
-
-//   final int _currentSortColumn = 0;
-//   final bool _isAscending = true;
-//   Future<bool> _onBackPressed() async {
-//     bool returnValue = false;
-//     return await showDialog(
-//           context: context,
-//           builder: (context) => AlertDialog(
-//             title: const Text('Do you want to close the application?'),
-//             actions: <Widget>[
-//               TextButton(
-//                 onPressed: () {
-//                   returnValue = false; // User selects "NO"
-//                   Navigator.of(context).pop(returnValue); // Close the dialog
-//                 },
-//                 child: const Text("NO"),
-//               ),
-//               TextButton(
-//                 onPressed: () {
-//                   returnValue = true; // User selects "YES"
-//                   Navigator.of(context).pop(returnValue); // Close the dialog
-//                 },
-//                 child: const Text("YES"),
-//               ),
-//             ],
-//           ),
-//         ) ??
-//         false;
-//   }
-
-//   List<String> getLabels(String userGroup) {
-//     if (userGroup == "forest range officer") {
-//       return [
-//         'Report',
-//         'Pending',
-//         'Approved/Rejected',
-//         'Deemed Approved',
-//         'Transit Approval'
-//       ];
-//     } else {
-//       return ['Report', 'Pending', 'Approved/Rejected', 'Deemed Approved'];
-//     }
-//   }
-
-//   List<List<Color>> getActiveBgColors(String userGroup) {
-//     if (userGroup == "forest range officer") {
-//       return [
-//         [
-//           Color.fromARGB(255, 28, 110, 99),
-//         ],
-//         [Colors.orange],
-//         [Colors.green],
-//         [Colors.cyan],
-//         [Colors.blue]
-//       ];
-//     } else {
-//       return [
-//         [Colors.blueAccent],
-//         [Colors.orange],
-//         [Colors.green],
-//         [Colors.cyan]
-//       ];
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     print("USERGROUP " + userGroup);
-//     return WillPopScope(
-//       onWillPop: _onBackPressed,
-//       child: Scaffold(
-//         backgroundColor: Colors.white,
-//         appBar: AppBar(
-//           title: const Text(
-//             " Officer Dashboard",
-//             style: TextStyle(
-//               color: Colors.white,
-//             ),
-//           ),
-//           backgroundColor: Color.fromARGB(255, 28, 110, 99),
-//           elevation: 0,
-//         ),
-//         body: SingleChildScrollView(
-//           child: Column(
-//             children: <Widget>[
-//               Container(
-//                 margin: const EdgeInsets.only(top: 8, bottom: 8),
-//                 child: ToggleSwitch(
-//                   minWidth: MediaQuery.of(context).size.width,
-//                   initialLabelIndex: _radioValue,
-//                   cornerRadius: 8.0,
-//                   activeFgColor: Colors.white,
-//                   inactiveBgColor: Colors.grey[200],
-//                   inactiveFgColor: Color.fromARGB(255, 28, 110, 99),
-//                   labels: getLabels(userGroup),
-//                   activeBgColors: getActiveBgColors(userGroup),
-//                   onToggle: (index) => _handleRadioValueChange(index!),
-//                 ),
-//               ),
-//               LayoutBuilder(builder: (context, constraints) {
-//                 if (tab == 0) {
-//                   print("USERGROUP " + userGroup);
-//                   return Column(
-//                     mainAxisAlignment: MainAxisAlignment.start,
-//                     children: [
-//                       Container(
-//                           width: MediaQuery.of(context).size.width,
-//                           // height: MediaQuery.of(context).size.width,
-//                           decoration: BoxDecoration(
-//                             borderRadius: BorderRadius.circular(10),
-//                             color: Colors.white,
-//                             boxShadow: [
-//                               // BoxShadow(
-//                               //   color: Colors.blue.withOpacity(0.2),
-//                               //   blurRadius: 6.0,
-//                               //   spreadRadius: 2.0,
-//                               //   offset: Offset(2.0, 2.0),
-//                               // )
-//                             ],
-//                           ),
-//                           margin: const EdgeInsets.symmetric(
-//                               horizontal: 10, vertical: 15),
-//                           // padding: const EdgeInsets.all(15),
-//                           child: Column(
-//                             crossAxisAlignment: CrossAxisAlignment.center,
-//                             children: <Widget>[
-//                               Text(
-//                                 "Application Status Overview Pie Chart",
-//                                 style: TextStyle(
-//                                   fontSize: 18,
-//                                   fontWeight: FontWeight.bold,
-//                                   color: Color.fromARGB(255, 28, 110, 99),
-//                                 ),
-//                               ),
-//                               SizedBox(height: 20),
-//                               PieChart(
-//                                 dataMap: {
-//                                   "Approved": Approved,
-//                                   "Rejected": Rejected,
-//                                   "Pending": Pending
-//                                 },
-//                                 animationDuration: Duration(milliseconds: 800),
-//                                 chartLegendSpacing: 30,
-//                                 chartRadius:
-//                                     MediaQuery.of(context).size.width * 0.45,
-//                                 initialAngleInDegree: 0,
-//                                 chartType: ChartType.disc,
-//                                 colorList: [
-//                                   Color.fromARGB(255, 28, 110, 99),
-//                                   Colors.red,
-//                                   Colors.orange
-//                                 ],
-//                                 ringStrokeWidth: 32,
-//                                 centerText: "Status",
-//                                 centerTextStyle: TextStyle(
-//                                   fontWeight: FontWeight.bold,
-//                                   fontSize: 16,
-//                                   color: Colors.black54,
-//                                 ),
-//                                 legendOptions: LegendOptions(
-//                                   showLegendsInRow: true,
-//                                   legendPosition: LegendPosition.bottom,
-//                                   showLegends: true,
-//                                   legendTextStyle: TextStyle(
-//                                     fontWeight: FontWeight.w500,
-//                                     fontSize: 14,
-//                                   ),
-//                                 ),
-//                                 chartValuesOptions: ChartValuesOptions(
-//                                   showChartValueBackground: true,
-//                                   showChartValues: true,
-//                                   showChartValuesInPercentage: true,
-//                                   showChartValuesOutside: false,
-//                                   decimalPlaces: 1,
-//                                 ),
-//                               ),
-//                               SizedBox(height: 20),
-//                               // ElevatedButton.icon(
-//                               //   icon: Icon(Icons.download, color: Colors.white),
-//                               //   onPressed: () async {
-//                               //     await launch(
-//                               //         "${ServerHelper.baseUrl}auth/summary_report/");
-//                               //   },
-//                               //   label: Text(
-//                               //     "Download Report",
-//                               //     style: TextStyle(fontSize: 16),
-//                               //   ),
-//                               //   style: ElevatedButton.styleFrom(
-//                               //     backgroundColor: Colors.blueAccent,
-//                               //     padding: EdgeInsets.symmetric(
-//                               //         horizontal: 20, vertical: 10),
-//                               //     shape: RoundedRectangleBorder(
-//                               //       borderRadius: BorderRadius.circular(8),
-//                               //     ),
-//                               //   ),
-//                               // ),
-//                             ],
-//                           )),
-//                       Divider(
-//                         color: const Color.fromARGB(131, 158, 158, 158),
-//                         height: 0.5,
-//                       ),
-//                       Container(
-//                           width: MediaQuery.of(context).size.width,
-//                           decoration: BoxDecoration(
-//                             borderRadius: BorderRadius.circular(10),
-//                             color: Colors.white,
-//                             boxShadow: [
-//                               // BoxShadow(
-//                               //   color: Colors.blue.withOpacity(0.2),
-//                               //   blurRadius: 6.0,
-//                               //   spreadRadius: 2.0,
-//                               //   offset: Offset(2.0, 2.0),
-//                               // )
-//                             ],
-//                           ),
-//                           margin: const EdgeInsets.symmetric(
-//                               horizontal: 10, vertical: 15),
-//                           // padding: const EdgeInsets.all(15),
-//                           child: Column(
-//                             crossAxisAlignment: CrossAxisAlignment.center,
-//                             children: <Widget>[
-//                               Text(
-//                                 "Application Status Overview Bar Graph",
-//                                 style: TextStyle(
-//                                   fontSize: 18,
-//                                   fontWeight: FontWeight.bold,
-//                                   color: Color.fromARGB(255, 28, 110, 99),
-//                                 ),
-//                               ),
-//                               SizedBox(height: 20),
-//                               // Bar Graph
-//                               SizedBox(
-//                                 height: 250,
-//                                 child: Row(
-//                                   mainAxisAlignment:
-//                                       MainAxisAlignment.spaceEvenly,
-//                                   crossAxisAlignment: CrossAxisAlignment.end,
-//                                   children: [
-//                                     _buildBar(
-//                                       context,
-//                                       label: "Approved",
-//                                       value: (Approved + Rejected + Pending) ==
-//                                               0
-//                                           ? 0
-//                                           : (Approved /
-//                                               (Approved + Rejected + Pending) *
-//                                               100),
-//                                       color: Color.fromARGB(255, 28, 110, 99),
-//                                       max: (Approved + Rejected + Pending) == 0
-//                                           ? 1
-//                                           : (Approved + Rejected + Pending),
-//                                     ),
-//                                     _buildBar(
-//                                       context,
-//                                       label: "Rejected",
-//                                       value: (Approved + Rejected + Pending) ==
-//                                               0
-//                                           ? 0
-//                                           : (Rejected /
-//                                               (Approved + Rejected + Pending) *
-//                                               100),
-//                                       color: Colors.red,
-//                                       max: (Approved + Rejected + Pending) == 0
-//                                           ? 1
-//                                           : (Approved + Rejected + Pending),
-//                                     ),
-//                                     _buildBar(
-//                                       context,
-//                                       label: "Pending",
-//                                       value: (Approved + Rejected + Pending) ==
-//                                               0
-//                                           ? 0
-//                                           : (Pending /
-//                                               (Approved + Rejected + Pending) *
-//                                               100),
-//                                       color: Colors.orange,
-//                                       max: (Approved + Rejected + Pending) == 0
-//                                           ? 1
-//                                           : (Approved + Rejected + Pending),
-//                                     ),
-//                                   ],
-//                                 ),
-//                               ),
-//                               SizedBox(height: 20),
-//                             ],
-//                           ))
-
-//                       // Helper widget for bar
-//                     ],
-//                   );
-//                 } else if (tab == 1) {
-//                   return Container(
-//                       height: MediaQuery.of(context).size.height * 0.79,
-//                       decoration: BoxDecoration(
-//                         borderRadius: BorderRadius.circular(5),
-//                         color: Colors.white,
-//                         boxShadow: [
-//                           BoxShadow(
-//                             color: Colors.deepOrangeAccent,
-//                             blurRadius: 2.0,
-//                             spreadRadius: 1.0,
-//                             //offset: Offset(2.0, 2.0), // shadow direction: bottom right
-//                           )
-//                         ],
-//                       ),
-//                       margin: const EdgeInsets.only(
-//                           left: 5, right: 5, top: 2, bottom: 10),
-//                       padding: const EdgeInsets.only(
-//                           left: 2, right: 2, top: 2, bottom: 2),
-//                       child: Scrollbar(
-//                           thumbVisibility: true,
-//                           thickness: 15,
-//                           child: SingleChildScrollView(
-//                               scrollDirection: Axis.horizontal,
-//                               padding: const EdgeInsets.only(bottom: 15),
-//                               child: Scrollbar(
-//                                 thumbVisibility: true,
-//                                 thickness: 15,
-//                                 child: SingleChildScrollView(
-//                                   scrollDirection: Axis.vertical,
-//                                   child: DataTable(
-//                                     columnSpacing: 20,
-//                                     dividerThickness: 2,
-//                                     headingRowColor:
-//                                         WidgetStateColor.resolveWith(
-//                                             (states) => Colors.orange),
-//                                     columns: [
-//                                       DataColumn(
-//                                         label: Text(
-//                                           'S.No',
-//                                           style: TextStyle(
-//                                               fontWeight: FontWeight.bold,
-//                                               color: Colors.white),
-//                                         ),
-//                                       ),
-//                                       DataColumn(
-//                                           label: Text(
-//                                         'Application\n       No',
-//                                         style: TextStyle(
-//                                             fontWeight: FontWeight.bold,
-//                                             color: Colors.white),
-//                                       )),
-//                                       DataColumn(
-//                                           label: Text(
-//                                         'Application\n      Name',
-//                                         style: TextStyle(
-//                                             fontWeight: FontWeight.bold,
-//                                             color: Colors.white),
-//                                       )),
-//                                       DataColumn(
-//                                           label: Text(
-//                                         'Application\n      Date',
-//                                         style: TextStyle(
-//                                             fontWeight: FontWeight.bold,
-//                                             color: Colors.white),
-//                                       )),
-//                                       DataColumn(
-//                                           label: Text(
-//                                         'Current Status',
-//                                         style: TextStyle(
-//                                             fontWeight: FontWeight.bold,
-//                                             color: Colors.white),
-//                                       )),
-//                                       DataColumn(
-//                                           label: Text(
-//                                         'Deputy Officer \n Assignment status',
-//                                         style: TextStyle(
-//                                             fontWeight: FontWeight.bold,
-//                                             color: Colors.white),
-//                                       )),
-//                                       DataColumn(
-//                                           label: Text(
-//                                         'Notified / Non-Notified\n     Villages',
-//                                         style: TextStyle(
-//                                             fontWeight: FontWeight.bold,
-//                                             color: Colors.white),
-//                                       )),
-//                                       DataColumn(
-//                                           label: Text(
-//                                         'Days  left\nfor Approval',
-//                                         style: TextStyle(
-//                                             fontWeight: FontWeight.bold,
-//                                             color: Colors.white),
-//                                       )),
-//                                       // DataColumn(
-//                                       //     label: Text(
-//                                       //   'Approval\n    Date',
-//                                       //   style: TextStyle(
-//                                       //       fontWeight: FontWeight.bold,
-//                                       //       color: Colors.white),
-//                                       // )),
-//                                       DataColumn(
-//                                           label: Text(
-//                                         'Action',
-//                                         style: TextStyle(
-//                                             fontWeight: FontWeight.bold,
-//                                             color: Colors.white),
-//                                       )),
-//                                       // DataColumn(
-//                                       //     label: Text(
-//                                       //   'Download\n      Tp',
-//                                       //   style: TextStyle(
-//                                       //       fontWeight: FontWeight.bold,
-//                                       //       color: Colors.white),
-//                                       // )),
-//                                       // DataColumn(
-//                                       //     label: Text(
-//                                       //   'Download\n Report',
-//                                       //   style: TextStyle(
-//                                       //       fontWeight: FontWeight.bold,
-//                                       //       color: Colors.white),
-//                                       // )),
-
-//                                       //qr
-//                                       // DataColumn(
-//                                       //     label: Text(
-//                                       //   'QR Code',
-//                                       //   style: TextStyle(
-//                                       //       fontWeight: FontWeight.bold,
-//                                       //       color: Colors.white),
-//                                       // )),
-//                                       DataColumn(
-//                                           label: Text(
-//                                         'Remark',
-//                                         style: TextStyle(
-//                                             fontWeight: FontWeight.bold,
-//                                             color: Colors.white),
-//                                       )),
-//                                       DataColumn(
-//                                           label: Text(
-//                                         'Remark\n  Date',
-//                                         style: TextStyle(
-//                                             fontWeight: FontWeight.bold,
-//                                             color: Colors.white),
-//                                       )),
-//                                       DataColumn(
-//                                           label: Text(
-//                                         'Location',
-//                                         style: TextStyle(
-//                                             fontWeight: FontWeight.bold,
-//                                             color: Colors.white),
-//                                       )),
-//                                     ],
-//                                     rows:
-//                                         sr // Loops through dataColumnText, each iteration assigning the value to element
-//                                             .map(
-//                                               ((value) => DataRow(
-//                                                     cells: <DataCell>[
-//                                                       DataCell((Text((int.parse(
-//                                                                   value) +
-//                                                               1)
-//                                                           .toString()))), //Extracting from Map element the value
-//                                                       DataCell(Text(App_no[
-//                                                               int.parse(value)]
-//                                                           .toString())),
-//                                                       DataCell(Text(App_Name[
-//                                                               int.parse(value)]
-//                                                           .toString())),
-//                                                       DataCell(Text(App_Date[
-//                                                               int.parse(value)]
-//                                                           .toString())),
-//                                                       DataCell(Text(
-//                                                           field_status[
-//                                                                   int.parse(
-//                                                                       value)]
-//                                                               .toString())),
-//                                                       // DataCell(Text(OfficerStatus(
-//                                                       //     userGroup,
-//                                                       //     division[
-//                                                       //         int.parse(value)],
-//                                                       //     verify_range_officer[
-//                                                       //         int.parse(value)],
-//                                                       //     field_status[
-//                                                       //             int.parse(
-//                                                       //                 value)]
-//                                                       //         .toString()))),
-//                                                       DataCell(Text(AssignOfficer(
-//                                                           is_form_two[int.parse(
-//                                                                   value)] ??
-//                                                               false,
-//                                                           assigned_deputy2_by_id[
-//                                                               int.parse(value)],
-//                                                           assigned_deputy1_by_id[
-//                                                               int.parse(value)],
-//                                                           log_updated_by_use[
-//                                                               int.parse(
-//                                                                   value)]))),
-//                                                       DataCell(Text(is_form_two[
-//                                                                   int.parse(
-//                                                                       value)] ==
-//                                                               true
-//                                                           ? "Notified"
-//                                                           : "Non-Notified")),
-//                                                       DataCell(Text(Tp_Number[
-//                                                               int.parse(value)]
-//                                                           .toString())),
-//                                                       // DataCell(Text(Tp_Number[
-//                                                       //                 int.parse(
-//                                                       //                     value)]
-//                                                       //             .toString() ==
-//                                                       //         '0'
-//                                                       //     ? "N/A"
-//                                                       //     : daysBetween(DateTime.parse(
-//                                                       //             Tp_Issue_Date[
-//                                                       //                     int.parse(
-//                                                       //                         value)]
-//                                                       //                 .toString()))
-//                                                       //         .toString())),
-//                                                       // DataCell(Text((Tp_Number[
-//                                                       //                 int.parse(
-//                                                       //                     value)]
-//                                                       //             .toString() ==
-//                                                       //         '0'
-//                                                       //     ? "N/A"
-//                                                       //     : Approved_date[int.parse(
-//                                                       //                 value)] !=
-//                                                       //             null
-//                                                       //         ? Approved_date[
-//                                                       //                 int.parse(
-//                                                       //                     value)]
-//                                                       //             .toString()
-//                                                       //         : "N/A"))),
-//                                                       DataCell(
-//                                                         Visibility(
-//                                                           visible: true,
-//                                                           child: IconButton(
-//                                                             icon: Icon(Icons
-//                                                                 .visibility),
-//                                                             color: Colors.blue,
-//                                                             onPressed: () {
-//                                                               if (userGroup ==
-//                                                                   userGroup) {
-//                                                                 String IDS = Ids[
-//                                                                         int.parse(
-//                                                                             value)]
-//                                                                     .toString();
-//                                                                 Navigator.push(
-//                                                                     context,
-//                                                                     MaterialPageRoute(
-//                                                                         builder: (_) => ViewApplication(
-//                                                                             sessionToken:
-//                                                                                 sessionToken,
-//                                                                             userGroup:
-//                                                                                 userGroup,
-//                                                                             userId:
-//                                                                                 userId,
-//                                                                             Ids:
-//                                                                                 IDS,
-//                                                                             Range:
-//                                                                                 Range,
-//                                                                             userName:
-//                                                                                 userName,
-//                                                                             userEmail:
-//                                                                                 userEmail)));
-//                                                               }
-//                                                             },
-//                                                           ),
-//                                                         ),
-//                                                       ),
-//                                                       // DataCell(
-//                                                       //   Visibility(
-//                                                       //     visible: (Current_status[
-//                                                       //                     int.parse(
-//                                                       //                         value)]
-//                                                       //                 .toString() ==
-//                                                       //             'A')
-//                                                       //         ? true
-//                                                       //         : false,
-//                                                       //     child: IconButton(
-//                                                       //       icon: Icon(Icons
-//                                                       //           .file_download),
-//                                                       //       color: Colors.blue,
-//                                                       //       onPressed:
-//                                                       //           () async {
-//                                                       //         await launch("${ServerHelper.baseUrl}auth/new_transit_pass_pdf/" +
-//                                                       //             replaceSlashesWithDashes(
-//                                                       //                 App_no[int
-//                                                       //                     .parse(
-//                                                       //                         value)]) +
-//                                                       //             "/");
-//                                                       //         // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-//                                                       //       },
-//                                                       //     ),
-//                                                       //   ),
-//                                                       // ),
-//                                                       // DataCell(
-//                                                       //   IconButton(
-//                                                       //     icon: Icon(Icons
-//                                                       //         .file_download),
-//                                                       //     color: Colors.blue,
-//                                                       //     onPressed: () async {
-//                                                       //       await launch("${ServerHelper.baseUrl}auth/new_user_report/" +
-//                                                       //           replaceSlashesWithDashes(
-//                                                       //               App_no[int
-//                                                       //                   .parse(
-//                                                       //                       value)]) +
-//                                                       //           "/");
-//                                                       //       // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-//                                                       //     },
-//                                                       //   ),
-//                                                       // ),
-
-//                                                       // DataCell(
-//                                                       //   Visibility(
-//                                                       //     visible: (Current_status[
-//                                                       //                     int.parse(
-//                                                       //                         value)]
-//                                                       //                 .toString() ==
-//                                                       //             'A')
-//                                                       //         ? true
-//                                                       //         : false,
-//                                                       //     child: IconButton(
-//                                                       //       icon: Icon(Icons
-//                                                       //           .qr_code_outlined),
-//                                                       //       color: Colors.blue,
-//                                                       //       onPressed:
-//                                                       //           () async {
-//                                                       //         await launch("${ServerHelper.baseUrl}auth/qr_code_pdf/" +
-//                                                       //             replaceSlashesWithDashes(
-//                                                       //                 App_no[int
-//                                                       //                     .parse(
-//                                                       //                         value)]) +
-//                                                       //             "/");
-//                                                       //         // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-//                                                       //       },
-//                                                       //     ),
-//                                                       //   ),
-//                                                       // ),
-//                                                       DataCell(Text(OfficerRemark(
-//                                                               Current_status[
-//                                                                   int.parse(
-//                                                                       value)],
-//                                                               disapproved_reason[
-//                                                                   int.parse(
-//                                                                       value)],
-//                                                               reason_division[
-//                                                                   int.parse(
-//                                                                       value)],
-//                                                               reason_range_officer[
-//                                                                   int.parse(
-//                                                                       value)],
-//                                                               reason_depty_ranger_office[
-//                                                                   int.parse(
-//                                                                       value)],
-//                                                               reason_office[
-//                                                                   int.parse(
-//                                                                       value)])
-//                                                           .toString())),
-//                                                       DataCell(Text(OfficerDate(
-//                                                               Current_status[
-//                                                                   int.parse(
-//                                                                       value)],
-//                                                               verify_office_date[
-//                                                                   int.parse(
-//                                                                       value)],
-//                                                               division_date[
-//                                                                   int.parse(
-//                                                                       value)],
-//                                                               range_officer_date[
-//                                                                   int.parse(
-//                                                                       value)],
-//                                                               deputy_officer_date[
-//                                                                   int.parse(
-//                                                                       value)],
-//                                                               verify_office_date[
-//                                                                   int.parse(
-//                                                                       value)])
-//                                                           .toString())),
-//                                                       DataCell(
-//                                                         Visibility(
-//                                                           child: IconButton(
-//                                                             icon: Icon(Icons
-//                                                                 .location_on_rounded),
-//                                                             color: Colors.blue,
-//                                                             onPressed:
-//                                                                 () async {
-//                                                               await launch("https://timber.forest.kerala.gov.in/app/location_views/" +
-//                                                                   replaceSlashesWithDashes(
-//                                                                       App_no[int
-//                                                                           .parse(
-//                                                                               value)]) +
-//                                                                   "/");
-//                                                               // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-//                                                             },
-//                                                           ),
-//                                                         ),
-//                                                       ),
-//                                                     ],
-//                                                   )),
-//                                             )
-//                                             .toList(),
-//                                   ),
-//                                 ),
-//                               ))));
-//                 } else if (tab == 2) {
-//                   return Container(
-//                       height: MediaQuery.of(context).size.height * 0.79,
-//                       decoration: BoxDecoration(
-//                         borderRadius: BorderRadius.circular(5),
-//                         color: Colors.white,
-//                         boxShadow: [
-//                           BoxShadow(
-//                             color: Colors.green,
-//                             blurRadius: 2.0,
-//                             spreadRadius: 1.0,
-//                           )
-//                         ],
-//                       ),
-//                       margin: const EdgeInsets.only(
-//                           left: 5, right: 5, top: 2, bottom: 10),
-//                       padding: const EdgeInsets.only(
-//                           left: 2, right: 2, top: 2, bottom: 2),
-//                       child: Scrollbar(
-//                           thumbVisibility: true,
-//                           thickness: 15,
-//                           child: SingleChildScrollView(
-//                               scrollDirection: Axis.horizontal,
-//                               padding: const EdgeInsets.only(bottom: 15),
-//                               child: Scrollbar(
-//                                   thumbVisibility: true,
-//                                   thickness: 15,
-//                                   child: SingleChildScrollView(
-//                                       scrollDirection: Axis.vertical,
-//                                       child: DataTable(
-//                                         columnSpacing: 30,
-//                                         dividerThickness: 2,
-//                                         headingRowColor:
-//                                             WidgetStateColor.resolveWith(
-//                                                 (states) => Colors.green),
-//                                         columns: [
-//                                           DataColumn(
-//                                             label: Text(
-//                                               'S.No',
-//                                               style: TextStyle(
-//                                                   fontWeight: FontWeight.bold,
-//                                                   color: Colors.white),
-//                                             ),
-//                                           ),
-//                                           DataColumn(
-//                                             label: Text(
-//                                               'Application\n       No',
-//                                               style: TextStyle(
-//                                                   fontWeight: FontWeight.bold,
-//                                                   color: Colors.white),
-//                                             ),
-//                                           ),
-//                                           DataColumn(
-//                                               label: Text(
-//                                             'Application\n     Name',
-//                                             style: TextStyle(
-//                                                 fontWeight: FontWeight.bold,
-//                                                 color: Colors.white),
-//                                           )),
-//                                           DataColumn(
-//                                               label: Text(
-//                                             'Application\n      Date',
-//                                             style: TextStyle(
-//                                                 fontWeight: FontWeight.bold,
-//                                                 color: Colors.white),
-//                                           )),
-//                                           DataColumn(
-//                                               label: Text(
-//                                             'Current Status',
-//                                             style: TextStyle(
-//                                                 fontWeight: FontWeight.bold,
-//                                                 color: Colors.white),
-//                                           )),
-//                                           // DataColumn(
-//                                           //     label: Text(
-//                                           //   'Deputy Officer \n Assignment status',
-//                                           //   style: TextStyle(
-//                                           //       fontWeight: FontWeight.bold,
-//                                           //       color: Colors.white),
-//                                           // )),
-//                                           DataColumn(
-//                                               label: Text(
-//                                             'Notified / Non-Notified\n     Villages',
-//                                             style: TextStyle(
-//                                                 fontWeight: FontWeight.bold,
-//                                                 color: Colors.white),
-//                                           )),
-//                                           DataColumn(
-//                                               label: Text(
-//                                             'Approved\n     Date',
-//                                             style: TextStyle(
-//                                                 fontWeight: FontWeight.bold,
-//                                                 color: Colors.white),
-//                                           )),
-//                                           DataColumn(
-//                                               label: Text(
-//                                             'Action',
-//                                             style: TextStyle(
-//                                                 fontWeight: FontWeight.bold,
-//                                                 color: Colors.white),
-//                                           )),
-//                                           DataColumn(
-//                                               label: Text(
-//                                             '  Download\nCutting Pass',
-//                                             style: TextStyle(
-//                                                 fontWeight: FontWeight.bold,
-//                                                 color: Colors.white),
-//                                           )),
-//                                           // DataColumn(
-//                                           //     label: Text(
-//                                           //   'Download\n  Report',
-//                                           //   style: TextStyle(
-//                                           //       fontWeight: FontWeight.bold,
-//                                           //       color: Colors.white),
-//                                           // )),
-//                                           // DataColumn(
-//                                           //     label: Text(
-//                                           //   'QR Code',
-//                                           //   style: TextStyle(
-//                                           //       fontWeight: FontWeight.bold,
-//                                           //       color: Colors.white),
-//                                           // )),
-//                                           DataColumn(
-//                                               label: Text(
-//                                             'Remark',
-//                                             style: TextStyle(
-//                                                 fontWeight: FontWeight.bold,
-//                                                 color: Colors.white),
-//                                           )),
-//                                           DataColumn(
-//                                               label: Text(
-//                                             'Remark\n  Date',
-//                                             style: TextStyle(
-//                                                 fontWeight: FontWeight.bold,
-//                                                 color: Colors.white),
-//                                           )),
-//                                           DataColumn(
-//                                               label: Text(
-//                                             'Location',
-//                                             style: TextStyle(
-//                                                 fontWeight: FontWeight.bold,
-//                                                 color: Colors.white),
-//                                           )),
-//                                           // DataColumn(
-//                                           //     label: Visibility(
-//                                           //         visible: userGroup ==
-//                                           //                 'forest range officer'
-//                                           //             ? true
-//                                           //             : false,
-//                                           //         child: Text(
-//                                           //           'FORM - III',
-//                                           //           style: TextStyle(
-//                                           //               fontWeight:
-//                                           //                   FontWeight.bold,
-//                                           //               color: Colors.white),
-//                                           //         ))),
-//                                         ],
-//                                         rows:
-//                                             sr1 // Loops through dataColumnText, each iteration assigning the value to element
-//                                                 .map(
-//                                                   ((value) => DataRow(
-//                                                         cells: <DataCell>[
-//                                                           DataCell((Text(
-//                                                               (int.parse(value) +
-//                                                                       1)
-//                                                                   .toString()))),
-//                                                           DataCell(Text(App_no1[
-//                                                                   int.parse(
-//                                                                       value)]
-//                                                               .toString())),
-//                                                           DataCell(Text(
-//                                                               App_Name1[
-//                                                                       int.parse(
-//                                                                           value)]
-//                                                                   .toString())),
-//                                                           DataCell(Text(
-//                                                               App_Date1[
-//                                                                       int.parse(
-//                                                                           value)]
-//                                                                   .toString())),
-//                                                           DataCell(Text(
-//                                                               field_status1[
-//                                                                       int.parse(
-//                                                                           value)]
-//                                                                   .toString())),
-//                                                           // DataCell(Text(OfficerStatus(
-//                                                           //     userGroup,
-//                                                           //     division1[
-//                                                           //         int.parse(
-//                                                           //             value)],
-//                                                           //     verify_range_officer1[
-//                                                           //         int.parse(
-//                                                           //             value)],
-//                                                           //     field_status1[
-//                                                           //             int.parse(
-//                                                           //                 value)]
-//                                                           //         .toString()))),
-//                                                           // DataCell(Text(AssignOfficer(
-//                                                           //         is_form_two1[
-//                                                           //             int.parse(
-//                                                           //                 value)],
-//                                                           //         assigned_deputy2_by_id1[
-//                                                           //             int.parse(
-//                                                           //                 value)],
-//                                                           //         assigned_deputy1_by_id1[
-//                                                           //             int.parse(
-//                                                           //                 value)],
-//                                                           //         log_updated_by_use1[
-//                                                           //             int.parse(
-//                                                           //                 value)]) ??
-//                                                           //     "N/A")),
-//                                                           DataCell(Text(is_form_two1[
-//                                                                       int.parse(
-//                                                                           value)] ==
-//                                                                   true
-//                                                               ? "   Notified  "
-//                                                               : "  Non-Notified  ")),
-//                                                           DataCell(Text(Tp_Number1[
-//                                                                           int.parse(
-//                                                                               value)]
-//                                                                       .toString()
-//                                                                       .length ==
-//                                                                   '0'
-//                                                               ? "N/A"
-//                                                               : Approved_date1[int.parse(
-//                                                                               value)]
-//                                                                           .toString() !=
-//                                                                       'null'
-//                                                                   ? Approved_date1[
-//                                                                           int.parse(
-//                                                                               value)]
-//                                                                       .toString()
-//                                                                   : "N/A")),
-//                                                           DataCell(
-//                                                             Visibility(
-//                                                               // visible: (Current_status1[int.parse(value)].toString()=='A')?true:false,
-//                                                               visible: true,
-//                                                               child: IconButton(
-//                                                                 icon: Icon(Icons
-//                                                                     .visibility),
-//                                                                 color:
-//                                                                     Colors.blue,
-//                                                                 onPressed: () {
-//                                                                   if (userGroup ==
-//                                                                       userGroup) {
-//                                                                     String IDS =
-//                                                                         Ids1[int.parse(value)]
-//                                                                             .toString();
-//                                                                     Navigator.push(
-//                                                                         context,
-//                                                                         MaterialPageRoute(
-//                                                                             builder: (_) => ViewApplication(
-//                                                                                 sessionToken: sessionToken,
-//                                                                                 userGroup: userGroup,
-//                                                                                 userId: userId,
-//                                                                                 Ids: IDS,
-//                                                                                 Range: Range,
-//                                                                                 userName: userName,
-//                                                                                 userEmail: userEmail)));
-//                                                                   }
-//                                                                 },
-//                                                               ),
-//                                                             ),
-//                                                           ),
-//                                                           DataCell(
-//                                                             Visibility(
-//                                                               visible: (Current_status1[
-//                                                                               int.parse(value)]
-//                                                                           .toString() ==
-//                                                                       'A')
-//                                                                   ? true
-//                                                                   : false,
-//                                                               child: IconButton(
-//                                                                 icon: Icon(Icons
-//                                                                     .file_download),
-//                                                                 color:
-//                                                                     Colors.blue,
-//                                                                 onPressed: () {
-//                                                                   downloadFormIPdf(
-//                                                                     int.parse(App_no1[int.parse(
-//                                                                             value)]
-//                                                                         .toString()
-//                                                                         .substring(App_no1[int.parse(value)].toString().length -
-//                                                                             6)),
-//                                                                     is_form_two1[
-//                                                                         int.parse(
-//                                                                             value)],
-//                                                                   );
-
-//                                                                   // downloadFormIPdf(
-//                                                                   //   int.parse(App_no1[int.parse(
-//                                                                   //           value)]
-//                                                                   //       .toString()
-//                                                                   //       .substring(App_no1[int.parse(value)].toString().length -
-//                                                                   //           6)),
-//                                                                   // );
-//                                                                   // String url;
-
-//                                                                   // await launch(
-//                                                                   //     url);
-//                                                                   // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-//                                                                 },
-//                                                               ),
-//                                                             ),
-//                                                           ),
-//                                                           // DataCell(
-//                                                           //   IconButton(
-//                                                           //     icon: Icon(Icons
-//                                                           //         .file_download),
-//                                                           //     color:
-//                                                           //         Colors.blue,
-//                                                           //     onPressed:
-//                                                           //         () async {
-//                                                           //       await launch("${ServerHelper.baseUrl}auth/new_user_report/" +
-//                                                           //           replaceSlashesWithDashes(
-//                                                           //               App_no1[
-//                                                           //                   int.parse(value)]) +
-//                                                           //           "/");
-//                                                           //       // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-//                                                           //     },
-//                                                           //   ),
-//                                                           // ),
-//                                                           // DataCell(
-//                                                           //   Visibility(
-//                                                           //     visible: (Current_status1[
-//                                                           //                     int.parse(value)]
-//                                                           //                 .toString() ==
-//                                                           //             'A')
-//                                                           //         ? true
-//                                                           //         : false,
-//                                                           //     child: IconButton(
-//                                                           //       icon: Icon(Icons
-//                                                           //           .qr_code_outlined),
-//                                                           //       color:
-//                                                           //           Colors.blue,
-//                                                           //       onPressed:
-//                                                           //           () async {
-//                                                           //         await launch("${ServerHelper.baseUrl}auth/qr_code_pdf/" +
-//                                                           //             replaceSlashesWithDashes(
-//                                                           //                 App_no1[
-//                                                           //                     int.parse(value)]) +
-//                                                           //             "/");
-//                                                           //         // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-//                                                           //       },
-//                                                           //     ),
-//                                                           //   ),
-//                                                           // ),
-//                                                           DataCell(Text(OfficerRemark(
-//                                                                   Current_status1[
-//                                                                           int.parse(
-//                                                                               value)]
-//                                                                       .toString(),
-//                                                                   disapproved_reason1[
-//                                                                           int.parse(
-//                                                                               value)]
-//                                                                       .toString(),
-//                                                                   reason_division1[
-//                                                                       int.parse(
-//                                                                           value)],
-//                                                                   reason_range_officer1[
-//                                                                       int.parse(
-//                                                                           value)],
-//                                                                   reason_depty_ranger_office1[
-//                                                                       int.parse(
-//                                                                           value)],
-//                                                                   reason_office1[
-//                                                                       int.parse(
-//                                                                           value)])
-//                                                               .toString())),
-//                                                           DataCell(Text(OfficerDate(
-//                                                                   Current_status1[
-//                                                                       int.parse(
-//                                                                           value)],
-//                                                                   verify_office_date1[
-//                                                                       int.parse(
-//                                                                           value)],
-//                                                                   division_date1[
-//                                                                       int.parse(
-//                                                                           value)],
-//                                                                   range_officer_date1[
-//                                                                       int.parse(
-//                                                                           value)],
-//                                                                   deputy_officer_date1[
-//                                                                       int.parse(
-//                                                                           value)],
-//                                                                   verify_office_date1[
-//                                                                       int.parse(
-//                                                                           value)])
-//                                                               .toString())),
-//                                                           DataCell(
-//                                                             Visibility(
-//                                                               child: IconButton(
-//                                                                 icon: Icon(Icons
-//                                                                     .location_on_rounded),
-//                                                                 color:
-//                                                                     Colors.blue,
-//                                                                 onPressed:
-//                                                                     () async {
-//                                                                   await launch("https://timber.forest.kerala.gov.in/app/location_views/" +
-//                                                                       replaceSlashesWithDashes(
-//                                                                           App_no1[
-//                                                                               int.parse(value)]) +
-//                                                                       "/");
-//                                                                   // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-//                                                                 },
-//                                                               ),
-//                                                             ),
-//                                                           ),
-//                                                           // DataCell(
-//                                                           //   new Visibility(
-//                                                           //     visible: (getForm(
-//                                                           //                     is_form_two1[int.parse(
-//                                                           //                         value)],
-//                                                           //                     other_State1[int.parse(
-//                                                           //                         value)],
-//                                                           //                     division1[int.parse(
-//                                                           //                         value)],
-//                                                           //                     verify_range_officer1[int.parse(
-//                                                           //                         value)],
-//                                                           //                     Current_status1[int.parse(
-//                                                           //                         value)]) ==
-//                                                           //                 false &&
-//                                                           //             is_form3_1[int.parse(
-//                                                           //                     value)] ==
-//                                                           //                 false)
-//                                                           //         ? true
-//                                                           //         : false,
-//                                                           //     child: IconButton(
-//                                                           //       icon: new Icon(Icons
-//                                                           //           .file_copy_outlined),
-//                                                           //       color:
-//                                                           //           Colors.blue,
-//                                                           //       onPressed:
-//                                                           //           () async {
-//                                                           //         print("form 3");
-//                                                           //         print(getForm(
-//                                                           //             is_form3_1[
-//                                                           //                 int.parse(
-//                                                           //                     value)],
-//                                                           //             other_State1[
-//                                                           //                 int.parse(
-//                                                           //                     value)],
-//                                                           //             division1[int
-//                                                           //                 .parse(
-//                                                           //                     value)],
-//                                                           //             verify_range_officer1[
-//                                                           //                 int.parse(
-//                                                           //                     value)],
-//                                                           //             Current_status1[
-//                                                           //                 int.parse(
-//                                                           //                     value)]));
-//                                                           //         Navigator.push(
-//                                                           //             context,
-//                                                           //             MaterialPageRoute(
-//                                                           //                 builder: (_) =>
-//                                                           //                     Form3Page1(
-//                                                           //                       sessionToken: sessionToken,
-//                                                           //                       Ids1: Ids1[int.parse(value)].toString(),
-//                                                           //                     )));
-//                                                           //         // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-//                                                           //       },
-//                                                           //     ),
-//                                                           //   ),
-//                                                           // ),
-//                                                         ],
-//                                                       )),
-//                                                 )
-//                                                 .toList(),
-//                                       ))))));
-//                 } else if (tab == 3) {
-//                   return Container(
-//                       height: MediaQuery.of(context).size.height * 0.79,
-//                       decoration: BoxDecoration(
-//                         borderRadius: BorderRadius.circular(5),
-//                         color: Colors.white,
-//                         boxShadow: [
-//                           BoxShadow(
-//                             color: Colors.cyan,
-//                             blurRadius: 2.0,
-//                             spreadRadius: 1.0,
-//                             // offset: Offset(2.0, 2.0), // shadow direction: bottom right
-//                           )
-//                         ],
-//                       ),
-//                       margin: const EdgeInsets.only(
-//                           left: 5, right: 5, top: 2, bottom: 10),
-//                       padding: const EdgeInsets.only(
-//                           left: 2, right: 2, top: 2, bottom: 2),
-//                       child: Scrollbar(
-//                           thumbVisibility: true,
-//                           thickness: 15,
-//                           child: SingleChildScrollView(
-//                               scrollDirection: Axis.horizontal,
-//                               padding: const EdgeInsets.only(bottom: 15),
-//                               child: Scrollbar(
-//                                   thumbVisibility: true,
-//                                   thickness: 15,
-//                                   child: SingleChildScrollView(
-//                                       scrollDirection: Axis.vertical,
-//                                       child: DataTable(
-//                                         sortColumnIndex: _currentSortColumn,
-//                                         sortAscending: _isAscending,
-//                                         columnSpacing: 20,
-//                                         dividerThickness: 2,
-//                                         headingRowColor:
-//                                             WidgetStateColor.resolveWith(
-//                                                 (states) => Colors.cyan),
-//                                         columns: [
-//                                           DataColumn(
-//                                             label: Text(
-//                                               'S.No',
-//                                               style: TextStyle(
-//                                                   fontWeight: FontWeight.bold,
-//                                                   color: Colors.white),
-//                                             ),
-//                                           ),
-//                                           DataColumn(
-//                                               label: Text(
-//                                             'Application\n       No',
-//                                             style: TextStyle(
-//                                                 fontWeight: FontWeight.bold,
-//                                                 color: Colors.white),
-//                                           )),
-//                                           DataColumn(
-//                                               label: Text(
-//                                             'Application\n      Name',
-//                                             style: TextStyle(
-//                                                 fontWeight: FontWeight.bold,
-//                                                 color: Colors.white),
-//                                           )),
-//                                           DataColumn(
-//                                               label: Text(
-//                                             'Application\n      Date',
-//                                             style: TextStyle(
-//                                                 fontWeight: FontWeight.bold,
-//                                                 color: Colors.white),
-//                                           )),
-//                                           DataColumn(
-//                                               label: Text(
-//                                             'Current Status',
-//                                             style: TextStyle(
-//                                                 fontWeight: FontWeight.bold,
-//                                                 color: Colors.white),
-//                                           )),
-//                                           DataColumn(
-//                                               label: Text(
-//                                             'Approved\n    Date',
-//                                             style: TextStyle(
-//                                                 fontWeight: FontWeight.bold,
-//                                                 color: Colors.white),
-//                                           )),
-//                                           DataColumn(
-//                                               label: Text(
-//                                             'Action',
-//                                             style: TextStyle(
-//                                                 fontWeight: FontWeight.bold,
-//                                                 color: Colors.white),
-//                                           )),
-//                                           // DataColumn(
-//                                           //     label: Text(
-//                                           //   'Download\n      Tp',
-//                                           //   style: TextStyle(
-//                                           //       fontWeight: FontWeight.bold,
-//                                           //       color: Colors.white),
-//                                           // )),
-//                                           // DataColumn(
-//                                           //     label: Text(
-//                                           //   'Download\n Report',
-//                                           //   style: TextStyle(
-//                                           //       fontWeight: FontWeight.bold,
-//                                           //       color: Colors.white),
-//                                           // )),
-//                                           // DataColumn(
-//                                           //     label: Text(
-//                                           //   'QR Code',
-//                                           //   style: TextStyle(
-//                                           //       fontWeight: FontWeight.bold,
-//                                           //       color: Colors.white),
-//                                           // )),
-//                                           DataColumn(
-//                                               label: Text(
-//                                             'Remark',
-//                                             style: TextStyle(
-//                                                 fontWeight: FontWeight.bold,
-//                                                 color: Colors.white),
-//                                           )),
-//                                           DataColumn(
-//                                               label: Text(
-//                                             'Remark\n  Date',
-//                                             style: TextStyle(
-//                                                 fontWeight: FontWeight.bold,
-//                                                 color: Colors.white),
-//                                           )),
-//                                         ],
-//                                         rows:
-//                                             sr2 // Loops through dataColumnText, each iteration assigning the value to element
-//                                                 .map(
-//                                                   ((value) => DataRow(
-//                                                         cells: <DataCell>[
-//                                                           DataCell((Text((int
-//                                                                       .parse(
-//                                                                           value) +
-//                                                                   1)
-//                                                               .toString()))), //Extracting from Map element the value
-//                                                           DataCell(Text(App_no2[
-//                                                                   int.parse(
-//                                                                       value)]
-//                                                               .toString())),
-//                                                           DataCell(Text(
-//                                                               App_Name2[
-//                                                                       int.parse(
-//                                                                           value)]
-//                                                                   .toString())),
-//                                                           DataCell(Text(
-//                                                               App_Date2[
-//                                                                       int.parse(
-//                                                                           value)]
-//                                                                   .toString())),
-//                                                           DataCell(Text(DeemedApproved2[
-//                                                                       int.parse(
-//                                                                           value)] ==
-//                                                                   true
-//                                                               ? "Deemed Approved"
-//                                                               : '')),
-//                                                           DataCell(Text(
-//                                                               Approved_date2[
-//                                                                       int.parse(
-//                                                                           value)]
-//                                                                   .toString())),
-//                                                           DataCell(
-//                                                             Visibility(
-//                                                               // visible: (Current_status[int.parse(value)].toString()=='A')?true:false,
-//                                                               child: IconButton(
-//                                                                 icon: Icon(Icons
-//                                                                     .visibility),
-//                                                                 color:
-//                                                                     Colors.blue,
-//                                                                 onPressed: () {
-//                                                                   if (userGroup ==
-//                                                                       userGroup) {
-//                                                                     String IDS =
-//                                                                         Ids2[int.parse(value)]
-//                                                                             .toString();
-//                                                                     Navigator.push(
-//                                                                         context,
-//                                                                         MaterialPageRoute(
-//                                                                             builder: (_) => ViewApplication(
-//                                                                                   sessionToken: sessionToken,
-//                                                                                   userGroup: userGroup,
-//                                                                                   userId: userId,
-//                                                                                   Ids: IDS,
-//                                                                                   userName: userName,
-//                                                                                   userEmail: userEmail,
-//                                                                                   Range: [],
-//                                                                                 )));
-//                                                                   }
-//                                                                 },
-//                                                               ),
-//                                                             ),
-//                                                           ),
-//                                                           // DataCell(
-//                                                           //   Visibility(
-//                                                           //     visible: (Current_status2[
-//                                                           //                     int.parse(value)]
-//                                                           //                 .toString() ==
-//                                                           //             'A')
-//                                                           //         ? true
-//                                                           //         : false,
-//                                                           //     child: IconButton(
-//                                                           //       icon: Icon(Icons
-//                                                           //           .file_download),
-//                                                           //       color:
-//                                                           //           Colors.blue,
-//                                                           //       onPressed:
-//                                                           //           () async {
-//                                                           //         await launch("${ServerHelper.baseUrl}auth/new_transit_pass_pdf/" +
-//                                                           //             replaceSlashesWithDashes(
-//                                                           //                 App_no2[
-//                                                           //                     int.parse(value)]) +
-//                                                           //             "/");
-//                                                           //         // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-//                                                           //       },
-//                                                           //     ),
-//                                                           //   ),
-//                                                           // ),
-//                                                           // DataCell(
-//                                                           //   IconButton(
-//                                                           //     icon: Icon(Icons
-//                                                           //         .file_download),
-//                                                           //     color:
-//                                                           //         Colors.blue,
-//                                                           //     onPressed:
-//                                                           //         () async {
-//                                                           //       await launch("${ServerHelper.baseUrl}auth/new_user_report/" +
-//                                                           //           replaceSlashesWithDashes(
-//                                                           //               App_no2[
-//                                                           //                   int.parse(value)]) +
-//                                                           //           "/");
-//                                                           //       // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-//                                                           //     },
-//                                                           //   ),
-//                                                           // ),
-//                                                           // DataCell(
-//                                                           //   Visibility(
-//                                                           //     visible: (Current_status2[
-//                                                           //                     int.parse(value)]
-//                                                           //                 .toString() ==
-//                                                           //             'A')
-//                                                           //         ? true
-//                                                           //         : false,
-//                                                           //     child: IconButton(
-//                                                           //       icon: Icon(Icons
-//                                                           //           .qr_code_outlined),
-//                                                           //       color:
-//                                                           //           Colors.blue,
-//                                                           //       onPressed:
-//                                                           //           () async {
-//                                                           //         await launch("${ServerHelper.baseUrl}auth/qr_code_pdf/" +
-//                                                           //             replaceSlashesWithDashes(
-//                                                           //                 App_no2[
-//                                                           //                     int.parse(value)]) +
-//                                                           //             "/");
-//                                                           //         // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-//                                                           //       },
-//                                                           //     ),
-//                                                           //   ),
-//                                                           // ),
-//                                                           DataCell(Text(OfficerRemark(
-//                                                               Current_status2[
-//                                                                       int.parse(
-//                                                                           value)]
-//                                                                   .toString(),
-//                                                               disapproved_reason2[
-//                                                                       int.parse(
-//                                                                           value)]
-//                                                                   .toString(),
-//                                                               reason_division2[
-//                                                                   int.parse(
-//                                                                       value)],
-//                                                               reason_range_officer2[
-//                                                                   int.parse(
-//                                                                       value)],
-//                                                               reason_depty_ranger_office2[
-//                                                                   int.parse(
-//                                                                       value)],
-//                                                               reason_office2[
-//                                                                   int.parse(
-//                                                                       value)]))),
-//                                                           DataCell(Text(OfficerDate(
-//                                                               Current_status2[
-//                                                                   int.parse(
-//                                                                       value)],
-//                                                               verify_office_date2[
-//                                                                   int.parse(
-//                                                                       value)],
-//                                                               division_date2[
-//                                                                   int.parse(
-//                                                                       value)],
-//                                                               range_officer_date2[
-//                                                                   int.parse(
-//                                                                       value)],
-//                                                               deputy_officer_date2[
-//                                                                   int.parse(
-//                                                                       value)],
-//                                                               verify_office_date2[
-//                                                                   int.parse(
-//                                                                       value)]))),
-//                                                         ],
-//                                                       )),
-//                                                 )
-//                                                 .toList(),
-//                                       ))))));
-//                 } else if (tab == 4) {
-//                   if (userGroup == "forest range officer") {
-//                     return Container(
-//                         height: MediaQuery.of(context).size.height * 0.79,
-//                         decoration: BoxDecoration(
-//                           borderRadius: BorderRadius.circular(5),
-//                           color: Colors.white,
-//                           boxShadow: [
-//                             BoxShadow(
-//                               color: Colors.blue,
-//                               blurRadius: 2.0,
-//                               spreadRadius: 1.0,
-//                               //  offset: Offset(2.0, 2.0), // shadow direction: bottom right
-//                             )
-//                           ],
-//                         ),
-//                         margin: const EdgeInsets.only(
-//                             left: 5, right: 5, top: 2, bottom: 10),
-//                         padding: const EdgeInsets.only(
-//                             left: 2, right: 2, top: 2, bottom: 2),
-//                         child: Scrollbar(
-//                             thumbVisibility: true,
-//                             thickness: 15,
-//                             child: SingleChildScrollView(
-//                                 scrollDirection: Axis.horizontal,
-//                                 padding: const EdgeInsets.only(bottom: 15),
-//                                 child: Scrollbar(
-//                                     thumbVisibility: true,
-//                                     thickness: 15,
-//                                     child: SingleChildScrollView(
-//                                         scrollDirection: Axis.vertical,
-//                                         child: DataTable(
-//                                           sortColumnIndex: _currentSortColumn,
-//                                           sortAscending: _isAscending,
-//                                           columnSpacing: 20,
-//                                           dividerThickness: 2,
-//                                           headingRowColor:
-//                                               WidgetStateColor.resolveWith(
-//                                                   (states) => Colors.blue),
-//                                           columns: [
-//                                             DataColumn(
-//                                               label: Text(
-//                                                 'S.No',
-//                                                 style: TextStyle(
-//                                                     fontWeight: FontWeight.bold,
-//                                                     color: Colors.white),
-//                                               ),
-//                                             ),
-//                                             DataColumn(
-//                                                 label: Text(
-//                                               'Application \n   No',
-//                                               style: TextStyle(
-//                                                   fontWeight: FontWeight.bold,
-//                                                   color: Colors.white),
-//                                             )),
-//                                             // DataColumn(
-//                                             //     label: Text(
-//                                             //   'Application \n   Name',
-//                                             //   style: TextStyle(
-//                                             //       fontWeight: FontWeight.bold,
-//                                             //       color: Colors.white),
-//                                             // )),
-//                                             DataColumn(
-//                                                 label: Text(
-//                                               'Application \n   Date',
-//                                               style: TextStyle(
-//                                                   fontWeight: FontWeight.bold,
-//                                                   color: Colors.white),
-//                                             )),
-//                                             //DataColumn(label: Text('Current\n   Status',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),)),
-//                                             //DataColumn(label: Text('Days  left\nfor Approved',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),)),
-//                                             // DataColumn(label: Text('Approved\n    Date',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),)),
-//                                             DataColumn(
-//                                                 label: Text(
-//                                               ' Action ',
-//                                               style: TextStyle(
-//                                                   fontWeight: FontWeight.bold,
-//                                                   color: Colors.white),
-//                                             )),
-//                                             DataColumn(
-//                                                 label: Text(
-//                                               ' Location ',
-//                                               style: TextStyle(
-//                                                   fontWeight: FontWeight.bold,
-//                                                   color: Colors.white),
-//                                             )),
-//                                             //DataColumn(label: Text('Download\n Report',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),)),
-//                                             //DataColumn(label: Text('QR Code',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),)),
-//                                             //DataColumn(label: Text('Remark',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),)),
-//                                             // DataColumn(label: Text('Remark\n  Date',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),)),
-//                                           ],
-//                                           rows:
-//                                               sr3 // Loops through dataColumnText, each iteration assigning the value to element
-//                                                   .map(
-//                                                     ((value) => DataRow(
-//                                                           cells: <DataCell>[
-//                                                             DataCell((Text((int
-//                                                                         .parse(
-//                                                                             value) +
-//                                                                     1)
-//                                                                 .toString()))), //Extracting from Map element the value
-//                                                             DataCell(Text(App_no3[
-//                                                                     int.parse(
-//                                                                         value)]
-//                                                                 .toString())),
-//                                                             // DataCell(Text(App_Name3[
-//                                                             //         int.parse(
-//                                                             //             value)]
-//                                                             //     .toString())),
-//                                                             DataCell(Text(App_Date3[
-//                                                                     int.parse(
-//                                                                         value)]
-//                                                                 .toString())),
-//                                                             //DataCell(Text(Current_status3[int.parse(value)].toString()=='S'?"Submitted":Current_status3[int.parse(value)].toString()=='P'?"Pending":"Rejected")),
-//                                                             // DataCell(Text(days_left_transit3[int.parse(value)].toString()==6?"Not Generated":"Not Generated")),
-//                                                             // DataCell(Text((Approved_date3[int.parse(value)].toString()=='true')?Approved_date3[int.parse(value)].toString():"N/A",)),
-//                                                             DataCell(
-//                                                               IconButton(
-//                                                                 icon: Icon(Icons
-//                                                                     .visibility),
-//                                                                 color:
-//                                                                     Colors.blue,
-//                                                                 onPressed: () {
-//                                                                   if (userGroup ==
-//                                                                       'forest range officer') {
-//                                                                     String IDS =
-//                                                                         Ids3[int.parse(value)]
-//                                                                             .toString();
-//                                                                     Navigator.push(
-//                                                                         context,
-//                                                                         MaterialPageRoute(
-//                                                                             builder: (_) => transitViewAndApprove(
-//                                                                                   sessionToken: sessionToken,
-//                                                                                   userGroup: userGroup,
-//                                                                                   Ids: App_no3[int.parse(value)],
-//                                                                                   userName: userName,
-//                                                                                   userEmail: userEmail,
-//                                                                                 )));
-//                                                                   } else {
-//                                                                     Fluttertoast.showToast(
-//                                                                         msg:
-//                                                                             "Approval and Rejection handle by range officer",
-//                                                                         toastLength:
-//                                                                             Toast
-//                                                                                 .LENGTH_SHORT,
-//                                                                         gravity:
-//                                                                             ToastGravity
-//                                                                                 .CENTER,
-//                                                                         timeInSecForIosWeb:
-//                                                                             8,
-//                                                                         backgroundColor:
-//                                                                             Colors
-//                                                                                 .blue,
-//                                                                         textColor:
-//                                                                             Colors
-//                                                                                 .white,
-//                                                                         fontSize:
-//                                                                             18.0);
-//                                                                   }
-//                                                                 },
-//                                                               ),
-//                                                             ),
-//                                                             DataCell(
-//                                                               Visibility(
-//                                                                 child:
-//                                                                     IconButton(
-//                                                                   icon: Icon(Icons
-//                                                                       .location_on_rounded),
-//                                                                   color: Colors
-//                                                                       .blue,
-//                                                                   onPressed:
-//                                                                       () async {
-//                                                                     await launch("https://timber.forest.kerala.gov.in/app/location_views/" +
-//                                                                         replaceSlashesWithDashes(
-//                                                                             App_no3[int.parse(value)]) +
-//                                                                         "/");
-//                                                                     // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-//                                                                   },
-//                                                                 ),
-//                                                               ),
-//                                                             ),
-//                                                             // DataCell(
-//                                                             //   IconButton(
-//                                                             //     icon: new Icon(Icons
-//                                                             //         .file_download),
-//                                                             //     color: Colors.blue,
-//                                                             //     onPressed:
-//                                                             //         () async {
-//                                                             //       await launch(
-//                                                             //           " ${ServerHelper.baseUrl}auth/new_noc_pdf/" +
-//                                                             //               Ids3[int.parse(
-//                                                             //                   value)] +
-//                                                             //               "/");
-//                                                             //     },
-//                                                             //   ),
-//                                                             // ),
-//                                                           ],
-//                                                         )),
-//                                                   )
-//                                                   .toList(),
-//                                         ))))));
-//                   } else {
-//                     return Container();
-//                   }
-//                 }
-//                 return Container(); // Add this line
-//               }),
-//             ],
-//           ),
-//         ),
-//         drawer: Container(
-//           child: Drawer(
-//             child: Container(
-//               color: Colors.white,
-//               child: ListView(
-//                 padding: EdgeInsets.all(0),
-//                 children: [
-//                   UserAccountsDrawerHeader(
-//                     decoration: BoxDecoration(
-//                         gradient: LinearGradient(
-//                       colors: [
-//                         Color.fromARGB(255, 28, 110, 99),
-//                         Color.fromARGB(207, 28, 110, 99),
-//                         Color.fromARGB(195, 105, 138, 132)
-//                       ],
-//                     )),
-//                     accountEmail: Text(userEmail),
-//                     accountName: Text(userName),
-//                     currentAccountPicture: CircleAvatar(
-//                       backgroundColor: Colors.white,
-//                       child: Text(
-//                         userName[0].toUpperCase(),
-//                         style: TextStyle(color: Colors.black, fontSize: 20),
-//                       ),
-//                     ),
-//                   ),
-//                   ListTile(
-//                       leading: Icon(
-//                         Icons.receipt_long_outlined,
-//                         color: Colors.black,
-//                         size: 25,
-//                       ),
-//                       title: Text(
-//                         'Reports',
-//                         style: TextStyle(color: Colors.black, fontSize: 20),
-//                       ),
-//                       onTap: () {
-//                         Navigator.push(
-//                             context,
-//                             MaterialPageRoute(
-//                                 builder: (_) =>
-//                                     Reports(sessionToken: sessionToken)));
-//                       }),
-//                   ListTile(
-//                       leading: Icon(
-//                         Icons.dashboard,
-//                         color: Colors.black,
-//                         size: 25,
-//                       ),
-//                       title: Text(
-//                         'Dashboard',
-//                         style: TextStyle(color: Colors.black, fontSize: 20),
-//                       ),
-//                       onTap: () {
-//                         Navigator.pushReplacement(
-//                             context,
-//                             MaterialPageRoute(
-//                                 builder: (_) => OfficerDashboard(
-//                                       sessionToken: sessionToken,
-//                                       userName: userName,
-//                                       userEmail: userEmail,
-//                                       userGroup: userGroup,
-//                                       userId: userId,
-//                                       dropdownValue: dropdownValue,
-//                                       Range: Range,
-//                                       userMobile: widget.userMobile,
-//                                       userAddress: widget.userAddress,
-//                                     )));
-//                       }),
-//                   ListTile(
-//                       leading: Icon(
-//                         Icons.qr_code_scanner,
-//                         color: Colors.black,
-//                         size: 25,
-//                       ),
-//                       title: Text(
-//                         'QR-Scanner',
-//                         style: TextStyle(color: Colors.black, fontSize: 20),
-//                       ),
-//                       onTap: () {
-//                         Navigator.push(
-//                             context,
-//                             MaterialPageRoute(
-//                                 builder: (_) => QueryPage(
-//                                       userId: userId,
-//                                       sessionToken: sessionToken,
-//                                       userName: userName,
-//                                       userEmail: userEmail,
-//                                       userMobile:
-//                                           widget.userMobile ?? "987654312",
-//                                       userAddress:
-//                                           widget.userAddress ?? "Address",
-//                                     )));
-//                       }),
-//                   ListTile(
-//                     leading: Icon(
-//                       Icons.logout,
-//                       color: Colors.black,
-//                       size: 25,
-//                     ),
-//                     title: Text(
-//                       'Logout',
-//                       style: TextStyle(color: Colors.black, fontSize: 20),
-//                     ),
-//                     onTap: () async {
-//                       // Show logout confirmation dialog
-//                       bool confirmLogout = await showDialog(
-//                             context: context,
-//                             builder: (context) => AlertDialog(
-//                               title: const Text('Confirm Logout'),
-//                               content: const Text(
-//                                   'Are you sure you want to logout?'),
-//                               actions: <Widget>[
-//                                 TextButton(
-//                                   onPressed: () =>
-//                                       Navigator.of(context).pop(false),
-//                                   child: const Text("Cancel"),
-//                                 ),
-//                                 TextButton(
-//                                   onPressed: () =>
-//                                       Navigator.of(context).pop(true),
-//                                   child: const Text("Logout"),
-//                                 ),
-//                               ],
-//                             ),
-//                           ) ??
-//                           false;
-
-//                       if (confirmLogout) {
-//                         // Replace the drawer with a loading indicator
-//                         Navigator.pop(context); // Close the drawer
-
-//                         // Show loading dialog
-//                         showDialog(
-//                           context: context,
-//                           barrierDismissible: false,
-//                           builder: (BuildContext context) {
-//                             return Center(
-//                               child: Dialog(
-//                                 elevation: 0,
-//                                 backgroundColor: Colors.transparent,
-//                                 child: Column(
-//                                   mainAxisSize: MainAxisSize.min,
-//                                   children: [
-//                                     CircularProgressIndicator(),
-//                                     SizedBox(height: 20),
-//                                     Text('Logging out...',
-//                                         style: TextStyle(
-//                                             color: Colors.white,
-//                                             fontWeight: FontWeight.bold))
-//                                   ],
-//                                 ),
-//                               ),
-//                             );
-//                           },
-//                         );
-
-//                         try {
-//                           // Perform logout
-//                           const String url =
-//                               '${ServerHelper.baseUrl}auth/logout/';
-//                           await http.post(
-//                             Uri.parse(url),
-//                             headers: <String, String>{
-//                               'Content-Type': 'application/json',
-//                               'Authorization': "token $sessionToken"
-//                             },
-//                           );
-
-//                           // Clear local storage
-//                           SharedPreferences prefs =
-//                               await SharedPreferences.getInstance();
-//                           await prefs.remove('isLoggedIn');
-
-//                           // Navigate to login screen
-//                           Navigator.of(context, rootNavigator: true)
-//                               .pop(); // Dismiss the loading dialog
-//                           Navigator.pushReplacement(context,
-//                               MaterialPageRoute(builder: (_) => login()));
-//                         } catch (e) {
-//                           // Handle errors
-//                           Navigator.of(context, rootNavigator: true)
-//                               .pop(); // Dismiss the loading dialog
-//                           ScaffoldMessenger.of(context).showSnackBar(
-//                             SnackBar(
-//                                 content:
-//                                     Text('Logout failed: ${e.toString()}')),
-//                           );
-//                         }
-//                       }
-//                     },
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-
-//   Widget _buildBar(BuildContext context,
-//       {required String label,
-//       required double value,
-//       required Color color,
-//       required double max}) {
-//     const double barMaxHeight = 180;
-//     final double barHeight = max == 0 ? 0 : (value / max) * barMaxHeight;
-//     return Column(
-//       mainAxisAlignment: MainAxisAlignment.end,
-//       children: [
-//         Text(
-//           value.toStringAsFixed(1),
-//           style: TextStyle(
-//               fontWeight: FontWeight.bold, fontSize: 16, color: color),
-//         ),
-//         SizedBox(height: 4),
-//         Container(
-//           width: 40,
-//           height: barHeight,
-//           decoration: BoxDecoration(
-//             color: color,
-//             borderRadius: BorderRadius.only(
-//                 topLeft: Radius.circular(6), topRight: Radius.circular(6)),
-//           ),
-//         ),
-//         SizedBox(height: 8),
-//         Text(
-//           label,
-//           style: TextStyle(
-//               fontWeight: FontWeight.w500, fontSize: 14, color: Colors.black87),
-//         ),
-//       ],
-//     );
-//   }
-
-//   void permission() async {
-//     if (Platform.isAndroid) {
-//       PermissionStatus status = await Permission.storage.status;
-//       if (!status.isGranted) {
-//         await Permission.storage.request();
-//       }
-//     }
-//   }
-// }
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_interpolation_to_compose_strings
+
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:hexcolor/hexcolor.dart';
+import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter/foundation.dart';
+import 'package:pie_chart/pie_chart.dart';
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tigramnks/Form3Page1.dart';
+import 'package:tigramnks/NEW_FORMS/transitViewAndApprove.dart';
+import 'package:tigramnks/NocViewApplication.dart';
+import 'package:tigramnks/QueryPage.dart';
+import 'package:tigramnks/Reports.dart';
+import 'package:tigramnks/ViewApplication.dart';
+import 'package:tigramnks/login.dart';
+import 'package:toggle_switch/toggle_switch.dart';
+import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+class OfficerDashboard extends StatefulWidget {
+  String sessionToken;
+  int userId;
+  String userName;
+  String userEmail;
+  String userGroup;
+  String dropdownValue;
+  List Range;
+
+  var userMobile;
+
+  var userAddress;
+  OfficerDashboard(
+      {required this.userId,
+      required this.userName,
+      required this.userEmail,
+      required this.sessionToken,
+      required this.userGroup,
+      required this.dropdownValue,
+      required this.Range});
+  @override
+  _OfficerDashboardState createState() => _OfficerDashboardState(userId,
+      userName, userEmail, sessionToken, userGroup, dropdownValue, Range);
+}
+
+class _OfficerDashboardState extends State<OfficerDashboard> {
+  void initState() {
+    super.initState();
+    print(userId);
+    pie_chart();
+    PendingApp();
+    ApprovedApp();
+    DeemedApp();
+    NocForm();
+  }
+
+  String sessionToken;
+  int userId;
+  String userName;
+  String userEmail;
+  String userGroup;
+  String dropdownValue;
+  List Range;
+  double Approved = 0;
+  double Rejected = 0;
+  double Pending = 0;
+
+  _OfficerDashboardState(this.userId, this.userName, this.userEmail,
+      this.sessionToken, this.userGroup, this.dropdownValue, this.Range);
+
+//---------------------Pie-chart------------------
+  void pie_chart() async {
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/dashbord_chart';
+
+    final response = await http.get(Uri.parse(url), headers: <String, String>{
+      'Content-Type': 'application/json',
+      'Authorization': "token $sessionToken"
+    });
+    Map<String, dynamic> responseJSON = json.decode(response.body);
+    print(responseJSON);
+    setState(() {
+      Approved = responseJSON['data']['per_approved'];
+      Rejected = responseJSON['data']['per_rejected'];
+      Pending = responseJSON['data']['per_submitted'];
+    });
+  }
+
+  String replaceSlashesWithDashes(String input) {
+    return input.replaceAll('/', '-');
+  }
+
+  List<Color> colors = [Colors.blue, Colors.red, Colors.orange];
+
+//------------------End--Pie--Chart--------------
+
+  String url = "http://65.1.132.43:8080/api/auth/new_transit_pass_pdf/90/";
+
+  //---------------Table ----------------------
+  //---------pending-------------
+  final List Ids = [];
+  final List sr = [];
+  final List App_no = [];
+  final List App_Name = [];
+  final List App_Date = [];
+  final List Current_status = [];
+  final List days_left_transit = [];
+  final List Approved_date = [];
+  final List Action = [];
+  //------------
+  final List reason_office = [];
+  final List reason_depty_ranger_office = [];
+  final List reason_range_officer = [];
+  final List disapproved_reason = [];
+  final List reason_division = [];
+  //------------
+  //------------
+  final List verify_office_date = [];
+  final List deputy_officer_date = [];
+  final List range_officer_date = [];
+  final List division_date = [];
+  //final List disapproved_reason=[];
+  //------------
+  final List Remark = [];
+  final List Remark_date = [];
+  final List Tp_status = [];
+  final List Tp_Issue_Date = [];
+  final List Tp_Number = [];
+  final List verify_range = [];
+  final List depty_range_officer = [];
+  final List verify_range_officer = [];
+  final List division = [];
+  final List tp_expiry_date = [];
+  final List other_State = [];
+
+  final List verify_deputy2 = [];
+  final List reason_deputy2 = [];
+  final List deputy2_date = [];
+
+  final List is_form_two = [];
+
+  final List assigned_deputy1_by_id = [];
+  final List assigned_deputy2_by_id = [];
+
+  final List log_updated_by_use = [];
+  final List verify_forest1 = [];
+  //------------------------
+
+  List list1 = [];
+  int allApplication = 0;
+//-----------Approved------------------------
+  int allApplication1 = 0;
+  final List Ids1 = [];
+  final List sr1 = [];
+  final List App_no1 = [];
+  final List App_Name1 = [];
+  final List App_Date1 = [];
+  final List Current_status1 = [];
+  final List days_left_transit1 = [];
+  final List Approved_date1 = [];
+  final List Action1 = [];
+  final List Remark1 = [];
+  final List Remark_date1 = [];
+  final List Tp_status1 = [];
+  final List Tp_Issue_Date1 = [];
+  final List Tp_Number1 = [];
+  final List verify_range1 = [];
+  final List depty_range_officer1 = [];
+  final List verify_range_officer1 = [];
+  final List division1 = [];
+  final List tp_expiry_date1 = [];
+  //------------
+  final List reason_office1 = [];
+  final List reason_depty_ranger_office1 = [];
+  final List reason_range_officer1 = [];
+  final List disapproved_reason1 = [];
+  final List reason_division1 = [];
+  //------------
+  final List verify_office_date1 = [];
+  final List deputy_officer_date1 = [];
+  final List range_officer_date1 = [];
+  final List division_date1 = [];
+
+  final List other_State1 = [];
+
+  final List verify_deputy2_1 = [];
+  final List reason_deputy2_1 = [];
+  final List deputy2_date_1 = [];
+
+  final List is_form_two1 = [];
+  final List is_form3_1 = [];
+
+  final List assigned_deputy1_by_id1 = [];
+  final List assigned_deputy2_by_id1 = [];
+  final List log_updated_by_use1 = [];
+  final List verify_forest1_1 = [];
+  final List field_status = [];
+  final List field_status1 = [];
+  //------------------------------------------
+  void PendingApp() async {
+    sr.clear();
+    App_no.clear();
+    App_Name.clear();
+    App_Date.clear();
+    Current_status.clear();
+    days_left_transit.clear();
+    Approved_date.clear();
+    Action.clear();
+    Remark.clear();
+    Remark_date.clear();
+    Tp_Issue_Date.clear();
+    Tp_Number.clear();
+    verify_range.clear();
+    depty_range_officer.clear();
+    verify_range_officer.clear();
+    tp_expiry_date.clear();
+    reason_office.clear();
+    reason_depty_ranger_office.clear();
+    reason_range_officer.clear();
+    disapproved_reason.clear();
+    verify_office_date.clear();
+    deputy_officer_date.clear();
+    range_officer_date.clear();
+    division.clear();
+    reason_division.clear();
+    division_date.clear();
+    other_State.clear();
+    verify_deputy2.clear();
+    reason_deputy2.clear();
+    deputy2_date.clear();
+    is_form_two.clear();
+    assigned_deputy1_by_id.clear();
+    assigned_deputy2_by_id.clear();
+    log_updated_by_use.clear();
+    verify_forest1.clear();
+    field_status.clear();
+    print("Pending Application");
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/PendingListViewApplication';
+    final response = await http.get(Uri.parse(url), headers: <String, String>{
+      'Content-Type': 'application/json',
+      'Authorization': "token $sessionToken"
+    });
+    Map<String, dynamic> responseJSON = json.decode(response.body);
+    print(responseJSON);
+    List list = responseJSON["data"];
+    setState(() {
+      allApplication = list.length;
+    });
+    for (var i = 0; i < allApplication; i++) {
+      sr.add(i.toString());
+      Ids.add(list[i]['id'].toString());
+      App_no.add(list[i]['application_no']);
+      App_Name.add(list[i]['name'].toString());
+      App_Date.add(list[i]['created_date'].toString());
+      Current_status.add(list[i]['application_status'].toString());
+      days_left_transit.add(list[i]['6'].toString());
+      Approved_date.add(list[i]['tp_expiry_status'].toString());
+      Action.add(list[i][''].toString());
+      Remark.add(list[i]['disapproved_reason'].toString());
+      Remark_date.add(list[i]['range_officer_date'].toString());
+      Tp_Issue_Date.add(list[i]['transit_pass_created_date'].toString());
+      Tp_Number.add(list[i]['transit_pass_id'].toString());
+      verify_range.add(list[i]['verify_office']);
+      depty_range_officer.add(list[i]['depty_range_officer']);
+      verify_range_officer.add(list[i]['application_status']);
+      division.add(list[i]['d']);
+      tp_expiry_date.add(list[i]['tp_expiry_date']);
+      reason_office.add(list[i]['reason_office']);
+      reason_depty_ranger_office.add(list[i]['reason_depty_ranger_office']);
+      reason_range_officer.add(list[i]['reason_range_officer']);
+      reason_division.add(list[i]['reason_division_officer']);
+      disapproved_reason.add(list[i]['disapproved_reason']);
+      field_status.add(list[i]['status']);
+      verify_office_date.add(list[i]['verify_office_date']);
+      deputy_officer_date.add(list[i]['deputy_officer_date']);
+      range_officer_date.add(list[i]['range_officer_date']);
+      division_date.add(list[i]['division_officer_date']);
+      // Remark.add(list[i]['transit_pass_created_date']);
+      other_State.add(list[i]['other_state']);
+      verify_deputy2.add(list[i]['verify_deputy2']);
+      reason_deputy2.add(list[i]['reason_deputy2']);
+      deputy2_date.add(list[i]['deputy2_date']);
+      is_form_two.add(list[i]['is_form_two']);
+      assigned_deputy1_by_id.add(list[i]['assigned_deputy1_name']);
+      assigned_deputy2_by_id.add(list[i]['assigned_deputy2_name']);
+      log_updated_by_use.add(list[i]['log_updated_by_user']);
+      verify_forest1.add(list[i]['verify_forest1']);
+    }
+    print("--------------- Pending Application----------------");
+    print("---------------log----------");
+    print(log_updated_by_use);
+    // print(Ids + App_no + App_Date + App_Name + Current_status);
+  }
+
+//-----------Approved-------------
+  void ApprovedApp() async {
+    sr1.clear();
+    App_no1.clear();
+    App_Name1.clear();
+    App_Date1.clear();
+    Current_status1.clear();
+    days_left_transit1.clear();
+    Approved_date1.clear();
+    Action1.clear();
+    Remark1.clear();
+    Remark_date1.clear();
+    Tp_Issue_Date1.clear();
+    Tp_Number1.clear();
+    verify_range1.clear();
+    depty_range_officer1.clear();
+    verify_range_officer1.clear();
+    tp_expiry_date1.clear();
+    reason_office1.clear();
+    reason_depty_ranger_office1.clear();
+    reason_range_officer1.clear();
+    disapproved_reason1.clear();
+    verify_office_date1.clear();
+    deputy_officer_date1.clear();
+    range_officer_date1.clear();
+    division1.clear();
+    reason_division1.clear();
+    division_date1.clear();
+    other_State1.clear();
+    verify_deputy2_1.clear();
+    reason_deputy2_1.clear();
+    deputy2_date_1.clear();
+    is_form_two1.clear();
+    assigned_deputy1_by_id1.clear();
+    assigned_deputy2_by_id1.clear();
+    log_updated_by_use1.clear();
+    verify_forest1_1.clear();
+    print("Approved Application");
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ApprovedListViewApplication';
+    final response = await http.get(Uri.parse(url), headers: <String, String>{
+      'Content-Type': 'application/json',
+      'Authorization': "token $sessionToken"
+    });
+    Map<String, dynamic> responseJSON = json.decode(response.body);
+    print(responseJSON);
+    List list = responseJSON["data"];
+
+    setState(() {
+      allApplication1 = list.length;
+    });
+    print(list.length);
+    for (var i = 0; i < allApplication1; i++) {
+      sr1.add(i.toString());
+      Ids1.add(list[i]['id'].toString());
+      App_no1.add(list[i]['application_no']);
+      App_Name1.add(list[i]['name'].toString());
+      App_Date1.add(list[i]['created_date'].toString());
+      Current_status1.add(list[i]['application_status'].toString());
+      days_left_transit1.add(list[i]['application_status'].toString());
+      Approved_date1.add(list[i]['verify_office_date'].toString());
+      Action1.add(list[i][''].toString());
+      Remark1.add(list[i]['reason_office'].toString());
+      Remark_date1.add(list[i]['range_officer_date'].toString());
+      Tp_Issue_Date1.add(list[i]['transit_pass_created_date'].toString());
+      Tp_Number1.add(list[i]['transit_pass_id'].toString());
+      verify_range1.add(list[i]['verify_office']);
+      depty_range_officer1.add(list[i]['depty_range_officer']);
+      verify_range_officer1.add(list[i]['approved_by_r']);
+      division1.add(list[i]['d']);
+      tp_expiry_date1.add(list[i]['tp_expiry_date']);
+      reason_office1.add(list[i]['reason_office']);
+      reason_depty_ranger_office1.add(list[i]['reason_depty_ranger_office']);
+      reason_range_officer1.add(list[i]['reason_range_officer']);
+      reason_division1.add(list[i]['reason_division_officer']);
+      disapproved_reason1.add(list[i]['disapproved_reason']);
+      verify_office_date1.add(list[i]['verify_office_date']);
+      deputy_officer_date1.add(list[i]['deputy_officer_date']);
+      range_officer_date1.add(list[i]['range_officer_date']);
+      division_date1.add(list[i]['division_officer_date']);
+      // Remark.add(list[i]['transit_pass_created_date']);
+      other_State1.add(list[i]['other_state']);
+
+      verify_deputy2_1.add(list[i]['verify_deputy2']);
+      reason_deputy2_1.add(list[i]['reason_deputy2']);
+      deputy2_date_1.add(list[i]['deputy2_date']);
+
+      is_form_two1.add(list[i]['is_form_two']);
+      is_form3_1.add(list[i]['is_form3']);
+
+      assigned_deputy1_by_id1.add(list[i]['assigned_deputy1_name']);
+      assigned_deputy2_by_id1.add(list[i]['assigned_deputy2_name']);
+      log_updated_by_use1.add(list[i]['log_updated_by_user']);
+      verify_forest1_1.add(list[i]['verify_forest1']);
+      field_status1.add(list[i]['status'].toString());
+    }
+  }
+
+//--end-Approve-------------------
+  //---------------------------Deemed-Approve-----------------------------
+  //----------------------
+  int allApplication2 = 0;
+  final List Ids2 = [];
+  final List sr2 = [];
+  final List App_no2 = [];
+  final List App_Name2 = [];
+  final List App_Date2 = [];
+  final List Current_status2 = [];
+  final List days_left_transit2 = [];
+  final List Approved_date2 = [];
+  final List Action2 = [];
+  final List Remark2 = [];
+  final List Remark_date2 = [];
+  final List Tp_status2 = [];
+  final List Tp_Issue_Date2 = [];
+  final List Tp_Number2 = [];
+  final List DeemedApproved2 = [];
+
+  final List reason_office2 = [];
+  final List reason_depty_ranger_office2 = [];
+  final List reason_range_officer2 = [];
+  final List disapproved_reason2 = [];
+  final List reason_division2 = [];
+  //------------
+  final List verify_office_date2 = [];
+  final List deputy_officer_date2 = [];
+  final List range_officer_date2 = [];
+  final List division_date2 = [];
+
+  final List other_State2 = [];
+  final List division2 = [];
+
+  //---------------------
+  void DeemedApp() async {
+    sr2.clear();
+    print("Deemed Application");
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/DeemedApprovedList';
+    final response = await http.get(Uri.parse(url), headers: <String, String>{
+      'Content-Type': 'application/json',
+      'Authorization': "token $sessionToken"
+    });
+    Map<String, dynamic> responseJSON = json.decode(response.body);
+
+    List list = responseJSON["data"];
+    setState(() {
+      allApplication2 = list.length;
+    });
+    for (var i = 0; i < allApplication2; i++) {
+      sr2.add(i.toString());
+      Ids2.add(list[i]['id'].toString());
+      App_no2.add(list[i]['application_no']);
+      App_Name2.add(list[i]['name'].toString());
+      App_Date2.add(list[i]['created_date'].toString());
+      Current_status2.add(list[i]['application_status'].toString());
+      Approved_date2.add(list[i]['transit_pass_created_date'].toString());
+      Action2.add(list[i][''].toString());
+      Remark2.add(list[i]['reason_office']);
+      Remark_date2.add(list[i]['verify_office_date']);
+      Tp_Issue_Date2.add(list[i]['transit_pass_created_date']);
+      Tp_Number2.add(list[i]['transit_pass_id'].toString());
+      DeemedApproved2.add(list[i]['deemed_approval']);
+
+      reason_office2.add(list[i]['reason_office']);
+      reason_depty_ranger_office2.add(list[i]['reason_depty_ranger_office']);
+      reason_range_officer2.add(list[i]['reason_range_officer']);
+      disapproved_reason2.add(list[i]['disapproved_reason']);
+      verify_office_date2.add(list[i]['verify_office_date']);
+      deputy_officer_date2.add(list[i]['deputy_officer_date']);
+      range_officer_date2.add(list[i]['range_officer_date']);
+
+      division2.add(list[i]['division_officer']);
+      reason_division2.add(list[i]['reason_division_officer']);
+      division_date2.add(list[i]['division_officer_date']);
+      // Remark.add(list[i]['transit_pass_created_date']);
+      other_State2.add(list[i]['other_state']);
+    }
+  }
+
+  int allApplication3 = 0;
+  final List Ids3 = [];
+  final List sr3 = [];
+  final List App_no3 = [];
+  final List App_Name3 = [];
+  final List App_Date3 = [];
+  final List Current_status3 = [];
+  final List days_left_transit3 = [];
+  final List Approved_date3 = [];
+  final List Action3 = [];
+  final List Remark3 = [];
+  final List Remark_date3 = [];
+  final List Tp_status3 = [];
+  final List Tp_Issue_Date3 = [];
+  final List Tp_Number3 = [];
+  //--------------------
+
+  void NocForm() async {
+    sr3.clear();
+    const String url =
+        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/GetOfficerTransitPasses/';
+    final response = await http.get(Uri.parse(url), headers: <String, String>{
+      'Content-Type': 'application/json',
+      'Authorization': "token $sessionToken"
+    });
+    Map<String, dynamic> responseJSON = json.decode(response.body);
+
+    List list = responseJSON["transits"];
+    setState(() {
+      allApplication3 = list.length;
+    });
+    for (var i = 0; i < allApplication3; i++) {
+      sr3.add(i.toString());
+      Ids3.add(list[i]['app_form'].toString());
+      App_no3.add(list[i]['transit_number']);
+      App_Name3.add(list[i]['name'].toString());
+      App_Date3.add(list[i]['transit_req_date'].toString());
+      Current_status3.add(list[i]['transit_status'].toString());
+      days_left_transit3.add(list[i]['application_status'].toString());
+      Approved_date3.add(list[i]['verify_office_date'].toString());
+      Action3.add(list[i][''].toString());
+      Remark3.add(list[i]['reason_office'].toString());
+      Remark_date3.add(list[i]['range_officer_date'].toString());
+      Tp_Issue_Date3.add(list[i]['transit_pass_created_date'].toString());
+      Tp_Number3.add(list[i]['transit_pass_created_date'].toString());
+      // Remark.add(list[i]['transit_pass_created_date']);
+    }
+  }
+
+  //-----------------------End-Noc-Form-----------------------------------
+  //---------------End---Table-----------------
+  int _radioValue = 0;
+  bool flag = true;
+  var tab = 0;
+  @override
+  void _handleRadioValueChange(int value) async {
+    pie_chart();
+    setState(() {
+      _radioValue = value;
+      if (_radioValue == 0) {
+        setState(() {
+          tab = 0;
+          flag = true;
+          pie_chart();
+        });
+      } else if (_radioValue == 1) {
+        setState(() {
+          tab = 1;
+          flag = false;
+          PendingApp();
+        });
+      } else if (_radioValue == 2) {
+        setState(() {
+          tab = 2;
+          ApprovedApp();
+        });
+      } else if (_radioValue == 3) {
+        setState(() {
+          tab = 3;
+          DeemedApp();
+        });
+      } else if (_radioValue == 4) {
+        setState(() {
+          tab = 4;
+          NocForm();
+        });
+      }
+    });
+  }
+
+  String OfficerRemark(String AppStatus, String disapproved, String division,
+      String forest, String deputy, String revenue) {
+    if (AppStatus == 'R') {
+      return disapproved;
+    } else if (division.isNotEmpty) {
+      return division;
+    } else if (forest.isNotEmpty) {
+      return forest;
+    } else if (deputy.isNotEmpty) {
+      return deputy;
+    } else if (revenue.isNotEmpty) {
+      return revenue;
+    } else {
+      return "N/A";
+    }
+  }
+
+  String OfficerDate(String AppStatus, dynamic disapproved, dynamic division,
+      dynamic forest, dynamic deputy, dynamic revenue) {
+    if (AppStatus == 'R') {
+      return disapproved != null ? disapproved.toString() : "N/A";
+    } else if (division != null) {
+      return division.toString();
+    } else if (forest != null) {
+      return forest.toString();
+    } else if (deputy != null) {
+      return deputy.toString();
+    } else if (revenue != null) {
+      return revenue.toString();
+    } else {
+      return "N/A";
+    }
+  }
+
+  // Modify the OfficerStatus method to handle null values
+  String OfficerStatus(
+      String user, dynamic divisionNo, String rangeApprove, String status) {
+    if (user == "deputy range officer") {
+      if (status == "false") {
+        if (rangeApprove == "R") {
+          return "Rejected by range officer ";
+        } else if (rangeApprove == "A") {
+          return "Approved by range officer,\n deputy officer field varification pending";
+        } else if (rangeApprove == "P") {
+          return "deputy officer field varification pending";
+        } else {
+          return "";
+        }
+      } else {
+        return "Recommended by Deputy Range Officer,\n Range Officer Recommendation pending";
+      }
+    } else if (user == "forest range officer") {
+      if (status == "false") {
+        if (rangeApprove == "R") {
+          return "Rejected by range officer ";
+        } else if (divisionNo != null) {
+          return "Approved by range officer,\n deputy officer field varification pending";
+        } else if (rangeApprove == "A") {
+          return "Approved by range officer";
+        } else if (rangeApprove == "P") {
+          return "Range officer Recomendation \n pending";
+        } else {
+          return "";
+        }
+      } else {
+        return "field varification pending";
+      }
+    } else {
+      return "";
+    }
+  }
+
+  String AssignOfficer(bool isForm2, String? assign_deputy2,
+      String? assign_deputy1, bool? log_updated_by_user) {
+    if (isForm2 == true) {
+      if (assign_deputy2 != null) {
+        return assign_deputy2;
+      } else if (assign_deputy1 != null) {
+        if (log_updated_by_user == true) {
+          return 'Yet to Assign for Stage 2';
+        } else {
+          return assign_deputy1;
+        }
+      } else {
+        return 'Yet to Assign for Stage 1';
+      }
+    }
+    return 'N/A';
+  }
+
+  bool getForm(bool isform, bool other_State, bool division_officer,
+      bool verify_range_officer, String App_status) {
+    bool can_apply3 = false;
+    if (App_status == 'A') {
+      return can_apply3;
+    }
+    if (isform == true) {
+      if (other_State == false) {
+        if (division_officer == true && App_status != 'P') {
+          can_apply3 = true;
+          return can_apply3;
+        } else {
+          return can_apply3;
+        }
+      } else {
+        if (verify_range_officer == true && App_status != 'P') {
+          can_apply3 = true;
+          return can_apply3;
+        } else {
+          return can_apply3;
+        }
+      }
+    }
+    return can_apply3;
+  }
+
+  int daysBetween(DateTime from) {
+    DateTime a = DateTime.now();
+    from = DateTime(from.year, from.month, from.day);
+    DateTime to = DateTime(a.year, a.month, a.day);
+    int b = 7 - (to.difference(from).inHours / 24).round();
+    if (b < 0) {
+      return 0;
+    } else {
+      return b;
+    }
+  }
+
+  int _currentSortColumn = 0;
+  bool _isAscending = true;
+  Future<bool> _onBackPressed() async {
+    bool returnValue = false;
+    return await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Do you want to close the application?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  returnValue = false; // User selects "NO"
+                  Navigator.of(context).pop(returnValue); // Close the dialog
+                },
+                child: const Text("NO"),
+              ),
+              TextButton(
+                onPressed: () {
+                  returnValue = true; // User selects "YES"
+                  Navigator.of(context).pop(returnValue); // Close the dialog
+                },
+                child: const Text("YES"),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
+
+  List<String> getLabels(String userGroup) {
+    if (userGroup == "forest range officer") {
+      return [
+        'Report',
+        'Pending',
+        'Approved/Rejected',
+        'Deemed Approved',
+        'Transit Approval'
+      ];
+    } else {
+      return ['Report', 'Pending', 'Approved/Rejected', 'Deemed Approved'];
+    }
+  }
+
+  List<List<Color>> getActiveBgColors(String userGroup) {
+    if (userGroup == "forest range officer") {
+      return [
+        [Colors.blueAccent],
+        [Colors.orange],
+        [Colors.green],
+        [Colors.cyan],
+        [Colors.blue]
+      ];
+    } else {
+      return [
+        [Colors.blueAccent],
+        [Colors.orange],
+        [Colors.green],
+        [Colors.cyan]
+      ];
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print("USERGROUP " + userGroup);
+    return WillPopScope(
+      onWillPop: _onBackPressed,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: const Text(" Officer Dashboard"),
+
+          //backgroundColor: Colors.blueGrey,
+          elevation: 0,
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Container(
+                margin: const EdgeInsets.only(top: 8, bottom: 8),
+                child: ToggleSwitch(
+                  minWidth: MediaQuery.of(context).size.width,
+                  initialLabelIndex: _radioValue,
+                  cornerRadius: 8.0,
+                  activeFgColor: Colors.white,
+                  inactiveBgColor: Colors.grey[200],
+                  inactiveFgColor: Colors.blue,
+                  labels: getLabels(userGroup),
+                  activeBgColors: getActiveBgColors(userGroup),
+                  onToggle: (index) => _handleRadioValueChange(index!),
+                ),
+              ),
+              LayoutBuilder(builder: (context, constraints) {
+                if (tab == 0) {
+                  print("USERGROUP " + userGroup);
+                  return Container(
+                      width: MediaQuery.of(context).size.width,
+                      //height:  MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.blue,
+                            blurRadius: 2.0,
+                            spreadRadius: 1.0,
+                            // offset: Offset(2.0, 2.0),
+                            // shadow direction: bottom right
+                          )
+                        ],
+                      ),
+                      margin: const EdgeInsets.only(
+                          left: 5, right: 5, top: 2, bottom: 10),
+                      padding: const EdgeInsets.only(
+                          left: 2, right: 2, top: 2, bottom: 2),
+                      child: Column(
+                        children: <Widget>[
+                          PieChart(
+                            dataMap: {
+                              "Approved": Approved,
+                              "Rejected": Rejected,
+                              "Pending": Pending
+                            },
+                            animationDuration: Duration(milliseconds: 800),
+                            chartLegendSpacing: 20,
+                            chartRadius:
+                                MediaQuery.of(context).size.width * 0.50,
+                            initialAngleInDegree: 0,
+                            chartType: ChartType.disc,
+                            colorList: [Colors.blue, Colors.red, Colors.orange],
+                            ringStrokeWidth: MediaQuery.of(context).size.width,
+                            centerText: "",
+                            legendOptions: LegendOptions(
+                              showLegendsInRow: false,
+                              legendPosition: LegendPosition.left,
+                              showLegends: true,
+                              legendTextStyle: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            chartValuesOptions: ChartValuesOptions(
+                              showChartValueBackground: true,
+                              showChartValues: true,
+                              showChartValuesInPercentage: false,
+                              showChartValuesOutside: false,
+                              decimalPlaces: 1,
+                            ),
+                          ),
+                          // TextButton.icon(
+                          //   icon: Icon(Icons.file_download),
+                          //   onPressed: () async {
+                          //     await launch(
+                          //         "https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/summary_report/");
+                          //   },
+                          //   label: Text("Download"),
+                          // ),
+                        ],
+                      ));
+                } else if (tab == 1) {
+                  return Container(
+                      height: MediaQuery.of(context).size.height * 0.79,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.deepOrangeAccent,
+                            blurRadius: 2.0,
+                            spreadRadius: 1.0,
+                            //offset: Offset(2.0, 2.0), // shadow direction: bottom right
+                          )
+                        ],
+                      ),
+                      margin: const EdgeInsets.only(
+                          left: 5, right: 5, top: 2, bottom: 10),
+                      padding: const EdgeInsets.only(
+                          left: 2, right: 2, top: 2, bottom: 2),
+                      child: Scrollbar(
+                          thumbVisibility: true,
+                          thickness: 15,
+                          child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.only(bottom: 15),
+                              child: Scrollbar(
+                                thumbVisibility: true,
+                                thickness: 15,
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.vertical,
+                                  child: DataTable(
+                                    columnSpacing: 20,
+                                    dividerThickness: 2,
+                                    headingRowColor:
+                                        MaterialStateColor.resolveWith(
+                                            (states) => Colors.orange),
+                                    columns: [
+                                      DataColumn(
+                                        label: Text(
+                                          'S.No',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                      DataColumn(
+                                          label: Text(
+                                        'Application\n       No',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      )),
+                                      DataColumn(
+                                          label: Text(
+                                        'Application\n      Name',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      )),
+                                      DataColumn(
+                                          label: Text(
+                                        'Application\n      Date',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      )),
+                                      DataColumn(
+                                          label: Text(
+                                        'Current Status',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      )),
+                                      DataColumn(
+                                          label: Text(
+                                        'Deputy Officer \n Assignment status',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      )),
+                                      DataColumn(
+                                          label: Text(
+                                        'Notified / Non-Notified\n     Villages',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      )),
+                                      DataColumn(
+                                          label: Text(
+                                        'Days  left\nfor Approval',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      )),
+                                      DataColumn(
+                                          label: Text(
+                                        'Approval\n    Date',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      )),
+                                      DataColumn(
+                                          label: Text(
+                                        'Action',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      )),
+                                      DataColumn(
+                                          label: Text(
+                                        'Download\n      Tp',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      )),
+                                      DataColumn(
+                                          label: Text(
+                                        'Download\n Report',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      )),
+                                      DataColumn(
+                                          label: Text(
+                                        'QR Code',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      )),
+                                      DataColumn(
+                                          label: Text(
+                                        'Remark',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      )),
+                                      DataColumn(
+                                          label: Text(
+                                        'Remark\n  Date',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      )),
+                                      DataColumn(
+                                          label: Text(
+                                        'Location',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      )),
+                                    ],
+                                    rows:
+                                        sr // Loops through dataColumnText, each iteration assigning the value to element
+                                            .map(
+                                              ((value) => DataRow(
+                                                    cells: <DataCell>[
+                                                      DataCell((Text((int.parse(
+                                                                  value) +
+                                                              1)
+                                                          .toString()))), //Extracting from Map element the value
+                                                      DataCell(Text(App_no[
+                                                              int.parse(value)]
+                                                          .toString())),
+                                                      DataCell(Text(App_Name[
+                                                              int.parse(value)]
+                                                          .toString())),
+                                                      DataCell(Text(App_Date[
+                                                              int.parse(value)]
+                                                          .toString())),
+                                                      DataCell(Text(OfficerStatus(
+                                                          userGroup,
+                                                          division[
+                                                              int.parse(value)],
+                                                          verify_range_officer[
+                                                              int.parse(value)],
+                                                          field_status[
+                                                                  int.parse(
+                                                                      value)]
+                                                              .toString()))),
+                                                      DataCell(Text(AssignOfficer(
+                                                          is_form_two[int.parse(
+                                                                  value)] ??
+                                                              false,
+                                                          assigned_deputy2_by_id[
+                                                              int.parse(value)],
+                                                          assigned_deputy1_by_id[
+                                                              int.parse(value)],
+                                                          log_updated_by_use[
+                                                              int.parse(
+                                                                  value)]))),
+                                                      DataCell(Text(is_form_two[
+                                                                  int.parse(
+                                                                      value)] ==
+                                                              true
+                                                          ? "Notified"
+                                                          : "Non-Notified")),
+                                                      DataCell(Text(Tp_Number[
+                                                                      int.parse(
+                                                                          value)]
+                                                                  .toString() ==
+                                                              '0'
+                                                          ? "N/A"
+                                                          : daysBetween(DateTime.parse(
+                                                                  Tp_Issue_Date[
+                                                                          int.parse(
+                                                                              value)]
+                                                                      .toString()))
+                                                              .toString())),
+                                                      DataCell(Text((Tp_Number[
+                                                                      int.parse(
+                                                                          value)]
+                                                                  .toString() ==
+                                                              '0'
+                                                          ? "N/A"
+                                                          : Approved_date[int.parse(
+                                                                      value)] !=
+                                                                  null
+                                                              ? Approved_date[
+                                                                      int.parse(
+                                                                          value)]
+                                                                  .toString()
+                                                              : "N/A"))),
+                                                      DataCell(
+                                                        new Visibility(
+                                                          visible: true,
+                                                          child: IconButton(
+                                                            icon: new Icon(Icons
+                                                                .visibility),
+                                                            color: Colors.blue,
+                                                            onPressed: () {
+                                                              if (userGroup ==
+                                                                  userGroup) {
+                                                                String IDS = Ids[
+                                                                        int.parse(
+                                                                            value)]
+                                                                    .toString();
+                                                                Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder: (_) => ViewApplication(
+                                                                            sessionToken:
+                                                                                sessionToken,
+                                                                            userGroup:
+                                                                                userGroup,
+                                                                            userId:
+                                                                                userId,
+                                                                            Ids:
+                                                                                IDS,
+                                                                            Range:
+                                                                                Range,
+                                                                            userName:
+                                                                                userName,
+                                                                            userEmail:
+                                                                                userEmail)));
+                                                              }
+                                                            },
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      DataCell(
+                                                        new Visibility(
+                                                          visible: (Current_status[
+                                                                          int.parse(
+                                                                              value)]
+                                                                      .toString() ==
+                                                                  'A')
+                                                              ? true
+                                                              : false,
+                                                          child: IconButton(
+                                                            icon: new Icon(Icons
+                                                                .file_download),
+                                                            color: Colors.blue,
+                                                            onPressed:
+                                                                () async {
+                                                              await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_transit_pass_pdf/" +
+                                                                  replaceSlashesWithDashes(
+                                                                      App_no[int
+                                                                          .parse(
+                                                                              value)]) +
+                                                                  "/");
+                                                              // _requestDownload("http://www.orimi.com/pdf-test.pdf");
+                                                            },
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      DataCell(
+                                                        IconButton(
+                                                          icon: new Icon(Icons
+                                                              .file_download),
+                                                          color: Colors.blue,
+                                                          onPressed: () async {
+                                                            await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_user_report/" +
+                                                                replaceSlashesWithDashes(
+                                                                    App_no[int
+                                                                        .parse(
+                                                                            value)]) +
+                                                                "/");
+                                                            // _requestDownload("http://www.orimi.com/pdf-test.pdf");
+                                                          },
+                                                        ),
+                                                      ),
+
+                                                      DataCell(
+                                                        new Visibility(
+                                                          visible: (Current_status[
+                                                                          int.parse(
+                                                                              value)]
+                                                                      .toString() ==
+                                                                  'A')
+                                                              ? true
+                                                              : false,
+                                                          child: IconButton(
+                                                            icon: new Icon(Icons
+                                                                .qr_code_outlined),
+                                                            color: Colors.blue,
+                                                            onPressed:
+                                                                () async {
+                                                              await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/qr_code_pdf/" +
+                                                                  replaceSlashesWithDashes(
+                                                                      App_no[int
+                                                                          .parse(
+                                                                              value)]) +
+                                                                  "/");
+                                                              // _requestDownload("http://www.orimi.com/pdf-test.pdf");
+                                                            },
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      DataCell(Text(OfficerRemark(
+                                                              Current_status[
+                                                                  int.parse(
+                                                                      value)],
+                                                              disapproved_reason[
+                                                                  int.parse(
+                                                                      value)],
+                                                              reason_division[
+                                                                  int.parse(
+                                                                      value)],
+                                                              reason_range_officer[
+                                                                  int.parse(
+                                                                      value)],
+                                                              reason_depty_ranger_office[
+                                                                  int.parse(
+                                                                      value)],
+                                                              reason_office[
+                                                                  int.parse(
+                                                                      value)])
+                                                          .toString())),
+                                                      DataCell(Text(OfficerDate(
+                                                              Current_status[
+                                                                  int.parse(
+                                                                      value)],
+                                                              verify_office_date[
+                                                                  int.parse(
+                                                                      value)],
+                                                              division_date[
+                                                                  int.parse(
+                                                                      value)],
+                                                              range_officer_date[
+                                                                  int.parse(
+                                                                      value)],
+                                                              deputy_officer_date[
+                                                                  int.parse(
+                                                                      value)],
+                                                              verify_office_date[
+                                                                  int.parse(
+                                                                      value)])
+                                                          .toString())),
+                                                      DataCell(
+                                                        Visibility(
+                                                          child: IconButton(
+                                                            icon: new Icon(Icons
+                                                                .location_on_rounded),
+                                                            color: Colors.blue,
+                                                            onPressed:
+                                                                () async {
+                                                              await launch("https://f4020lwv-8000.inc1.devtunnels.ms//app/location_views/" +
+                                                                  replaceSlashesWithDashes(
+                                                                      App_no[int
+                                                                          .parse(
+                                                                              value)]) +
+                                                                  "/");
+                                                              // _requestDownload("http://www.orimi.com/pdf-test.pdf");
+                                                            },
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  )),
+                                            )
+                                            .toList(),
+                                  ),
+                                ),
+                              ))));
+                } else if (tab == 2) {
+                  return Container(
+                      height: MediaQuery.of(context).size.height * 0.79,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.green,
+                            blurRadius: 2.0,
+                            spreadRadius: 1.0,
+                          )
+                        ],
+                      ),
+                      margin: const EdgeInsets.only(
+                          left: 5, right: 5, top: 2, bottom: 10),
+                      padding: const EdgeInsets.only(
+                          left: 2, right: 2, top: 2, bottom: 2),
+                      child: Scrollbar(
+                          thumbVisibility: true,
+                          thickness: 15,
+                          child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.only(bottom: 15),
+                              child: Scrollbar(
+                                  thumbVisibility: true,
+                                  thickness: 15,
+                                  child: SingleChildScrollView(
+                                      scrollDirection: Axis.vertical,
+                                      child: DataTable(
+                                        columnSpacing: 30,
+                                        dividerThickness: 2,
+                                        headingRowColor:
+                                            MaterialStateColor.resolveWith(
+                                                (states) => Colors.green),
+                                        columns: [
+                                          DataColumn(
+                                            label: Text(
+                                              'S.No',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                          DataColumn(
+                                            label: Text(
+                                              'Application\n       No',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                          DataColumn(
+                                              label: Text(
+                                            'Application\n     Name',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          )),
+                                          DataColumn(
+                                              label: Text(
+                                            'Application\n      Date',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          )),
+                                          DataColumn(
+                                              label: Text(
+                                            'Current Status',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          )),
+                                          // DataColumn(
+                                          //     label: Text(
+                                          //   'Deputy Officer \n Assignment status',
+                                          //   style: TextStyle(
+                                          //       fontWeight: FontWeight.bold,
+                                          //       color: Colors.white),
+                                          // )),
+                                          DataColumn(
+                                              label: Text(
+                                            'Notified / Non-Notified\n     Villages',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          )),
+                                          DataColumn(
+                                              label: Text(
+                                            'Approved\n     Date',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          )),
+                                          DataColumn(
+                                              label: Text(
+                                            'Action',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          )),
+                                          DataColumn(
+                                              label: Text(
+                                            'Download\n       Tp',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          )),
+                                          DataColumn(
+                                              label: Text(
+                                            'Download\n  Report',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          )),
+                                          DataColumn(
+                                              label: Text(
+                                            'QR Code',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          )),
+                                          DataColumn(
+                                              label: Text(
+                                            'Remark',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          )),
+                                          DataColumn(
+                                              label: Text(
+                                            'Remark\n  Date',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          )),
+                                          DataColumn(
+                                              label: Text(
+                                            'Location',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          )),
+                                          // DataColumn(
+                                          //     label: Visibility(
+                                          //         visible: userGroup ==
+                                          //                 'forest range officer'
+                                          //             ? true
+                                          //             : false,
+                                          //         child: Text(
+                                          //           'FORM - III',
+                                          //           style: TextStyle(
+                                          //               fontWeight:
+                                          //                   FontWeight.bold,
+                                          //               color: Colors.white),
+                                          //         ))),
+                                        ],
+                                        rows:
+                                            sr1 // Loops through dataColumnText, each iteration assigning the value to element
+                                                .map(
+                                                  ((value) => DataRow(
+                                                        cells: <DataCell>[
+                                                          DataCell((Text(
+                                                              (int.parse(value) +
+                                                                      1)
+                                                                  .toString()))),
+                                                          DataCell(Text(App_no1[
+                                                                  int.parse(
+                                                                      value)]
+                                                              .toString())),
+                                                          DataCell(Text(
+                                                              App_Name1[
+                                                                      int.parse(
+                                                                          value)]
+                                                                  .toString())),
+                                                          DataCell(Text(
+                                                              App_Date1[
+                                                                      int.parse(
+                                                                          value)]
+                                                                  .toString())),
+                                                          DataCell(Text(OfficerStatus(
+                                                              userGroup,
+                                                              division1[
+                                                                  int.parse(
+                                                                      value)],
+                                                              verify_range_officer1[
+                                                                  int.parse(
+                                                                      value)],
+                                                              field_status1[
+                                                                      int.parse(
+                                                                          value)]
+                                                                  .toString()))),
+                                                          // DataCell(Text(AssignOfficer(
+                                                          //         is_form_two1[
+                                                          //             int.parse(
+                                                          //                 value)],
+                                                          //         assigned_deputy2_by_id1[
+                                                          //             int.parse(
+                                                          //                 value)],
+                                                          //         assigned_deputy1_by_id1[
+                                                          //             int.parse(
+                                                          //                 value)],
+                                                          //         log_updated_by_use1[
+                                                          //             int.parse(
+                                                          //                 value)]) ??
+                                                          //     "N/A")),
+                                                          DataCell(Text(is_form_two1[
+                                                                      int.parse(
+                                                                          value)] ==
+                                                                  true
+                                                              ? "   Notified  "
+                                                              : "  Non-Notified  ")),
+                                                          DataCell(Text(Tp_Number1[
+                                                                          int.parse(
+                                                                              value)]
+                                                                      .toString()
+                                                                      .length ==
+                                                                  '0'
+                                                              ? "N/A"
+                                                              : Approved_date1[int.parse(
+                                                                              value)]
+                                                                          .toString() !=
+                                                                      'null'
+                                                                  ? Approved_date1[
+                                                                          int.parse(
+                                                                              value)]
+                                                                      .toString()
+                                                                  : "N/A")),
+                                                          DataCell(
+                                                            new Visibility(
+                                                              // visible: (Current_status1[int.parse(value)].toString()=='A')?true:false,
+                                                              visible: true,
+                                                              child: IconButton(
+                                                                icon: new Icon(Icons
+                                                                    .visibility),
+                                                                color:
+                                                                    Colors.blue,
+                                                                onPressed: () {
+                                                                  if (userGroup ==
+                                                                      userGroup) {
+                                                                    String IDS =
+                                                                        Ids1[int.parse(value)]
+                                                                            .toString();
+                                                                    Navigator.push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                            builder: (_) => ViewApplication(
+                                                                                sessionToken: sessionToken,
+                                                                                userGroup: userGroup,
+                                                                                userId: userId,
+                                                                                Ids: IDS,
+                                                                                Range: Range,
+                                                                                userName: userName,
+                                                                                userEmail: userEmail)));
+                                                                  }
+                                                                },
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          DataCell(
+                                                            new Visibility(
+                                                              visible: (Current_status1[
+                                                                              int.parse(value)]
+                                                                          .toString() ==
+                                                                      'A')
+                                                                  ? true
+                                                                  : false,
+                                                              child: IconButton(
+                                                                icon: new Icon(Icons
+                                                                    .file_download),
+                                                                color:
+                                                                    Colors.blue,
+                                                                onPressed:
+                                                                    () async {
+                                                                  await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_transit_pass_pdf/" +
+                                                                      replaceSlashesWithDashes(
+                                                                          App_no1[
+                                                                              int.parse(value)]) +
+                                                                      "/");
+                                                                  // _requestDownload("http://www.orimi.com/pdf-test.pdf");
+                                                                },
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          DataCell(
+                                                            IconButton(
+                                                              icon: new Icon(Icons
+                                                                  .file_download),
+                                                              color:
+                                                                  Colors.blue,
+                                                              onPressed:
+                                                                  () async {
+                                                                await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_user_report/" +
+                                                                    replaceSlashesWithDashes(
+                                                                        App_no1[
+                                                                            int.parse(value)]) +
+                                                                    "/");
+                                                                // _requestDownload("http://www.orimi.com/pdf-test.pdf");
+                                                              },
+                                                            ),
+                                                          ),
+                                                          DataCell(
+                                                            new Visibility(
+                                                              visible: (Current_status1[
+                                                                              int.parse(value)]
+                                                                          .toString() ==
+                                                                      'A')
+                                                                  ? true
+                                                                  : false,
+                                                              child: IconButton(
+                                                                icon: new Icon(Icons
+                                                                    .qr_code_outlined),
+                                                                color:
+                                                                    Colors.blue,
+                                                                onPressed:
+                                                                    () async {
+                                                                  await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/qr_code_pdf/" +
+                                                                      replaceSlashesWithDashes(
+                                                                          App_no1[
+                                                                              int.parse(value)]) +
+                                                                      "/");
+                                                                  // _requestDownload("http://www.orimi.com/pdf-test.pdf");
+                                                                },
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          DataCell(Text(OfficerRemark(
+                                                                  Current_status1[
+                                                                          int.parse(
+                                                                              value)]
+                                                                      .toString(),
+                                                                  disapproved_reason1[
+                                                                          int.parse(
+                                                                              value)]
+                                                                      .toString(),
+                                                                  reason_division1[
+                                                                      int.parse(
+                                                                          value)],
+                                                                  reason_range_officer1[
+                                                                      int.parse(
+                                                                          value)],
+                                                                  reason_depty_ranger_office1[
+                                                                      int.parse(
+                                                                          value)],
+                                                                  reason_office1[
+                                                                      int.parse(
+                                                                          value)])
+                                                              .toString())),
+                                                          DataCell(Text(OfficerDate(
+                                                                  Current_status1[
+                                                                      int.parse(
+                                                                          value)],
+                                                                  verify_office_date1[
+                                                                      int.parse(
+                                                                          value)],
+                                                                  division_date1[
+                                                                      int.parse(
+                                                                          value)],
+                                                                  range_officer_date1[
+                                                                      int.parse(
+                                                                          value)],
+                                                                  deputy_officer_date1[
+                                                                      int.parse(
+                                                                          value)],
+                                                                  verify_office_date1[
+                                                                      int.parse(
+                                                                          value)])
+                                                              .toString())),
+                                                          DataCell(
+                                                            Visibility(
+                                                              child: IconButton(
+                                                                icon: new Icon(Icons
+                                                                    .location_on_rounded),
+                                                                color:
+                                                                    Colors.blue,
+                                                                onPressed:
+                                                                    () async {
+                                                                  await launch("https://f4020lwv-8000.inc1.devtunnels.ms//app/location_views/" +
+                                                                      replaceSlashesWithDashes(
+                                                                          App_no1[
+                                                                              int.parse(value)]) +
+                                                                      "/");
+                                                                  // _requestDownload("http://www.orimi.com/pdf-test.pdf");
+                                                                },
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          // DataCell(
+                                                          //   new Visibility(
+                                                          //     visible: (getForm(
+                                                          //                     is_form_two1[int.parse(
+                                                          //                         value)],
+                                                          //                     other_State1[int.parse(
+                                                          //                         value)],
+                                                          //                     division1[int.parse(
+                                                          //                         value)],
+                                                          //                     verify_range_officer1[int.parse(
+                                                          //                         value)],
+                                                          //                     Current_status1[int.parse(
+                                                          //                         value)]) ==
+                                                          //                 false &&
+                                                          //             is_form3_1[int.parse(
+                                                          //                     value)] ==
+                                                          //                 false)
+                                                          //         ? true
+                                                          //         : false,
+                                                          //     child: IconButton(
+                                                          //       icon: new Icon(Icons
+                                                          //           .file_copy_outlined),
+                                                          //       color:
+                                                          //           Colors.blue,
+                                                          //       onPressed:
+                                                          //           () async {
+                                                          //         print("form 3");
+                                                          //         print(getForm(
+                                                          //             is_form3_1[
+                                                          //                 int.parse(
+                                                          //                     value)],
+                                                          //             other_State1[
+                                                          //                 int.parse(
+                                                          //                     value)],
+                                                          //             division1[int
+                                                          //                 .parse(
+                                                          //                     value)],
+                                                          //             verify_range_officer1[
+                                                          //                 int.parse(
+                                                          //                     value)],
+                                                          //             Current_status1[
+                                                          //                 int.parse(
+                                                          //                     value)]));
+                                                          //         Navigator.push(
+                                                          //             context,
+                                                          //             MaterialPageRoute(
+                                                          //                 builder: (_) =>
+                                                          //                     Form3Page1(
+                                                          //                       sessionToken: sessionToken,
+                                                          //                       Ids1: Ids1[int.parse(value)].toString(),
+                                                          //                     )));
+                                                          //         // _requestDownload("http://www.orimi.com/pdf-test.pdf");
+                                                          //       },
+                                                          //     ),
+                                                          //   ),
+                                                          // ),
+                                                        ],
+                                                      )),
+                                                )
+                                                .toList(),
+                                      ))))));
+                } else if (tab == 3) {
+                  return Container(
+                      height: MediaQuery.of(context).size.height * 0.79,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.cyan,
+                            blurRadius: 2.0,
+                            spreadRadius: 1.0,
+                            // offset: Offset(2.0, 2.0), // shadow direction: bottom right
+                          )
+                        ],
+                      ),
+                      margin: const EdgeInsets.only(
+                          left: 5, right: 5, top: 2, bottom: 10),
+                      padding: const EdgeInsets.only(
+                          left: 2, right: 2, top: 2, bottom: 2),
+                      child: Scrollbar(
+                          thumbVisibility: true,
+                          thickness: 15,
+                          child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.only(bottom: 15),
+                              child: Scrollbar(
+                                  thumbVisibility: true,
+                                  thickness: 15,
+                                  child: SingleChildScrollView(
+                                      scrollDirection: Axis.vertical,
+                                      child: DataTable(
+                                        sortColumnIndex: _currentSortColumn,
+                                        sortAscending: _isAscending,
+                                        columnSpacing: 20,
+                                        dividerThickness: 2,
+                                        headingRowColor:
+                                            MaterialStateColor.resolveWith(
+                                                (states) => Colors.cyan),
+                                        columns: [
+                                          DataColumn(
+                                            label: Text(
+                                              'S.No',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                          DataColumn(
+                                              label: Text(
+                                            'Application\n       No',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          )),
+                                          DataColumn(
+                                              label: Text(
+                                            'Application\n      Name',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          )),
+                                          DataColumn(
+                                              label: Text(
+                                            'Application\n      Date',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          )),
+                                          DataColumn(
+                                              label: Text(
+                                            'Current Status',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          )),
+                                          DataColumn(
+                                              label: Text(
+                                            'Approved\n    Date',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          )),
+                                          DataColumn(
+                                              label: Text(
+                                            'Action',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          )),
+                                          DataColumn(
+                                              label: Text(
+                                            'Download\n      Tp',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          )),
+                                          DataColumn(
+                                              label: Text(
+                                            'Download\n Report',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          )),
+                                          DataColumn(
+                                              label: Text(
+                                            'QR Code',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          )),
+                                          DataColumn(
+                                              label: Text(
+                                            'Remark',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          )),
+                                          DataColumn(
+                                              label: Text(
+                                            'Remark\n  Date',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          )),
+                                        ],
+                                        rows:
+                                            sr2 // Loops through dataColumnText, each iteration assigning the value to element
+                                                .map(
+                                                  ((value) => DataRow(
+                                                        cells: <DataCell>[
+                                                          DataCell((Text((int
+                                                                      .parse(
+                                                                          value) +
+                                                                  1)
+                                                              .toString()))), //Extracting from Map element the value
+                                                          DataCell(Text(App_no2[
+                                                                  int.parse(
+                                                                      value)]
+                                                              .toString())),
+                                                          DataCell(Text(
+                                                              App_Name2[
+                                                                      int.parse(
+                                                                          value)]
+                                                                  .toString())),
+                                                          DataCell(Text(
+                                                              App_Date2[
+                                                                      int.parse(
+                                                                          value)]
+                                                                  .toString())),
+                                                          DataCell(Text(DeemedApproved2[
+                                                                      int.parse(
+                                                                          value)] ==
+                                                                  true
+                                                              ? "Deemed Approved"
+                                                              : '')),
+                                                          DataCell(Text(
+                                                              Approved_date2[
+                                                                      int.parse(
+                                                                          value)]
+                                                                  .toString())),
+                                                          DataCell(
+                                                            new Visibility(
+                                                              // visible: (Current_status[int.parse(value)].toString()=='A')?true:false,
+                                                              child: IconButton(
+                                                                icon: new Icon(Icons
+                                                                    .visibility),
+                                                                color:
+                                                                    Colors.blue,
+                                                                onPressed: () {
+                                                                  if (userGroup ==
+                                                                      userGroup) {
+                                                                    String IDS =
+                                                                        Ids2[int.parse(value)]
+                                                                            .toString();
+                                                                    Navigator.push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                            builder: (_) => ViewApplication(
+                                                                                  sessionToken: sessionToken,
+                                                                                  userGroup: userGroup,
+                                                                                  userId: userId,
+                                                                                  Ids: IDS,
+                                                                                  userName: userName,
+                                                                                  userEmail: userEmail,
+                                                                                  Range: [],
+                                                                                )));
+                                                                  }
+                                                                },
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          DataCell(
+                                                            new Visibility(
+                                                              visible: (Current_status2[
+                                                                              int.parse(value)]
+                                                                          .toString() ==
+                                                                      'A')
+                                                                  ? true
+                                                                  : false,
+                                                              child: IconButton(
+                                                                icon: new Icon(Icons
+                                                                    .file_download),
+                                                                color:
+                                                                    Colors.blue,
+                                                                onPressed:
+                                                                    () async {
+                                                                  await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_transit_pass_pdf/" +
+                                                                      replaceSlashesWithDashes(
+                                                                          App_no2[
+                                                                              int.parse(value)]) +
+                                                                      "/");
+                                                                  // _requestDownload("http://www.orimi.com/pdf-test.pdf");
+                                                                },
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          DataCell(
+                                                            IconButton(
+                                                              icon: new Icon(Icons
+                                                                  .file_download),
+                                                              color:
+                                                                  Colors.blue,
+                                                              onPressed:
+                                                                  () async {
+                                                                await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_user_report/" +
+                                                                    replaceSlashesWithDashes(
+                                                                        App_no2[
+                                                                            int.parse(value)]) +
+                                                                    "/");
+                                                                // _requestDownload("http://www.orimi.com/pdf-test.pdf");
+                                                              },
+                                                            ),
+                                                          ),
+                                                          DataCell(
+                                                            new Visibility(
+                                                              visible: (Current_status2[
+                                                                              int.parse(value)]
+                                                                          .toString() ==
+                                                                      'A')
+                                                                  ? true
+                                                                  : false,
+                                                              child: IconButton(
+                                                                icon: new Icon(Icons
+                                                                    .qr_code_outlined),
+                                                                color:
+                                                                    Colors.blue,
+                                                                onPressed:
+                                                                    () async {
+                                                                  await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/qr_code_pdf/" +
+                                                                      replaceSlashesWithDashes(
+                                                                          App_no2[
+                                                                              int.parse(value)]) +
+                                                                      "/");
+                                                                  // _requestDownload("http://www.orimi.com/pdf-test.pdf");
+                                                                },
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          DataCell(Text(OfficerRemark(
+                                                              Current_status2[
+                                                                      int.parse(
+                                                                          value)]
+                                                                  .toString(),
+                                                              disapproved_reason2[
+                                                                      int.parse(
+                                                                          value)]
+                                                                  .toString(),
+                                                              reason_division2[
+                                                                  int.parse(
+                                                                      value)],
+                                                              reason_range_officer2[
+                                                                  int.parse(
+                                                                      value)],
+                                                              reason_depty_ranger_office2[
+                                                                  int.parse(
+                                                                      value)],
+                                                              reason_office2[
+                                                                  int.parse(
+                                                                      value)]))),
+                                                          DataCell(Text(OfficerDate(
+                                                              Current_status2[
+                                                                  int.parse(
+                                                                      value)],
+                                                              verify_office_date2[
+                                                                  int.parse(
+                                                                      value)],
+                                                              division_date2[
+                                                                  int.parse(
+                                                                      value)],
+                                                              range_officer_date2[
+                                                                  int.parse(
+                                                                      value)],
+                                                              deputy_officer_date2[
+                                                                  int.parse(
+                                                                      value)],
+                                                              verify_office_date2[
+                                                                  int.parse(
+                                                                      value)]))),
+                                                        ],
+                                                      )),
+                                                )
+                                                .toList(),
+                                      ))))));
+                } else if (tab == 4) {
+                  if (userGroup == "forest range officer") {
+                    return Container(
+                        height: MediaQuery.of(context).size.height * 0.79,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.blue,
+                              blurRadius: 2.0,
+                              spreadRadius: 1.0,
+                              //  offset: Offset(2.0, 2.0), // shadow direction: bottom right
+                            )
+                          ],
+                        ),
+                        margin: const EdgeInsets.only(
+                            left: 5, right: 5, top: 2, bottom: 10),
+                        padding: const EdgeInsets.only(
+                            left: 2, right: 2, top: 2, bottom: 2),
+                        child: Scrollbar(
+                            thumbVisibility: true,
+                            thickness: 15,
+                            child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                padding: const EdgeInsets.only(bottom: 15),
+                                child: Scrollbar(
+                                    thumbVisibility: true,
+                                    thickness: 15,
+                                    child: SingleChildScrollView(
+                                        scrollDirection: Axis.vertical,
+                                        child: DataTable(
+                                          sortColumnIndex: _currentSortColumn,
+                                          sortAscending: _isAscending,
+                                          columnSpacing: 20,
+                                          dividerThickness: 2,
+                                          headingRowColor:
+                                              MaterialStateColor.resolveWith(
+                                                  (states) => Colors.blue),
+                                          columns: [
+                                            DataColumn(
+                                              label: Text(
+                                                'S.No',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                            DataColumn(
+                                                label: Text(
+                                              'Application \n   No',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            )),
+                                            // DataColumn(
+                                            //     label: Text(
+                                            //   'Application \n   Name',
+                                            //   style: TextStyle(
+                                            //       fontWeight: FontWeight.bold,
+                                            //       color: Colors.white),
+                                            // )),
+                                            DataColumn(
+                                                label: Text(
+                                              'Application \n   Date',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            )),
+                                            //DataColumn(label: Text('Current\n   Status',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),)),
+                                            //DataColumn(label: Text('Days  left\nfor Approved',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),)),
+                                            // DataColumn(label: Text('Approved\n    Date',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),)),
+                                            DataColumn(
+                                                label: Text(
+                                              ' Action ',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            )),
+                                            DataColumn(
+                                                label: Text(
+                                              ' Location ',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            )),
+                                            //DataColumn(label: Text('Download\n Report',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),)),
+                                            //DataColumn(label: Text('QR Code',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),)),
+                                            //DataColumn(label: Text('Remark',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),)),
+                                            // DataColumn(label: Text('Remark\n  Date',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),)),
+                                          ],
+                                          rows:
+                                              sr3 // Loops through dataColumnText, each iteration assigning the value to element
+                                                  .map(
+                                                    ((value) => DataRow(
+                                                          cells: <DataCell>[
+                                                            DataCell((Text((int
+                                                                        .parse(
+                                                                            value) +
+                                                                    1)
+                                                                .toString()))), //Extracting from Map element the value
+                                                            DataCell(Text(App_no3[
+                                                                    int.parse(
+                                                                        value)]
+                                                                .toString())),
+                                                            // DataCell(Text(App_Name3[
+                                                            //         int.parse(
+                                                            //             value)]
+                                                            //     .toString())),
+                                                            DataCell(Text(App_Date3[
+                                                                    int.parse(
+                                                                        value)]
+                                                                .toString())),
+                                                            //DataCell(Text(Current_status3[int.parse(value)].toString()=='S'?"Submitted":Current_status3[int.parse(value)].toString()=='P'?"Pending":"Rejected")),
+                                                            // DataCell(Text(days_left_transit3[int.parse(value)].toString()==6?"Not Generated":"Not Generated")),
+                                                            // DataCell(Text((Approved_date3[int.parse(value)].toString()=='true')?Approved_date3[int.parse(value)].toString():"N/A",)),
+                                                            DataCell(
+                                                              IconButton(
+                                                                icon: new Icon(Icons
+                                                                    .visibility),
+                                                                color:
+                                                                    Colors.blue,
+                                                                onPressed: () {
+                                                                  if (userGroup ==
+                                                                      'forest range officer') {
+                                                                    String IDS =
+                                                                        Ids3[int.parse(value)]
+                                                                            .toString();
+                                                                    Navigator.push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                            builder: (_) => transitViewAndApprove(
+                                                                                  sessionToken: sessionToken,
+                                                                                  userGroup: userGroup,
+                                                                                  Ids: App_no3[int.parse(value)],
+                                                                                  userName: userName,
+                                                                                  userEmail: userEmail,
+                                                                                )));
+                                                                  } else {
+                                                                    Fluttertoast.showToast(
+                                                                        msg:
+                                                                            "Approval and Rejection handle by range officer",
+                                                                        toastLength:
+                                                                            Toast
+                                                                                .LENGTH_SHORT,
+                                                                        gravity:
+                                                                            ToastGravity
+                                                                                .CENTER,
+                                                                        timeInSecForIosWeb:
+                                                                            8,
+                                                                        backgroundColor:
+                                                                            Colors
+                                                                                .blue,
+                                                                        textColor:
+                                                                            Colors
+                                                                                .white,
+                                                                        fontSize:
+                                                                            18.0);
+                                                                  }
+                                                                },
+                                                              ),
+                                                            ),
+                                                            DataCell(
+                                                              Visibility(
+                                                                child:
+                                                                    IconButton(
+                                                                  icon: new Icon(
+                                                                      Icons
+                                                                          .location_on_rounded),
+                                                                  color: Colors
+                                                                      .blue,
+                                                                  onPressed:
+                                                                      () async {
+                                                                    await launch("https://f4020lwv-8000.inc1.devtunnels.ms//app/location_views/" +
+                                                                        replaceSlashesWithDashes(
+                                                                            App_no3[int.parse(value)]) +
+                                                                        "/");
+                                                                    // _requestDownload("http://www.orimi.com/pdf-test.pdf");
+                                                                  },
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            // DataCell(
+                                                            //   IconButton(
+                                                            //     icon: new Icon(Icons
+                                                            //         .file_download),
+                                                            //     color: Colors.blue,
+                                                            //     onPressed:
+                                                            //         () async {
+                                                            //       await launch(
+                                                            //           " https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_noc_pdf/" +
+                                                            //               Ids3[int.parse(
+                                                            //                   value)] +
+                                                            //               "/");
+                                                            //     },
+                                                            //   ),
+                                                            // ),
+                                                          ],
+                                                        )),
+                                                  )
+                                                  .toList(),
+                                        ))))));
+                  } else {
+                    return Container();
+                  }
+                }
+                return Container(); // Add this line
+              }),
+            ],
+          ),
+        ),
+        drawer: Container(
+          child: Drawer(
+            child: Container(
+              color: Colors.white,
+              child: ListView(
+                padding: EdgeInsets.all(0),
+                children: [
+                  UserAccountsDrawerHeader(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          colors: [HexColor("#26f596"), HexColor("#0499f2")]),
+                    ),
+                    accountEmail: Text('$userEmail'),
+                    accountName: Text("$userName"),
+                    currentAccountPicture: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      child: Text(
+                        userName[0].toUpperCase(),
+                        style: TextStyle(color: Colors.black, fontSize: 20),
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                      leading: Icon(
+                        Icons.receipt_long_outlined,
+                        color: Colors.black,
+                        size: 25,
+                      ),
+                      title: Text(
+                        'Reports',
+                        style: TextStyle(color: Colors.black, fontSize: 20),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) =>
+                                    Reports(sessionToken: sessionToken)));
+                      }),
+                  ListTile(
+                      leading: Icon(
+                        Icons.dashboard,
+                        color: Colors.black,
+                        size: 25,
+                      ),
+                      title: Text(
+                        'Dashboard',
+                        style: TextStyle(color: Colors.black, fontSize: 20),
+                      ),
+                      onTap: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => OfficerDashboard(
+                                      sessionToken: sessionToken,
+                                      userName: userName,
+                                      userEmail: userEmail,
+                                      userGroup: userGroup,
+                                      userId: userId,
+                                      dropdownValue: dropdownValue,
+                                      Range: Range,
+                                    )));
+                      }),
+                  ListTile(
+                      leading: Icon(
+                        Icons.qr_code_scanner,
+                        color: Colors.black,
+                        size: 25,
+                      ),
+                      title: Text(
+                        'QR-Scanner',
+                        style: TextStyle(color: Colors.black, fontSize: 20),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => QueryPage(
+                                      userId: userId,
+                                      sessionToken: sessionToken,
+                                      userName: userName,
+                                      userEmail: userEmail,
+                                      userMobile: widget.userMobile,
+                                      userAddress: widget.userAddress,
+                                    )));
+                      }),
+                  ListTile(
+                      leading: Icon(
+                        Icons.logout,
+                        color: Colors.black,
+                        size: 25,
+                      ),
+                      title: Text(
+                        'Logout',
+                        style: TextStyle(color: Colors.black, fontSize: 20),
+                      ),
+                      onTap: () async {
+                        const String url =
+                            'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/logout/';
+                        await http.post(
+                          Uri.parse(url),
+                          headers: <String, String>{
+                            'Content-Type': 'application/json',
+                            'Authorization': "token $sessionToken"
+                          },
+                        );
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        prefs.remove('isLoggedIn');
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (_) => login()));
+                      }),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
