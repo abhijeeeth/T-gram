@@ -231,6 +231,57 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       log('Response: ${responseJson.toString()}');
 
       if (response.statusCode == 200) {
+        try {
+          // Get application ID from the data
+          final String appId = ids;
+          log('Attempting to delete location data for app ID: $appId');
+
+          if (appId.isEmpty) {
+            log('Error: Application ID is empty');
+            emit(FieldVerifyDataSavedState(success: true));
+            return;
+          }
+
+          // Initialize database helper
+          DbHelper dbHelper = DbHelper();
+          await dbHelper.ensureDatabaseCreated();
+
+          // Safely parse appId to integer
+          int? appIdInt;
+          try {
+            appIdInt = int.parse(appId);
+          } catch (parseError) {
+            log('Error parsing appId to integer: $parseError');
+            emit(FieldVerifyDataSavedState(success: true));
+            return;
+          }
+
+          // Get existing application locations for this app ID
+          log('Fetching locations for appId: $appIdInt');
+          List<Map<String, dynamic>> existingLocations =
+              await dbHelper.getApplicationLocations(appIdInt);
+
+          log('Found ${existingLocations.length} location records to delete');
+
+          // Delete each location record for this application
+          int deletedCount = 0;
+          for (var location in existingLocations) {
+            int locationId = location['id'];
+            log('Deleting location ID: $locationId');
+            int result = await dbHelper.deleteApplicationLocation(locationId);
+            if (result > 0) {
+              deletedCount++;
+            } else {
+              log('Failed to delete location ID: $locationId');
+            }
+          }
+
+          log('Successfully deleted $deletedCount/${existingLocations.length} location records for app ID: $appId');
+        } catch (dbError) {
+          log('Error when deleting local data after successful upload: $dbError');
+          // Continue with success state even if local cleanup fails
+        }
+
         emit(FieldVerifyDataSavedState(success: true));
       } else {
         emit(FieldVerifyDataSavedState(

@@ -651,11 +651,20 @@ class DbHelper {
   Future<List<Map<String, dynamic>>> getApplicationLocations(
       int appFormId) async {
     Database db = await database;
-    return await db.query(
-      'application_locations',
-      where: 'app_form_id = ?',
-      whereArgs: [appFormId],
-    );
+    try {
+      print("Fetching application locations for app_form_id: $appFormId");
+      final result = await db.query(
+        'application_locations',
+        where: 'app_form_id = ?',
+        whereArgs: [appFormId],
+      );
+      print(
+          "Found ${result.length} location records for app_form_id: $appFormId");
+      return result;
+    } catch (e) {
+      print("Error fetching application locations: $e");
+      return [];
+    }
   }
 
   Future<Map<String, dynamic>?> getApplicationLocation(int id) async {
@@ -681,8 +690,16 @@ class DbHelper {
 
   Future<int> deleteApplicationLocation(int id) async {
     Database db = await database;
-    return await db
-        .delete('application_locations', where: 'id = ?', whereArgs: [id]);
+    try {
+      print("Deleting application location with id: $id");
+      final result = await db
+          .delete('application_locations', where: 'id = ?', whereArgs: [id]);
+      print("Delete result: $result rows affected");
+      return result;
+    } catch (e) {
+      print("Error deleting application location: $e");
+      return 0;
+    }
   }
 
   Future<bool> applicationExistsByNo(String applicationNo) async {
