@@ -1,2333 +1,1757 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_interpolation_to_compose_strings
+// import 'dart:convert';
+// import 'dart:developer';
+// import 'dart:io';
 
-import 'dart:convert';
-import 'dart:io';
+// import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
+// import 'package:fluttertoast/fluttertoast.dart';
+// import 'package:hexcolor/hexcolor.dart';
+// import 'package:http/http.dart' as http;
+// import 'package:jailbreak_root_detection/jailbreak_root_detection.dart';
+// import 'package:marquee/marquee.dart';
+// import 'package:package_info_plus/package_info_plus.dart';
+// import 'package:permission_handler/permission_handler.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:tigramnks/DivisionDashboard.dart';
+// import 'package:tigramnks/FieldOfficerDashboard.dart';
+// import 'package:tigramnks/OfficerDashboard.dart';
+// import 'package:tigramnks/SFDashboard.dart';
+// import 'package:tigramnks/forgetPassword.dart';
+// import 'package:tigramnks/homePage.dart';
+// import 'package:tigramnks/server/serverhelper.dart';
+// import 'package:tigramnks/signup.dart';
+// import 'package:toggle_switch/toggle_switch.dart';
 
-import 'package:hexcolor/hexcolor.dart';
-import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flutter/foundation.dart';
-import 'package:pie_chart/pie_chart.dart';
-import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tigramnks/Form3Page1.dart';
-import 'package:tigramnks/NEW_FORMS/transitViewAndApprove.dart';
-import 'package:tigramnks/NocViewApplication.dart';
-import 'package:tigramnks/QueryPage.dart';
-import 'package:tigramnks/Reports.dart';
-import 'package:tigramnks/ViewApplication.dart';
-import 'package:tigramnks/login.dart';
-import 'package:toggle_switch/toggle_switch.dart';
-import 'package:http/http.dart' as http;
-import 'package:dio/dio.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:url_launcher/url_launcher.dart';
+// import 'checkPostDash.dart';
 
-class OfficerDashboard extends StatefulWidget {
-  String sessionToken;
-  int userId;
-  String userName;
-  String userEmail;
-  String userGroup;
-  String dropdownValue;
-  List Range;
+// // Custom HTTP client that bypasses SSL certificate verification
+// class MyHttpOverrides extends HttpOverrides {
+//   @override
+//   HttpClient createHttpClient(SecurityContext? context) {
+//     return super.createHttpClient(context)
+//       ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+//   }
+// }
 
-  var userMobile;
+// void main() {
+//   // Override HTTP client for SSL bypass (development only)
+//   HttpOverrides.global = MyHttpOverrides();
+//   runApp(const login());
+// }
 
-  var userAddress;
-  OfficerDashboard(
-      {required this.userId,
-      required this.userName,
-      required this.userEmail,
-      required this.sessionToken,
-      required this.userGroup,
-      required this.dropdownValue,
-      required this.Range});
-  @override
-  _OfficerDashboardState createState() => _OfficerDashboardState(userId,
-      userName, userEmail, sessionToken, userGroup, dropdownValue, Range);
-}
+// class login extends StatelessWidget {
+//   const login({super.key});
 
-class _OfficerDashboardState extends State<OfficerDashboard> {
-  void initState() {
-    super.initState();
-    print(userId);
-    pie_chart();
-    PendingApp();
-    ApprovedApp();
-    DeemedApp();
-    NocForm();
-  }
+//   @override
+//   Widget build(BuildContext context) {
+//     return const MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       home: LoginDemo(),
+//     );
+//   }
+// }
 
-  String sessionToken;
-  int userId;
-  String userName;
-  String userEmail;
-  String userGroup;
-  String dropdownValue;
-  List Range;
-  double Approved = 0;
-  double Rejected = 0;
-  double Pending = 0;
+// class LoginDemo extends StatefulWidget {
+//   const LoginDemo({super.key});
 
-  _OfficerDashboardState(this.userId, this.userName, this.userEmail,
-      this.sessionToken, this.userGroup, this.dropdownValue, this.Range);
+//   @override
+//   _LoginDemoState createState() => _LoginDemoState();
+// }
 
-//---------------------Pie-chart------------------
-  void pie_chart() async {
-    const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/dashbord_chart';
+// class _LoginDemoState extends State<LoginDemo> {
+//   bool isHiddenPassword = true;
 
-    final response = await http.get(Uri.parse(url), headers: <String, String>{
-      'Content-Type': 'application/json',
-      'Authorization': "token $sessionToken"
-    });
-    Map<String, dynamic> responseJSON = json.decode(response.body);
-    print(responseJSON);
-    setState(() {
-      Approved = responseJSON['data']['per_approved'];
-      Rejected = responseJSON['data']['per_rejected'];
-      Pending = responseJSON['data']['per_submitted'];
-    });
-  }
+//   TextEditingController loginMobile = TextEditingController();
+//   TextEditingController loginEmail = TextEditingController();
+//   TextEditingController loginPassword = TextEditingController();
 
-  String replaceSlashesWithDashes(String input) {
-    return input.replaceAll('/', '-');
-  }
+//   bool validateEmail(String value) {
+//     String pattern =
+//         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+//     RegExp regex = RegExp(pattern);
+//     return (!regex.hasMatch(value)) ? false : true;
+//   }
 
-  List<Color> colors = [Colors.blue, Colors.red, Colors.orange];
+//   int _radioValue = 0;
+//   String? maintenance;
+//   int? maintenance_cost;
+//   int? estimatedMaintenanceCost;
 
-//------------------End--Pie--Chart--------------
+//   bool flag = true;
+//   bool? _jailbroken;
+//   bool? _developerMode;
 
-  String url = "http://65.1.132.43:8080/api/auth/new_transit_pass_pdf/90/";
+//   @override
+//   void initState() {
+//     super.initState();
+//     initPlatformState();
+//     _requestStoragePermission();
+//   }
 
-  //---------------Table ----------------------
-  //---------pending-------------
-  final List Ids = [];
-  final List sr = [];
-  final List App_no = [];
-  final List App_Name = [];
-  final List App_Date = [];
-  final List Current_status = [];
-  final List days_left_transit = [];
-  final List Approved_date = [];
-  final List Action = [];
-  //------------
-  final List reason_office = [];
-  final List reason_depty_ranger_office = [];
-  final List reason_range_officer = [];
-  final List disapproved_reason = [];
-  final List reason_division = [];
-  //------------
-  //------------
-  final List verify_office_date = [];
-  final List deputy_officer_date = [];
-  final List range_officer_date = [];
-  final List division_date = [];
-  //final List disapproved_reason=[];
-  //------------
-  final List Remark = [];
-  final List Remark_date = [];
-  final List Tp_status = [];
-  final List Tp_Issue_Date = [];
-  final List Tp_Number = [];
-  final List verify_range = [];
-  final List depty_range_officer = [];
-  final List verify_range_officer = [];
-  final List division = [];
-  final List tp_expiry_date = [];
-  final List other_State = [];
+//   // Request storage permission
+//   Future<void> _requestStoragePermission() async {
+//     PermissionStatus status;
 
-  final List verify_deputy2 = [];
-  final List reason_deputy2 = [];
-  final List deputy2_date = [];
+//     // For Android 13 and above (SDK 33+), we need to request specific permissions
+//     if (await Permission.storage.isRestricted ||
+//         await Permission.storage.isDenied) {
+//       status = await Permission.storage.request();
 
-  final List is_form_two = [];
+//       if (status.isGranted) {
+//         // await Permission.storage.request();
+//         Fluttertoast.showToast(
+//           msg: 'Storage permission granted',
+//           toastLength: Toast.LENGTH_SHORT,
+//           gravity: ToastGravity.BOTTOM,
+//         );
+//       } else if (status.isDenied) {
+//         await Permission.storage.request();
+//         Fluttertoast.showToast(
+//           msg:
+//               'Storage permission denied. Some features may not work properly.',
+//           toastLength: Toast.LENGTH_LONG,
+//           gravity: ToastGravity.BOTTOM,
+//         );
+//       } else if (status.isPermanentlyDenied) {
+//         Fluttertoast.showToast(
+//           msg:
+//               'Storage permission permanently denied. Please enable it from app settings.',
+//           toastLength: Toast.LENGTH_LONG,
+//           gravity: ToastGravity.BOTTOM,
+//         );
+//         // You could open app settings here
+//         await openAppSettings();
+//       }
+//     }
+//   }
 
-  final List assigned_deputy1_by_id = [];
-  final List assigned_deputy2_by_id = [];
+//   // Platform messages are asynchronous, so we initialize in an async method.
+//   Future<void> initPlatformState() async {
+//     bool jailbroken;
+//     bool developerMode;
+//     // Platform messages may fail, so we use a try/catch PlatformException.
+//     try {
+//       final jailbreakRootDetection = JailbreakRootDetection();
+//       jailbroken = await jailbreakRootDetection.isJailBroken;
+//     } on PlatformException {
+//       jailbroken = true;
+//       developerMode = false;
+//     }
 
-  final List log_updated_by_use = [];
-  final List verify_forest1 = [];
-  //------------------------
+//     // If the widget was removed from the tree while the asynchronous platform
+//     // message was in flight, we want to discard the reply rather thxuuan calling
+//       if (_radioValue == 0) {
+//         maintenance = 'Yes';
+//         setState(() {
+//           flag = true;
+//         });
+//       } else if (_radioValue == 1) {
+//         maintenance = 'No';
+//         setState(() {
+//           flag = false;
+//         });
+//       }
+//     });
+//   }
 
-  List list1 = [];
-  int allApplication = 0;
-//-----------Approved------------------------
-  int allApplication1 = 0;
-  final List Ids1 = [];
-  final List sr1 = [];
-  final List App_no1 = [];
-  final List App_Name1 = [];
-  final List App_Date1 = [];
-  final List Current_status1 = [];
-  final List days_left_transit1 = [];
-  final List Approved_date1 = [];
-  final List Action1 = [];
-  final List Remark1 = [];
-  final List Remark_date1 = [];
-  final List Tp_status1 = [];
-  final List Tp_Issue_Date1 = [];
-  final List Tp_Number1 = [];
-  final List verify_range1 = [];
-  final List depty_range_officer1 = [];
-  final List verify_range_officer1 = [];
-  final List division1 = [];
-  final List tp_expiry_date1 = [];
-  //------------
-  final List reason_office1 = [];
-  final List reason_depty_ranger_office1 = [];
-  final List reason_range_officer1 = [];
-  final List disapproved_reason1 = [];
-  final List reason_division1 = [];
-  //------------
-  final List verify_office_date1 = [];
-  final List deputy_officer_date1 = [];
-  final List range_officer_date1 = [];
-  final List division_date1 = [];
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//         // backgroundColor: Colors.green[100],
+//         backgroundColor: Colors.white,
+//         body: SingleChildScrollView(
+//           child: Column(
+//             children: <Widget>[
+//               Container(
+//                   padding: const EdgeInsets.only(right: 15, top: 8),
+//                   width: double.infinity,
+//                   height: 80,
+//                   child: Row(
+//                     mainAxisAlignment: MainAxisAlignment.center, // Add this
+//                     children: <Widget>[
+//                       Image.asset(
+//                         "assets/images/kerala_logo.jpg",
+//                         width: 80,
+//                         height: 80,
+//                       ),
+//                     ],
+//                   )),
+//               Container(
+//                   padding: const EdgeInsets.only(left: 15, right: 15),
+//                   width: double.infinity,
+//                   height: 65,
+//                   color: HexColor("#02075D"),
+//                   child: Row(
+//                     children: <Widget>[
+//                       const Text(
+//                         "Login",
+//                         style: TextStyle(
+//                           fontFamily: 'Cairo',
+//                           fontWeight: FontWeight.bold,
+//                           fontStyle: FontStyle.normal,
+//                           color: Colors.white,
+//                           fontSize: 24,
+//                         ),
+//                       ),
+//                       const Spacer(),
+//                       Image.asset(
+//                         "assets/images/tigram01.png",
+//                         width: 120,
+//                         height: 90,
+//                       ),
+//                     ],
+//                   )),
+//               Container(
+//                 margin: const EdgeInsets.only(top: 50, bottom: 15),
+//                 child: ToggleSwitch(
+//                   minWidth: double.infinity,
+//                   minHeight: 50,
+//                   initialLabelIndex: _radioValue,
+//                   cornerRadius: 8.0,
+//                   activeFgColor: Colors.white,
+//                   inactiveBgColor: Colors.grey[200],
+//                   inactiveFgColor: Colors.black54,
+//                   labels: const ['User', 'Officer'],
+//                   fontSize: 16,
+//                   activeBgColors: const [
+//                     [Color(0xFF02075D)],
+//                     [Color(0xFF02075D)]
+//                     //blinh
+//                   ],
+//                   onToggle: _handleRadioValueChange,
+//                 ),
+//               ),
+//               LayoutBuilder(builder: (context, constraints) {
+//                 if (flag == true) {
+//                   return const UserLogin();
+//                 } else if (flag == false) {
+//                   return const OfficerLogin();
+//                 }
+//                 return Container(); // Default return for type safety
+//               }),
+//               Row(
+//                 children: [
+//                   const SizedBox(width: 8.0),
+//                   Expanded(
+//                     child: FutureBuilder<PackageInfo>(
+//                       future: PackageInfo.fromPlatform(),
+//                       builder: (context, snapshot) {
+//                         if (snapshot.connectionState == ConnectionState.done) {
+//                           if (snapshot.hasData) {
+//                             final packageInfo = snapshot.data!;
+//                             return Center(
+//                               child: Text(
+//                                 "Version: ${packageInfo.version}+${packageInfo.buildNumber}",
+//                                 style: const TextStyle(
+//                                   fontSize: 10,
+//                                   color: Color.fromARGB(255, 63, 63, 63),
+//                                   fontWeight: FontWeight.bold,
+//                                 ),
+//                               ),
+//                             );
+//                           } else if (snapshot.hasError) {
+//                             return const Center(
+//                               child: Text(
+//                                 "Error loading version",
+//                                 style: TextStyle(
+//                                   fontSize: 10,
+//                                   color: Colors.red,
+//                                 ),
+//                               ),
+//                             );
+//                           }
+//                         }
+//                         // Show loading indicator while waiting
+//                         return const Center(
+//                           child: Text(
+//                             "Loading version...",
+//                             style: TextStyle(
+//                               fontSize: 10,
+//                               color: Colors.grey,
+//                             ),
+//                           ),
+//                         );
+//                       },
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//               const SizedBox(height: 5),
+//               Container(
+//                 width: double.infinity,
+//                 height: 25,
+//                 color: HexColor("#004d40"),
+//                 alignment: Alignment.center,
+//                 margin: const EdgeInsets.only(bottom: 10),
+//                 child: Marquee(
+//                   text: "Kerala Forest Research Institute (KFRI)",
+//                   style: const TextStyle(
+//                     fontFamily: 'Arial',
+//                     fontWeight: FontWeight.w500,
+//                     color: Colors.white,
+//                     fontSize: 14,
+//                   ),
+//                 ),
+//               ),
+//               const SizedBox(height: 7),
+//             ],
+//           ),
+//         ));
+//   }
+// }
 
-  final List other_State1 = [];
+// //-------------------------------User-Login-------------------------------------
 
-  final List verify_deputy2_1 = [];
-  final List reason_deputy2_1 = [];
-  final List deputy2_date_1 = [];
+// class UserLogin extends StatefulWidget {
+//   const UserLogin({super.key});
 
-  final List is_form_two1 = [];
-  final List is_form3_1 = [];
+//   @override
+//   _UserState createState() => _UserState();
+// }
 
-  final List assigned_deputy1_by_id1 = [];
-  final List assigned_deputy2_by_id1 = [];
-  final List log_updated_by_use1 = [];
-  final List verify_forest1_1 = [];
-  final List field_status = [];
-  final List field_status1 = [];
-  //------------------------------------------
-  void PendingApp() async {
-    sr.clear();
-    App_no.clear();
-    App_Name.clear();
-    App_Date.clear();
-    Current_status.clear();
-    days_left_transit.clear();
-    Approved_date.clear();
-    Action.clear();
-    Remark.clear();
-    Remark_date.clear();
-    Tp_Issue_Date.clear();
-    Tp_Number.clear();
-    verify_range.clear();
-    depty_range_officer.clear();
-    verify_range_officer.clear();
-    tp_expiry_date.clear();
-    reason_office.clear();
-    reason_depty_ranger_office.clear();
-    reason_range_officer.clear();
-    disapproved_reason.clear();
-    verify_office_date.clear();
-    deputy_officer_date.clear();
-    range_officer_date.clear();
-    division.clear();
-    reason_division.clear();
-    division_date.clear();
-    other_State.clear();
-    verify_deputy2.clear();
-    reason_deputy2.clear();
-    deputy2_date.clear();
-    is_form_two.clear();
-    assigned_deputy1_by_id.clear();
-    assigned_deputy2_by_id.clear();
-    log_updated_by_use.clear();
-    verify_forest1.clear();
-    field_status.clear();
-    print("Pending Application");
-    const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/PendingListViewApplication';
-    final response = await http.get(Uri.parse(url), headers: <String, String>{
-      'Content-Type': 'application/json',
-      'Authorization': "token $sessionToken"
-    });
-    Map<String, dynamic> responseJSON = json.decode(response.body);
-    print(responseJSON);
-    List list = responseJSON["data"];
-    setState(() {
-      allApplication = list.length;
-    });
-    for (var i = 0; i < allApplication; i++) {
-      sr.add(i.toString());
-      Ids.add(list[i]['id'].toString());
-      App_no.add(list[i]['application_no']);
-      App_Name.add(list[i]['name'].toString());
-      App_Date.add(list[i]['created_date'].toString());
-      Current_status.add(list[i]['application_status'].toString());
-      days_left_transit.add(list[i]['6'].toString());
-      Approved_date.add(list[i]['tp_expiry_status'].toString());
-      Action.add(list[i][''].toString());
-      Remark.add(list[i]['disapproved_reason'].toString());
-      Remark_date.add(list[i]['range_officer_date'].toString());
-      Tp_Issue_Date.add(list[i]['transit_pass_created_date'].toString());
-      Tp_Number.add(list[i]['transit_pass_id'].toString());
-      verify_range.add(list[i]['verify_office']);
-      depty_range_officer.add(list[i]['depty_range_officer']);
-      verify_range_officer.add(list[i]['application_status']);
-      division.add(list[i]['d']);
-      tp_expiry_date.add(list[i]['tp_expiry_date']);
-      reason_office.add(list[i]['reason_office']);
-      reason_depty_ranger_office.add(list[i]['reason_depty_ranger_office']);
-      reason_range_officer.add(list[i]['reason_range_officer']);
-      reason_division.add(list[i]['reason_division_officer']);
-      disapproved_reason.add(list[i]['disapproved_reason']);
-      field_status.add(list[i]['status']);
-      verify_office_date.add(list[i]['verify_office_date']);
-      deputy_officer_date.add(list[i]['deputy_officer_date']);
-      range_officer_date.add(list[i]['range_officer_date']);
-      division_date.add(list[i]['division_officer_date']);
-      // Remark.add(list[i]['transit_pass_created_date']);
-      other_State.add(list[i]['other_state']);
-      verify_deputy2.add(list[i]['verify_deputy2']);
-      reason_deputy2.add(list[i]['reason_deputy2']);
-      deputy2_date.add(list[i]['deputy2_date']);
-      is_form_two.add(list[i]['is_form_two']);
-      assigned_deputy1_by_id.add(list[i]['assigned_deputy1_name']);
-      assigned_deputy2_by_id.add(list[i]['assigned_deputy2_name']);
-      log_updated_by_use.add(list[i]['log_updated_by_user']);
-      verify_forest1.add(list[i]['verify_forest1']);
-    }
-    print("--------------- Pending Application----------------");
-    print("---------------log----------");
-    print(log_updated_by_use);
-    // print(Ids + App_no + App_Date + App_Name + Current_status);
-  }
+// class _UserState extends State<UserLogin> {
+//   bool isHiddenPassword = true;
+//   String sessionToken = '';
+//   int? userId;
+//   String userName = '';
+//   String userEmail = '';
+//   String userMobile = '';
+//   String userAddress = '';
+//   String userProfile = '';
+//   String userGroup = '';
+//   String userCato = '';
 
-//-----------Approved-------------
-  void ApprovedApp() async {
-    sr1.clear();
-    App_no1.clear();
-    App_Name1.clear();
-    App_Date1.clear();
-    Current_status1.clear();
-    days_left_transit1.clear();
-    Approved_date1.clear();
-    Action1.clear();
-    Remark1.clear();
-    Remark_date1.clear();
-    Tp_Issue_Date1.clear();
-    Tp_Number1.clear();
-    verify_range1.clear();
-    depty_range_officer1.clear();
-    verify_range_officer1.clear();
-    tp_expiry_date1.clear();
-    reason_office1.clear();
-    reason_depty_ranger_office1.clear();
-    reason_range_officer1.clear();
-    disapproved_reason1.clear();
-    verify_office_date1.clear();
-    deputy_officer_date1.clear();
-    range_officer_date1.clear();
-    division1.clear();
-    reason_division1.clear();
-    division_date1.clear();
-    other_State1.clear();
-    verify_deputy2_1.clear();
-    reason_deputy2_1.clear();
-    deputy2_date_1.clear();
-    is_form_two1.clear();
-    assigned_deputy1_by_id1.clear();
-    assigned_deputy2_by_id1.clear();
-    log_updated_by_use1.clear();
-    verify_forest1_1.clear();
-    print("Approved Application");
-    const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/ApprovedListViewApplication';
-    final response = await http.get(Uri.parse(url), headers: <String, String>{
-      'Content-Type': 'application/json',
-      'Authorization': "token $sessionToken"
-    });
-    Map<String, dynamic> responseJSON = json.decode(response.body);
-    print(responseJSON);
-    List list = responseJSON["data"];
+//   TextEditingController loginMobile = TextEditingController();
+//   TextEditingController loginEmail = TextEditingController();
+//   TextEditingController loginPassword = TextEditingController();
 
-    setState(() {
-      allApplication1 = list.length;
-    });
-    print(list.length);
-    for (var i = 0; i < allApplication1; i++) {
-      sr1.add(i.toString());
-      Ids1.add(list[i]['id'].toString());
-      App_no1.add(list[i]['application_no']);
-      App_Name1.add(list[i]['name'].toString());
-      App_Date1.add(list[i]['created_date'].toString());
-      Current_status1.add(list[i]['application_status'].toString());
-      days_left_transit1.add(list[i]['application_status'].toString());
-      Approved_date1.add(list[i]['verify_office_date'].toString());
-      Action1.add(list[i][''].toString());
-      Remark1.add(list[i]['reason_office'].toString());
-      Remark_date1.add(list[i]['range_officer_date'].toString());
-      Tp_Issue_Date1.add(list[i]['transit_pass_created_date'].toString());
-      Tp_Number1.add(list[i]['transit_pass_id'].toString());
-      verify_range1.add(list[i]['verify_office']);
-      depty_range_officer1.add(list[i]['depty_range_officer']);
-      verify_range_officer1.add(list[i]['approved_by_r']);
-      division1.add(list[i]['d']);
-      tp_expiry_date1.add(list[i]['tp_expiry_date']);
-      reason_office1.add(list[i]['reason_office']);
-      reason_depty_ranger_office1.add(list[i]['reason_depty_ranger_office']);
-      reason_range_officer1.add(list[i]['reason_range_officer']);
-      reason_division1.add(list[i]['reason_division_officer']);
-      disapproved_reason1.add(list[i]['disapproved_reason']);
-      verify_office_date1.add(list[i]['verify_office_date']);
-      deputy_officer_date1.add(list[i]['deputy_officer_date']);
-      range_officer_date1.add(list[i]['range_officer_date']);
-      division_date1.add(list[i]['division_officer_date']);
-      // Remark.add(list[i]['transit_pass_created_date']);
-      other_State1.add(list[i]['other_state']);
+//   bool validateEmail(String value) {
+//     String pattern =
+//         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+//     RegExp regex = RegExp(pattern);
+//     return (!regex.hasMatch(value)) ? false : true;
+//   }
 
-      verify_deputy2_1.add(list[i]['verify_deputy2']);
-      reason_deputy2_1.add(list[i]['reason_deputy2']);
-      deputy2_date_1.add(list[i]['deputy2_date']);
+//   bool validateMobile(String value) {
+//     if (value.length != 10)
+//       return false;
+//     else
+//       return true;
+//   }
 
-      is_form_two1.add(list[i]['is_form_two']);
-      is_form3_1.add(list[i]['is_form3']);
+//   //-------------------------------------Shared-Preferences---------------------
+//   SharedPreferences? prefs;
+//   bool? newuser;
 
-      assigned_deputy1_by_id1.add(list[i]['assigned_deputy1_name']);
-      assigned_deputy2_by_id1.add(list[i]['assigned_deputy2_name']);
-      log_updated_by_use1.add(list[i]['log_updated_by_user']);
-      verify_forest1_1.add(list[i]['verify_forest1']);
-      field_status1.add(list[i]['status'].toString());
-    }
-  }
+//   get dropdownValue => null;
 
-//--end-Approve-------------------
-  //---------------------------Deemed-Approve-----------------------------
-  //----------------------
-  int allApplication2 = 0;
-  final List Ids2 = [];
-  final List sr2 = [];
-  final List App_no2 = [];
-  final List App_Name2 = [];
-  final List App_Date2 = [];
-  final List Current_status2 = [];
-  final List days_left_transit2 = [];
-  final List Approved_date2 = [];
-  final List Action2 = [];
-  final List Remark2 = [];
-  final List Remark_date2 = [];
-  final List Tp_status2 = [];
-  final List Tp_Issue_Date2 = [];
-  final List Tp_Number2 = [];
-  final List DeemedApproved2 = [];
+//   void getLogin() async {
+//     List userRange;
+//     List<String> URange = [];
+//     List distRange = [];
+//     List<String> Dist = [];
+//     List Range = [];
+//     prefs = await SharedPreferences.getInstance();
+//     setState(() {
+//       newuser = (prefs?.getBool('isLoggedIn') ?? true);
+//     });
+//     if (newuser == false) {
+//       const String url = '${ServerHelper.baseUrl}auth/NewLogin';
+//       Map data = {
+//         "email_or_phone": (prefs?.getString('LoginUser') ?? '').trim(),
+//         "password": (prefs?.getString('LoginPass') ?? '').trim(),
+//       };
 
-  final List reason_office2 = [];
-  final List reason_depty_ranger_office2 = [];
-  final List reason_range_officer2 = [];
-  final List disapproved_reason2 = [];
-  final List reason_division2 = [];
-  //------------
-  final List verify_office_date2 = [];
-  final List deputy_officer_date2 = [];
-  final List range_officer_date2 = [];
-  final List division_date2 = [];
+//       var body = json.encode(data);
 
-  final List other_State2 = [];
-  final List division2 = [];
+//       final response = await http.post(Uri.parse(url),
+//           headers: <String, String>{'Content-Type': 'application/json'},
+//           body: body);
 
-  //---------------------
-  void DeemedApp() async {
-    sr2.clear();
-    print("Deemed Application");
-    const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/DeemedApprovedList';
-    final response = await http.get(Uri.parse(url), headers: <String, String>{
-      'Content-Type': 'application/json',
-      'Authorization': "token $sessionToken"
-    });
-    Map<String, dynamic> responseJSON = json.decode(response.body);
+//       Map<String, dynamic> responseJson = json.decode(response.body);
+//       if (responseJson['status'] == "success") {
+//         setState(() {
+//           userId = responseJson['data']['id'];
 
-    List list = responseJSON["data"];
-    setState(() {
-      allApplication2 = list.length;
-    });
-    for (var i = 0; i < allApplication2; i++) {
-      sr2.add(i.toString());
-      Ids2.add(list[i]['id'].toString());
-      App_no2.add(list[i]['application_no']);
-      App_Name2.add(list[i]['name'].toString());
-      App_Date2.add(list[i]['created_date'].toString());
-      Current_status2.add(list[i]['application_status'].toString());
-      Approved_date2.add(list[i]['transit_pass_created_date'].toString());
-      Action2.add(list[i][''].toString());
-      Remark2.add(list[i]['reason_office']);
-      Remark_date2.add(list[i]['verify_office_date']);
-      Tp_Issue_Date2.add(list[i]['transit_pass_created_date']);
-      Tp_Number2.add(list[i]['transit_pass_id'].toString());
-      DeemedApproved2.add(list[i]['deemed_approval']);
+//           userName = responseJson['data']['name'];
+//           userEmail = responseJson["data"]["email"];
+//           sessionToken = responseJson['token'];
+//           ServerHelper.token = sessionToken;
+//           userGroup = responseJson['data']['user_group'][0];
+//           userMobile = responseJson["data"]["phone"];
+//           userAddress = responseJson["data"]["address"];
+//           userCato = responseJson["data"]["usr_category"];
+//           userProfile = responseJson["data"]["photo_proof_img"];
+//         });
+//         if (responseJson['data']['user_group'][0] == 'user') {
+//           Fluttertoast.showToast(
+//               msg: 'Welcome $userName',
+//               toastLength: Toast.LENGTH_SHORT,
+//               gravity: ToastGravity.BOTTOM,
+//               timeInSecForIosWeb: 1,
+//               backgroundColor: Colors.blue,
+//               textColor: Colors.white,
+//               fontSize: 18.0);
+//           Navigator.pushReplacement(
+//               context,
+//               PageRouteBuilder(
+//                   transitionDuration: const Duration(milliseconds: 250),
+//                   transitionsBuilder:
+//                       (context, animation, animationTime, child) {
+//                     return ScaleTransition(
+//                       alignment: Alignment.topCenter,
+//                       scale: animation,
+//                       child: child,
+//                     );
+//                   },
+//                   pageBuilder: (context, animation, animationTime) {
+//                     return HomePage(
+//                       userId: userId!,
+//                       userName: userName,
+//                       userEmail: userEmail,
+//                       userMobile: userMobile,
+//                       userAddress: userAddress,
+//                       userProfile: userProfile,
+//                       sessionToken: sessionToken,
+//                       userGroup: userGroup,
+//                       userCato: userCato,
+//                     );
+//                   }));
+//         } else if (responseJson['data']['user_group'][0]
+//                 .toString()
+//                 .toLowerCase() ==
+//             'division officer') {
+//           setState(() {
+//             userRange = responseJson['data']['range'];
+//             URange = List<String>.from(userRange);
+//           });
+//           Fluttertoast.showToast(
+//               msg: 'Welcome $userName',
+//               toastLength: Toast.LENGTH_SHORT,
+//               gravity: ToastGravity.CENTER,
+//               timeInSecForIosWeb: 4,
+//               backgroundColor: Colors.blue,
+//               textColor: Colors.white,
+//               fontSize: 18.0);
+//           Navigator.pushReplacement(
+//               context,
+//               PageRouteBuilder(
+//                   transitionDuration: const Duration(milliseconds: 250),
+//                   transitionsBuilder:
+//                       (context, animation, animationTime, child) {
+//                     return ScaleTransition(
+//                       alignment: Alignment.topCenter,
+//                       scale: animation,
+//                       child: child,
+//                     );
+//                   },
+//                   pageBuilder: (context, animation, animationTime) {
+//                     return DivisonDashBoard(
+//                       userId: userId,
+//                       userName: userName,
+//                       userEmail: userEmail,
+//                       sessionToken: sessionToken,
+//                       userGroup: userGroup,
+//                       // dropdownValue: dropdownValue,
+//                       userRange: URange,
+//                     );
+//                   }));
+//         } else if (responseJson['data']['user_group'][0]
+//                 .toString()
+//                 .toLowerCase() ==
+//             'state officer') {
+//           setState(() {
+//             distRange = responseJson['data']['division_range_list'];
 
-      reason_office2.add(list[i]['reason_office']);
-      reason_depty_ranger_office2.add(list[i]['reason_depty_ranger_office']);
-      reason_range_officer2.add(list[i]['reason_range_officer']);
-      disapproved_reason2.add(list[i]['disapproved_reason']);
-      verify_office_date2.add(list[i]['verify_office_date']);
-      deputy_officer_date2.add(list[i]['deputy_officer_date']);
-      range_officer_date2.add(list[i]['range_officer_date']);
+//             for (int i = 0; i < distRange.length; i++) {
+//               Dist.add(
+//                   responseJson['data']['division_range_list'][i]['division']);
+//               Range.add(
+//                   responseJson['data']['division_range_list'][i]['ranges']);
+//               // URange=List<String>.from(Range);
+//               for (int j = 0; j < Range[i].length; j++) {
+//                 URange.add(Range[i][j].toString());
+//               }
+//             }
+//             //D_Range=List<String>.from(Dist_Range);
+//           });
+//           Fluttertoast.showToast(
+//               msg: 'Welcome $userName',
+//               toastLength: Toast.LENGTH_SHORT,
+//               gravity: ToastGravity.BOTTOM,
+//               timeInSecForIosWeb: 4,
+//               backgroundColor: Colors.blue,
+//               textColor: Colors.white,
+//               fontSize: 18.0);
+//           Navigator.pushReplacement(
+//               context,
+//               PageRouteBuilder(
+//                   transitionDuration: const Duration(milliseconds: 250),
+//                   transitionsBuilder:
+//                       (context, animation, animationTime, child) {
+//                     return ScaleTransition(
+//                       alignment: Alignment.topCenter,
+//                       scale: animation,
+//                       child: child,
+//                     );
+//                   },
+//                   pageBuilder: (context, animation, animationTime) {
+//                     return SFDashboard(
+//                       Dist_Range: distRange ?? [],
+//                       userId: userId!,
+//                       userName: userName,
+//                       userEmail: userEmail,
+//                       sessionToken: sessionToken,
+//                       userGroup: userGroup,
+//                       dropdownValue: dropdownValue,
+//                       userMobile: userMobile,
+//                       userProfile: userProfile,
+//                       userAddress: userAddress,
+//                       Dist: Dist,
+//                       Range: URange,
+//                     );
+//                   }));
+//         } else if (responseJson['data']['user_group'][0]
+//                 .toString()
+//                 .toLowerCase() ==
+//             'field officer') {
+//           Fluttertoast.showToast(
+//               msg: 'Welcome $userName',
+//               toastLength: Toast.LENGTH_SHORT,
+//               gravity: ToastGravity.BOTTOM,
+//               timeInSecForIosWeb: 4,
+//               backgroundColor: Colors.blue,
+//               textColor: Colors.white,
+//               fontSize: 18.0);
+//           Navigator.pushReplacement(
+//               context,
+//               PageRouteBuilder(
+//                   transitionDuration: const Duration(milliseconds: 250),
+//                   transitionsBuilder:
+//                       (context, animation, animationTime, child) {
+//                     return ScaleTransition(
+//                       alignment: Alignment.topCenter,
+//                       scale: animation,
+//                       child: child,
+//                     );
+//                   },
+//                   pageBuilder: (context, animation, animationTime) {
+//                     return FieldOfficerDashboard(
+//                         userId: userId!,
+//                         userName: userName,
+//                         userEmail: userEmail,
+//                         sessionToken: sessionToken,
+//                         userGroup: userGroup,
+//                         dropdownValue: 'Field Officer',
+//                         userMobile: userMobile,
+//                         userProfile: userProfile,
+//                         userAddress: userAddress);
+//                   }));
+//         } else if (responseJson['data']['user_group'][0]
+//                 .toString()
+//                 .toLowerCase() ==
+//             'checkpost officer') {
+//           Fluttertoast.showToast(
+//               msg: 'Login Successful',
+//               toastLength: Toast.LENGTH_SHORT,
+//               gravity: ToastGravity.BOTTOM,
+//               timeInSecForIosWeb: 4,
+//               backgroundColor: Colors.green,
+//               textColor: Colors.white,
+//               fontSize: 18.0);
+//           Navigator.pushReplacement(
+//               context,
+//               PageRouteBuilder(
+//                   transitionDuration: const Duration(milliseconds: 250),
+//                   transitionsBuilder:
+//                       (context, animation, animationTime, child) {
+//                     return ScaleTransition(
+//                       alignment: Alignment.topCenter,
+//                       scale: animation,
+//                       child: child,
+//                     );
+//                   },
+//                   pageBuilder: (context, animation, animationTime) {
+//                     return checkPost(
+//                         userId: userId,
+//                         userName: userName,
+//                         userEmail: userEmail,
+//                         sessionToken: sessionToken,
+//                         userGroup: userGroup);
+//                   }));
+//         } else {
+//           if (userGroup == 'forest range officer') {
+//             Range = responseJson['data']['range'];
+//           }
+//           Fluttertoast.showToast(
+//               msg: 'Welcome $userName',
+//               toastLength: Toast.LENGTH_SHORT,
+//               gravity: ToastGravity.BOTTOM,
+//               timeInSecForIosWeb: 4,
+//               backgroundColor: Colors.blue,
+//               textColor: Colors.white,
+//               fontSize: 18.0);
+//           Navigator.pushReplacement(
+//               context,
+//               PageRouteBuilder(
+//                   transitionDuration: const Duration(milliseconds: 250),
+//                   transitionsBuilder:
+//                       (context, animation, animationTime, child) {
+//                     return ScaleTransition(
+//                       alignment: Alignment.topCenter,
+//                       scale: animation,
+//                       child: child,
+//                     );
+//                   },
+//                   pageBuilder: (context, animation, animationTime) {
+//                     return OfficerDashboard(
+//                       userId: userId!,
+//                       userName: userName,
+//                       userEmail: userEmail,
+//                       sessionToken: sessionToken,
+//                       userGroup: userGroup,
+//                       dropdownValue: dropdownValue ?? '',
+//                       Range: Range,
+//                       userMobile: userMobile,
+//                       userAddress: userAddress,
+//                     );
+//                   }));
+//         }
+//       } else {
+//         Navigator.push(
+//           context,
+//           MaterialPageRoute(builder: (_) => const login()),
+//         );
+//       }
+//     }
+//   }
 
-      division2.add(list[i]['division_officer']);
-      reason_division2.add(list[i]['reason_division_officer']);
-      division_date2.add(list[i]['division_officer_date']);
-      // Remark.add(list[i]['transit_pass_created_date']);
-      other_State2.add(list[i]['other_state']);
-    }
-  }
+//   @override
+//   void initState() {
+//     // TODO: implement initState
+//     super.initState();
+//     getLogin();
+//     // toHome();
+//   }
 
-  int allApplication3 = 0;
-  final List Ids3 = [];
-  final List sr3 = [];
-  final List App_no3 = [];
-  final List App_Name3 = [];
-  final List App_Date3 = [];
-  final List Current_status3 = [];
-  final List days_left_transit3 = [];
-  final List Approved_date3 = [];
-  final List Action3 = [];
-  final List Remark3 = [];
-  final List Remark_date3 = [];
-  final List Tp_status3 = [];
-  final List Tp_Issue_Date3 = [];
-  final List Tp_Number3 = [];
-  //--------------------
+//   //-----------------------------------End-Shared-Preferences-------------------
 
-  void NocForm() async {
-    sr3.clear();
-    const String url =
-        'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/GetOfficerTransitPasses/';
-    final response = await http.get(Uri.parse(url), headers: <String, String>{
-      'Content-Type': 'application/json',
-      'Authorization': "token $sessionToken"
-    });
-    Map<String, dynamic> responseJSON = json.decode(response.body);
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//         decoration: BoxDecoration(
+//           borderRadius: BorderRadius.circular(8.0),
+//           color: Colors.white,
+//           border: Border.all(color: Colors.red[600]!, width: 1.2),
+//           boxShadow: const [
+//             BoxShadow(
+//               color: Color.fromARGB(73, 0, 0, 0),
+//               blurRadius: 2.0,
+//               spreadRadius: 0.0,
+//               offset: Offset(2.0, 2.0), // shadow direction: bottom right
+//             )
+//           ],
+//         ),
+//         margin: const EdgeInsets.only(left: 15, right: 15, top: 15, bottom: 30),
+//         padding:
+//             const EdgeInsets.only(left: 15, right: 15, top: 50, bottom: 30),
+//         child: Column(children: <Widget>[
+//           TextField(
+//               controller: loginEmail,
+//               decoration: const InputDecoration(
+//                   border: OutlineInputBorder(
+//                     borderSide: BorderSide(width: 2),
+//                     borderRadius: BorderRadius.all(Radius.circular(8.0)),
+//                   ),
+//                   prefixIcon: Icon(Icons.email_outlined),
+//                   hintText: 'Enter E-mail/Mobile',
+//                   labelText: "E-mail/Mobile",
+//                   hintStyle: TextStyle(
+//                     fontFamily: 'Cairo',
+//                     fontStyle: FontStyle.normal,
+//                   ))),
+//           const SizedBox(
+//             height: 10,
+//           ),
+//           TextField(
+//             controller: loginPassword,
+//             decoration: InputDecoration(
+//                 border: const OutlineInputBorder(
+//                   borderSide: BorderSide(width: 2),
+//                   borderRadius: BorderRadius.all(Radius.circular(8.0)),
+//                 ),
+//                 prefixIcon: const Icon(Icons.vpn_key_outlined),
+//                 suffixIcon: InkWell(
+//                   onTap: () {
+//                     setState(() {
+//                       isHiddenPassword = !isHiddenPassword;
+//                     });
+//                   },
+//                   child: const Icon(
+//                     Icons.visibility,
+//                   ),
+//                 ),
+//                 hintText: 'Enter Password',
+//                 labelText: "Password",
+//                 hintStyle: const TextStyle(
+//                   fontFamily: 'Cairo',
+//                   fontStyle: FontStyle.normal,
+//                 )),
+//             obscureText: isHiddenPassword,
+//             // obscuringCharacter: '*',
+//           ),
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.end,
+//             children: [
+//               TextButton(
+//                   onPressed: () {
+//                     Navigator.push(
+//                         context,
+//                         MaterialPageRoute(
+//                             builder: (_) => const forgetPassword()));
+//                   },
+//                   child: Text(
+//                     'Forget Password',
+//                     textAlign: TextAlign.left,
+//                     style: TextStyle(
+//                       fontFamily: 'Cairo',
+//                       fontStyle: FontStyle.normal,
+//                       color: Colors.blue[700],
+//                       fontSize: 16,
+//                     ),
+//                   )),
+//             ],
+//           ),
+//           Center(
+//             child: Row(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 Container(
+//                   margin: const EdgeInsets.only(top: 10.0, bottom: 0.0),
+//                   height: 50,
+//                   width: 120,
+//                   decoration: BoxDecoration(
+//                       color: Colors.yellow[700],
+//                       borderRadius: BorderRadius.circular(8)),
+//                   child: TextButton(
+//                       // color: Colors.amber,
+//                       child: const Text(
+//                         'Login',
+//                         style: TextStyle(
+//                           fontFamily: 'Cairo',
+//                           fontStyle: FontStyle.normal,
+//                           fontSize: 20,
+//                           color: Colors.black,
+//                         ),
+//                       ),
+//                       onPressed: () async {
+//                         if ((loginEmail.text.isEmpty) ||
+//                             (loginPassword.text.isEmpty)) {
+//                           Fluttertoast.showToast(
+//                               msg:
+//                                   "Either User Name or password field is empty",
+//                               toastLength: Toast.LENGTH_SHORT,
+//                               gravity: ToastGravity.CENTER,
+//                               timeInSecForIosWeb: 1,
+//                               backgroundColor: Colors.red,
+//                               textColor: Colors.white,
+//                               fontSize: 18.0);
+//                         } else {
+//                           print("----login----");
+//                           const String url =
+//                               '${ServerHelper.baseUrl}auth/NewLogin';
+//                           Map data = {
+//                             "email_or_phone": loginEmail.text.trim(),
+//                             "password": loginPassword.text.trim()
+//                           };
 
-    List list = responseJSON["transits"];
-    setState(() {
-      allApplication3 = list.length;
-    });
-    for (var i = 0; i < allApplication3; i++) {
-      sr3.add(i.toString());
-      Ids3.add(list[i]['app_form'].toString());
-      App_no3.add(list[i]['transit_number']);
-      App_Name3.add(list[i]['name'].toString());
-      App_Date3.add(list[i]['transit_req_date'].toString());
-      Current_status3.add(list[i]['transit_status'].toString());
-      days_left_transit3.add(list[i]['application_status'].toString());
-      Approved_date3.add(list[i]['verify_office_date'].toString());
-      Action3.add(list[i][''].toString());
-      Remark3.add(list[i]['reason_office'].toString());
-      Remark_date3.add(list[i]['range_officer_date'].toString());
-      Tp_Issue_Date3.add(list[i]['transit_pass_created_date'].toString());
-      Tp_Number3.add(list[i]['transit_pass_created_date'].toString());
-      // Remark.add(list[i]['transit_pass_created_date']);
-    }
-  }
+//                           var body = json.encode(data);
 
-  //-----------------------End-Noc-Form-----------------------------------
-  //---------------End---Table-----------------
-  int _radioValue = 0;
-  bool flag = true;
-  var tab = 0;
-  @override
-  void _handleRadioValueChange(int value) async {
-    pie_chart();
-    setState(() {
-      _radioValue = value;
-      if (_radioValue == 0) {
-        setState(() {
-          tab = 0;
-          flag = true;
-          pie_chart();
-        });
-      } else if (_radioValue == 1) {
-        setState(() {
-          tab = 1;
-          flag = false;
-          PendingApp();
-        });
-      } else if (_radioValue == 2) {
-        setState(() {
-          tab = 2;
-          ApprovedApp();
-        });
-      } else if (_radioValue == 3) {
-        setState(() {
-          tab = 3;
-          DeemedApp();
-        });
-      } else if (_radioValue == 4) {
-        setState(() {
-          tab = 4;
-          NocForm();
-        });
-      }
-    });
-  }
+//                           final response = await http.post(Uri.parse(url),
+//                               headers: <String, String>{
+//                                 'Content-Type': 'application/json'
+//                               },
+//                               body: body);
 
-  String OfficerRemark(String AppStatus, String disapproved, String division,
-      String forest, String deputy, String revenue) {
-    if (AppStatus == 'R') {
-      return disapproved;
-    } else if (division.isNotEmpty) {
-      return division;
-    } else if (forest.isNotEmpty) {
-      return forest;
-    } else if (deputy.isNotEmpty) {
-      return deputy;
-    } else if (revenue.isNotEmpty) {
-      return revenue;
-    } else {
-      return "N/A";
-    }
-  }
+//                           Map<String, dynamic> responseJson =
+//                               json.decode(response.body);
+//                           print("----------------------login----------------");
 
-  String OfficerDate(String AppStatus, dynamic disapproved, dynamic division,
-      dynamic forest, dynamic deputy, dynamic revenue) {
-    if (AppStatus == 'R') {
-      return disapproved != null ? disapproved.toString() : "N/A";
-    } else if (division != null) {
-      return division.toString();
-    } else if (forest != null) {
-      return forest.toString();
-    } else if (deputy != null) {
-      return deputy.toString();
-    } else if (revenue != null) {
-      return revenue.toString();
-    } else {
-      return "N/A";
-    }
-  }
+//                           if (responseJson['status'] == "success") {
+//                             setState(() {
+//                               userId = responseJson['data']['id'];
 
-  // Modify the OfficerStatus method to handle null values
-  String OfficerStatus(
-      String user, dynamic divisionNo, String rangeApprove, String status) {
-    if (user == "deputy range officer") {
-      if (status == "false") {
-        if (rangeApprove == "R") {
-          return "Rejected by range officer ";
-        } else if (rangeApprove == "A") {
-          return "Approved by range officer,\n deputy officer field varification pending";
-        } else if (rangeApprove == "P") {
-          return "deputy officer field varification pending";
-        } else {
-          return "";
-        }
-      } else {
-        return "Recommended by Deputy Range Officer,\n Range Officer Recommendation pending";
-      }
-    } else if (user == "forest range officer") {
-      if (status == "false") {
-        if (rangeApprove == "R") {
-          return "Rejected by range officer ";
-        } else if (divisionNo != null) {
-          return "Approved by range officer,\n deputy officer field varification pending";
-        } else if (rangeApprove == "A") {
-          return "Approved by range officer";
-        } else if (rangeApprove == "P") {
-          return "Range officer Recomendation \n pending";
-        } else {
-          return "";
-        }
-      } else {
-        return "field varification pending";
-      }
-    } else {
-      return "";
-    }
-  }
+//                               userName = responseJson['data']['name'];
+//                               userEmail = responseJson["data"]["email"];
+//                               userMobile = responseJson["data"]["phone"];
+//                               userAddress = responseJson["data"]["address"];
+//                               sessionToken = responseJson["token"];
+//                               ServerHelper.token = sessionToken;
+//                               userProfile =
+//                                   responseJson["data"]["photo_proof_img"];
+//                               userGroup = responseJson['data']['user_group'][0];
+//                               userCato = responseJson['data']['usr_category'];
+//                             });
+//                             if (responseJson['data']['user_group'][0] ==
+//                                 'user') {
+//                               prefs?.setString('LoginUser', loginEmail.text);
+//                               prefs?.setString('LoginPass', loginPassword.text);
+//                               prefs?.setBool('isLoggedIn', false);
+//                               Fluttertoast.showToast(
+//                                   msg: 'Login Sucessfully',
+//                                   toastLength: Toast.LENGTH_SHORT,
+//                                   gravity: ToastGravity.CENTER,
+//                                   timeInSecForIosWeb: 1,
+//                                   backgroundColor: Colors.green,
+//                                   textColor: Colors.white,
+//                                   fontSize: 18.0);
+//                               Navigator.pushReplacement(
+//                                   context,
+//                                   PageRouteBuilder(
+//                                       transitionDuration:
+//                                           const Duration(milliseconds: 250),
+//                                       transitionsBuilder: (context, animation,
+//                                           animationTime, child) {
+//                                         return ScaleTransition(
+//                                           alignment: Alignment.topCenter,
+//                                           scale: animation,
+//                                           child: child,
+//                                         );
+//                                       },
+//                                       pageBuilder:
+//                                           (context, animation, animationTime) {
+//                                         return HomePage(
+//                                           userId: userId!,
+//                                           userName: userName,
+//                                           userEmail: userEmail,
+//                                           userMobile: userMobile,
+//                                           userAddress: userAddress,
+//                                           userProfile: userProfile,
+//                                           sessionToken: sessionToken,
+//                                           userGroup: userGroup,
+//                                           userCato: userCato,
+//                                         );
+//                                       }));
+//                             } else {
+//                               Navigator.pushReplacement(
+//                                   context,
+//                                   MaterialPageRoute(
+//                                       builder: (_) => const login()));
+//                               Fluttertoast.showToast(
+//                                   msg: 'Go to Officer Login',
+//                                   toastLength: Toast.LENGTH_SHORT,
+//                                   gravity: ToastGravity.CENTER,
+//                                   timeInSecForIosWeb: 1,
+//                                   backgroundColor: Colors.red,
+//                                   textColor: Colors.white,
+//                                   fontSize: 18.0);
+//                               loginEmail.clear();
+//                               loginPassword.clear();
+//                             }
+//                           } else {
+//                             Navigator.pushReplacement(
+//                                 context,
+//                                 MaterialPageRoute(
+//                                     builder: (_) => const login()));
+//                             Fluttertoast.showToast(
+//                                 msg: 'Invalid credentials',
+//                                 toastLength: Toast.LENGTH_SHORT,
+//                                 gravity: ToastGravity.CENTER,
+//                                 timeInSecForIosWeb: 1,
+//                                 backgroundColor: Colors.red,
+//                                 textColor: Colors.white,
+//                                 fontSize: 18.0);
+//                           }
+//                         }
+//                       }),
+//                 ),
+//                 const SizedBox(
+//                   width: 10,
+//                 ),
+//                 Container(
+//                   margin: const EdgeInsets.only(top: 10.0, bottom: 0.0),
+//                   height: 50,
+//                   width: 120,
+//                   decoration: BoxDecoration(
+//                       color: Colors.green[700],
+//                       borderRadius: BorderRadius.circular(8)),
+//                   child: TextButton(
+//                     child: const Text(
+//                       'Sign Up',
+//                       style: TextStyle(
+//                         fontFamily: 'Cairo',
+//                         fontStyle: FontStyle.normal,
+//                         fontSize: 20,
+//                         color: Colors.white,
+//                       ),
+//                     ),
+//                     onPressed: () {
+//                       Navigator.push(
+//                         context,
+//                         MaterialPageRoute(builder: (_) => const signup()),
+//                       );
+//                     },
+//                   ),
+//                 )
+//               ],
+//             ),
+//           ),
+//           const SizedBox(
+//             height: 10,
+//           ),
+//           //  TextButton(
+//           //     onPressed: () {
+//           //       Navigator.push(
+//           //           context, MaterialPageRoute(builder: (_) => const signup()));
+//           //     },
+//           //     child: RichText(
+//           //       textAlign: TextAlign.center,
+//           //       text: TextSpan(children: <TextSpan>[
+//           //         const TextSpan(
+//           //             text: "New User ? ",
+//           //             style: TextStyle(
+//           //               color: Colors.black,
+//           //               fontFamily: 'Cairo',
+//           //             )),
+//           //         TextSpan(
+//           //             text: "Sign Up",
+//           //             style: TextStyle(
+//           //                 color: Colors.blue[700],
+//           //                 fontFamily: 'Cairo',
+//           //                 fontSize: 16,
+//           //                 fontWeight: FontWeight.bold)),
+//           //       ]),
+//           //     )),
+//         ]));
+//   }
+// }
+// //-------------------------------End--UserLogin---------------------------------
 
-  String AssignOfficer(bool isForm2, String? assign_deputy2,
-      String? assign_deputy1, bool? log_updated_by_user) {
-    if (isForm2 == true) {
-      if (assign_deputy2 != null) {
-        return assign_deputy2;
-      } else if (assign_deputy1 != null) {
-        if (log_updated_by_user == true) {
-          return 'Yet to Assign for Stage 2';
-        } else {
-          return assign_deputy1;
-        }
-      } else {
-        return 'Yet to Assign for Stage 1';
-      }
-    }
-    return 'N/A';
-  }
+// //-----------------------Officer--Login-----------------------------------------
 
-  bool getForm(bool isform, bool other_State, bool division_officer,
-      bool verify_range_officer, String App_status) {
-    bool can_apply3 = false;
-    if (App_status == 'A') {
-      return can_apply3;
-    }
-    if (isform == true) {
-      if (other_State == false) {
-        if (division_officer == true && App_status != 'P') {
-          can_apply3 = true;
-          return can_apply3;
-        } else {
-          return can_apply3;
-        }
-      } else {
-        if (verify_range_officer == true && App_status != 'P') {
-          can_apply3 = true;
-          return can_apply3;
-        } else {
-          return can_apply3;
-        }
-      }
-    }
-    return can_apply3;
-  }
+// class OfficerLogin extends StatefulWidget {
+//   const OfficerLogin({super.key});
 
-  int daysBetween(DateTime from) {
-    DateTime a = DateTime.now();
-    from = DateTime(from.year, from.month, from.day);
-    DateTime to = DateTime(a.year, a.month, a.day);
-    int b = 7 - (to.difference(from).inHours / 24).round();
-    if (b < 0) {
-      return 0;
-    } else {
-      return b;
-    }
-  }
+//   @override
+//   _OfficerState createState() => _OfficerState();
+// }
 
-  int _currentSortColumn = 0;
-  bool _isAscending = true;
-  Future<bool> _onBackPressed() async {
-    bool returnValue = false;
-    return await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Do you want to close the application?'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  returnValue = false; // User selects "NO"
-                  Navigator.of(context).pop(returnValue); // Close the dialog
-                },
-                child: const Text("NO"),
-              ),
-              TextButton(
-                onPressed: () {
-                  returnValue = true; // User selects "YES"
-                  Navigator.of(context).pop(returnValue); // Close the dialog
-                },
-                child: const Text("YES"),
-              ),
-            ],
-          ),
-        ) ??
-        false;
-  }
+// class _OfficerState extends State<OfficerLogin> {
+//   //-------------------------------------Shared-Preferences---------------------
+//   SharedPreferences? prefs;
+//   bool? newuser;
 
-  List<String> getLabels(String userGroup) {
-    if (userGroup == "forest range officer") {
-      return [
-        'Report',
-        'Pending',
-        'Approved/Rejected',
-        'Deemed Approved',
-        'Transit Approval'
-      ];
-    } else {
-      return ['Report', 'Pending', 'Approved/Rejected', 'Deemed Approved'];
-    }
-  }
+//   void getLogin() async {
+//     List userRange;
+//     List<String> URange = [];
+//     List distRange = [];
+//     List<String> Dist = [];
+//     List Range = [];
+//     prefs = await SharedPreferences.getInstance();
+//     setState(() {
+//       newuser = (prefs?.getBool('isLoggedIn') ?? true);
+//     });
+//     if (newuser == false) {
+//       const String url = 'http://www.gisfy.co.in:86/app/auth/NewLogin';
+//       Map data = {
+//         "email_or_phone": prefs?.getString('LoginUser') ?? '',
+//         "password": prefs?.getString('LoginPass') ?? '',
+//       };
 
-  List<List<Color>> getActiveBgColors(String userGroup) {
-    if (userGroup == "forest range officer") {
-      return [
-        [Colors.blueAccent],
-        [Colors.orange],
-        [Colors.green],
-        [Colors.cyan],
-        [Colors.blue]
-      ];
-    } else {
-      return [
-        [Colors.blueAccent],
-        [Colors.orange],
-        [Colors.green],
-        [Colors.cyan]
-      ];
-    }
-  }
+//       var body = json.encode(data);
 
-  @override
-  Widget build(BuildContext context) {
-    print("USERGROUP " + userGroup);
-    return WillPopScope(
-      onWillPop: _onBackPressed,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: const Text(" Officer Dashboard"),
+//       final response = await http.post(Uri.parse(url),
+//           headers: <String, String>{'Content-Type': 'application/json'},
+//           body: body);
 
-          //backgroundColor: Colors.blueGrey,
-          elevation: 0,
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              Container(
-                margin: const EdgeInsets.only(top: 8, bottom: 8),
-                child: ToggleSwitch(
-                  minWidth: MediaQuery.of(context).size.width,
-                  initialLabelIndex: _radioValue,
-                  cornerRadius: 8.0,
-                  activeFgColor: Colors.white,
-                  inactiveBgColor: Colors.grey[200],
-                  inactiveFgColor: Colors.blue,
-                  labels: getLabels(userGroup),
-                  activeBgColors: getActiveBgColors(userGroup),
-                  onToggle: (index) => _handleRadioValueChange(index!),
-                ),
-              ),
-              LayoutBuilder(builder: (context, constraints) {
-                if (tab == 0) {
-                  print("USERGROUP " + userGroup);
-                  return Container(
-                      width: MediaQuery.of(context).size.width,
-                      //height:  MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.blue,
-                            blurRadius: 2.0,
-                            spreadRadius: 1.0,
-                            // offset: Offset(2.0, 2.0),
-                            // shadow direction: bottom right
-                          )
-                        ],
-                      ),
-                      margin: const EdgeInsets.only(
-                          left: 5, right: 5, top: 2, bottom: 10),
-                      padding: const EdgeInsets.only(
-                          left: 2, right: 2, top: 2, bottom: 2),
-                      child: Column(
-                        children: <Widget>[
-                          PieChart(
-                            dataMap: {
-                              "Approved": Approved,
-                              "Rejected": Rejected,
-                              "Pending": Pending
-                            },
-                            animationDuration: Duration(milliseconds: 800),
-                            chartLegendSpacing: 20,
-                            chartRadius:
-                                MediaQuery.of(context).size.width * 0.50,
-                            initialAngleInDegree: 0,
-                            chartType: ChartType.disc,
-                            colorList: [Colors.blue, Colors.red, Colors.orange],
-                            ringStrokeWidth: MediaQuery.of(context).size.width,
-                            centerText: "",
-                            legendOptions: LegendOptions(
-                              showLegendsInRow: false,
-                              legendPosition: LegendPosition.left,
-                              showLegends: true,
-                              legendTextStyle: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            chartValuesOptions: ChartValuesOptions(
-                              showChartValueBackground: true,
-                              showChartValues: true,
-                              showChartValuesInPercentage: false,
-                              showChartValuesOutside: false,
-                              decimalPlaces: 1,
-                            ),
-                          ),
-                          // TextButton.icon(
-                          //   icon: Icon(Icons.file_download),
-                          //   onPressed: () async {
-                          //     await launch(
-                          //         "https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/summary_report/");
-                          //   },
-                          //   label: Text("Download"),
-                          // ),
-                        ],
-                      ));
-                } else if (tab == 1) {
-                  return Container(
-                      height: MediaQuery.of(context).size.height * 0.79,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.deepOrangeAccent,
-                            blurRadius: 2.0,
-                            spreadRadius: 1.0,
-                            //offset: Offset(2.0, 2.0), // shadow direction: bottom right
-                          )
-                        ],
-                      ),
-                      margin: const EdgeInsets.only(
-                          left: 5, right: 5, top: 2, bottom: 10),
-                      padding: const EdgeInsets.only(
-                          left: 2, right: 2, top: 2, bottom: 2),
-                      child: Scrollbar(
-                          thumbVisibility: true,
-                          thickness: 15,
-                          child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.only(bottom: 15),
-                              child: Scrollbar(
-                                thumbVisibility: true,
-                                thickness: 15,
-                                child: SingleChildScrollView(
-                                  scrollDirection: Axis.vertical,
-                                  child: DataTable(
-                                    columnSpacing: 20,
-                                    dividerThickness: 2,
-                                    headingRowColor:
-                                        MaterialStateColor.resolveWith(
-                                            (states) => Colors.orange),
-                                    columns: [
-                                      DataColumn(
-                                        label: Text(
-                                          'S.No',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white),
-                                        ),
-                                      ),
-                                      DataColumn(
-                                          label: Text(
-                                        'Application\n       No',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      )),
-                                      DataColumn(
-                                          label: Text(
-                                        'Application\n      Name',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      )),
-                                      DataColumn(
-                                          label: Text(
-                                        'Application\n      Date',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      )),
-                                      DataColumn(
-                                          label: Text(
-                                        'Current Status',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      )),
-                                      DataColumn(
-                                          label: Text(
-                                        'Deputy Officer \n Assignment status',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      )),
-                                      DataColumn(
-                                          label: Text(
-                                        'Notified / Non-Notified\n     Villages',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      )),
-                                      DataColumn(
-                                          label: Text(
-                                        'Days  left\nfor Approval',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      )),
-                                      DataColumn(
-                                          label: Text(
-                                        'Approval\n    Date',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      )),
-                                      DataColumn(
-                                          label: Text(
-                                        'Action',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      )),
-                                      DataColumn(
-                                          label: Text(
-                                        'Download\n      Tp',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      )),
-                                      DataColumn(
-                                          label: Text(
-                                        'Download\n Report',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      )),
-                                      DataColumn(
-                                          label: Text(
-                                        'QR Code',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      )),
-                                      DataColumn(
-                                          label: Text(
-                                        'Remark',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      )),
-                                      DataColumn(
-                                          label: Text(
-                                        'Remark\n  Date',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      )),
-                                      DataColumn(
-                                          label: Text(
-                                        'Location',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      )),
-                                    ],
-                                    rows:
-                                        sr // Loops through dataColumnText, each iteration assigning the value to element
-                                            .map(
-                                              ((value) => DataRow(
-                                                    cells: <DataCell>[
-                                                      DataCell((Text((int.parse(
-                                                                  value) +
-                                                              1)
-                                                          .toString()))), //Extracting from Map element the value
-                                                      DataCell(Text(App_no[
-                                                              int.parse(value)]
-                                                          .toString())),
-                                                      DataCell(Text(App_Name[
-                                                              int.parse(value)]
-                                                          .toString())),
-                                                      DataCell(Text(App_Date[
-                                                              int.parse(value)]
-                                                          .toString())),
-                                                      DataCell(Text(OfficerStatus(
-                                                          userGroup,
-                                                          division[
-                                                              int.parse(value)],
-                                                          verify_range_officer[
-                                                              int.parse(value)],
-                                                          field_status[
-                                                                  int.parse(
-                                                                      value)]
-                                                              .toString()))),
-                                                      DataCell(Text(AssignOfficer(
-                                                          is_form_two[int.parse(
-                                                                  value)] ??
-                                                              false,
-                                                          assigned_deputy2_by_id[
-                                                              int.parse(value)],
-                                                          assigned_deputy1_by_id[
-                                                              int.parse(value)],
-                                                          log_updated_by_use[
-                                                              int.parse(
-                                                                  value)]))),
-                                                      DataCell(Text(is_form_two[
-                                                                  int.parse(
-                                                                      value)] ==
-                                                              true
-                                                          ? "Notified"
-                                                          : "Non-Notified")),
-                                                      DataCell(Text(Tp_Number[
-                                                                      int.parse(
-                                                                          value)]
-                                                                  .toString() ==
-                                                              '0'
-                                                          ? "N/A"
-                                                          : daysBetween(DateTime.parse(
-                                                                  Tp_Issue_Date[
-                                                                          int.parse(
-                                                                              value)]
-                                                                      .toString()))
-                                                              .toString())),
-                                                      DataCell(Text((Tp_Number[
-                                                                      int.parse(
-                                                                          value)]
-                                                                  .toString() ==
-                                                              '0'
-                                                          ? "N/A"
-                                                          : Approved_date[int.parse(
-                                                                      value)] !=
-                                                                  null
-                                                              ? Approved_date[
-                                                                      int.parse(
-                                                                          value)]
-                                                                  .toString()
-                                                              : "N/A"))),
-                                                      DataCell(
-                                                        new Visibility(
-                                                          visible: true,
-                                                          child: IconButton(
-                                                            icon: new Icon(Icons
-                                                                .visibility),
-                                                            color: Colors.blue,
-                                                            onPressed: () {
-                                                              if (userGroup ==
-                                                                  userGroup) {
-                                                                String IDS = Ids[
-                                                                        int.parse(
-                                                                            value)]
-                                                                    .toString();
-                                                                Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                        builder: (_) => ViewApplication(
-                                                                            sessionToken:
-                                                                                sessionToken,
-                                                                            userGroup:
-                                                                                userGroup,
-                                                                            userId:
-                                                                                userId,
-                                                                            Ids:
-                                                                                IDS,
-                                                                            Range:
-                                                                                Range,
-                                                                            userName:
-                                                                                userName,
-                                                                            userEmail:
-                                                                                userEmail)));
-                                                              }
-                                                            },
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      DataCell(
-                                                        new Visibility(
-                                                          visible: (Current_status[
-                                                                          int.parse(
-                                                                              value)]
-                                                                      .toString() ==
-                                                                  'A')
-                                                              ? true
-                                                              : false,
-                                                          child: IconButton(
-                                                            icon: new Icon(Icons
-                                                                .file_download),
-                                                            color: Colors.blue,
-                                                            onPressed:
-                                                                () async {
-                                                              await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_transit_pass_pdf/" +
-                                                                  replaceSlashesWithDashes(
-                                                                      App_no[int
-                                                                          .parse(
-                                                                              value)]) +
-                                                                  "/");
-                                                              // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-                                                            },
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      DataCell(
-                                                        IconButton(
-                                                          icon: new Icon(Icons
-                                                              .file_download),
-                                                          color: Colors.blue,
-                                                          onPressed: () async {
-                                                            await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_user_report/" +
-                                                                replaceSlashesWithDashes(
-                                                                    App_no[int
-                                                                        .parse(
-                                                                            value)]) +
-                                                                "/");
-                                                            // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-                                                          },
-                                                        ),
-                                                      ),
+//       Map<String, dynamic> responseJson = json.decode(response.body);
+//       if (responseJson['status'] == "success") {
+//         setState(() {
+//           userId = responseJson['data']['id'];
 
-                                                      DataCell(
-                                                        new Visibility(
-                                                          visible: (Current_status[
-                                                                          int.parse(
-                                                                              value)]
-                                                                      .toString() ==
-                                                                  'A')
-                                                              ? true
-                                                              : false,
-                                                          child: IconButton(
-                                                            icon: new Icon(Icons
-                                                                .qr_code_outlined),
-                                                            color: Colors.blue,
-                                                            onPressed:
-                                                                () async {
-                                                              await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/qr_code_pdf/" +
-                                                                  replaceSlashesWithDashes(
-                                                                      App_no[int
-                                                                          .parse(
-                                                                              value)]) +
-                                                                  "/");
-                                                              // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-                                                            },
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      DataCell(Text(OfficerRemark(
-                                                              Current_status[
-                                                                  int.parse(
-                                                                      value)],
-                                                              disapproved_reason[
-                                                                  int.parse(
-                                                                      value)],
-                                                              reason_division[
-                                                                  int.parse(
-                                                                      value)],
-                                                              reason_range_officer[
-                                                                  int.parse(
-                                                                      value)],
-                                                              reason_depty_ranger_office[
-                                                                  int.parse(
-                                                                      value)],
-                                                              reason_office[
-                                                                  int.parse(
-                                                                      value)])
-                                                          .toString())),
-                                                      DataCell(Text(OfficerDate(
-                                                              Current_status[
-                                                                  int.parse(
-                                                                      value)],
-                                                              verify_office_date[
-                                                                  int.parse(
-                                                                      value)],
-                                                              division_date[
-                                                                  int.parse(
-                                                                      value)],
-                                                              range_officer_date[
-                                                                  int.parse(
-                                                                      value)],
-                                                              deputy_officer_date[
-                                                                  int.parse(
-                                                                      value)],
-                                                              verify_office_date[
-                                                                  int.parse(
-                                                                      value)])
-                                                          .toString())),
-                                                      DataCell(
-                                                        Visibility(
-                                                          child: IconButton(
-                                                            icon: new Icon(Icons
-                                                                .location_on_rounded),
-                                                            color: Colors.blue,
-                                                            onPressed:
-                                                                () async {
-                                                              await launch("https://f4020lwv-8000.inc1.devtunnels.ms//app/location_views/" +
-                                                                  replaceSlashesWithDashes(
-                                                                      App_no[int
-                                                                          .parse(
-                                                                              value)]) +
-                                                                  "/");
-                                                              // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-                                                            },
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  )),
-                                            )
-                                            .toList(),
-                                  ),
-                                ),
-                              ))));
-                } else if (tab == 2) {
-                  return Container(
-                      height: MediaQuery.of(context).size.height * 0.79,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.green,
-                            blurRadius: 2.0,
-                            spreadRadius: 1.0,
-                          )
-                        ],
-                      ),
-                      margin: const EdgeInsets.only(
-                          left: 5, right: 5, top: 2, bottom: 10),
-                      padding: const EdgeInsets.only(
-                          left: 2, right: 2, top: 2, bottom: 2),
-                      child: Scrollbar(
-                          thumbVisibility: true,
-                          thickness: 15,
-                          child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.only(bottom: 15),
-                              child: Scrollbar(
-                                  thumbVisibility: true,
-                                  thickness: 15,
-                                  child: SingleChildScrollView(
-                                      scrollDirection: Axis.vertical,
-                                      child: DataTable(
-                                        columnSpacing: 30,
-                                        dividerThickness: 2,
-                                        headingRowColor:
-                                            MaterialStateColor.resolveWith(
-                                                (states) => Colors.green),
-                                        columns: [
-                                          DataColumn(
-                                            label: Text(
-                                              'S.No',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white),
-                                            ),
-                                          ),
-                                          DataColumn(
-                                            label: Text(
-                                              'Application\n       No',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white),
-                                            ),
-                                          ),
-                                          DataColumn(
-                                              label: Text(
-                                            'Application\n     Name',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )),
-                                          DataColumn(
-                                              label: Text(
-                                            'Application\n      Date',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )),
-                                          DataColumn(
-                                              label: Text(
-                                            'Current Status',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )),
-                                          // DataColumn(
-                                          //     label: Text(
-                                          //   'Deputy Officer \n Assignment status',
-                                          //   style: TextStyle(
-                                          //       fontWeight: FontWeight.bold,
-                                          //       color: Colors.white),
-                                          // )),
-                                          DataColumn(
-                                              label: Text(
-                                            'Notified / Non-Notified\n     Villages',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )),
-                                          DataColumn(
-                                              label: Text(
-                                            'Approved\n     Date',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )),
-                                          DataColumn(
-                                              label: Text(
-                                            'Action',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )),
-                                          DataColumn(
-                                              label: Text(
-                                            'Download\n       Tp',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )),
-                                          DataColumn(
-                                              label: Text(
-                                            'Download\n  Report',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )),
-                                          DataColumn(
-                                              label: Text(
-                                            'QR Code',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )),
-                                          DataColumn(
-                                              label: Text(
-                                            'Remark',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )),
-                                          DataColumn(
-                                              label: Text(
-                                            'Remark\n  Date',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )),
-                                          DataColumn(
-                                              label: Text(
-                                            'Location',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )),
-                                          // DataColumn(
-                                          //     label: Visibility(
-                                          //         visible: userGroup ==
-                                          //                 'forest range officer'
-                                          //             ? true
-                                          //             : false,
-                                          //         child: Text(
-                                          //           'FORM - III',
-                                          //           style: TextStyle(
-                                          //               fontWeight:
-                                          //                   FontWeight.bold,
-                                          //               color: Colors.white),
-                                          //         ))),
-                                        ],
-                                        rows:
-                                            sr1 // Loops through dataColumnText, each iteration assigning the value to element
-                                                .map(
-                                                  ((value) => DataRow(
-                                                        cells: <DataCell>[
-                                                          DataCell((Text(
-                                                              (int.parse(value) +
-                                                                      1)
-                                                                  .toString()))),
-                                                          DataCell(Text(App_no1[
-                                                                  int.parse(
-                                                                      value)]
-                                                              .toString())),
-                                                          DataCell(Text(
-                                                              App_Name1[
-                                                                      int.parse(
-                                                                          value)]
-                                                                  .toString())),
-                                                          DataCell(Text(
-                                                              App_Date1[
-                                                                      int.parse(
-                                                                          value)]
-                                                                  .toString())),
-                                                          DataCell(Text(OfficerStatus(
-                                                              userGroup,
-                                                              division1[
-                                                                  int.parse(
-                                                                      value)],
-                                                              verify_range_officer1[
-                                                                  int.parse(
-                                                                      value)],
-                                                              field_status1[
-                                                                      int.parse(
-                                                                          value)]
-                                                                  .toString()))),
-                                                          // DataCell(Text(AssignOfficer(
-                                                          //         is_form_two1[
-                                                          //             int.parse(
-                                                          //                 value)],
-                                                          //         assigned_deputy2_by_id1[
-                                                          //             int.parse(
-                                                          //                 value)],
-                                                          //         assigned_deputy1_by_id1[
-                                                          //             int.parse(
-                                                          //                 value)],
-                                                          //         log_updated_by_use1[
-                                                          //             int.parse(
-                                                          //                 value)]) ??
-                                                          //     "N/A")),
-                                                          DataCell(Text(is_form_two1[
-                                                                      int.parse(
-                                                                          value)] ==
-                                                                  true
-                                                              ? "   Notified  "
-                                                              : "  Non-Notified  ")),
-                                                          DataCell(Text(Tp_Number1[
-                                                                          int.parse(
-                                                                              value)]
-                                                                      .toString()
-                                                                      .length ==
-                                                                  '0'
-                                                              ? "N/A"
-                                                              : Approved_date1[int.parse(
-                                                                              value)]
-                                                                          .toString() !=
-                                                                      'null'
-                                                                  ? Approved_date1[
-                                                                          int.parse(
-                                                                              value)]
-                                                                      .toString()
-                                                                  : "N/A")),
-                                                          DataCell(
-                                                            new Visibility(
-                                                              // visible: (Current_status1[int.parse(value)].toString()=='A')?true:false,
-                                                              visible: true,
-                                                              child: IconButton(
-                                                                icon: new Icon(Icons
-                                                                    .visibility),
-                                                                color:
-                                                                    Colors.blue,
-                                                                onPressed: () {
-                                                                  if (userGroup ==
-                                                                      userGroup) {
-                                                                    String IDS =
-                                                                        Ids1[int.parse(value)]
-                                                                            .toString();
-                                                                    Navigator.push(
-                                                                        context,
-                                                                        MaterialPageRoute(
-                                                                            builder: (_) => ViewApplication(
-                                                                                sessionToken: sessionToken,
-                                                                                userGroup: userGroup,
-                                                                                userId: userId,
-                                                                                Ids: IDS,
-                                                                                Range: Range,
-                                                                                userName: userName,
-                                                                                userEmail: userEmail)));
-                                                                  }
-                                                                },
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          DataCell(
-                                                            new Visibility(
-                                                              visible: (Current_status1[
-                                                                              int.parse(value)]
-                                                                          .toString() ==
-                                                                      'A')
-                                                                  ? true
-                                                                  : false,
-                                                              child: IconButton(
-                                                                icon: new Icon(Icons
-                                                                    .file_download),
-                                                                color:
-                                                                    Colors.blue,
-                                                                onPressed:
-                                                                    () async {
-                                                                  await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_transit_pass_pdf/" +
-                                                                      replaceSlashesWithDashes(
-                                                                          App_no1[
-                                                                              int.parse(value)]) +
-                                                                      "/");
-                                                                  // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-                                                                },
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          DataCell(
-                                                            IconButton(
-                                                              icon: new Icon(Icons
-                                                                  .file_download),
-                                                              color:
-                                                                  Colors.blue,
-                                                              onPressed:
-                                                                  () async {
-                                                                await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_user_report/" +
-                                                                    replaceSlashesWithDashes(
-                                                                        App_no1[
-                                                                            int.parse(value)]) +
-                                                                    "/");
-                                                                // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-                                                              },
-                                                            ),
-                                                          ),
-                                                          DataCell(
-                                                            new Visibility(
-                                                              visible: (Current_status1[
-                                                                              int.parse(value)]
-                                                                          .toString() ==
-                                                                      'A')
-                                                                  ? true
-                                                                  : false,
-                                                              child: IconButton(
-                                                                icon: new Icon(Icons
-                                                                    .qr_code_outlined),
-                                                                color:
-                                                                    Colors.blue,
-                                                                onPressed:
-                                                                    () async {
-                                                                  await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/qr_code_pdf/" +
-                                                                      replaceSlashesWithDashes(
-                                                                          App_no1[
-                                                                              int.parse(value)]) +
-                                                                      "/");
-                                                                  // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-                                                                },
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          DataCell(Text(OfficerRemark(
-                                                                  Current_status1[
-                                                                          int.parse(
-                                                                              value)]
-                                                                      .toString(),
-                                                                  disapproved_reason1[
-                                                                          int.parse(
-                                                                              value)]
-                                                                      .toString(),
-                                                                  reason_division1[
-                                                                      int.parse(
-                                                                          value)],
-                                                                  reason_range_officer1[
-                                                                      int.parse(
-                                                                          value)],
-                                                                  reason_depty_ranger_office1[
-                                                                      int.parse(
-                                                                          value)],
-                                                                  reason_office1[
-                                                                      int.parse(
-                                                                          value)])
-                                                              .toString())),
-                                                          DataCell(Text(OfficerDate(
-                                                                  Current_status1[
-                                                                      int.parse(
-                                                                          value)],
-                                                                  verify_office_date1[
-                                                                      int.parse(
-                                                                          value)],
-                                                                  division_date1[
-                                                                      int.parse(
-                                                                          value)],
-                                                                  range_officer_date1[
-                                                                      int.parse(
-                                                                          value)],
-                                                                  deputy_officer_date1[
-                                                                      int.parse(
-                                                                          value)],
-                                                                  verify_office_date1[
-                                                                      int.parse(
-                                                                          value)])
-                                                              .toString())),
-                                                          DataCell(
-                                                            Visibility(
-                                                              child: IconButton(
-                                                                icon: new Icon(Icons
-                                                                    .location_on_rounded),
-                                                                color:
-                                                                    Colors.blue,
-                                                                onPressed:
-                                                                    () async {
-                                                                  await launch("https://f4020lwv-8000.inc1.devtunnels.ms//app/location_views/" +
-                                                                      replaceSlashesWithDashes(
-                                                                          App_no1[
-                                                                              int.parse(value)]) +
-                                                                      "/");
-                                                                  // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-                                                                },
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          // DataCell(
-                                                          //   new Visibility(
-                                                          //     visible: (getForm(
-                                                          //                     is_form_two1[int.parse(
-                                                          //                         value)],
-                                                          //                     other_State1[int.parse(
-                                                          //                         value)],
-                                                          //                     division1[int.parse(
-                                                          //                         value)],
-                                                          //                     verify_range_officer1[int.parse(
-                                                          //                         value)],
-                                                          //                     Current_status1[int.parse(
-                                                          //                         value)]) ==
-                                                          //                 false &&
-                                                          //             is_form3_1[int.parse(
-                                                          //                     value)] ==
-                                                          //                 false)
-                                                          //         ? true
-                                                          //         : false,
-                                                          //     child: IconButton(
-                                                          //       icon: new Icon(Icons
-                                                          //           .file_copy_outlined),
-                                                          //       color:
-                                                          //           Colors.blue,
-                                                          //       onPressed:
-                                                          //           () async {
-                                                          //         print("form 3");
-                                                          //         print(getForm(
-                                                          //             is_form3_1[
-                                                          //                 int.parse(
-                                                          //                     value)],
-                                                          //             other_State1[
-                                                          //                 int.parse(
-                                                          //                     value)],
-                                                          //             division1[int
-                                                          //                 .parse(
-                                                          //                     value)],
-                                                          //             verify_range_officer1[
-                                                          //                 int.parse(
-                                                          //                     value)],
-                                                          //             Current_status1[
-                                                          //                 int.parse(
-                                                          //                     value)]));
-                                                          //         Navigator.push(
-                                                          //             context,
-                                                          //             MaterialPageRoute(
-                                                          //                 builder: (_) =>
-                                                          //                     Form3Page1(
-                                                          //                       sessionToken: sessionToken,
-                                                          //                       Ids1: Ids1[int.parse(value)].toString(),
-                                                          //                     )));
-                                                          //         // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-                                                          //       },
-                                                          //     ),
-                                                          //   ),
-                                                          // ),
-                                                        ],
-                                                      )),
-                                                )
-                                                .toList(),
-                                      ))))));
-                } else if (tab == 3) {
-                  return Container(
-                      height: MediaQuery.of(context).size.height * 0.79,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.cyan,
-                            blurRadius: 2.0,
-                            spreadRadius: 1.0,
-                            // offset: Offset(2.0, 2.0), // shadow direction: bottom right
-                          )
-                        ],
-                      ),
-                      margin: const EdgeInsets.only(
-                          left: 5, right: 5, top: 2, bottom: 10),
-                      padding: const EdgeInsets.only(
-                          left: 2, right: 2, top: 2, bottom: 2),
-                      child: Scrollbar(
-                          thumbVisibility: true,
-                          thickness: 15,
-                          child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.only(bottom: 15),
-                              child: Scrollbar(
-                                  thumbVisibility: true,
-                                  thickness: 15,
-                                  child: SingleChildScrollView(
-                                      scrollDirection: Axis.vertical,
-                                      child: DataTable(
-                                        sortColumnIndex: _currentSortColumn,
-                                        sortAscending: _isAscending,
-                                        columnSpacing: 20,
-                                        dividerThickness: 2,
-                                        headingRowColor:
-                                            MaterialStateColor.resolveWith(
-                                                (states) => Colors.cyan),
-                                        columns: [
-                                          DataColumn(
-                                            label: Text(
-                                              'S.No',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white),
-                                            ),
-                                          ),
-                                          DataColumn(
-                                              label: Text(
-                                            'Application\n       No',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )),
-                                          DataColumn(
-                                              label: Text(
-                                            'Application\n      Name',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )),
-                                          DataColumn(
-                                              label: Text(
-                                            'Application\n      Date',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )),
-                                          DataColumn(
-                                              label: Text(
-                                            'Current Status',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )),
-                                          DataColumn(
-                                              label: Text(
-                                            'Approved\n    Date',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )),
-                                          DataColumn(
-                                              label: Text(
-                                            'Action',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )),
-                                          DataColumn(
-                                              label: Text(
-                                            'Download\n      Tp',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )),
-                                          DataColumn(
-                                              label: Text(
-                                            'Download\n Report',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )),
-                                          DataColumn(
-                                              label: Text(
-                                            'QR Code',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )),
-                                          DataColumn(
-                                              label: Text(
-                                            'Remark',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )),
-                                          DataColumn(
-                                              label: Text(
-                                            'Remark\n  Date',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )),
-                                        ],
-                                        rows:
-                                            sr2 // Loops through dataColumnText, each iteration assigning the value to element
-                                                .map(
-                                                  ((value) => DataRow(
-                                                        cells: <DataCell>[
-                                                          DataCell((Text((int
-                                                                      .parse(
-                                                                          value) +
-                                                                  1)
-                                                              .toString()))), //Extracting from Map element the value
-                                                          DataCell(Text(App_no2[
-                                                                  int.parse(
-                                                                      value)]
-                                                              .toString())),
-                                                          DataCell(Text(
-                                                              App_Name2[
-                                                                      int.parse(
-                                                                          value)]
-                                                                  .toString())),
-                                                          DataCell(Text(
-                                                              App_Date2[
-                                                                      int.parse(
-                                                                          value)]
-                                                                  .toString())),
-                                                          DataCell(Text(DeemedApproved2[
-                                                                      int.parse(
-                                                                          value)] ==
-                                                                  true
-                                                              ? "Deemed Approved"
-                                                              : '')),
-                                                          DataCell(Text(
-                                                              Approved_date2[
-                                                                      int.parse(
-                                                                          value)]
-                                                                  .toString())),
-                                                          DataCell(
-                                                            new Visibility(
-                                                              // visible: (Current_status[int.parse(value)].toString()=='A')?true:false,
-                                                              child: IconButton(
-                                                                icon: new Icon(Icons
-                                                                    .visibility),
-                                                                color:
-                                                                    Colors.blue,
-                                                                onPressed: () {
-                                                                  if (userGroup ==
-                                                                      userGroup) {
-                                                                    String IDS =
-                                                                        Ids2[int.parse(value)]
-                                                                            .toString();
-                                                                    Navigator.push(
-                                                                        context,
-                                                                        MaterialPageRoute(
-                                                                            builder: (_) => ViewApplication(
-                                                                                  sessionToken: sessionToken,
-                                                                                  userGroup: userGroup,
-                                                                                  userId: userId,
-                                                                                  Ids: IDS,
-                                                                                  userName: userName,
-                                                                                  userEmail: userEmail,
-                                                                                  Range: [],
-                                                                                )));
-                                                                  }
-                                                                },
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          DataCell(
-                                                            new Visibility(
-                                                              visible: (Current_status2[
-                                                                              int.parse(value)]
-                                                                          .toString() ==
-                                                                      'A')
-                                                                  ? true
-                                                                  : false,
-                                                              child: IconButton(
-                                                                icon: new Icon(Icons
-                                                                    .file_download),
-                                                                color:
-                                                                    Colors.blue,
-                                                                onPressed:
-                                                                    () async {
-                                                                  await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_transit_pass_pdf/" +
-                                                                      replaceSlashesWithDashes(
-                                                                          App_no2[
-                                                                              int.parse(value)]) +
-                                                                      "/");
-                                                                  // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-                                                                },
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          DataCell(
-                                                            IconButton(
-                                                              icon: new Icon(Icons
-                                                                  .file_download),
-                                                              color:
-                                                                  Colors.blue,
-                                                              onPressed:
-                                                                  () async {
-                                                                await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_user_report/" +
-                                                                    replaceSlashesWithDashes(
-                                                                        App_no2[
-                                                                            int.parse(value)]) +
-                                                                    "/");
-                                                                // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-                                                              },
-                                                            ),
-                                                          ),
-                                                          DataCell(
-                                                            new Visibility(
-                                                              visible: (Current_status2[
-                                                                              int.parse(value)]
-                                                                          .toString() ==
-                                                                      'A')
-                                                                  ? true
-                                                                  : false,
-                                                              child: IconButton(
-                                                                icon: new Icon(Icons
-                                                                    .qr_code_outlined),
-                                                                color:
-                                                                    Colors.blue,
-                                                                onPressed:
-                                                                    () async {
-                                                                  await launch("https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/qr_code_pdf/" +
-                                                                      replaceSlashesWithDashes(
-                                                                          App_no2[
-                                                                              int.parse(value)]) +
-                                                                      "/");
-                                                                  // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-                                                                },
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          DataCell(Text(OfficerRemark(
-                                                              Current_status2[
-                                                                      int.parse(
-                                                                          value)]
-                                                                  .toString(),
-                                                              disapproved_reason2[
-                                                                      int.parse(
-                                                                          value)]
-                                                                  .toString(),
-                                                              reason_division2[
-                                                                  int.parse(
-                                                                      value)],
-                                                              reason_range_officer2[
-                                                                  int.parse(
-                                                                      value)],
-                                                              reason_depty_ranger_office2[
-                                                                  int.parse(
-                                                                      value)],
-                                                              reason_office2[
-                                                                  int.parse(
-                                                                      value)]))),
-                                                          DataCell(Text(OfficerDate(
-                                                              Current_status2[
-                                                                  int.parse(
-                                                                      value)],
-                                                              verify_office_date2[
-                                                                  int.parse(
-                                                                      value)],
-                                                              division_date2[
-                                                                  int.parse(
-                                                                      value)],
-                                                              range_officer_date2[
-                                                                  int.parse(
-                                                                      value)],
-                                                              deputy_officer_date2[
-                                                                  int.parse(
-                                                                      value)],
-                                                              verify_office_date2[
-                                                                  int.parse(
-                                                                      value)]))),
-                                                        ],
-                                                      )),
-                                                )
-                                                .toList(),
-                                      ))))));
-                } else if (tab == 4) {
-                  if (userGroup == "forest range officer") {
-                    return Container(
-                        height: MediaQuery.of(context).size.height * 0.79,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.blue,
-                              blurRadius: 2.0,
-                              spreadRadius: 1.0,
-                              //  offset: Offset(2.0, 2.0), // shadow direction: bottom right
-                            )
-                          ],
-                        ),
-                        margin: const EdgeInsets.only(
-                            left: 5, right: 5, top: 2, bottom: 10),
-                        padding: const EdgeInsets.only(
-                            left: 2, right: 2, top: 2, bottom: 2),
-                        child: Scrollbar(
-                            thumbVisibility: true,
-                            thickness: 15,
-                            child: SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                padding: const EdgeInsets.only(bottom: 15),
-                                child: Scrollbar(
-                                    thumbVisibility: true,
-                                    thickness: 15,
-                                    child: SingleChildScrollView(
-                                        scrollDirection: Axis.vertical,
-                                        child: DataTable(
-                                          sortColumnIndex: _currentSortColumn,
-                                          sortAscending: _isAscending,
-                                          columnSpacing: 20,
-                                          dividerThickness: 2,
-                                          headingRowColor:
-                                              MaterialStateColor.resolveWith(
-                                                  (states) => Colors.blue),
-                                          columns: [
-                                            DataColumn(
-                                              label: Text(
-                                                'S.No',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white),
-                                              ),
-                                            ),
-                                            DataColumn(
-                                                label: Text(
-                                              'Application \n   No',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white),
-                                            )),
-                                            // DataColumn(
-                                            //     label: Text(
-                                            //   'Application \n   Name',
-                                            //   style: TextStyle(
-                                            //       fontWeight: FontWeight.bold,
-                                            //       color: Colors.white),
-                                            // )),
-                                            DataColumn(
-                                                label: Text(
-                                              'Application \n   Date',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white),
-                                            )),
-                                            //DataColumn(label: Text('Current\n   Status',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),)),
-                                            //DataColumn(label: Text('Days  left\nfor Approved',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),)),
-                                            // DataColumn(label: Text('Approved\n    Date',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),)),
-                                            DataColumn(
-                                                label: Text(
-                                              ' Action ',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white),
-                                            )),
-                                            DataColumn(
-                                                label: Text(
-                                              ' Location ',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white),
-                                            )),
-                                            //DataColumn(label: Text('Download\n Report',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),)),
-                                            //DataColumn(label: Text('QR Code',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),)),
-                                            //DataColumn(label: Text('Remark',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),)),
-                                            // DataColumn(label: Text('Remark\n  Date',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),)),
-                                          ],
-                                          rows:
-                                              sr3 // Loops through dataColumnText, each iteration assigning the value to element
-                                                  .map(
-                                                    ((value) => DataRow(
-                                                          cells: <DataCell>[
-                                                            DataCell((Text((int
-                                                                        .parse(
-                                                                            value) +
-                                                                    1)
-                                                                .toString()))), //Extracting from Map element the value
-                                                            DataCell(Text(App_no3[
-                                                                    int.parse(
-                                                                        value)]
-                                                                .toString())),
-                                                            // DataCell(Text(App_Name3[
-                                                            //         int.parse(
-                                                            //             value)]
-                                                            //     .toString())),
-                                                            DataCell(Text(App_Date3[
-                                                                    int.parse(
-                                                                        value)]
-                                                                .toString())),
-                                                            //DataCell(Text(Current_status3[int.parse(value)].toString()=='S'?"Submitted":Current_status3[int.parse(value)].toString()=='P'?"Pending":"Rejected")),
-                                                            // DataCell(Text(days_left_transit3[int.parse(value)].toString()==6?"Not Generated":"Not Generated")),
-                                                            // DataCell(Text((Approved_date3[int.parse(value)].toString()=='true')?Approved_date3[int.parse(value)].toString():"N/A",)),
-                                                            DataCell(
-                                                              IconButton(
-                                                                icon: new Icon(Icons
-                                                                    .visibility),
-                                                                color:
-                                                                    Colors.blue,
-                                                                onPressed: () {
-                                                                  if (userGroup ==
-                                                                      'forest range officer') {
-                                                                    String IDS =
-                                                                        Ids3[int.parse(value)]
-                                                                            .toString();
-                                                                    Navigator.push(
-                                                                        context,
-                                                                        MaterialPageRoute(
-                                                                            builder: (_) => transitViewAndApprove(
-                                                                                  sessionToken: sessionToken,
-                                                                                  userGroup: userGroup,
-                                                                                  Ids: App_no3[int.parse(value)],
-                                                                                  userName: userName,
-                                                                                  userEmail: userEmail,
-                                                                                )));
-                                                                  } else {
-                                                                    Fluttertoast.showToast(
-                                                                        msg:
-                                                                            "Approval and Rejection handle by range officer",
-                                                                        toastLength:
-                                                                            Toast
-                                                                                .LENGTH_SHORT,
-                                                                        gravity:
-                                                                            ToastGravity
-                                                                                .CENTER,
-                                                                        timeInSecForIosWeb:
-                                                                            8,
-                                                                        backgroundColor:
-                                                                            Colors
-                                                                                .blue,
-                                                                        textColor:
-                                                                            Colors
-                                                                                .white,
-                                                                        fontSize:
-                                                                            18.0);
-                                                                  }
-                                                                },
-                                                              ),
-                                                            ),
-                                                            DataCell(
-                                                              Visibility(
-                                                                child:
-                                                                    IconButton(
-                                                                  icon: new Icon(
-                                                                      Icons
-                                                                          .location_on_rounded),
-                                                                  color: Colors
-                                                                      .blue,
-                                                                  onPressed:
-                                                                      () async {
-                                                                    await launch("https://f4020lwv-8000.inc1.devtunnels.ms//app/location_views/" +
-                                                                        replaceSlashesWithDashes(
-                                                                            App_no3[int.parse(value)]) +
-                                                                        "/");
-                                                                    // _requestDownload("http://www.orimi.com/pdf-test.pdf");
-                                                                  },
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            // DataCell(
-                                                            //   IconButton(
-                                                            //     icon: new Icon(Icons
-                                                            //         .file_download),
-                                                            //     color: Colors.blue,
-                                                            //     onPressed:
-                                                            //         () async {
-                                                            //       await launch(
-                                                            //           " https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/new_noc_pdf/" +
-                                                            //               Ids3[int.parse(
-                                                            //                   value)] +
-                                                            //               "/");
-                                                            //     },
-                                                            //   ),
-                                                            // ),
-                                                          ],
-                                                        )),
-                                                  )
-                                                  .toList(),
-                                        ))))));
-                  } else {
-                    return Container();
-                  }
-                }
-                return Container(); // Add this line
-              }),
-            ],
-          ),
-        ),
-        drawer: Container(
-          child: Drawer(
-            child: Container(
-              color: Colors.white,
-              child: ListView(
-                padding: EdgeInsets.all(0),
-                children: [
-                  UserAccountsDrawerHeader(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          colors: [HexColor("#26f596"), HexColor("#0499f2")]),
-                    ),
-                    accountEmail: Text('$userEmail'),
-                    accountName: Text("$userName"),
-                    currentAccountPicture: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      child: Text(
-                        userName[0].toUpperCase(),
-                        style: TextStyle(color: Colors.black, fontSize: 20),
-                      ),
-                    ),
-                  ),
-                  ListTile(
-                      leading: Icon(
-                        Icons.receipt_long_outlined,
-                        color: Colors.black,
-                        size: 25,
-                      ),
-                      title: Text(
-                        'Reports',
-                        style: TextStyle(color: Colors.black, fontSize: 20),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) =>
-                                    Reports(sessionToken: sessionToken)));
-                      }),
-                  ListTile(
-                      leading: Icon(
-                        Icons.dashboard,
-                        color: Colors.black,
-                        size: 25,
-                      ),
-                      title: Text(
-                        'Dashboard',
-                        style: TextStyle(color: Colors.black, fontSize: 20),
-                      ),
-                      onTap: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => OfficerDashboard(
-                                      sessionToken: sessionToken,
-                                      userName: userName,
-                                      userEmail: userEmail,
-                                      userGroup: userGroup,
-                                      userId: userId,
-                                      dropdownValue: dropdownValue,
-                                      Range: Range,
-                                    )));
-                      }),
-                  ListTile(
-                      leading: Icon(
-                        Icons.qr_code_scanner,
-                        color: Colors.black,
-                        size: 25,
-                      ),
-                      title: Text(
-                        'QR-Scanner',
-                        style: TextStyle(color: Colors.black, fontSize: 20),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => QueryPage(
-                                      userId: userId,
-                                      sessionToken: sessionToken,
-                                      userName: userName,
-                                      userEmail: userEmail,
-                                      userMobile: widget.userMobile,
-                                      userAddress: widget.userAddress,
-                                    )));
-                      }),
-                  ListTile(
-                      leading: Icon(
-                        Icons.logout,
-                        color: Colors.black,
-                        size: 25,
-                      ),
-                      title: Text(
-                        'Logout',
-                        style: TextStyle(color: Colors.black, fontSize: 20),
-                      ),
-                      onTap: () async {
-                        const String url =
-                            'https://f4020lwv-8000.inc1.devtunnels.ms//api/auth/logout/';
-                        await http.post(
-                          Uri.parse(url),
-                          headers: <String, String>{
-                            'Content-Type': 'application/json',
-                            'Authorization': "token $sessionToken"
-                          },
-                        );
-                        SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-                        prefs.remove('isLoggedIn');
-                        Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (_) => login()));
-                      }),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+//           userName = responseJson['data']['name'];
+//           userEmail = responseJson["data"]["email"];
+//           sessionToken = responseJson['token'];
+//           ServerHelper.token = sessionToken;
+//           userGroup = responseJson['data']['user_group'][0];
+//           userMobile = responseJson["data"]["phone"];
+//           userAddress = responseJson["data"]["address"];
+//           userProfile = responseJson["data"]["photo_proof_img"];
+//         });
+//         if (responseJson['data']['user_group'][0] == 'user') {
+//           Fluttertoast.showToast(
+//               msg: 'Login Sucessfully',
+//               toastLength: Toast.LENGTH_SHORT,
+//               gravity: ToastGravity.BOTTOM,
+//               timeInSecForIosWeb: 1,
+//               backgroundColor: Colors.green,
+//               textColor: Colors.white,
+//               fontSize: 18.0);
+//           Navigator.pushReplacement(
+//               context,
+//               PageRouteBuilder(
+//                   transitionDuration: const Duration(milliseconds: 250),
+//                   transitionsBuilder:
+//                       (context, animation, animationTime, child) {
+//                     return ScaleTransition(
+//                       alignment: Alignment.topCenter,
+//                       scale: animation,
+//                       child: child,
+//                     );
+//                   },
+//                   pageBuilder: (context, animation, animationTime) {
+//                     return HomePage(
+//                       userId: userId!,
+//                       userName: userName,
+//                       userEmail: userEmail,
+//                       userMobile: userMobile,
+//                       userAddress: userAddress,
+//                       userProfile: userProfile,
+//                       sessionToken: sessionToken,
+//                       userGroup: userGroup,
+//                       userCato: '',
+//                     );
+//                   }));
+//         } else if (responseJson['data']['user_group'][0]
+//                 .toString()
+//                 .toLowerCase() ==
+//             'division officer') {
+//           setState(() {
+//             userRange = responseJson['data']['range'];
+//             URange = List<String>.from(userRange);
+//           });
+//           Fluttertoast.showToast(
+//               msg: 'Login Successful',
+//               toastLength: Toast.LENGTH_SHORT,
+//               gravity: ToastGravity.BOTTOM,
+//               timeInSecForIosWeb: 4,
+//               backgroundColor: Colors.green,
+//               textColor: Colors.white,
+//               fontSize: 18.0);
+//           Navigator.pushReplacement(
+//               context,
+//               PageRouteBuilder(
+//                   transitionDuration: const Duration(milliseconds: 250),
+//                   transitionsBuilder:
+//                       (context, animation, animationTime, child) {
+//                     return ScaleTransition(
+//                       alignment: Alignment.topCenter,
+//                       scale: animation,
+//                       child: child,
+//                     );
+//                   },
+//                   pageBuilder: (context, animation, animationTime) {
+//                     return DivisonDashBoard(
+//                       userId: userId,
+//                       userName: userName,
+//                       userEmail: userEmail,
+//                       sessionToken: sessionToken,
+//                       userGroup: userGroup,
+//                       userRange: URange,
+//                     );
+//                   }));
+//         } else if (responseJson['data']['user_group'][0]
+//                 .toString()
+//                 .toLowerCase() ==
+//             'state officer') {
+//           setState(() {
+//             distRange = responseJson['data']['division_range_list'];
+//             print("----------------------------#%%%------");
+
+//             for (int i = 0; i < distRange.length; i++) {
+//               Dist.add(
+//                   responseJson['data']['division_range_list'][i]['division']);
+//               Range.add(
+//                   responseJson['data']['division_range_list'][i]['ranges']);
+//               // URange=List<String>.from(Range);
+//               for (int j = 0; j < Range[i].length; j++) {
+//                 URange.add(Range[i][j].toString());
+//               }
+
+//               //print(Range);
+//             }
+//             //D_Range=List<String>.from(Dist_Range);
+//           });
+//           Fluttertoast.showToast(
+//               msg: 'Login Successful',
+//               toastLength: Toast.LENGTH_SHORT,
+//               gravity: ToastGravity.BOTTOM,
+//               timeInSecForIosWeb: 4,
+//               backgroundColor: Colors.green,
+//               textColor: Colors.white,
+//               fontSize: 18.0);
+//           Navigator.pushReplacement(
+//               context,
+//               PageRouteBuilder(
+//                   transitionDuration: const Duration(milliseconds: 250),
+//                   transitionsBuilder:
+//                       (context, animation, animationTime, child) {
+//                     return ScaleTransition(
+//                       alignment: Alignment.topCenter,
+//                       scale: animation,
+//                       child: child,
+//                     );
+//                   },
+//                   pageBuilder: (context, animation, animationTime) {
+//                     return SFDashboard(
+//                       userId: userId!,
+//                       userName: userName,
+//                       userEmail: userEmail,
+//                       sessionToken: sessionToken,
+//                       userGroup: userGroup,
+//                       dropdownValue: dropdownValue!,
+//                       userMobile: userMobile,
+//                       userProfile: userProfile,
+//                       userAddress: userAddress,
+//                       Dist: Dist,
+//                       Range: URange,
+//                       Dist_Range: distRange ?? [],
+//                     );
+//                   }));
+//         } else if (responseJson['data']['user_group'][0]
+//                 .toString()
+//                 .toLowerCase() ==
+//             'field officer') {
+//           Fluttertoast.showToast(
+//               msg: 'Login Successful',
+//               toastLength: Toast.LENGTH_SHORT,
+//               gravity: ToastGravity.BOTTOM,
+//               timeInSecForIosWeb: 4,
+//               backgroundColor: Colors.green,
+//               textColor: Colors.white,
+//               fontSize: 18.0);
+//           Navigator.pushReplacement(
+//               context,
+//               PageRouteBuilder(
+//                   transitionDuration: const Duration(milliseconds: 250),
+//                   transitionsBuilder:
+//                       (context, animation, animationTime, child) {
+//                     return ScaleTransition(
+//                       alignment: Alignment.topCenter,
+//                       scale: animation,
+//                       child: child,
+//                     );
+//                   },
+//                   pageBuilder: (context, animation, animationTime) {
+//                     return FieldOfficerDashboard(
+//                         userId: userId!,
+//                         userName: userName,
+//                         userEmail: userEmail,
+//                         sessionToken: sessionToken,
+//                         userGroup: userGroup,
+//                         dropdownValue: dropdownValue!,
+//                         userMobile: userMobile,
+//                         userProfile: userProfile,
+//                         userAddress: userAddress);
+//                   }));
+//         } else if (responseJson['data']['user_group'][0]
+//                 .toString()
+//                 .toLowerCase() ==
+//             'checkpost officer') {
+//           Fluttertoast.showToast(
+//               msg: 'Login Successful',
+//               toastLength: Toast.LENGTH_SHORT,
+//               gravity: ToastGravity.BOTTOM,
+//               timeInSecForIosWeb: 4,
+//               backgroundColor: Colors.green,
+//               textColor: Colors.white,
+//               fontSize: 18.0);
+//           Navigator.pushReplacement(
+//               context,
+//               PageRouteBuilder(
+//                   transitionDuration: const Duration(milliseconds: 250),
+//                   transitionsBuilder:
+//                       (context, animation, animationTime, child) {
+//                     return ScaleTransition(
+//                       alignment: Alignment.topCenter,
+//                       scale: animation,
+//                       child: child,
+//                     );
+//                   },
+//                   pageBuilder: (context, animation, animationTime) {
+//                     return checkPost(
+//                         userId: userId,
+//                         userName: userName,
+//                         userEmail: userEmail,
+//                         sessionToken: sessionToken,
+//                         userGroup: userGroup);
+//                   }));
+//         } else {
+//           if (userGroup == 'forest range officer') {
+//             Range = responseJson['data']['range'];
+//           }
+//           Fluttertoast.showToast(
+//               msg: 'Login Successful',
+//               toastLength: Toast.LENGTH_SHORT,
+//               gravity: ToastGravity.BOTTOM,
+//               timeInSecForIosWeb: 4,
+//               backgroundColor: Colors.green,
+//               textColor: Colors.white,
+//               fontSize: 18.0);
+//           Navigator.pushReplacement(
+//               context,
+//               PageRouteBuilder(
+//                   transitionDuration: const Duration(milliseconds: 250),
+//                   transitionsBuilder:
+//                       (context, animation, animationTime, child) {
+//                     return ScaleTransition(
+//                       alignment: Alignment.topCenter,
+//                       scale: animation,
+//                       child: child,
+//                     );
+//                   },
+//                   pageBuilder: (context, animation, animationTime) {
+//                     return OfficerDashboard(
+//                       userId: userId!,
+//                       userName: userName,
+//                       userEmail: userEmail,
+//                       sessionToken: sessionToken,
+//                       userGroup: userGroup,
+//                       Range: Range,
+//                       dropdownValue: dropdownValue!,
+//                       userMobile: userMobile,
+//                       userAddress: userAddress,
+//                       //  userImage:userImage,
+//                     );
+//                   }));
+//         }
+//       } else {
+//         Navigator.push(
+//           context,
+//           MaterialPageRoute(builder: (_) => const login()),
+//         );
+//       }
+//     }
+//   }
+
+//   @override
+//   void initState() {
+//     // TODO: implement initState
+//     super.initState();
+//     getLogin();
+//     // check_if_already_login();
+//   }
+//   //-----------------------------------End-Shared-Preferences-------------------
+
+//   bool isHiddenPassword = true;
+
+//   String sessionToken = '';
+//   int? userId;
+//   String userName = '';
+//   String userEmail = '';
+//   String userGroup = '';
+//   String userMobile = '';
+//   String userAddress = '';
+//   String userProfile = '';
+//   List? userRange;
+//   List<String> URange = [];
+//   List? Dist_Range;
+//   List<String> Dist = [];
+//   List Range = [];
+//   TextEditingController loginMobile = TextEditingController();
+//   TextEditingController loginEmail = TextEditingController();
+//   TextEditingController loginPassword = TextEditingController();
+
+//   bool validateEmail(String value) {
+//     Pattern pattern =
+//         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+//     RegExp regex = RegExp(pattern.toString());
+//     return (!regex.hasMatch(value)) ? false : true;
+//   }
+
+//   String? dropdownValue;
+//   String? login_holder = '';
+//   List<String> Officer_login = [
+//     'Revenue Officer',
+//     'Deputy Range Officer',
+//     'Forest Range Officer',
+//     'Division Officer',
+//     'State Officer',
+//     'Field Officer',
+//     'checkpost officer'
+//   ];
+//   bool check = false;
+//   void getDropDownItem() {
+//     setState(() {
+//       login_holder = dropdownValue;
+//       if (login_holder != null) {
+//         check = true;
+//       } else {
+//         check = false;
+//       }
+//     });
+//   }
+
+//   //------------------Assign Officer--------------------------------
+
+//   //------------------End-Assign-Officer----------------------------
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//         decoration: BoxDecoration(
+//           borderRadius: BorderRadius.circular(12),
+//           color: Colors.white,
+//           border: Border.all(
+//             color: Colors.red[700]!,
+//             width: 1.2,
+//           ), //<---- Insert Gradient Here
+//           boxShadow: const [
+//             BoxShadow(
+//               color: Color.fromARGB(144, 0, 0, 0),
+//               blurRadius: 2.0,
+//               spreadRadius: 0.0,
+//               offset: Offset(2.0, 2.0), // shadow direction: bottom right
+//             )
+//           ],
+//         ),
+//         margin: const EdgeInsets.only(left: 15, right: 15, top: 15, bottom: 30),
+//         padding: const EdgeInsets.only(left: 15, right: 15, top: 45),
+//         child: Column(children: <Widget>[
+//           Container(
+//             margin: const EdgeInsets.only(top: 10, bottom: 10),
+//             decoration: BoxDecoration(
+//                 border: Border.all(
+//                   color: Colors.grey,
+//                   width: 1,
+//                 ),
+//                 borderRadius: BorderRadius.circular(8)),
+//             padding: const EdgeInsets.only(
+//                 left: 10.0, right: 10.0, top: 10, bottom: 0),
+//             child: DropdownButton<String>(
+//               value: dropdownValue,
+//               isExpanded: true,
+//               icon: const Icon(Icons.arrow_drop_down_circle_outlined),
+//               iconSize: 24,
+//               elevation: 0,
+//               style: const TextStyle(color: Colors.black, fontSize: 18),
+//               hint: const Text("Officer Login"),
+//               /*underline: Container(
+//                 height: 2,
+//                 color: Colors.grey,
+//               ),*/
+//               onChanged: (String? data) {
+//                 setState(() {
+//                   dropdownValue = data;
+//                   if (dropdownValue == data) {
+//                     check = true;
+//                   } else {
+//                     check = false;
+//                   }
+//                 });
+//               },
+//               items:
+//                   Officer_login.map<DropdownMenuItem<String>>((String value) {
+//                 return DropdownMenuItem<String>(
+//                   value: value,
+//                   child: Text(value),
+//                 );
+//               }).toList(),
+//             ),
+//           ),
+//           TextField(
+//               controller: loginEmail,
+//               decoration: const InputDecoration(
+//                   border: OutlineInputBorder(
+//                     borderSide: BorderSide(width: 2),
+//                     borderRadius: BorderRadius.all(Radius.circular(8.0)),
+//                   ),
+//                   prefixIcon: Icon(Icons.perm_identity_rounded),
+//                   hintText: 'Enter Email/Mobile',
+//                   labelText: "E-mail/Mobile",
+//                   hintStyle: TextStyle(
+//                     fontFamily: 'Cairo',
+//                     fontStyle: FontStyle.normal,
+//                   ))),
+//           const SizedBox(
+//             height: 10,
+//           ),
+//           TextField(
+//             controller: loginPassword,
+//             decoration: InputDecoration(
+//                 border: const OutlineInputBorder(
+//                   borderSide: BorderSide(width: 2),
+//                   borderRadius: BorderRadius.all(Radius.circular(8.0)),
+//                 ),
+//                 prefixIcon: const Icon(Icons.vpn_key_outlined),
+//                 suffixIcon: InkWell(
+//                   onTap: () {
+//                     setState(() {
+//                       isHiddenPassword = !isHiddenPassword;
+//                     });
+//                   },
+//                   child: const Icon(Icons.visibility),
+//                 ),
+//                 hintText: 'Enter Password',
+//                 labelText: "Password",
+//                 hintStyle: const TextStyle(
+//                   fontFamily: 'Cairo',
+//                   fontStyle: FontStyle.normal,
+//                 )),
+//             obscureText: isHiddenPassword,
+//             // obscuringCharacter: '',
+//           ),
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.end,
+//             children: [
+//               TextButton(
+//                   onPressed: () {
+//                     Navigator.push(
+//                         context,
+//                         MaterialPageRoute(
+//                             builder: (_) => const forgetPassword()));
+//                   },
+//                   child: Text(
+//                     'Change Password',
+//                     style: TextStyle(
+//                       fontFamily: 'Cairo',
+//                       fontStyle: FontStyle.normal,
+//                       color: Colors.blue[700],
+//                       fontSize: 16,
+//                     ),
+//                   )),
+//             ],
+//           ),
+//           const SizedBox(
+//             height: 10,
+//           ),
+//           Container(
+//             margin: const EdgeInsets.only(top: 10.0, bottom: 0.0),
+//             height: 50,
+//             width: double.infinity,
+//             decoration: BoxDecoration(
+//                 color: Colors.yellow[700],
+//                 borderRadius: BorderRadius.circular(8)),
+//             child: TextButton(
+//                 // color: Colors.amber,
+//                 child: const Text(
+//                   'Login',
+//                   style: TextStyle(
+//                     fontFamily: 'Cairo',
+//                     fontStyle: FontStyle.normal,
+//                     fontSize: 20,
+//                     color: Colors.black,
+//                   ),
+//                 ),
+//                 onPressed: () async {
+//                   if ((loginEmail.text.isEmpty) ||
+//                       (loginPassword.text.isEmpty)) {
+//                     Fluttertoast.showToast(
+//                         msg: "Either User Name or password field is empty",
+//                         toastLength: Toast.LENGTH_SHORT,
+//                         gravity: ToastGravity.CENTER,
+//                         timeInSecForIosWeb: 1,
+//                         backgroundColor: Colors.red,
+//                         textColor: Colors.white,
+//                         fontSize: 18.0);
+//                   } else if ((dropdownValue == null)) {
+//                     Fluttertoast.showToast(
+//                         msg: "Please Select Officer Login",
+//                         toastLength: Toast.LENGTH_SHORT,
+//                         gravity: ToastGravity.CENTER,
+//                         timeInSecForIosWeb: 1,
+//                         backgroundColor: Colors.red,
+//                         textColor: Colors.white,
+//                         fontSize: 18.0);
+//                   } else {
+//                     print("----login--");
+//                     const String url = '${ServerHelper.baseUrl}auth/NewLogin';
+//                     Map data = {
+//                       "email_or_phone": loginEmail.text,
+//                       "password": loginPassword.text
+//                     };
+//                     dynamic response;
+
+//                     var body = json.encode(data);
+//                     response = await http
+//                         .post(Uri.parse(url),
+//                             headers: {
+//                               "Content-Type": "application/json",
+//                             },
+//                             body: body)
+//                         .timeout(const Duration(seconds: 10));
+
+//                     // final response = await http.post(Uri.parse(url),
+//                     //     headers: {'Content-Type': 'application/json'},
+//                     //     body: body);
+
+//                     Map<String, dynamic> responseJson =
+//                         json.decode(response.body);
+//                     log("----------------------login----------------");
+//                     log(response.body);
+
+//                     if (responseJson['status'] == "success") {
+//                       log(responseJson['token'].toString());
+//                       setState(() {
+//                         userId = responseJson['data']['id'];
+//                         userName = responseJson['data']['name'];
+//                         userEmail = responseJson["data"]["email"];
+//                         sessionToken = responseJson['token'];
+//                         ServerHelper.token = sessionToken;
+//                         userGroup = responseJson['data']['user_group'][0];
+//                         // Make sure to handle the phone and address fields safely
+//                         userMobile =
+//                             responseJson["data"]["phone"]?.toString() ?? '';
+//                         userAddress =
+//                             responseJson["data"]["address"]?.toString() ?? '';
+//                         userProfile = responseJson["data"]["photo_proof_img"] ??
+//                             'no_photo';
+//                       });
+
+//                       // saveneeded() async {
+
+//                       // }
+
+//                       log(sessionToken.toString());
+//                       log(userMobile.toString());
+//                       log(userMobile.toString());
+//                       if (dropdownValue != null &&
+//                           responseJson['data']['user_group'][0]
+//                                   .toString()
+//                                   .toLowerCase() ==
+//                               dropdownValue!.toLowerCase()) {
+//                         if (responseJson['data']['user_group'][0]
+//                                 .toString()
+//                                 .toLowerCase() ==
+//                             'division officer') {
+//                           prefs?.setBool('isLoggedIn', false);
+//                           prefs?.setString('LoginUser', loginEmail.text);
+//                           prefs?.setString('LoginPass', loginPassword.text);
+//                           setState(() {
+//                             userRange = responseJson['data']['range'];
+//                             URange = List<String>.from(userRange ?? []);
+//                           });
+//                           Fluttertoast.showToast(
+//                               msg: 'Login Successful',
+//                               toastLength: Toast.LENGTH_SHORT,
+//                               gravity: ToastGravity.CENTER,
+//                               timeInSecForIosWeb: 4,
+//                               backgroundColor: Colors.green,
+//                               textColor: Colors.white,
+//                               fontSize: 18.0);
+//                           Navigator.pushReplacement(
+//                               context,
+//                               PageRouteBuilder(
+//                                   transitionDuration:
+//                                       const Duration(milliseconds: 250),
+//                                   transitionsBuilder: (context, animation,
+//                                       animationTime, child) {
+//                                     return ScaleTransition(
+//                                       alignment: Alignment.topCenter,
+//                                       scale: animation,
+//                                       child: child,
+//                                     );
+//                                   },
+//                                   pageBuilder:
+//                                       (context, animation, animationTime) {
+//                                     return DivisonDashBoard(
+//                                       userId: userId,
+//                                       userName: userName,
+//                                       userEmail: userEmail,
+//                                       sessionToken: sessionToken,
+//                                       userGroup: userGroup,
+//                                       dropdownValue: dropdownValue,
+//                                       userRange: URange,
+//                                     );
+//                                   }));
+//                         } else if (responseJson['data']['user_group'][0]
+//                                 .toString()
+//                                 .toLowerCase() ==
+//                             'state officer') {
+//                           prefs?.setBool('isLoggedIn', false);
+//                           prefs?.setString('LoginUser', loginEmail.text);
+//                           prefs?.setString('LoginPass', loginPassword.text);
+//                           setState(() {
+//                             Dist_Range =
+//                                 responseJson['data']['division_range_list'];
+
+//                             for (int i = 0; i < Dist_Range!.length; i++) {
+//                               Dist.add(responseJson['data']
+//                                   ['division_range_list'][i]['division']);
+//                               Range.add(responseJson['data']
+//                                   ['division_range_list'][i]['ranges']);
+//                               for (int j = 0; j < Range[i].length; j++) {
+//                                 URange.add(Range[i][j].toString());
+//                               }
+//                             }
+//                           });
+//                           Fluttertoast.showToast(
+//                               msg: 'Login Successful',
+//                               toastLength: Toast.LENGTH_SHORT,
+//                               gravity: ToastGravity.CENTER,
+//                               timeInSecForIosWeb: 4,
+//                               backgroundColor: Colors.green,
+//                               textColor: Colors.white,
+//                               fontSize: 18.0);
+//                           Navigator.pushReplacement(
+//                               context,
+//                               PageRouteBuilder(
+//                                   transitionDuration:
+//                                       const Duration(milliseconds: 250),
+//                                   transitionsBuilder: (context, animation,
+//                                       animationTime, child) {
+//                                     return ScaleTransition(
+//                                       alignment: Alignment.topCenter,
+//                                       scale: animation,
+//                                       child: child,
+//                                     );
+//                                   },
+//                                   pageBuilder:
+//                                       (context, animation, animationTime) {
+//                                     return SFDashboard(
+//                                       userId: userId!,
+//                                       userName: userName,
+//                                       userEmail: userEmail,
+//                                       sessionToken: sessionToken,
+//                                       userGroup: userGroup,
+//                                       dropdownValue: dropdownValue!,
+//                                       userMobile: userMobile,
+//                                       userProfile: userProfile,
+//                                       userAddress: userAddress,
+//                                       Dist: Dist,
+//                                       Range: URange,
+//                                       Dist_Range: Dist_Range ?? [],
+//                                     );
+//                                   }));
+//                         } else if (responseJson['data']['user_group'][0]
+//                                 .toString()
+//                                 .toLowerCase() ==
+//                             'field officer') {
+//                           prefs!.setBool('isLoggedIn', false);
+//                           prefs!.setString('LoginUser', loginEmail.text);
+//                           prefs!.setString('LoginPass', loginPassword.text);
+//                           Fluttertoast.showToast(
+//                               msg: 'Login Successful',
+//                               toastLength: Toast.LENGTH_SHORT,
+//                               gravity: ToastGravity.CENTER,
+//                               timeInSecForIosWeb: 4,
+//                               backgroundColor: Colors.green,
+//                               textColor: Colors.white,
+//                               fontSize: 18.0);
+//                           Navigator.pushReplacement(
+//                               context,
+//                               PageRouteBuilder(
+//                                   transitionDuration:
+//                                       const Duration(milliseconds: 250),
+//                                   transitionsBuilder: (context, animation,
+//                                       animationTime, child) {
+//                                     return ScaleTransition(
+//                                       alignment: Alignment.topCenter,
+//                                       scale: animation,
+//                                       child: child,
+//                                     );
+//                                   },
+//                                   pageBuilder:
+//                                       (context, animation, animationTime) {
+//                                     return FieldOfficerDashboard(
+//                                         userId: userId!,
+//                                         userName: userName,
+//                                         userEmail: userEmail,
+//                                         sessionToken: sessionToken,
+//                                         userGroup: userGroup,
+//                                         dropdownValue: dropdownValue!,
+//                                         userMobile: userMobile,
+//                                         userProfile: userProfile,
+//                                         userAddress: userAddress);
+//                                   }));
+//                         } else if (responseJson['data']['user_group'][0]
+//                                 .toString()
+//                                 .toLowerCase() ==
+//                             'checkpost officer') {
+//                           Fluttertoast.showToast(
+//                               msg: 'Login Successful',
+//                               toastLength: Toast.LENGTH_SHORT,
+//                               gravity: ToastGravity.BOTTOM,
+//                               timeInSecForIosWeb: 4,
+//                               backgroundColor: Colors.green,
+//                               textColor: Colors.white,
+//                               fontSize: 18.0);
+//                           Navigator.pushReplacement(
+//                               context,
+//                               PageRouteBuilder(
+//                                   transitionDuration:
+//                                       const Duration(milliseconds: 250),
+//                                   transitionsBuilder: (context, animation,
+//                                       animationTime, child) {
+//                                     return ScaleTransition(
+//                                       alignment: Alignment.topCenter,
+//                                       scale: animation,
+//                                       child: child,
+//                                     );
+//                                   },
+//                                   pageBuilder:
+//                                       (context, animation, animationTime) {
+//                                     return checkPost(
+//                                         userId: userId,
+//                                         userName: userName,
+//                                         userEmail: userEmail,
+//                                         sessionToken: sessionToken,
+//                                         userGroup: userGroup);
+//                                   }));
+//                         } else {
+//                           if (userGroup == 'forest range officer') {
+//                             Range = responseJson['data']['range'];
+//                           }
+//                           prefs!.setBool('isLoggedIn', false);
+//                           prefs!.setString('LoginUser', loginEmail.text);
+//                           prefs!.setString('LoginPass', loginPassword.text);
+//                           Fluttertoast.showToast(
+//                               msg: 'Login Successful',
+//                               toastLength: Toast.LENGTH_SHORT,
+//                               gravity: ToastGravity.CENTER,
+//                               timeInSecForIosWeb: 4,
+//                               backgroundColor: Colors.green,
+//                               textColor: Colors.white,
+//                               fontSize: 18.0);
+//                           Navigator.pushReplacement(
+//                               context,
+//                               PageRouteBuilder(
+//                                   transitionDuration:
+//                                       const Duration(milliseconds: 250),
+//                                   transitionsBuilder: (context, animation,
+//                                       animationTime, child) {
+//                                     return ScaleTransition(
+//                                       alignment: Alignment.topCenter,
+//                                       scale: animation,
+//                                       child: child,
+//                                     );
+//                                   },
+//                                   pageBuilder:
+//                                       (context, animation, animationTime) {
+//                                     return OfficerDashboard(
+//                                       userId: userId!,
+//                                       userName: userName,
+//                                       userEmail: userEmail,
+//                                       sessionToken: sessionToken,
+//                                       userGroup: userGroup,
+//                                       dropdownValue: dropdownValue!,
+//                                       Range: Range,
+//                                       userMobile: userMobile,
+//                                       userAddress: userAddress,
+//                                     );
+//                                   }));
+//                         }
+//                       }
+//                     } else {
+//                       Navigator.push(
+//                         context,
+//                         MaterialPageRoute(builder: (_) => const login()),
+//                       );
+//                       Fluttertoast.showToast(
+//                           msg: 'Invalid credentials',
+//                           toastLength: Toast.LENGTH_SHORT,
+//                           gravity: ToastGravity.CENTER,
+//                           timeInSecForIosWeb: 4,
+//                           backgroundColor: Colors.red,
+//                           textColor: Colors.white,
+//                           fontSize: 18.0);
+//                     }
+//                   }
+//                 }),
+//           ),
+//           const SizedBox(
+//             height: 10,
+//           ),
+//         ]));
+//   }
+// }
