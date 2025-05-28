@@ -822,7 +822,7 @@ class _ShimmerImage extends StatelessWidget {
             );
           },
           errorBuilder: (context, error, stackTrace) => Center(
-            child: Icon(Icons.broken_image, color: Colors.grey, size: 40),
+            child: Icon(Icons.image, color: Colors.red, size: 40),
           ),
         ),
       ],

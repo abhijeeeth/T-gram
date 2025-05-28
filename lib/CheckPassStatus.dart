@@ -123,8 +123,8 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
     }
 
     String url = notified == 'Yes'
-        ? '${ServerHelper.baseUrl}auth/generate_form_i_pdf/'
-        : '${ServerHelper.baseUrl}auth/generate_form_ii_pdf/';
+        ? '${ServerHelper.baseUrl}auth/generate_form_ii_pdf/'
+        : '${ServerHelper.baseUrl}auth/generate_form_i_pdf/';
 
     try {
       // Request storage permissions
@@ -411,6 +411,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
   final List user_Loc = [];
   final List recomend_Officer = [];
   final List field_status = [];
+  final List current_status_1 = [];
   //------------
   late Map<String, dynamic> responseJSON;
   int allApplication = 0;
@@ -448,6 +449,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
     user_Loc.clear();
     recomend_Officer.clear();
     field_status.clear();
+    current_status_1.clear();
     //-----clear------
 
     const String url = '${ServerHelper.baseUrl}auth/GetCuttingPasses';
@@ -468,7 +470,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
       Ids.add(list[i]['id']);
       App_no.add(list[i]['application_no']);
       App_Date.add(list[i]['created_date'].toString());
-      App_Status.add(list[i]['approved_by_r'].toString());
+      App_Status.add(list[i]['application_status'].toString());
       Current_status.add(list[i]['created_date'].toString());
       Tp_status.add(list[i]['application_status'].toString());
       Tp_Issue_Date.add(list[i]['transit_pass_created_date'].toString());
@@ -501,6 +503,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
       log_updated_by_use.add(list[i]['log_updated_by_user']);
       verify_forest1.add(list[i]['verify_forest1']);
       field_status.add(list[i]['status'].toString());
+      current_status_1.add(list[i]['current_app_status'].toString());
     }
   }
 
@@ -1049,43 +1052,43 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                             //       fontWeight: FontWeight.bold,
                                             //       color: Colors.white),
                                             // )),
-                                            DataColumn(
-                                                label: Text(
-                                              'TP Status',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white),
-                                            )),
-                                            DataColumn(
-                                                label: Text(
-                                              'TP Issuing\n      Date',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white),
-                                            )),
-                                            DataColumn(
-                                              label: Text(
-                                                'TP No',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white),
-                                              ),
-                                            ),
-                                            DataColumn(
-                                                label: Text(
-                                              'No.of days left\n   for Transit',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white),
-                                            )),
-                                            DataColumn(
-                                              label: Text(
-                                                'Remark',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white),
-                                              ),
-                                            ),
+                                            // DataColumn(
+                                            //     label: Text(
+                                            //   'TP Status',
+                                            //   style: TextStyle(
+                                            //       fontWeight: FontWeight.bold,
+                                            //       color: Colors.white),
+                                            // )),
+                                            // DataColumn(
+                                            //     label: Text(
+                                            //   'TP Issuing\n      Date',
+                                            //   style: TextStyle(
+                                            //       fontWeight: FontWeight.bold,
+                                            //       color: Colors.white),
+                                            // )),
+                                            // DataColumn(
+                                            //   label: Text(
+                                            //     'TP No',
+                                            //     style: TextStyle(
+                                            //         fontWeight: FontWeight.bold,
+                                            //         color: Colors.white),
+                                            //   ),
+                                            // ),
+                                            // DataColumn(
+                                            //     label: Text(
+                                            //   'No.of days left\n   for Transit',
+                                            //   style: TextStyle(
+                                            //       fontWeight: FontWeight.bold,
+                                            //       color: Colors.white),
+                                            // )),
+                                            // DataColumn(
+                                            //   label: Text(
+                                            //     'Remark',
+                                            //     style: TextStyle(
+                                            //         fontWeight: FontWeight.bold,
+                                            //         color: Colors.white),
+                                            //   ),
+                                            // ),
                                             DataColumn(
                                                 label: Text(
                                               'Notified / Non-Notified\n     Villages',
@@ -1095,7 +1098,7 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                             )),
                                             DataColumn(
                                                 label: Text(
-                                              'Download\n    TP',
+                                              'Download\n    CP',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.white),
@@ -1153,28 +1156,36 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                                             'R'
                                                                         ? "Rejected"
                                                                         : App_Status[int.parse(value)].toString() ==
-                                                                                'A'
-                                                                            ? "Accepted"
-                                                                            : "Pending")),
+                                                                                'RT'
+                                                                            ? "Returned"
+                                                                            : App_Status[int.parse(value)].toString() == 'A'
+                                                                                ? "Accepted"
+                                                                                : "Pending")),
                                                             DataCell(Text(
-                                                              OfficerStatus(
-                                                                userGroup,
-                                                                user_Loc[int.parse(
-                                                                        value)]
-                                                                    .toString(),
-                                                                recomend_Officer[
+                                                                current_status_1[
                                                                         int.parse(
                                                                             value)]
-                                                                    .toString(),
-                                                                division[int.parse(
-                                                                        value)]
-                                                                    .toString(),
-                                                                field_status[int
-                                                                        .parse(
-                                                                            value)]
-                                                                    .toString(),
-                                                              ),
-                                                            )),
+                                                                    .toString()
+
+                                                                // OfficerStatus(
+                                                                //   userGroup,
+                                                                //   user_Loc[int.parse(
+                                                                //           value)]
+                                                                //       .toString(),
+                                                                //   recomend_Officer[
+                                                                //           int.parse(
+                                                                //               value)]
+                                                                //       .toString(),
+                                                                //   division[int.parse(
+                                                                //           value)]
+                                                                //       .toString(),
+                                                                //   field_status[int
+                                                                //           .parse(
+                                                                //               value)]
+                                                                //       .toString(),
+                                                                // ),
+                                                                )),
+
                                                             // DataCell(Text(OfficerStatus(
                                                             //     division[int.parse(
                                                             //         value)],
@@ -1227,68 +1238,69 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                             //                 int.parse(
                                                             //                     value)])
                                                             //         .toString())),
-                                                            DataCell(Text(Tp_status[int.parse(
-                                                                            value)]
-                                                                        .toString() ==
-                                                                    'A'
-                                                                ? "Approved"
-                                                                : Tp_status[int.parse(value)]
-                                                                            .toString() ==
-                                                                        'S'
-                                                                    ? "Submitted"
-                                                                    : Tp_status[int.parse(value)].toString() ==
-                                                                            'R'
-                                                                        ? "Rejected"
-                                                                        : "Pending")),
-                                                            DataCell(Text(Tp_Number[int.parse(
-                                                                            value)]
-                                                                        .toString() ==
-                                                                    '0'
-                                                                ? "Not Generated"
-                                                                : Tp_Issue_Date[
-                                                                        int.parse(
-                                                                            value)]
-                                                                    .toString())),
-                                                            DataCell(Text(Tp_Number[int.parse(
-                                                                            value)]
-                                                                        .toString() ==
-                                                                    '0'
-                                                                ? "Not Generated"
-                                                                : Tp_Number[int
-                                                                        .parse(
-                                                                            value)]
-                                                                    .toString())),
-                                                            DataCell(Text(Tp_Number[int.parse(
-                                                                            value)]
-                                                                        .toString() ==
-                                                                    '0'
-                                                                ? "  N/A  "
-                                                                : "   " +
-                                                                    daysBetween(
-                                                                            DateTime.parse(Tp_Issue_Date[int.parse(value)].toString()))
-                                                                        .toString())),
-                                                            DataCell(
-                                                              Text(""),
-                                                              // Text(OfficerRemark(
-                                                              //   Current_status[
-                                                              //       int.parse(
-                                                              //           value)],
-                                                              //   disapproved_reason[
-                                                              //       int.parse(
-                                                              //           value)],
-                                                              //   reason_division[
-                                                              //       int.parse(
-                                                              //           value)],
-                                                              //   reason_range_officer[
-                                                              //       int.parse(
-                                                              //           value)],
-                                                              //   reason_depty_ranger_office[
-                                                              //       int.parse(
-                                                              //           value)],
-                                                              //   reason_office[
-                                                              //       int.parse(
-                                                              //           value)]))
-                                                            ),
+                                                            // DataCell(Text(Tp_status[int.parse(
+                                                            //                 value)]
+                                                            //             .toString() ==
+                                                            //         'A'
+                                                            //     ? "Approved"
+                                                            //     : Tp_status[int.parse(value)]
+                                                            //                 .toString() ==
+                                                            //             'S'
+                                                            //         ? "Submitted"
+                                                            //         : Tp_status[int.parse(value)].toString() ==
+                                                            //                 'R'
+                                                            //             ? "Rejected"
+                                                            //             : "Pending")),
+                                                            // DataCell(Text(Tp_Number[int.parse(
+                                                            //                 value)]
+                                                            //             .toString() ==
+                                                            //         '0'
+                                                            //     ? "Not Generated"
+                                                            //     : Tp_Issue_Date[
+                                                            //             int.parse(
+                                                            //                 value)]
+                                                            //         .toString())),
+                                                            // DataCell(Text(Tp_Number[int.parse(
+                                                            //                 value)]
+                                                            //             .toString() ==
+                                                            //         '0'
+                                                            //     ? "Not Generated"
+                                                            //     : Tp_Number[int
+                                                            //             .parse(
+                                                            //                 value)]
+                                                            //         .toString())),
+                                                            // DataCell(Text(Tp_Number[int.parse(
+                                                            //                 value)]
+                                                            //             .toString() ==
+                                                            //         '0'
+                                                            //     ? "  N/A  "
+                                                            //     : "   " +
+                                                            //         daysBetween(
+                                                            //                 DateTime.parse(Tp_Issue_Date[int.parse(value)].toString()))
+                                                            //             .toString())),
+                                                            // DataCell(
+                                                            //   Text("remark"),
+                                                            //   // Text(OfficerRemark(
+                                                            //   //   Current_status[
+                                                            //   //       int.parse(
+                                                            //   //           value)],
+                                                            //   //   disapproved_reason[
+                                                            //   //       int.parse(
+                                                            //   //           value)],
+                                                            //   //   reason_division[
+                                                            //   //       int.parse(
+                                                            //   //           value)],
+                                                            //   //   reason_range_officer[
+                                                            //   //       int.parse(
+                                                            //   //           value)],
+                                                            //   //   reason_depty_ranger_office[
+                                                            //   //       int.parse(
+                                                            //   //           value)],
+                                                            //   //   reason_office[
+                                                            //   //       int.parse(
+                                                            //   //           value)]))
+                                                            // ),
+
                                                             DataCell(Text(is_form_two[
                                                                         int.parse(
                                                                             value)] ==
@@ -1297,11 +1309,11 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                                 : "Non-Notified")),
                                                             DataCell(
                                                               Visibility(
-                                                                visible: (App_Status[int.parse(value)]
-                                                                            .toString() ==
-                                                                        'Yes')
-                                                                    ? true
-                                                                    : false,
+                                                                visible:
+                                                                    (App_Status[int.parse(value)].toString() ==
+                                                                            'A')
+                                                                        ? true
+                                                                        : false,
                                                                 child:
                                                                     IconButton(
                                                                   icon: new Icon(
@@ -1312,11 +1324,9 @@ class _CheckPassStatusState extends State<CheckPassStatus> {
                                                                   onPressed:
                                                                       () {
                                                                     downloadFormIIPdf(
-                                                                      int.parse(App_no[int.parse(
-                                                                              value)]
-                                                                          .toString()
-                                                                          .substring(App_no[int.parse(value)].toString().length -
-                                                                              6)),
+                                                                      int.parse(
+                                                                          Ids[int.parse(value)]
+                                                                              .toString()),
                                                                       Tp_status[
                                                                           int.parse(
                                                                               value)],

@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart'
+    show kDebugMode; // For debug mode check
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tigramnks/bloc/main_bloc.dart';
@@ -5,22 +9,26 @@ import 'package:tigramnks/login.dart' as login_page;
 import 'package:tigramnks/utils/db_initializer.dart';
 
 // Add this class for SSL certificate bypass
-// class MyHttpOverrides extends HttpOverrides {
-//   @override
-//   HttpClient createHttpClient(SecurityContext? context) {
-//     return super.createHttpClient(context)
-//       ..badCertificateCallback =
-//           (X509Certificate cert, String host, int port) => true;
-//   }
-// }
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
+}
 
-// // Make sure this runs before anything else
-// void _setHttpOverrides() {
-//   HttpOverrides.global = MyHttpOverrides();
-// }
+// Make sure this runs before anything else
+void _setHttpOverrides() {
+  HttpOverrides.global = MyHttpOverrides();
+}
 
-// Example usage in main.dart
 void main() {
+  // Only bypass SSL in debug mode for safety
+  if (kDebugMode) {
+    _setHttpOverrides();
+  }
+
   WidgetsFlutterBinding.ensureInitialized();
 
   runApp(
@@ -63,7 +71,7 @@ class MyApp extends StatelessWidget {
             foregroundColor: Colors.white,
           ),
         ),
-        home: const login_page.login(),
+        home: const login_page.login(), // Ensure login() returns a Widget
       ),
     );
   }
