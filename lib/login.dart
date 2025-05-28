@@ -51,7 +51,7 @@ class _LoginDemoState extends State<LoginDemo> {
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              const SizedBox(height: 20),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.04),
               Container(
                 padding: const EdgeInsets.only(left: 15, right: 15),
                 width: double.infinity,
@@ -77,6 +77,7 @@ class _LoginDemoState extends State<LoginDemo> {
                   ],
                 ),
               ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.04),
               Container(
                 padding: const EdgeInsets.only(right: 15, top: 8),
                 width: double.infinity,
@@ -92,7 +93,9 @@ class _LoginDemoState extends State<LoginDemo> {
                   ],
                 ),
               ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.04),
               const LoginForm(),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.04),
               Row(
                 children: [
                   const SizedBox(width: 8.0),
@@ -416,17 +419,17 @@ class _LoginFormState extends State<LoginForm> {
         borderRadius: BorderRadius.circular(12),
         color: Colors.white,
         border: Border.all(
-          color: Colors.red[700]!,
+          color: Colors.grey[400]!,
           width: 1.2,
         ),
-        boxShadow: const [
-          BoxShadow(
-            color: Color.fromARGB(73, 0, 0, 0),
-            blurRadius: 2.0,
-            spreadRadius: 0.0,
-            offset: Offset(2.0, 2.0),
-          )
-        ],
+        // boxShadow: const [
+        //   BoxShadow(
+        //     color: Color.fromARGB(73, 0, 0, 0),
+        //     blurRadius: 2.0,
+        //     spreadRadius: 0.0,
+        //     offset: Offset(2.0, 2.0),
+        //   )
+        // ],
       ),
       margin: const EdgeInsets.only(left: 15, right: 15, top: 15, bottom: 30),
       padding: const EdgeInsets.only(left: 15, right: 15, top: 45, bottom: 30),
