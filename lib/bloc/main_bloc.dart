@@ -14,6 +14,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     on<SaveLocallyFieldVerifyData>(_savbeLocallyFieldVerifyData);
     on<FetchSpeciesList>(_fetchSpeciesList);
     on<UploadData>(_uploadData);
+    on<login>(_login);
     // TODO: implement event handler
   }
 
@@ -292,6 +293,10 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       emit(FieldVerifyDataSavedState(success: false, error: e.toString()));
     }
   }
+
+  FutureOr<void> _login(login event, Emitter<MainState> emit) async{
+    
+  }
 }
 
 // Define the events
@@ -348,5 +353,15 @@ class UploadData extends MainEvent {
   UploadData({required this.data});
 }
 
-
 //login
+class login extends MainEvent {
+  final String sessionToken;
+  final String password;
+  final String userEmail;
+
+  login({
+    required this.sessionToken,
+    required this.password,
+    required this.userEmail,
+  });
+}

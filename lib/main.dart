@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tigramnks/bloc/main_bloc.dart';
-import 'package:tigramnks/login.dart';
+import 'package:tigramnks/login.dart' as login_page;
 import 'package:tigramnks/utils/db_initializer.dart';
 
 // Add this class for SSL certificate bypass
@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
             foregroundColor: Colors.white,
           ),
         ),
-        home: const login(),
+        home: const login_page.login(),
       ),
     );
   }
