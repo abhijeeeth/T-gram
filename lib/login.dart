@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io'; // Add this import for HttpClient and X509Certificate
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart'; // Add this import for IOClient
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tigramnks/DivisionDashboard.dart';
@@ -173,6 +175,7 @@ class _LoginFormState extends State<LoginForm> {
   bool isHiddenPassword = true;
   final TextEditingController loginEmail = TextEditingController();
   final TextEditingController loginPassword = TextEditingController();
+  bool _isLoading = false;
 
   SharedPreferences? prefs;
 
@@ -199,6 +202,10 @@ class _LoginFormState extends State<LoginForm> {
       return;
     }
 
+    setState(() {
+      _isLoading = true;
+    });
+
     const String url = '${ServerHelper.baseUrl}auth/NewLogin';
     Map data = {
       "email_or_phone": loginEmail.text.trim(),
@@ -206,9 +213,35 @@ class _LoginFormState extends State<LoginForm> {
     };
 
     try {
-      final response = await http.post(Uri.parse(url),
-          headers: {'Content-Type': 'application/json'},
-          body: json.encode(data));
+      HttpClient httpClient = HttpClient()
+        ..badCertificateCallback =
+            (X509Certificate cert, String host, int port) => true;
+
+      // Create an IOClient using the custom HttpClient
+      IOClient ioClient = IOClient(httpClient);
+
+      // Make the POST request
+      final response = await ioClient
+          .post(
+            Uri.parse(url),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode(data),
+          )
+          .timeout(
+            const Duration(seconds: 15),
+            onTimeout: () => throw TimeoutException(
+                "Connection timed out. Please try again."),
+          );
+
+      // Close the client when done
+      ioClient.close();
+
+      if (!mounted) return;
+
+      setState(() {
+        _isLoading = false;
+      });
+
       Map<String, dynamic> responseJson = json.decode(response.body);
 
       if (responseJson['status'] == "success") {
@@ -220,15 +253,14 @@ class _LoginFormState extends State<LoginForm> {
         final userMobile = responseJson["data"]["phone"]?.toString() ?? '';
         final userAddress = responseJson["data"]["address"]?.toString() ?? '';
         final sessionToken = responseJson["token"];
+        ServerHelper.token = sessionToken;
         final userProfile = responseJson["data"]["photo_proof_img"] ?? '';
         final userCato = responseJson['data']['usr_category'] ?? '';
 
-        // Save login info for auto-login
         prefs?.setString('LoginUser', loginEmail.text);
         prefs?.setString('LoginPass', loginPassword.text);
         prefs?.setBool('isLoggedIn', false);
 
-        // Navigation based on user group
         if (userGroup == 'user') {
           Fluttertoast.showToast(
               msg: 'Welcome $userName',
@@ -322,7 +354,6 @@ class _LoginFormState extends State<LoginForm> {
                         userGroup: userGroup,
                       )));
         } else {
-          // Default: OfficerDashboard
           final Range = responseJson['data']['range'] ?? [];
           Navigator.pushReplacement(
               context,
@@ -340,8 +371,9 @@ class _LoginFormState extends State<LoginForm> {
                       )));
         }
       } else {
+        String errorMessage = responseJson['message'] ?? 'Invalid credentials';
         Fluttertoast.showToast(
-            msg: 'Invalid credentials',
+            msg: errorMessage,
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
             backgroundColor: Colors.red,
@@ -349,8 +381,23 @@ class _LoginFormState extends State<LoginForm> {
             fontSize: 18.0);
       }
     } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+
+      String errorMessage = 'Login failed. ';
+      if (e is TimeoutException) {
+        errorMessage += 'Connection timed out.';
+      } else if (e.toString().contains('SocketException')) {
+        errorMessage += 'No internet connection.';
+      } else {
+        errorMessage += 'Please try again.';
+      }
+
       Fluttertoast.showToast(
-          msg: 'Login failed. Please try again.',
+          msg: errorMessage,
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           backgroundColor: Colors.red,
@@ -458,18 +505,29 @@ class _LoginFormState extends State<LoginForm> {
                   decoration: BoxDecoration(
                       color: Colors.yellow[700],
                       borderRadius: BorderRadius.circular(8)),
-                  child: TextButton(
-                    onPressed: _login,
-                    child: const Text(
-                      'Login',
-                      style: TextStyle(
-                        fontFamily: 'Cairo',
-                        fontStyle: FontStyle.normal,
-                        fontSize: 20,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
+                  child: _isLoading
+                      ? const Center(
+                          child: SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator(
+                              color: Colors.black,
+                              strokeWidth: 2.0,
+                            ),
+                          ),
+                        )
+                      : TextButton(
+                          onPressed: _login,
+                          child: const Text(
+                            'Login',
+                            style: TextStyle(
+                              fontFamily: 'Cairo',
+                              fontStyle: FontStyle.normal,
+                              fontSize: 20,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
                 ),
               ),
               const SizedBox(width: 10),
@@ -480,6 +538,14 @@ class _LoginFormState extends State<LoginForm> {
                       color: Colors.green[700],
                       borderRadius: BorderRadius.circular(8)),
                   child: TextButton(
+                    onPressed: _isLoading
+                        ? null
+                        : () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (_) => const signup()),
+                            );
+                          },
                     child: const Text(
                       'Sign Up',
                       style: TextStyle(
@@ -489,12 +555,6 @@ class _LoginFormState extends State<LoginForm> {
                         color: Colors.white,
                       ),
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const signup()),
-                      );
-                    },
                   ),
                 ),
               ),
