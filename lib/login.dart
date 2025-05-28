@@ -45,117 +45,120 @@ class LoginDemo extends StatefulWidget {
 class _LoginDemoState extends State<LoginDemo> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Container(
-              padding: const EdgeInsets.only(right: 15, top: 8),
-              width: double.infinity,
-              height: 80,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Image.asset(
-                    "assets/images/kerala_logo.jpg",
-                    width: 80,
-                    height: 80,
-                  ),
-                ],
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              const SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.only(left: 15, right: 15),
+                width: double.infinity,
+                height: 65,
+                color: HexColor("#02075D"),
+                child: Row(
+                  children: <Widget>[
+                    const Text(
+                      "Login",
+                      style: TextStyle(
+                        fontFamily: 'Cairo',
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 24,
+                      ),
+                    ),
+                    const Spacer(),
+                    Image.asset(
+                      "assets/images/tigram01.png",
+                      width: 120,
+                      height: 90,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Container(
-              padding: const EdgeInsets.only(left: 15, right: 15),
-              width: double.infinity,
-              height: 65,
-              color: HexColor("#02075D"),
-              child: Row(
-                children: <Widget>[
-                  const Text(
-                    "Login",
-                    style: TextStyle(
-                      fontFamily: 'Cairo',
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 24,
+              Container(
+                padding: const EdgeInsets.only(right: 15, top: 8),
+                width: double.infinity,
+                height: 80,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Image.asset(
+                      "assets/images/kerala_logo.jpg",
+                      width: 80,
+                      height: 80,
+                    ),
+                  ],
+                ),
+              ),
+              const LoginForm(),
+              Row(
+                children: [
+                  const SizedBox(width: 8.0),
+                  Expanded(
+                    child: FutureBuilder<PackageInfo>(
+                      future: PackageInfo.fromPlatform(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          if (snapshot.hasData) {
+                            final packageInfo = snapshot.data!;
+                            return Center(
+                              child: Text(
+                                "Version: ${packageInfo.version}+${packageInfo.buildNumber}",
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  color: Color.fromARGB(255, 63, 63, 63),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            );
+                          } else if (snapshot.hasError) {
+                            return const Center(
+                              child: Text(
+                                "Error loading version",
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            );
+                          }
+                        }
+                        return const Center(
+                          child: Text(
+                            "Loading version...",
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
-                  const Spacer(),
-                  Image.asset(
-                    "assets/images/tigram01.png",
-                    width: 120,
-                    height: 90,
-                  ),
                 ],
               ),
-            ),
-            const LoginForm(),
-            Row(
-              children: [
-                const SizedBox(width: 8.0),
-                Expanded(
-                  child: FutureBuilder<PackageInfo>(
-                    future: PackageInfo.fromPlatform(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        if (snapshot.hasData) {
-                          final packageInfo = snapshot.data!;
-                          return Center(
-                            child: Text(
-                              "Version: ${packageInfo.version}+${packageInfo.buildNumber}",
-                              style: const TextStyle(
-                                fontSize: 10,
-                                color: Color.fromARGB(255, 63, 63, 63),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          );
-                        } else if (snapshot.hasError) {
-                          return const Center(
-                            child: Text(
-                              "Error loading version",
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: Colors.red,
-                              ),
-                            ),
-                          );
-                        }
-                      }
-                      return const Center(
-                        child: Text(
-                          "Loading version...",
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      );
-                    },
+              const SizedBox(height: 5),
+              Container(
+                width: double.infinity,
+                height: 25,
+                color: HexColor("#004d40"),
+                alignment: Alignment.center,
+                margin: const EdgeInsets.only(bottom: 10),
+                child: const Text(
+                  "Kerala Forest Research Institute (KFRI)",
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                    fontSize: 14,
                   ),
                 ),
-              ],
-            ),
-            const SizedBox(height: 5),
-            Container(
-              width: double.infinity,
-              height: 25,
-              color: HexColor("#004d40"),
-              alignment: Alignment.center,
-              margin: const EdgeInsets.only(bottom: 10),
-              child: const Text(
-                "Kerala Forest Research Institute (KFRI)",
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                  fontSize: 14,
-                ),
               ),
-            ),
-            const SizedBox(height: 7),
-          ],
+              const SizedBox(height: 7),
+            ],
+          ),
         ),
       ),
     );
