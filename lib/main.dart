@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tigramnks/bloc/main_bloc.dart';
@@ -7,19 +5,19 @@ import 'package:tigramnks/login.dart';
 import 'package:tigramnks/utils/db_initializer.dart';
 
 // Add this class for SSL certificate bypass
-class MyHttpOverrides extends HttpOverrides {
-  @override
-  HttpClient createHttpClient(SecurityContext? context) {
-    return super.createHttpClient(context)
-      ..badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
-  }
-}
+// class MyHttpOverrides extends HttpOverrides {
+//   @override
+//   HttpClient createHttpClient(SecurityContext? context) {
+//     return super.createHttpClient(context)
+//       ..badCertificateCallback =
+//           (X509Certificate cert, String host, int port) => true;
+//   }
+// }
 
-// Make sure this runs before anything else
-void _setHttpOverrides() {
-  HttpOverrides.global = MyHttpOverrides();
-}
+// // Make sure this runs before anything else
+// void _setHttpOverrides() {
+//   HttpOverrides.global = MyHttpOverrides();
+// }
 
 // Example usage in main.dart
 void main() {

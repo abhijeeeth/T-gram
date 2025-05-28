@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,7 +9,6 @@ import 'package:http/http.dart' as http;
 import 'package:jailbreak_root_detection/jailbreak_root_detection.dart';
 import 'package:marquee/marquee.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tigramnks/DivisionDashboard.dart';
 import 'package:tigramnks/FieldOfficerDashboard.dart';
@@ -24,17 +22,7 @@ import 'package:toggle_switch/toggle_switch.dart';
 
 import 'checkPostDash.dart';
 
-class MyHttpOverrides extends HttpOverrides {
-  @override
-  HttpClient createHttpClient(SecurityContext? context) {
-    return super.createHttpClient(context)
-      ..badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
-  }
-}
-
 void main() {
-  HttpOverrides.global = MyHttpOverrides();
   runApp(const login());
 }
 
@@ -84,44 +72,6 @@ class _LoginDemoState extends State<LoginDemo> {
   void initState() {
     super.initState();
     initPlatformState();
-    _requestStoragePermission();
-  }
-
-  // Request storage permission
-  Future<void> _requestStoragePermission() async {
-    PermissionStatus status;
-
-    // For Android 13 and above (SDK 33+), we need to request specific permissions
-    if (await Permission.storage.isRestricted ||
-        await Permission.storage.isDenied) {
-      status = await Permission.storage.request();
-
-      if (status.isGranted) {
-        // await Permission.storage.request();
-        Fluttertoast.showToast(
-          msg: 'Storage permission granted',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-        );
-      } else if (status.isDenied) {
-        await Permission.storage.request();
-        Fluttertoast.showToast(
-          msg:
-              'Storage permission denied. Some features may not work properly.',
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-        );
-      } else if (status.isPermanentlyDenied) {
-        Fluttertoast.showToast(
-          msg:
-              'Storage permission permanently denied. Please enable it from app settings.',
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-        );
-        // You could open app settings here
-        await openAppSettings();
-      }
-    }
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -138,7 +88,7 @@ class _LoginDemoState extends State<LoginDemo> {
     }
 
     // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather thxuuan calling
+    // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
     if (!mounted) return;
 
@@ -387,7 +337,6 @@ class _UserState extends State<UserLogin> {
           userName = responseJson['data']['name'];
           userEmail = responseJson["data"]["email"];
           sessionToken = responseJson['token'];
-          ServerHelper.token = sessionToken;
           userGroup = responseJson['data']['user_group'][0];
           userMobile = responseJson["data"]["phone"];
           userAddress = responseJson["data"]["address"];
@@ -797,7 +746,6 @@ class _UserState extends State<UserLogin> {
                               userMobile = responseJson["data"]["phone"];
                               userAddress = responseJson["data"]["address"];
                               sessionToken = responseJson["token"];
-                              ServerHelper.token = sessionToken;
                               userProfile =
                                   responseJson["data"]["photo_proof_img"];
                               userGroup = responseJson['data']['user_group'][0];
@@ -983,7 +931,6 @@ class _OfficerState extends State<OfficerLogin> {
           userName = responseJson['data']['name'];
           userEmail = responseJson["data"]["email"];
           sessionToken = responseJson['token'];
-          ServerHelper.token = sessionToken;
           userGroup = responseJson['data']['user_group'][0];
           userMobile = responseJson["data"]["phone"];
           userAddress = responseJson["data"]["address"];
@@ -1265,7 +1212,7 @@ class _OfficerState extends State<OfficerLogin> {
 
   bool validateEmail(String value) {
     Pattern pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regex = RegExp(pattern.toString());
     return (!regex.hasMatch(value)) ? false : true;
   }
@@ -1468,141 +1415,178 @@ class _OfficerState extends State<OfficerLogin> {
                     print("----login--");
                     const String url = '${ServerHelper.baseUrl}auth/NewLogin';
                     Map data = {
-                      "email_or_phone": loginEmail.text,
-                      "password": loginPassword.text
+                      "email_or_phone": loginEmail.text.trim(),
+                      "password": loginPassword.text.trim()
                     };
-                    dynamic response;
 
                     var body = json.encode(data);
 
-                    try {
-                      response = await http.post(Uri.parse(url),
-                          headers: {
-                            "Content-Type": "application/json",
-                          },
-                          body: body);
+                    final response = await http.post(Uri.parse(url),
+                        headers: {'Content-Type': 'application/json'},
+                        body: body);
 
-                      Map<String, dynamic> responseJson =
-                          json.decode(response.body);
-                      log("----------------------login----------------");
-                      log(response.body);
+                    Map<String, dynamic> responseJson =
+                        json.decode(response.body);
+                    log("----------------------login----------------");
+                    log(response.body);
 
-                      if (responseJson['status'] == "success") {
-                        log(responseJson['token'].toString());
-                        setState(() {
-                          userId = responseJson['data']['id'];
-                          userName = responseJson['data']['name'];
-                          userEmail = responseJson["data"]["email"];
-                          sessionToken = responseJson['token'];
-                          ServerHelper.token = sessionToken;
-                          userGroup = responseJson['data']['user_group'][0];
-                          // Make sure to handle the phone and address fields safely
-                          userMobile =
-                              responseJson["data"]["phone"]?.toString() ?? '';
-                          userAddress =
-                              responseJson["data"]["address"]?.toString() ?? '';
-                          userProfile = responseJson["data"]
-                                  ["photo_proof_img"] ??
-                              'no_photo';
-                        });
-
-                        log(sessionToken.toString());
-                        log(userMobile.toString());
-                        log(userMobile.toString());
-                        if (dropdownValue != null &&
-                            responseJson['data']['user_group'][0]
-                                    .toString()
-                                    .toLowerCase() ==
-                                dropdownValue!.toLowerCase()) {
-                          if (responseJson['data']['user_group'][0]
+                    if (responseJson['status'] == "success") {
+                      setState(() {
+                        userId = responseJson['data']['id'];
+                        userName = responseJson['data']['name'];
+                        userEmail = responseJson["data"]["email"];
+                        sessionToken = responseJson['token'];
+                        userGroup = responseJson['data']['user_group'][0];
+                        // Make sure to handle the phone and address fields safely
+                        userMobile =
+                            responseJson["data"]["phone"]?.toString() ?? '';
+                        userAddress =
+                            responseJson["data"]["address"]?.toString() ?? '';
+                        userProfile = responseJson["data"]["photo_proof_img"] ??
+                            'no_photo';
+                      });
+                      log(userMobile.toString());
+                      log(userMobile.toString());
+                      log(userMobile.toString());
+                      if (dropdownValue != null &&
+                          responseJson['data']['user_group'][0]
                                   .toString()
                                   .toLowerCase() ==
-                              'division officer') {
-                            prefs?.setBool('isLoggedIn', false);
-                            prefs?.setString('LoginUser', loginEmail.text);
-                            prefs?.setString('LoginPass', loginPassword.text);
-                            setState(() {
-                              userRange = responseJson['data']['range'];
-                              URange = List<String>.from(userRange ?? []);
-                            });
-                            Fluttertoast.showToast(
-                                msg: 'Login Successful',
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.CENTER,
-                                timeInSecForIosWeb: 4,
-                                backgroundColor: Colors.green,
-                                textColor: Colors.white,
-                                fontSize: 18.0);
-                            Navigator.pushReplacement(
-                                context,
-                                PageRouteBuilder(
-                                    transitionDuration:
-                                        const Duration(milliseconds: 250),
-                                    transitionsBuilder: (context, animation,
-                                        animationTime, child) {
-                                      return ScaleTransition(
-                                        alignment: Alignment.topCenter,
-                                        scale: animation,
-                                        child: child,
-                                      );
-                                    },
-                                    pageBuilder:
-                                        (context, animation, animationTime) {
-                                      return DivisonDashBoard(
-                                        userId: userId,
-                                        userName: userName,
-                                        userEmail: userEmail,
-                                        sessionToken: sessionToken,
-                                        userGroup: userGroup,
-                                        dropdownValue: dropdownValue,
-                                        userRange: URange,
-                                      );
-                                    }));
-                          } else if (responseJson['data']['user_group'][0]
-                                  .toString()
-                                  .toLowerCase() ==
-                              'state officer') {
-                            prefs?.setBool('isLoggedIn', false);
-                            prefs?.setString('LoginUser', loginEmail.text);
-                            prefs?.setString('LoginPass', loginPassword.text);
-                            setState(() {
-                              Dist_Range =
-                                  responseJson['data']['division_range_list'];
+                              dropdownValue!.toLowerCase()) {
+                        if (responseJson['data']['user_group'][0]
+                                .toString()
+                                .toLowerCase() ==
+                            'division officer') {
+                          prefs?.setBool('isLoggedIn', false);
+                          prefs?.setString('LoginUser', loginEmail.text);
+                          prefs?.setString('LoginPass', loginPassword.text);
+                          setState(() {
+                            userRange = responseJson['data']['range'];
+                            URange = List<String>.from(userRange ?? []);
+                          });
+                          Fluttertoast.showToast(
+                              msg: 'Login Successful',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 4,
+                              backgroundColor: Colors.green,
+                              textColor: Colors.white,
+                              fontSize: 18.0);
+                          Navigator.pushReplacement(
+                              context,
+                              PageRouteBuilder(
+                                  transitionDuration:
+                                      const Duration(milliseconds: 250),
+                                  transitionsBuilder: (context, animation,
+                                      animationTime, child) {
+                                    return ScaleTransition(
+                                      alignment: Alignment.topCenter,
+                                      scale: animation,
+                                      child: child,
+                                    );
+                                  },
+                                  pageBuilder:
+                                      (context, animation, animationTime) {
+                                    return DivisonDashBoard(
+                                      userId: userId,
+                                      userName: userName,
+                                      userEmail: userEmail,
+                                      sessionToken: sessionToken,
+                                      userGroup: userGroup,
+                                      dropdownValue: dropdownValue,
+                                      userRange: URange,
+                                    );
+                                  }));
+                        } else if (responseJson['data']['user_group'][0]
+                                .toString()
+                                .toLowerCase() ==
+                            'state officer') {
+                          prefs?.setBool('isLoggedIn', false);
+                          prefs?.setString('LoginUser', loginEmail.text);
+                          prefs?.setString('LoginPass', loginPassword.text);
+                          setState(() {
+                            Dist_Range =
+                                responseJson['data']['division_range_list'];
 
-                              for (int i = 0; i < Dist_Range!.length; i++) {
-                                Dist.add(responseJson['data']
-                                    ['division_range_list'][i]['division']);
-                                Range.add(responseJson['data']
-                                    ['division_range_list'][i]['ranges']);
-                                for (int j = 0; j < Range[i].length; j++) {
-                                  URange.add(Range[i][j].toString());
-                                }
+                            for (int i = 0; i < Dist_Range!.length; i++) {
+                              Dist.add(responseJson['data']
+                                  ['division_range_list'][i]['division']);
+                              Range.add(responseJson['data']
+                                  ['division_range_list'][i]['ranges']);
+                              for (int j = 0; j < Range[i].length; j++) {
+                                URange.add(Range[i][j].toString());
                               }
-                            });
-                            Fluttertoast.showToast(
-                                msg: 'Login Successful',
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.CENTER,
-                                timeInSecForIosWeb: 4,
-                                backgroundColor: Colors.green,
-                                textColor: Colors.white,
-                                fontSize: 18.0);
-                            Navigator.pushReplacement(
-                                context,
-                                PageRouteBuilder(
-                                    transitionDuration:
-                                        const Duration(milliseconds: 250),
-                                    transitionsBuilder: (context, animation,
-                                        animationTime, child) {
-                                      return ScaleTransition(
-                                        alignment: Alignment.topCenter,
-                                        scale: animation,
-                                        child: child,
-                                      );
-                                    },
-                                    pageBuilder:
-                                        (context, animation, animationTime) {
-                                      return SFDashboard(
+                            }
+                          });
+                          Fluttertoast.showToast(
+                              msg: 'Login Successful',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 4,
+                              backgroundColor: Colors.green,
+                              textColor: Colors.white,
+                              fontSize: 18.0);
+                          Navigator.pushReplacement(
+                              context,
+                              PageRouteBuilder(
+                                  transitionDuration:
+                                      const Duration(milliseconds: 250),
+                                  transitionsBuilder: (context, animation,
+                                      animationTime, child) {
+                                    return ScaleTransition(
+                                      alignment: Alignment.topCenter,
+                                      scale: animation,
+                                      child: child,
+                                    );
+                                  },
+                                  pageBuilder:
+                                      (context, animation, animationTime) {
+                                    return SFDashboard(
+                                      userId: userId!,
+                                      userName: userName,
+                                      userEmail: userEmail,
+                                      sessionToken: sessionToken,
+                                      userGroup: userGroup,
+                                      dropdownValue: dropdownValue!,
+                                      userMobile: userMobile,
+                                      userProfile: userProfile,
+                                      userAddress: userAddress,
+                                      Dist: Dist,
+                                      Range: URange,
+                                      Dist_Range: Dist_Range ?? [],
+                                    );
+                                  }));
+                        } else if (responseJson['data']['user_group'][0]
+                                .toString()
+                                .toLowerCase() ==
+                            'field officer') {
+                          prefs!.setBool('isLoggedIn', false);
+                          prefs!.setString('LoginUser', loginEmail.text);
+                          prefs!.setString('LoginPass', loginPassword.text);
+                          Fluttertoast.showToast(
+                              msg: 'Login Successful',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 4,
+                              backgroundColor: Colors.green,
+                              textColor: Colors.white,
+                              fontSize: 18.0);
+                          Navigator.pushReplacement(
+                              context,
+                              PageRouteBuilder(
+                                  transitionDuration:
+                                      const Duration(milliseconds: 250),
+                                  transitionsBuilder: (context, animation,
+                                      animationTime, child) {
+                                    return ScaleTransition(
+                                      alignment: Alignment.topCenter,
+                                      scale: animation,
+                                      child: child,
+                                    );
+                                  },
+                                  pageBuilder:
+                                      (context, animation, animationTime) {
+                                    return FieldOfficerDashboard(
                                         userId: userId!,
                                         userName: userName,
                                         userEmail: userEmail,
@@ -1611,162 +1595,99 @@ class _OfficerState extends State<OfficerLogin> {
                                         dropdownValue: dropdownValue!,
                                         userMobile: userMobile,
                                         userProfile: userProfile,
-                                        userAddress: userAddress,
-                                        Dist: Dist,
-                                        Range: URange,
-                                        Dist_Range: Dist_Range ?? [],
-                                      );
-                                    }));
-                          } else if (responseJson['data']['user_group'][0]
-                                  .toString()
-                                  .toLowerCase() ==
-                              'field officer') {
-                            prefs!.setBool('isLoggedIn', false);
-                            prefs!.setString('LoginUser', loginEmail.text);
-                            prefs!.setString('LoginPass', loginPassword.text);
-                            Fluttertoast.showToast(
-                                msg: 'Login Successful',
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.CENTER,
-                                timeInSecForIosWeb: 4,
-                                backgroundColor: Colors.green,
-                                textColor: Colors.white,
-                                fontSize: 18.0);
-                            Navigator.pushReplacement(
-                                context,
-                                PageRouteBuilder(
-                                    transitionDuration:
-                                        const Duration(milliseconds: 250),
-                                    transitionsBuilder: (context, animation,
-                                        animationTime, child) {
-                                      return ScaleTransition(
-                                        alignment: Alignment.topCenter,
-                                        scale: animation,
-                                        child: child,
-                                      );
-                                    },
-                                    pageBuilder:
-                                        (context, animation, animationTime) {
-                                      return FieldOfficerDashboard(
-                                          userId: userId!,
-                                          userName: userName,
-                                          userEmail: userEmail,
-                                          sessionToken: sessionToken,
-                                          userGroup: userGroup,
-                                          dropdownValue: dropdownValue!,
-                                          userMobile: userMobile,
-                                          userProfile: userProfile,
-                                          userAddress: userAddress);
-                                    }));
-                          } else if (responseJson['data']['user_group'][0]
-                                  .toString()
-                                  .toLowerCase() ==
-                              'checkpost officer') {
-                            Fluttertoast.showToast(
-                                msg: 'Login Successful',
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.BOTTOM,
-                                timeInSecForIosWeb: 4,
-                                backgroundColor: Colors.green,
-                                textColor: Colors.white,
-                                fontSize: 18.0);
-                            Navigator.pushReplacement(
-                                context,
-                                PageRouteBuilder(
-                                    transitionDuration:
-                                        const Duration(milliseconds: 250),
-                                    transitionsBuilder: (context, animation,
-                                        animationTime, child) {
-                                      return ScaleTransition(
-                                        alignment: Alignment.topCenter,
-                                        scale: animation,
-                                        child: child,
-                                      );
-                                    },
-                                    pageBuilder:
-                                        (context, animation, animationTime) {
-                                      return checkPost(
-                                          userId: userId,
-                                          userName: userName,
-                                          userEmail: userEmail,
-                                          sessionToken: sessionToken,
-                                          userGroup: userGroup);
-                                    }));
-                          } else {
-                            if (userGroup == 'forest range officer') {
-                              Range = responseJson['data']['range'];
-                            }
-                            prefs!.setBool('isLoggedIn', false);
-                            prefs!.setString('LoginUser', loginEmail.text);
-                            prefs!.setString('LoginPass', loginPassword.text);
-                            Fluttertoast.showToast(
-                                msg: 'Login Successful',
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.CENTER,
-                                timeInSecForIosWeb: 4,
-                                backgroundColor: Colors.green,
-                                textColor: Colors.white,
-                                fontSize: 18.0);
-                            Navigator.pushReplacement(
-                                context,
-                                PageRouteBuilder(
-                                    transitionDuration:
-                                        const Duration(milliseconds: 250),
-                                    transitionsBuilder: (context, animation,
-                                        animationTime, child) {
-                                      return ScaleTransition(
-                                        alignment: Alignment.topCenter,
-                                        scale: animation,
-                                        child: child,
-                                      );
-                                    },
-                                    pageBuilder:
-                                        (context, animation, animationTime) {
-                                      return OfficerDashboard(
-                                        userId: userId!,
+                                        userAddress: userAddress);
+                                  }));
+                        } else if (responseJson['data']['user_group'][0]
+                                .toString()
+                                .toLowerCase() ==
+                            'checkpost officer') {
+                          Fluttertoast.showToast(
+                              msg: 'Login Successful',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 4,
+                              backgroundColor: Colors.green,
+                              textColor: Colors.white,
+                              fontSize: 18.0);
+                          Navigator.pushReplacement(
+                              context,
+                              PageRouteBuilder(
+                                  transitionDuration:
+                                      const Duration(milliseconds: 250),
+                                  transitionsBuilder: (context, animation,
+                                      animationTime, child) {
+                                    return ScaleTransition(
+                                      alignment: Alignment.topCenter,
+                                      scale: animation,
+                                      child: child,
+                                    );
+                                  },
+                                  pageBuilder:
+                                      (context, animation, animationTime) {
+                                    return checkPost(
+                                        userId: userId,
                                         userName: userName,
                                         userEmail: userEmail,
                                         sessionToken: sessionToken,
-                                        userGroup: userGroup,
-                                        dropdownValue: dropdownValue!,
-                                        Range: Range,
-                                        userMobile: userMobile,
-                                        userAddress: userAddress,
-                                      );
-                                    }));
+                                        userGroup: userGroup);
+                                  }));
+                        } else {
+                          if (userGroup == 'forest range officer') {
+                            Range = responseJson['data']['range'];
                           }
+                          prefs!.setBool('isLoggedIn', false);
+                          prefs!.setString('LoginUser', loginEmail.text);
+                          prefs!.setString('LoginPass', loginPassword.text);
+                          Fluttertoast.showToast(
+                              msg: 'Login Successful',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 4,
+                              backgroundColor: Colors.green,
+                              textColor: Colors.white,
+                              fontSize: 18.0);
+                          Navigator.pushReplacement(
+                              context,
+                              PageRouteBuilder(
+                                  transitionDuration:
+                                      const Duration(milliseconds: 250),
+                                  transitionsBuilder: (context, animation,
+                                      animationTime, child) {
+                                    return ScaleTransition(
+                                      alignment: Alignment.topCenter,
+                                      scale: animation,
+                                      child: child,
+                                    );
+                                  },
+                                  pageBuilder:
+                                      (context, animation, animationTime) {
+                                    return OfficerDashboard(
+                                      userId: userId!,
+                                      userName: userName,
+                                      userEmail: userEmail,
+                                      sessionToken: sessionToken,
+                                      userGroup: userGroup,
+                                      dropdownValue: dropdownValue!,
+                                      Range: Range,
+                                      userMobile: userMobile,
+                                      userAddress: userAddress,
+                                    );
+                                  }));
                         }
-                      } else {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const login()),
-                        );
-                        Fluttertoast.showToast(
-                            msg: 'Invalid credentials',
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.CENTER,
-                            timeInSecForIosWeb: 4,
-                            backgroundColor: Colors.red,
-                            textColor: Colors.white,
-                            fontSize: 18.0);
                       }
-                    } catch (e) {
-                      log("Login error: $e");
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const login()),
+                      );
                       Fluttertoast.showToast(
-                          msg:
-                              'Network error. Please check your connection and try again.',
-                          toastLength: Toast.LENGTH_LONG,
+                          msg: 'Invalid credentials',
+                          toastLength: Toast.LENGTH_SHORT,
                           gravity: ToastGravity.CENTER,
+                          timeInSecForIosWeb: 4,
                           backgroundColor: Colors.red,
                           textColor: Colors.white,
-                          fontSize: 16.0);
-
-                      // Clear the form and allow retry
-                      loginEmail.clear();
-                      loginPassword.clear();
-                      setState(() {
-                        dropdownValue = null;
-                      });
+                          fontSize: 18.0);
                     }
                   }
                 }),
