@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tigramnks/Nocfreshlist.dart';
+import 'package:tigramnks/bloc/main_bloc.dart';
+import 'package:tigramnks/nocapprovedrejectedlist.dart';
+import 'package:tigramnks/nocpendingwithmelist.dart';
 
 class NocApplictaionTiles extends StatefulWidget {
   final String sessionToken;
@@ -42,7 +47,15 @@ class _NocApplictaionTilesState extends State<NocApplictaionTiles> {
                   icon: Icons.add_circle_rounded,
                   color: Colors.green[600]!,
                   onTap: () {
-                    // Handle fresh application tap
+                    context.read<MainBloc>().add(
+                        NocFreshApplicationList(sessionToken: _sessionToken));
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const NocFreshListTable(
+                            // sessionToken: _sessionToken,
+                            ),
+                      ),
+                    );
                   },
                 ),
                 _buildTile(
@@ -50,6 +63,15 @@ class _NocApplictaionTilesState extends State<NocApplictaionTiles> {
                   icon: Icons.hourglass_empty_rounded,
                   color: Colors.orange[600]!,
                   onTap: () {
+                    context.read<MainBloc>().add(
+                        NocPendingApplicationList(sessionToken: _sessionToken));
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const NocPendingListTable(
+                            // sessionToken: _sessionToken,
+                            ),
+                      ),
+                    );
                     // Handle pending with me tap
                   },
                 ),
@@ -58,7 +80,17 @@ class _NocApplictaionTilesState extends State<NocApplictaionTiles> {
                   icon: Icons.forward_rounded,
                   color: Colors.blue[600]!,
                   onTap: () {
-                    // Handle forwarded files tap
+                    context.read<MainBloc>().add(
+                        NocApprovedRejectedList(sessionToken: _sessionToken));
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            const NocApprovedRejectedListTable(
+                                // sessionToken: _sessionToken,
+                                ),
+                      ),
+                    );
+                    // Handle pending with me tap
                   },
                 ),
                 _buildTile(
@@ -66,7 +98,17 @@ class _NocApplictaionTilesState extends State<NocApplictaionTiles> {
                   icon: Icons.rule_rounded,
                   color: Colors.purple[600]!,
                   onTap: () {
-                    // Handle approved/rejected tap
+                    context.read<MainBloc>().add(
+                        NocApprovedRejectedList(sessionToken: _sessionToken));
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            const NocApprovedRejectedListTable(
+                                // sessionToken: _sessionToken,
+                                ),
+                      ),
+                    );
+                    // Handle pending with me tap
                   },
                 ),
               ],

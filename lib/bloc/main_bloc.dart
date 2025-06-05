@@ -4,6 +4,10 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:http/http.dart' as http;
+import 'package:tigramnks/Initializer.dart';
+import 'package:tigramnks/model/nocapprovedrejecedmodel.dart';
+import 'package:tigramnks/model/nocfreshapplictaionmodel.dart';
+import 'package:tigramnks/model/nocpendinglistmodel.dart';
 import 'package:tigramnks/server/serverhelper.dart';
 import 'package:tigramnks/sqflite/dbhelper.dart'; // Add this import
 import 'package:tigramnks/utils/local_storage.dart';
@@ -15,6 +19,9 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     on<FetchSpeciesList>(_fetchSpeciesList);
     on<UploadData>(_uploadData);
     on<login>(_login);
+    on<NocFreshApplicationList>(nocFreshApplicationList);
+    on<NocPendingApplicationList>(_nocPendingApplicationList);
+    on<NocApprovedRejectedList>(_nocApprovedRejectedList);
     // TODO: implement event handler
   }
 
@@ -294,11 +301,62 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     }
   }
 
-  FutureOr<void> _login(login event, Emitter<MainState> emit) async{
-    
+  FutureOr<void> _login(login event, Emitter<MainState> emit) async {}
+
+  FutureOr<void> nocFreshApplicationList(
+      NocFreshApplicationList event, Emitter<MainState> emit) async {
+    try {
+      emit(NocFreshLIstloading());
+      Initializer.nocFreshapplicationModel = NOCFreshapplicationModel.fromJson(
+          await Initializer.get(
+              'auth/PendingListViewApplicationNOC', event.sessionToken));
+      if (Initializer.nocFreshapplicationModel.status == true) {
+        emit(NocFreshListLoaded());
+      } else {
+        emit(NOClistfreshFailed());
+      }
+    } catch (e) {
+      log('Error fetching NOC fresh application list: $e');
+      emit(NOClistfreshFailed());
+    }
+  }
+
+  FutureOr<void> _nocPendingApplicationList(
+      NocPendingApplicationList event, Emitter<MainState> emit) async {
+    try {
+      emit(NocPendingLIstloading());
+      Initializer.nocPendingModel = NOCPendingModel.fromJson(
+          await Initializer.get(
+              'auth/InProcessingListViewApplicationNOC', event.sessionToken));
+      if (Initializer.nocPendingModel.status == true) {
+        emit(NocPendingListLoaded());
+      } else {
+        emit(NOClistPendingFailed());
+      }
+    } catch (e) {
+      log('Error fetching NOC pending application list: $e');
+      emit(NOClistPendingFailed());
+    }
+  }
+
+  FutureOr<void> _nocApprovedRejectedList(
+      NocApprovedRejectedList event, Emitter<MainState> emit) async {
+    try {
+      emit(NocApprovedRejectedLIstloading());
+      Initializer.nocApprovedRejectedModel = NOCApprovedRejectedModel.fromJson(
+          await Initializer.get(
+              'auth/ApprovedRejectListViewApplicationNOC', event.sessionToken));
+      if (Initializer.nocApprovedRejectedModel.status == true) {
+        emit(NocApprovedRejectedListLoaded());
+      } else {
+        emit(NOClistApprovedRejectedFailed());
+      }
+    } catch (e) {
+      log('Error fetching NOC approved/rejected application list: $e');
+      emit(NOClistApprovedRejectedFailed());
+    }
   }
 }
-
 // Define the events
 
 class MainEvent {}
@@ -365,3 +423,50 @@ class login extends MainEvent {
     required this.userEmail,
   });
 }
+
+//Noc Fresh Application List
+
+class NocFreshApplicationList extends MainEvent {
+  final String sessionToken;
+
+  NocFreshApplicationList({
+    required this.sessionToken,
+  });
+}
+
+class NocFreshLIstloading extends MainState {}
+
+class NocFreshListLoaded extends MainState {}
+
+class NOClistfreshFailed extends MainState {}
+
+//fresh application list
+class NocPendingApplicationList extends MainEvent {
+  final String sessionToken;
+
+  NocPendingApplicationList({
+    required this.sessionToken,
+  });
+}
+
+class NocPendingLIstloading extends MainState {}
+
+class NocPendingListLoaded extends MainState {}
+
+class NOClistPendingFailed extends MainState {}
+
+// Noc Approved Rejected List
+
+class NocApprovedRejectedList extends MainEvent {
+  final String sessionToken;
+
+  NocApprovedRejectedList({
+    required this.sessionToken,
+  });
+}
+
+class NocApprovedRejectedLIstloading extends MainState {}
+
+class NocApprovedRejectedListLoaded extends MainState {}
+
+class NOClistApprovedRejectedFailed extends MainState {}
