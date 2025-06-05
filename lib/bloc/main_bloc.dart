@@ -6,6 +6,7 @@ import 'package:bloc/bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:tigramnks/Initializer.dart';
 import 'package:tigramnks/model/nocapprovedrejecedmodel.dart';
+import 'package:tigramnks/model/nocforwardedlistmodel.dart';
 import 'package:tigramnks/model/nocfreshapplictaionmodel.dart';
 import 'package:tigramnks/model/nocpendinglistmodel.dart';
 import 'package:tigramnks/server/serverhelper.dart';
@@ -22,6 +23,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     on<NocFreshApplicationList>(nocFreshApplicationList);
     on<NocPendingApplicationList>(_nocPendingApplicationList);
     on<NocApprovedRejectedList>(_nocApprovedRejectedList);
+    on<NocForwardedList>(_nocForwardedList);
     // TODO: implement event handler
   }
 
@@ -356,6 +358,24 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       emit(NOClistApprovedRejectedFailed());
     }
   }
+
+  FutureOr<void> _nocForwardedList(
+      NocForwardedList event, Emitter<MainState> emit) async {
+    try {
+      emit(NocForwardedLIstloading());
+      Initializer.nocForwardedListModel = NOCForwardedListModel.fromJson(
+          await Initializer.get(
+              'auth/ForwardedListViewApplicationNOC', event.sessionToken));
+      if (Initializer.nocForwardedListModel.status == true) {
+        emit(NocForwardedListLoaded());
+      } else {
+        emit(NOClistForwardedFailed());
+      }
+    } catch (e) {
+      log('Error fetching NOC forwarded application list: $e');
+      emit(NOClistForwardedFailed());
+    }
+  }
 }
 // Define the events
 
@@ -470,3 +490,21 @@ class NocApprovedRejectedLIstloading extends MainState {}
 class NocApprovedRejectedListLoaded extends MainState {}
 
 class NOClistApprovedRejectedFailed extends MainState {}
+
+// Noc Forwarded List
+
+class NocForwardedList extends MainEvent {
+  final String sessionToken;
+
+  NocForwardedList({
+    required this.sessionToken,
+  });
+}
+
+class NocForwardedLIstloading extends MainState {}
+
+class NocForwardedListLoaded extends MainState {}
+
+class NOClistForwardedFailed extends MainState {}
+
+//Noc List Individual View

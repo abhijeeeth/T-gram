@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tigramnks/Nocfreshlist.dart';
 import 'package:tigramnks/bloc/main_bloc.dart';
 import 'package:tigramnks/nocapprovedrejectedlist.dart';
+import 'package:tigramnks/nocforwardedlist.dart';
 import 'package:tigramnks/nocpendingwithmelist.dart';
 
 class NocApplictaionTiles extends StatefulWidget {
@@ -80,14 +81,14 @@ class _NocApplictaionTilesState extends State<NocApplictaionTiles> {
                   icon: Icons.forward_rounded,
                   color: Colors.blue[600]!,
                   onTap: () {
-                    context.read<MainBloc>().add(
-                        NocApprovedRejectedList(sessionToken: _sessionToken));
+                    context
+                        .read<MainBloc>()
+                        .add(NocForwardedList(sessionToken: _sessionToken));
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) =>
-                            const NocApprovedRejectedListTable(
-                                // sessionToken: _sessionToken,
-                                ),
+                        builder: (context) => const NocForwardedListTable(
+                            // sessionToken: _sessionToken,
+                            ),
                       ),
                     );
                     // Handle pending with me tap

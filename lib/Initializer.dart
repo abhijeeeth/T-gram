@@ -3,8 +3,10 @@ import 'dart:developer';
 
 import 'package:http/http.dart' as http;
 import 'package:tigramnks/model/nocapprovedrejecedmodel.dart';
+import 'package:tigramnks/model/nocforwardedlistmodel.dart';
 import 'package:tigramnks/model/nocfreshapplictaionmodel.dart';
 import 'package:tigramnks/model/nocpendinglistmodel.dart';
+import 'package:tigramnks/model/nocviewmodel.dart';
 import 'package:tigramnks/server/serverhelper.dart';
 
 class Initializer {
@@ -13,6 +15,8 @@ class Initializer {
   static NOCPendingModel nocPendingModel = NOCPendingModel();
   static NOCApprovedRejectedModel nocApprovedRejectedModel =
       NOCApprovedRejectedModel();
+  static NOCForwardedListModel nocForwardedListModel = NOCForwardedListModel();
+  static NOCListViewModel nocListViewModel = NOCListViewModel();
 
   static Future<dynamic> get(String url, String token) async {
     try {

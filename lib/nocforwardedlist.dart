@@ -2,23 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tigramnks/Initializer.dart';
 import 'package:tigramnks/bloc/main_bloc.dart';
-import 'package:tigramnks/model/nocapprovedrejecedmodel.dart';
+import 'package:tigramnks/model/nocforwardedlistmodel.dart';
 
-class NocApprovedRejectedListTable extends StatelessWidget {
-  const NocApprovedRejectedListTable({super.key});
+class NocForwardedListTable extends StatelessWidget {
+  const NocForwardedListTable({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<MainBloc, MainState>(
       listener: (context, state) {
-        if (state is NOClistApprovedRejectedFailed) {
+        if (state is NOClistForwardedFailed) {
           // ScaffoldMessenger.of(context).showSnackBar(
           //   SnackBar(
           //     content: const Row(
           //       children: [
           //         Icon(Icons.error_outline, color: Colors.white),
           //         SizedBox(width: 8),
-          //         Text('Failed to load NOC applications'),
+          //         Text('Failed to load NOC forwarded applications'),
           //       ],
           //     ),
           //     backgroundColor: Colors.red.shade600,
@@ -35,7 +35,7 @@ class NocApprovedRejectedListTable extends StatelessWidget {
           backgroundColor: Colors.grey.shade50,
           appBar: AppBar(
             title: const Text(
-              'NOC Applications - Approved/Rejected',
+              'NOC Applications - Forwarded',
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 20,
@@ -59,7 +59,7 @@ class NocApprovedRejectedListTable extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context, MainState state) {
-    if (state is NocApprovedRejectedLIstloading) {
+    if (state is NocForwardedLIstloading) {
       return const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -70,7 +70,7 @@ class NocApprovedRejectedListTable extends StatelessWidget {
             ),
             SizedBox(height: 16),
             Text(
-              'Loading applications...',
+              'Loading forwarded applications...',
               style: TextStyle(
                 color: Colors.grey,
                 fontSize: 16,
@@ -81,19 +81,19 @@ class NocApprovedRejectedListTable extends StatelessWidget {
       );
     }
 
-    final approvedRejectedList =
-        Initializer.nocApprovedRejectedModel.data?.approvedRejectList ?? [];
+    final forwardedList =
+        Initializer.nocForwardedListModel.data?.forwardedList ?? [];
 
-    if (approvedRejectedList.isEmpty) {
+    if (forwardedList.isEmpty) {
       return _buildEmptyState();
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildHeader(approvedRejectedList.length),
+        _buildHeader(forwardedList.length),
         Expanded(
-          child: _buildTable(approvedRejectedList),
+          child: _buildTable(forwardedList),
         ),
       ],
     );
@@ -101,8 +101,8 @@ class NocApprovedRejectedListTable extends StatelessWidget {
 
   Widget _buildHeader(int count) {
     final areaRangeName =
-        Initializer.nocApprovedRejectedModel.data?.areaRangeName ?? '';
-    final group = Initializer.nocApprovedRejectedModel.data?.group ?? '';
+        Initializer.nocForwardedListModel.data?.areaRangeName ?? '';
+    final group = Initializer.nocForwardedListModel.data?.group ?? '';
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -116,7 +116,7 @@ class NocApprovedRejectedListTable extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Approved/Rejected Applications',
+                    'Forwarded Applications',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -125,7 +125,7 @@ class NocApprovedRejectedListTable extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '$count applications processed',
+                    '$count applications forwarded',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey.shade600,
@@ -137,23 +137,23 @@ class NocApprovedRejectedListTable extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: Colors.green.shade50,
+                  color: Colors.orange.shade50,
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.green.shade200),
+                  border: Border.all(color: Colors.orange.shade200),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      Icons.check_circle_outline,
+                      Icons.forward_outlined,
                       size: 16,
-                      color: Colors.green.shade700,
+                      color: Colors.orange.shade700,
                     ),
                     const SizedBox(width: 6),
                     Text(
                       '$count',
                       style: TextStyle(
-                        color: Colors.green.shade700,
+                        color: Colors.orange.shade700,
                         fontWeight: FontWeight.w500,
                         fontSize: 12,
                       ),
@@ -218,13 +218,13 @@ class NocApprovedRejectedListTable extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.check_circle_outline,
+            Icons.forward_outlined,
             size: 80,
             color: Colors.grey.shade400,
           ),
           const SizedBox(height: 16),
           Text(
-            'No Processed Applications',
+            'No Forwarded Applications',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w600,
@@ -233,7 +233,7 @@ class NocApprovedRejectedListTable extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'There are no approved or rejected NOC applications',
+            'There are no forwarded NOC applications to display',
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey.shade500,
@@ -244,7 +244,7 @@ class NocApprovedRejectedListTable extends StatelessWidget {
     );
   }
 
-  Widget _buildTable(List<ApprovedRejectList> approvedRejectedList) {
+  Widget _buildTable(List<ForwardedList> forwardedList) {
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
       decoration: BoxDecoration(
@@ -292,8 +292,8 @@ class NocApprovedRejectedListTable extends StatelessWidget {
                 DataColumn(label: Text('Purpose')),
                 // DataColumn(label: Text('Action')),
               ],
-              rows: List.generate(approvedRejectedList.length, (index) {
-                final item = approvedRejectedList[index];
+              rows: List.generate(forwardedList.length, (index) {
+                final item = forwardedList[index];
                 return DataRow(
                   color: WidgetStateColor.resolveWith((states) {
                     if (index.isEven) {
@@ -340,13 +340,13 @@ class NocApprovedRejectedListTable extends StatelessWidget {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.green.shade50,
+                          color: Colors.orange.shade50,
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
                           _formatDate(item.nocApplicationIdNocCreatedAt) ?? '-',
                           style: TextStyle(
-                            color: Colors.green.shade700,
+                            color: Colors.orange.shade700,
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                           ),
@@ -364,15 +364,15 @@ class NocApprovedRejectedListTable extends StatelessWidget {
                     //   Container(
                     //     child: ElevatedButton.icon(
                     //       onPressed: () {
-                    //         // Handle view action
+                    //         // Handle view action for forwarded application
                     //         // context.read<MainBloc>().add(
-                    //         //       NocApprovedRejectedActionEvent(item),
+                    //         //       NocForwardedActionEvent(item),
                     //         //     );
                     //       },
                     //       icon: const Icon(Icons.visibility, size: 16),
                     //       label: const Text('View'),
                     //       style: ElevatedButton.styleFrom(
-                    //         backgroundColor: Colors.green.shade600,
+                    //         backgroundColor: Colors.orange.shade600,
                     //         foregroundColor: Colors.white,
                     //         padding: const EdgeInsets.symmetric(
                     //           horizontal: 16,
