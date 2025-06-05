@@ -10,10 +10,10 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tigramnks/DivisionDashboard.dart';
 import 'package:tigramnks/FieldOfficerDashboard.dart';
-import 'package:tigramnks/OfficerDashboard.dart';
 import 'package:tigramnks/SFDashboard.dart';
 import 'package:tigramnks/forgetPassword.dart';
 import 'package:tigramnks/homePage.dart';
+import 'package:tigramnks/homecheck.dart';
 import 'package:tigramnks/server/serverhelper.dart';
 import 'package:tigramnks/signup.dart';
 
@@ -364,7 +364,7 @@ class _LoginFormState extends State<LoginForm> {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (_) => OfficerDashboard(
+                  builder: (_) => Homecheck(
                         userId: userId,
                         userName: userName,
                         userEmail: userEmail,

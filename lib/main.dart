@@ -35,6 +35,7 @@ void main() {
     DatabaseInitializer.wrapWithDatabaseInitialization(
       child: const MyApp(),
       loadingWidget: const MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: Scaffold(
           body: Center(child: CircularProgressIndicator()),
         ),
