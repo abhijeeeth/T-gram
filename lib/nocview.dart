@@ -70,6 +70,20 @@ class NOCView extends StatelessWidget {
                   ),
                   centerTitle: true,
                 ),
+                // floatingActionButton: FloatingActionButton.extended(
+                //   onPressed: () {
+                //     // Add your action here
+                //   },
+                //   backgroundColor: const Color.fromARGB(255, 28, 110, 99),
+                //   icon: const Icon(Icons.check, color: Colors.white),
+                //   label: const Text(
+                //     'Verify Site',
+                //     style: TextStyle(
+                //       color: Colors.white,
+                //       fontWeight: FontWeight.w600,
+                //     ),
+                //   ),
+                // ),
                 body: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   child: Padding(
@@ -80,6 +94,31 @@ class NOCView extends StatelessWidget {
                       children: [
                         // Application ID Card
                         _buildHeaderCard(nocData!.nocOfLandApplicationId),
+                        const SizedBox(height: 14),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              // Add your navigation or action here
+                            },
+                            icon: const Icon(Icons.arrow_forward),
+                            label: const Text('Proceed to site inspection'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  const Color.fromARGB(255, 28, 110, 99),
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              textStyle: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ),
                         const SizedBox(height: 24),
 
                         // Personal Details
