@@ -6,7 +6,7 @@ class NOCListViewModel {
   NOCListViewModel({this.status, this.message, this.data});
 
   NOCListViewModel.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
+    status = json['status']?.toString();
     message = json['message'];
     data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
@@ -30,17 +30,18 @@ class Data {
   String? hasValidEntry;
   String? hasDivisionEntry;
   List<DeputyRfos>? deputyRfos;
-  List<AdditionalDocuments>? additionalDocuments;
+  List<Null>? additionalDocuments;
+  ImageDocuments? imageDocuments;
 
   Data(
       {this.nocApplication,
       this.userGroup,
       this.divisionCommentsAndFiles,
-      // this.clerkCommentsAndFiles,
       this.hasValidEntry,
       this.hasDivisionEntry,
       this.deputyRfos,
-      this.additionalDocuments});
+      this.additionalDocuments,
+      this.imageDocuments});
 
   Data.fromJson(Map<String, dynamic> json) {
     nocApplication = json['noc_application'] != null
@@ -54,10 +55,8 @@ class Data {
       });
     }
     // if (json['clerk_comments_and_files'] != null) {
-    //   clerkCommentsAndFiles = <ClerkCommentsAndFiles>[];
-    //   json['clerk_comments_and_files'].forEach((v) {
-    //     clerkCommentsAndFiles!.add(ClerkCommentsAndFiles.fromJson(v));
-    //   });
+    // 	clerkCommentsAndFiles = <ClerkCommentsAndFiles>[];
+    // 	json['clerk_comments_and_files'].forEach((v) { clerkCommentsAndFiles!.add(new ClerkCommentsAndFiles.fromJson(v)); });
     // }
     hasValidEntry = json['has_valid_entry'];
     hasDivisionEntry = json['has_division_entry'];
@@ -67,12 +66,13 @@ class Data {
         deputyRfos!.add(DeputyRfos.fromJson(v));
       });
     }
-    if (json['additional_documents'] != null) {
-      additionalDocuments = <AdditionalDocuments>[];
-      json['additional_documents'].forEach((v) {
-        additionalDocuments!.add(AdditionalDocuments.fromJson(v));
-      });
-    }
+    // if (json['additional_documents'] != null) {
+    // 	additionalDocuments = <Null>[];
+    // 	json['additional_documents'].forEach((v) { additionalDocuments!.add(new Null.fromJson(v)); });
+    // }
+    imageDocuments = json['image_documents'] != null
+        ? ImageDocuments.fromJson(json['image_documents'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -85,18 +85,19 @@ class Data {
       data['division_comments_and_files'] =
           divisionCommentsAndFiles!.map((v) => v.toJson()).toList();
     }
-    // if (clerkCommentsAndFiles != null) {
-    //   data['clerk_comments_and_files'] =
-    //       clerkCommentsAndFiles!.map((v) => v.toJson()).toList();
+    // if (this.clerkCommentsAndFiles != null) {
+    //   data['clerk_comments_and_files'] = this.clerkCommentsAndFiles!.map((v) => v.toJson()).toList();
     // }
     data['has_valid_entry'] = hasValidEntry;
     data['has_division_entry'] = hasDivisionEntry;
     if (deputyRfos != null) {
       data['deputy_rfos'] = deputyRfos!.map((v) => v.toJson()).toList();
     }
-    if (additionalDocuments != null) {
-      data['additional_documents'] =
-          additionalDocuments!.map((v) => v.toJson()).toList();
+    // if (this.additionalDocuments != null) {
+    //   data['additional_documents'] = this.additionalDocuments!.map((v) => v.toJson()).toList();
+    // }
+    if (imageDocuments != null) {
+      data['image_documents'] = imageDocuments!.toJson();
     }
     return data;
   }
@@ -104,8 +105,39 @@ class Data {
 
 class NocApplication {
   int? id;
-  int? nocApplicationIdId;
-  int? clerkDivisionIdId;
+  String? nocOfLandApplicationId;
+  int? byUserId;
+  String? previousNocId;
+  String? division;
+  String? range;
+  bool? hasAppliedBefore;
+  Null previousNoc;
+  String? name;
+  String? nocIssuedName;
+  String? otherName;
+  bool? isInstitute;
+  String? designation;
+  String? instituteName;
+  String? address;
+  String? surveyNumber;
+  String? district;
+  String? taluka;
+  bool? withForest;
+  String? approximateDistance;
+  String? village;
+  String? panchayat;
+  String? legislativeAssembly;
+  String? block;
+  String? pinCode;
+  String? purpose;
+  String? selectedIdProof;
+  String? photoIdProof;
+  String? ownershipPattyam;
+  String? registrationDeed;
+  String? possessionCertificate;
+  String? landTaxReceipt;
+  String? nocCreatedAt;
+  int? clerkDivisionId;
   String? clerkDivisionCommentStepOne;
   String? clerkDivisionFileStepOne;
   String? clerkDivisionStepOneCommentDate;
@@ -114,8 +146,8 @@ class NocApplication {
   Null clerkDivisionFileStepTwo;
   Null clerkDivisionStepTwoCommentDate;
   String? clerkDivisionStepTwoApplicationStatus;
-  int? assignedDyrfoUserId;
-  int? ministerialHeadIdId;
+  Null assignedDyrfoUserId;
+  int? ministerialHeadId;
   String? ministerialHeadCommentStepOne;
   String? ministerialHeadFileStepOne;
   String? ministerialHeadStepOneCommentDate;
@@ -124,7 +156,7 @@ class NocApplication {
   Null ministerialHeadFileStepTwo;
   Null ministerialHeadStepTwoCommentDate;
   String? ministerialHeadStepTwoApplicationStatus;
-  int? dfoIdId;
+  int? dfoId;
   String? dfoCommentStepOne;
   String? dfoFileStepOne;
   String? dfoStepOneCommentDate;
@@ -133,12 +165,12 @@ class NocApplication {
   Null dfoFileStepTwo;
   Null dfoStepTwoCommentDate;
   String? dfoStepTwoApplicationStatus;
-  int? clerkRangeIdId;
+  int? clerkRangeId;
   String? clerkRangeComment;
   String? clerkRangeFile;
   String? clerkRangeCommentDate;
   String? clerkRangeApplicationStatus;
-  int? rfoIdId;
+  int? rfoId;
   String? rfoCommentStepOne;
   String? rfoFileStepOne;
   String? rfoStepOneCommentDate;
@@ -147,25 +179,56 @@ class NocApplication {
   Null rfoFileStepTwo;
   Null rfoStepTwoCommentDate;
   String? rfoStepTwoApplicationStatus;
-  Null dyrfoIdId;
-  Null dyrfoComment;
-  Null dyrfoFile;
-  Null dyrfoCommentDate;
+  int? dyrfoId;
+  String? dyrfoComment;
+  String? dyrfoFile;
+  String? dyrfoCommentDate;
   String? dyrfoApplicationStatus;
-  Null inspectionReport;
-  Null surveyReport;
-  Null surveySketches;
-  Null dfoDigitalSignature;
-  Null clarificationSought;
-  Null returnedOn;
+  String? inspectionReport;
+  String? surveyReport;
+  String? surveySketches;
+  String? dfoDigitalSignature;
+  String? clarificationSought;
+  String? returnedOn;
   String? clarificationResponse;
   bool? siteInception;
   String? stepStatus;
 
   NocApplication(
       {this.id,
-      this.nocApplicationIdId,
-      this.clerkDivisionIdId,
+      this.nocOfLandApplicationId,
+      this.byUserId,
+      this.previousNocId,
+      this.division,
+      this.range,
+      this.hasAppliedBefore,
+      this.previousNoc,
+      this.name,
+      this.nocIssuedName,
+      this.otherName,
+      this.isInstitute,
+      this.designation,
+      this.instituteName,
+      this.address,
+      this.surveyNumber,
+      this.district,
+      this.taluka,
+      this.withForest,
+      this.approximateDistance,
+      this.village,
+      this.panchayat,
+      this.legislativeAssembly,
+      this.block,
+      this.pinCode,
+      this.purpose,
+      this.selectedIdProof,
+      this.photoIdProof,
+      this.ownershipPattyam,
+      this.registrationDeed,
+      this.possessionCertificate,
+      this.landTaxReceipt,
+      this.nocCreatedAt,
+      this.clerkDivisionId,
       this.clerkDivisionCommentStepOne,
       this.clerkDivisionFileStepOne,
       this.clerkDivisionStepOneCommentDate,
@@ -175,7 +238,7 @@ class NocApplication {
       this.clerkDivisionStepTwoCommentDate,
       this.clerkDivisionStepTwoApplicationStatus,
       this.assignedDyrfoUserId,
-      this.ministerialHeadIdId,
+      this.ministerialHeadId,
       this.ministerialHeadCommentStepOne,
       this.ministerialHeadFileStepOne,
       this.ministerialHeadStepOneCommentDate,
@@ -184,7 +247,7 @@ class NocApplication {
       this.ministerialHeadFileStepTwo,
       this.ministerialHeadStepTwoCommentDate,
       this.ministerialHeadStepTwoApplicationStatus,
-      this.dfoIdId,
+      this.dfoId,
       this.dfoCommentStepOne,
       this.dfoFileStepOne,
       this.dfoStepOneCommentDate,
@@ -193,12 +256,12 @@ class NocApplication {
       this.dfoFileStepTwo,
       this.dfoStepTwoCommentDate,
       this.dfoStepTwoApplicationStatus,
-      this.clerkRangeIdId,
+      this.clerkRangeId,
       this.clerkRangeComment,
       this.clerkRangeFile,
       this.clerkRangeCommentDate,
       this.clerkRangeApplicationStatus,
-      this.rfoIdId,
+      this.rfoId,
       this.rfoCommentStepOne,
       this.rfoFileStepOne,
       this.rfoStepOneCommentDate,
@@ -207,7 +270,7 @@ class NocApplication {
       this.rfoFileStepTwo,
       this.rfoStepTwoCommentDate,
       this.rfoStepTwoApplicationStatus,
-      this.dyrfoIdId,
+      this.dyrfoId,
       this.dyrfoComment,
       this.dyrfoFile,
       this.dyrfoCommentDate,
@@ -224,8 +287,39 @@ class NocApplication {
 
   NocApplication.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    nocApplicationIdId = json['noc_application_id_id'];
-    clerkDivisionIdId = json['clerk_division_id_id'];
+    nocOfLandApplicationId = json['noc_of_land_application_id'];
+    byUserId = json['by_user_id'];
+    previousNocId = json['previous_noc_id'];
+    division = json['division'];
+    range = json['range'];
+    hasAppliedBefore = json['has_applied_before'];
+    previousNoc = json['previous_noc'];
+    name = json['name'];
+    nocIssuedName = json['noc_issued_name'];
+    otherName = json['other_name'];
+    isInstitute = json['is_institute'];
+    designation = json['designation'];
+    instituteName = json['institute_name'];
+    address = json['address'];
+    surveyNumber = json['survey_number'];
+    district = json['district'];
+    taluka = json['taluka'];
+    withForest = json['with_forest'];
+    approximateDistance = json['approximate_distance'];
+    village = json['village'];
+    panchayat = json['panchayat'];
+    legislativeAssembly = json['legislative_assembly'];
+    block = json['block'];
+    pinCode = json['pin_code'];
+    purpose = json['purpose'];
+    selectedIdProof = json['selected_id_proof'];
+    photoIdProof = json['photo_id_proof'];
+    ownershipPattyam = json['ownership_pattyam'];
+    registrationDeed = json['registration_deed'];
+    possessionCertificate = json['possession_certificate'];
+    landTaxReceipt = json['land_tax_receipt'];
+    nocCreatedAt = json['noc_created_at'];
+    clerkDivisionId = json['clerk_division_id'];
     clerkDivisionCommentStepOne = json['clerk_division_comment_step_one'];
     clerkDivisionFileStepOne = json['clerk_division_file_step_one'];
     clerkDivisionStepOneCommentDate =
@@ -239,7 +333,7 @@ class NocApplication {
     clerkDivisionStepTwoApplicationStatus =
         json['clerk_division_step_two_application_status'];
     assignedDyrfoUserId = json['assigned_dyrfo_user_id'];
-    ministerialHeadIdId = json['ministerial_head_id_id'];
+    ministerialHeadId = json['ministerial_head_id'];
     ministerialHeadCommentStepOne = json['ministerial_head_comment_step_one'];
     ministerialHeadFileStepOne = json['ministerial_head_file_step_one'];
     ministerialHeadStepOneCommentDate =
@@ -252,7 +346,7 @@ class NocApplication {
         json['ministerial_head_step_two_comment_date'];
     ministerialHeadStepTwoApplicationStatus =
         json['ministerial_head_step_two_application_status'];
-    dfoIdId = json['dfo_id_id'];
+    dfoId = json['dfo_id'];
     dfoCommentStepOne = json['dfo_comment_step_one'];
     dfoFileStepOne = json['dfo_file_step_one'];
     dfoStepOneCommentDate = json['dfo_step_one_comment_date'];
@@ -261,12 +355,12 @@ class NocApplication {
     dfoFileStepTwo = json['dfo_file_step_two'];
     dfoStepTwoCommentDate = json['dfo_step_two_comment_date'];
     dfoStepTwoApplicationStatus = json['dfo_step_two_application_status'];
-    clerkRangeIdId = json['clerk_range_id_id'];
+    clerkRangeId = json['clerk_range_id'];
     clerkRangeComment = json['clerk_range_comment'];
     clerkRangeFile = json['clerk_range_file'];
     clerkRangeCommentDate = json['clerk_range_comment_date'];
     clerkRangeApplicationStatus = json['clerk_range_application_status'];
-    rfoIdId = json['rfo_id_id'];
+    rfoId = json['rfo_id'];
     rfoCommentStepOne = json['rfo_comment_step_one'];
     rfoFileStepOne = json['rfo_file_step_one'];
     rfoStepOneCommentDate = json['rfo_step_one_comment_date'];
@@ -275,7 +369,7 @@ class NocApplication {
     rfoFileStepTwo = json['rfo_file_step_two'];
     rfoStepTwoCommentDate = json['rfo_step_two_comment_date'];
     rfoStepTwoApplicationStatus = json['rfo_step_two_application_status'];
-    dyrfoIdId = json['dyrfo_id_id'];
+    dyrfoId = json['dyrfo_id'];
     dyrfoComment = json['dyrfo_comment'];
     dyrfoFile = json['dyrfo_file'];
     dyrfoCommentDate = json['dyrfo_comment_date'];
@@ -294,8 +388,39 @@ class NocApplication {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
-    data['noc_application_id_id'] = nocApplicationIdId;
-    data['clerk_division_id_id'] = clerkDivisionIdId;
+    data['noc_of_land_application_id'] = nocOfLandApplicationId;
+    data['by_user_id'] = byUserId;
+    data['previous_noc_id'] = previousNocId;
+    data['division'] = division;
+    data['range'] = range;
+    data['has_applied_before'] = hasAppliedBefore;
+    data['previous_noc'] = previousNoc;
+    data['name'] = name;
+    data['noc_issued_name'] = nocIssuedName;
+    data['other_name'] = otherName;
+    data['is_institute'] = isInstitute;
+    data['designation'] = designation;
+    data['institute_name'] = instituteName;
+    data['address'] = address;
+    data['survey_number'] = surveyNumber;
+    data['district'] = district;
+    data['taluka'] = taluka;
+    data['with_forest'] = withForest;
+    data['approximate_distance'] = approximateDistance;
+    data['village'] = village;
+    data['panchayat'] = panchayat;
+    data['legislative_assembly'] = legislativeAssembly;
+    data['block'] = block;
+    data['pin_code'] = pinCode;
+    data['purpose'] = purpose;
+    data['selected_id_proof'] = selectedIdProof;
+    data['photo_id_proof'] = photoIdProof;
+    data['ownership_pattyam'] = ownershipPattyam;
+    data['registration_deed'] = registrationDeed;
+    data['possession_certificate'] = possessionCertificate;
+    data['land_tax_receipt'] = landTaxReceipt;
+    data['noc_created_at'] = nocCreatedAt;
+    data['clerk_division_id'] = clerkDivisionId;
     data['clerk_division_comment_step_one'] = clerkDivisionCommentStepOne;
     data['clerk_division_file_step_one'] = clerkDivisionFileStepOne;
     data['clerk_division_step_one_comment_date'] =
@@ -309,7 +434,7 @@ class NocApplication {
     data['clerk_division_step_two_application_status'] =
         clerkDivisionStepTwoApplicationStatus;
     data['assigned_dyrfo_user_id'] = assignedDyrfoUserId;
-    data['ministerial_head_id_id'] = ministerialHeadIdId;
+    data['ministerial_head_id'] = ministerialHeadId;
     data['ministerial_head_comment_step_one'] = ministerialHeadCommentStepOne;
     data['ministerial_head_file_step_one'] = ministerialHeadFileStepOne;
     data['ministerial_head_step_one_comment_date'] =
@@ -322,7 +447,7 @@ class NocApplication {
         ministerialHeadStepTwoCommentDate;
     data['ministerial_head_step_two_application_status'] =
         ministerialHeadStepTwoApplicationStatus;
-    data['dfo_id_id'] = dfoIdId;
+    data['dfo_id'] = dfoId;
     data['dfo_comment_step_one'] = dfoCommentStepOne;
     data['dfo_file_step_one'] = dfoFileStepOne;
     data['dfo_step_one_comment_date'] = dfoStepOneCommentDate;
@@ -331,12 +456,12 @@ class NocApplication {
     data['dfo_file_step_two'] = dfoFileStepTwo;
     data['dfo_step_two_comment_date'] = dfoStepTwoCommentDate;
     data['dfo_step_two_application_status'] = dfoStepTwoApplicationStatus;
-    data['clerk_range_id_id'] = clerkRangeIdId;
+    data['clerk_range_id'] = clerkRangeId;
     data['clerk_range_comment'] = clerkRangeComment;
     data['clerk_range_file'] = clerkRangeFile;
     data['clerk_range_comment_date'] = clerkRangeCommentDate;
     data['clerk_range_application_status'] = clerkRangeApplicationStatus;
-    data['rfo_id_id'] = rfoIdId;
+    data['rfo_id'] = rfoId;
     data['rfo_comment_step_one'] = rfoCommentStepOne;
     data['rfo_file_step_one'] = rfoFileStepOne;
     data['rfo_step_one_comment_date'] = rfoStepOneCommentDate;
@@ -345,7 +470,7 @@ class NocApplication {
     data['rfo_file_step_two'] = rfoFileStepTwo;
     data['rfo_step_two_comment_date'] = rfoStepTwoCommentDate;
     data['rfo_step_two_application_status'] = rfoStepTwoApplicationStatus;
-    data['dyrfo_id_id'] = dyrfoIdId;
+    data['dyrfo_id'] = dyrfoId;
     data['dyrfo_comment'] = dyrfoComment;
     data['dyrfo_file'] = dyrfoFile;
     data['dyrfo_comment_date'] = dyrfoCommentDate;
@@ -410,39 +535,15 @@ class DeputyRfos {
   }
 }
 
-class AdditionalDocuments {
-  int? id;
-  int? appFormId;
-  String? category;
-  String? document;
-  String? name;
-  String? uploadedAt;
+class ImageDocuments {
+  // ImageDocuments({});
 
-  AdditionalDocuments(
-      {this.id,
-      this.appFormId,
-      this.category,
-      this.document,
-      this.name,
-      this.uploadedAt});
-
-  AdditionalDocuments.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    appFormId = json['app_form_id'];
-    category = json['category'];
-    document = json['document'];
-    name = json['name'];
-    uploadedAt = json['uploaded_at'];
+  ImageDocuments.fromJson(Map<String, dynamic> json) {
+    // Implement parsing logic here if needed
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['app_form_id'] = appFormId;
-    data['category'] = category;
-    data['document'] = document;
-    data['name'] = name;
-    data['uploaded_at'] = uploadedAt;
     return data;
   }
 }

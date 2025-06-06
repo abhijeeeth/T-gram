@@ -11,15 +11,8 @@ import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pie_chart/pie_chart.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tigramnks/NEW_FORMS/transitViewAndApprove.dart';
-import 'package:tigramnks/PendingApplicationsPage.dart';
-import 'package:tigramnks/QueryPage.dart';
-import 'package:tigramnks/Reports.dart';
 import 'package:tigramnks/ViewApplication.dart';
-import 'package:tigramnks/login.dart';
-import 'package:tigramnks/pages/application_locations_list_page.dart';
-import 'package:tigramnks/screens/applications_list_page.dart';
 import 'package:tigramnks/server/serverhelper.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -2422,267 +2415,267 @@ class _OfficerDashboardState extends State<OfficerDashboard> {
             ],
           ),
         ),
-        drawer: Container(
-          child: Drawer(
-            child: Container(
-              color: Colors.white,
-              child: ListView(
-                padding: EdgeInsets.all(0),
-                children: [
-                  UserAccountsDrawerHeader(
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                      colors: [
-                        Color.fromARGB(255, 28, 110, 99),
-                        Color.fromARGB(207, 28, 110, 99),
-                        Color.fromARGB(195, 105, 138, 132)
-                      ],
-                    )),
-                    accountEmail: Text(userEmail),
-                    accountName: Text(userName),
-                    currentAccountPicture: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      child: Text(
-                        userName[0].toUpperCase(),
-                        style: TextStyle(color: Colors.black, fontSize: 20),
-                      ),
-                    ),
-                  ),
-                  ListTile(
-                      leading: Icon(
-                        Icons.receipt_long_outlined,
-                        color: Colors.black,
-                        size: 25,
-                      ),
-                      title: Text(
-                        'Reports',
-                        style: TextStyle(color: Colors.black, fontSize: 20),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) =>
-                                    Reports(sessionToken: sessionToken)));
-                      }),
-                  ListTile(
-                      leading: Icon(
-                        Icons.dashboard,
-                        color: Colors.black,
-                        size: 25,
-                      ),
-                      title: Text(
-                        'Dashboard',
-                        style: TextStyle(color: Colors.black, fontSize: 20),
-                      ),
-                      onTap: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => OfficerDashboard(
-                                      sessionToken: sessionToken,
-                                      userName: userName,
-                                      userEmail: userEmail,
-                                      userGroup: userGroup,
-                                      userId: userId,
-                                      dropdownValue: dropdownValue,
-                                      Range: Range,
-                                      userMobile: widget.userMobile,
-                                      userAddress: widget.userAddress,
-                                    )));
-                      }),
-                  ListTile(
-                      leading: Icon(
-                        Icons.qr_code_scanner,
-                        color: Colors.black,
-                        size: 25,
-                      ),
-                      title: Text(
-                        'QR-Scanner',
-                        style: TextStyle(color: Colors.black, fontSize: 20),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => QueryPage(
-                                      userId: userId,
-                                      sessionToken: sessionToken,
-                                      userName: userName,
-                                      userEmail: userEmail,
-                                      userMobile:
-                                          widget.userMobile ?? "987654312",
-                                      userAddress:
-                                          widget.userAddress ?? "Address",
-                                    )));
-                      }),
-                  ListTile(
-                      leading: Icon(
-                        Icons.offline_share,
-                        color: Colors.black,
-                        size: 25,
-                      ),
-                      title: Text(
-                        'Download Field Verification',
-                        style: TextStyle(color: Colors.black, fontSize: 20),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => PendingApplicationsPage(
-                                      sessionToken: sessionToken,
-                                      Range: Range,
-                                      userEmail: userEmail,
-                                      userGroup: userGroup,
-                                      userId: userId,
-                                      userName: userName,
-                                    )));
-                      }),
-                  ListTile(
-                      leading: Icon(
-                        Icons.offline_share,
-                        color: Colors.black,
-                        size: 25,
-                      ),
-                      title: Text(
-                        'Downloaded List',
-                        style: TextStyle(color: Colors.black, fontSize: 20),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => ApplicationsListPage(
-                                    // sessionToken: sessionToken,
-                                    // Range: Range,
-                                    // userEmail: userEmail,
-                                    // userGroup: userGroup,
-                                    // userId: userId,
-                                    // userName: userName,
-                                    )));
-                      }),
-                  ListTile(
-                      leading: Icon(
-                        Icons.offline_share,
-                        color: Colors.black,
-                        size: 25,
-                      ),
-                      title: Text(
-                        ' List',
-                        style: TextStyle(color: Colors.black, fontSize: 20),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const ApplicationLocationsListPage()),
-                        );
-                      }),
-                  ListTile(
-                    leading: Icon(
-                      Icons.logout,
-                      color: Colors.black,
-                      size: 25,
-                    ),
-                    title: Text(
-                      'Logout',
-                      style: TextStyle(color: Colors.black, fontSize: 20),
-                    ),
-                    onTap: () async {
-                      // Show logout confirmation dialog
-                      bool confirmLogout = await showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text('Confirm Logout'),
-                              content: const Text(
-                                  'Are you sure you want to logout?'),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.of(context).pop(false),
-                                  child: const Text("Cancel"),
-                                ),
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.of(context).pop(true),
-                                  child: const Text("Logout"),
-                                ),
-                              ],
-                            ),
-                          ) ??
-                          false;
+        // drawer: Container(
+        //   child: Drawer(
+        //     child: Container(
+        //       color: Colors.white,
+        //       child: ListView(
+        //         padding: EdgeInsets.all(0),
+        //         children: [
+        //           UserAccountsDrawerHeader(
+        //             decoration: BoxDecoration(
+        //                 gradient: LinearGradient(
+        //               colors: [
+        //                 Color.fromARGB(255, 28, 110, 99),
+        //                 Color.fromARGB(207, 28, 110, 99),
+        //                 Color.fromARGB(195, 105, 138, 132)
+        //               ],
+        //             )),
+        //             accountEmail: Text(userEmail),
+        //             accountName: Text(userName),
+        //             currentAccountPicture: CircleAvatar(
+        //               backgroundColor: Colors.white,
+        //               child: Text(
+        //                 userName[0].toUpperCase(),
+        //                 style: TextStyle(color: Colors.black, fontSize: 20),
+        //               ),
+        //             ),
+        //           ),
+        //           ListTile(
+        //               leading: Icon(
+        //                 Icons.receipt_long_outlined,
+        //                 color: Colors.black,
+        //                 size: 25,
+        //               ),
+        //               title: Text(
+        //                 'Reports',
+        //                 style: TextStyle(color: Colors.black, fontSize: 20),
+        //               ),
+        //               onTap: () {
+        //                 Navigator.push(
+        //                     context,
+        //                     MaterialPageRoute(
+        //                         builder: (_) =>
+        //                             Reports(sessionToken: sessionToken)));
+        //               }),
+        //           ListTile(
+        //               leading: Icon(
+        //                 Icons.dashboard,
+        //                 color: Colors.black,
+        //                 size: 25,
+        //               ),
+        //               title: Text(
+        //                 'Dashboard',
+        //                 style: TextStyle(color: Colors.black, fontSize: 20),
+        //               ),
+        //               onTap: () {
+        //                 Navigator.pushReplacement(
+        //                     context,
+        //                     MaterialPageRoute(
+        //                         builder: (_) => OfficerDashboard(
+        //                               sessionToken: sessionToken,
+        //                               userName: userName,
+        //                               userEmail: userEmail,
+        //                               userGroup: userGroup,
+        //                               userId: userId,
+        //                               dropdownValue: dropdownValue,
+        //                               Range: Range,
+        //                               userMobile: widget.userMobile,
+        //                               userAddress: widget.userAddress,
+        //                             )));
+        //               }),
+        //           ListTile(
+        //               leading: Icon(
+        //                 Icons.qr_code_scanner,
+        //                 color: Colors.black,
+        //                 size: 25,
+        //               ),
+        //               title: Text(
+        //                 'QR-Scanner',
+        //                 style: TextStyle(color: Colors.black, fontSize: 20),
+        //               ),
+        //               onTap: () {
+        //                 Navigator.push(
+        //                     context,
+        //                     MaterialPageRoute(
+        //                         builder: (_) => QueryPage(
+        //                               userId: userId,
+        //                               sessionToken: sessionToken,
+        //                               userName: userName,
+        //                               userEmail: userEmail,
+        //                               userMobile:
+        //                                   widget.userMobile ?? "987654312",
+        //                               userAddress:
+        //                                   widget.userAddress ?? "Address",
+        //                             )));
+        //               }),
+        //           ListTile(
+        //               leading: Icon(
+        //                 Icons.offline_share,
+        //                 color: Colors.black,
+        //                 size: 25,
+        //               ),
+        //               title: Text(
+        //                 'Download Field Verification',
+        //                 style: TextStyle(color: Colors.black, fontSize: 20),
+        //               ),
+        //               onTap: () {
+        //                 Navigator.push(
+        //                     context,
+        //                     MaterialPageRoute(
+        //                         builder: (_) => PendingApplicationsPage(
+        //                               sessionToken: sessionToken,
+        //                               Range: Range,
+        //                               userEmail: userEmail,
+        //                               userGroup: userGroup,
+        //                               userId: userId,
+        //                               userName: userName,
+        //                             )));
+        //               }),
+        //           ListTile(
+        //               leading: Icon(
+        //                 Icons.offline_share,
+        //                 color: Colors.black,
+        //                 size: 25,
+        //               ),
+        //               title: Text(
+        //                 'Downloaded List',
+        //                 style: TextStyle(color: Colors.black, fontSize: 20),
+        //               ),
+        //               onTap: () {
+        //                 Navigator.push(
+        //                     context,
+        //                     MaterialPageRoute(
+        //                         builder: (_) => ApplicationsListPage(
+        //                             // sessionToken: sessionToken,
+        //                             // Range: Range,
+        //                             // userEmail: userEmail,
+        //                             // userGroup: userGroup,
+        //                             // userId: userId,
+        //                             // userName: userName,
+        //                             )));
+        //               }),
+        //           ListTile(
+        //               leading: Icon(
+        //                 Icons.offline_share,
+        //                 color: Colors.black,
+        //                 size: 25,
+        //               ),
+        //               title: Text(
+        //                 ' List',
+        //                 style: TextStyle(color: Colors.black, fontSize: 20),
+        //               ),
+        //               onTap: () {
+        //                 Navigator.push(
+        //                   context,
+        //                   MaterialPageRoute(
+        //                       builder: (context) =>
+        //                           const ApplicationLocationsListPage()),
+        //                 );
+        //               }),
+        //           ListTile(
+        //             leading: Icon(
+        //               Icons.logout,
+        //               color: Colors.black,
+        //               size: 25,
+        //             ),
+        //             title: Text(
+        //               'Logout',
+        //               style: TextStyle(color: Colors.black, fontSize: 20),
+        //             ),
+        //             onTap: () async {
+        //               // Show logout confirmation dialog
+        //               bool confirmLogout = await showDialog(
+        //                     context: context,
+        //                     builder: (context) => AlertDialog(
+        //                       title: const Text('Confirm Logout'),
+        //                       content: const Text(
+        //                           'Are you sure you want to logout?'),
+        //                       actions: <Widget>[
+        //                         TextButton(
+        //                           onPressed: () =>
+        //                               Navigator.of(context).pop(false),
+        //                           child: const Text("Cancel"),
+        //                         ),
+        //                         TextButton(
+        //                           onPressed: () =>
+        //                               Navigator.of(context).pop(true),
+        //                           child: const Text("Logout"),
+        //                         ),
+        //                       ],
+        //                     ),
+        //                   ) ??
+        //                   false;
 
-                      if (confirmLogout) {
-                        // Replace the drawer with a loading indicator
-                        Navigator.pop(context); // Close the drawer
+        //               if (confirmLogout) {
+        //                 // Replace the drawer with a loading indicator
+        //                 Navigator.pop(context); // Close the drawer
 
-                        // Show loading dialog
-                        showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (BuildContext context) {
-                            return Center(
-                              child: Dialog(
-                                elevation: 0,
-                                backgroundColor: Colors.transparent,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    CircularProgressIndicator(),
-                                    SizedBox(height: 20),
-                                    Text('Logging out...',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold))
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        );
+        //                 // Show loading dialog
+        //                 showDialog(
+        //                   context: context,
+        //                   barrierDismissible: false,
+        //                   builder: (BuildContext context) {
+        //                     return Center(
+        //                       child: Dialog(
+        //                         elevation: 0,
+        //                         backgroundColor: Colors.transparent,
+        //                         child: Column(
+        //                           mainAxisSize: MainAxisSize.min,
+        //                           children: [
+        //                             CircularProgressIndicator(),
+        //                             SizedBox(height: 20),
+        //                             Text('Logging out...',
+        //                                 style: TextStyle(
+        //                                     color: Colors.white,
+        //                                     fontWeight: FontWeight.bold))
+        //                           ],
+        //                         ),
+        //                       ),
+        //                     );
+        //                   },
+        //                 );
 
-                        try {
-                          // Perform logout
-                          const String url =
-                              '${ServerHelper.baseUrl}auth/logout/';
-                          await http.post(
-                            Uri.parse(url),
-                            headers: <String, String>{
-                              'Content-Type': 'application/json',
-                              'Authorization': "token $sessionToken"
-                            },
-                          );
+        //                 try {
+        //                   // Perform logout
+        //                   const String url =
+        //                       '${ServerHelper.baseUrl}auth/logout/';
+        //                   await http.post(
+        //                     Uri.parse(url),
+        //                     headers: <String, String>{
+        //                       'Content-Type': 'application/json',
+        //                       'Authorization': "token $sessionToken"
+        //                     },
+        //                   );
 
-                          // Clear local storage
-                          SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          await prefs.remove('isLoggedIn');
+        //                   // Clear local storage
+        //                   SharedPreferences prefs =
+        //                       await SharedPreferences.getInstance();
+        //                   await prefs.remove('isLoggedIn');
 
-                          // Navigate to login screen
-                          Navigator.of(context, rootNavigator: true)
-                              .pop(); // Dismiss the loading dialog
-                          Navigator.pushReplacement(context,
-                              MaterialPageRoute(builder: (_) => login()));
-                        } catch (e) {
-                          // Handle errors
-                          Navigator.of(context, rootNavigator: true)
-                              .pop(); // Dismiss the loading dialog
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content:
-                                    Text('Logout failed: ${e.toString()}')),
-                          );
-                        }
-                      }
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
+        //                   // Navigate to login screen
+        //                   Navigator.of(context, rootNavigator: true)
+        //                       .pop(); // Dismiss the loading dialog
+        //                   Navigator.pushReplacement(context,
+        //                       MaterialPageRoute(builder: (_) => login()));
+        //                 } catch (e) {
+        //                   // Handle errors
+        //                   Navigator.of(context, rootNavigator: true)
+        //                       .pop(); // Dismiss the loading dialog
+        //                   ScaffoldMessenger.of(context).showSnackBar(
+        //                     SnackBar(
+        //                         content:
+        //                             Text('Logout failed: ${e.toString()}')),
+        //                   );
+        //                 }
+        //               }
+        //             },
+        //           ),
+        //         ],
+        //       ),
+        //     ),
+        //   ),
+        // ),
       ),
     );
   }

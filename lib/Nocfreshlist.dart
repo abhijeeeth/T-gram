@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tigramnks/Initializer.dart';
 import 'package:tigramnks/bloc/main_bloc.dart';
+import 'package:tigramnks/nocview.dart';
 
 class NocFreshListTable extends StatelessWidget {
-  const NocFreshListTable({super.key});
+  final String sessionToken;
+  const NocFreshListTable({super.key, required this.sessionToken});
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +94,7 @@ class NocFreshListTable extends StatelessWidget {
       children: [
         _buildHeader(pendingList.length),
         Expanded(
-          child: _buildTable(pendingList),
+          child: _buildTable(pendingList, context),
         ),
       ],
     );
@@ -189,7 +191,7 @@ class NocFreshListTable extends StatelessWidget {
     );
   }
 
-  Widget _buildTable(List pendingList) {
+  Widget _buildTable(List pendingList, BuildContext context) {
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
       decoration: BoxDecoration(
@@ -309,10 +311,13 @@ class NocFreshListTable extends StatelessWidget {
                       Container(
                         child: ElevatedButton.icon(
                           onPressed: () {
-                            // Handle view action
-                            // context.read<MainBloc>().add(
-                            //       NocFreshActionEvent(item),
-                            //     );
+                            context.read<MainBloc>().add(NocListIndividualView(
+                                sessionToken: sessionToken,
+                                Ids: item.id.toString() ?? ""));
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => const NOCView()),
+                            );
                           },
                           icon: const Icon(Icons.visibility, size: 16),
                           label: const Text('View'),

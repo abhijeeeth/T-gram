@@ -9,6 +9,7 @@ import 'package:tigramnks/model/nocapprovedrejecedmodel.dart';
 import 'package:tigramnks/model/nocforwardedlistmodel.dart';
 import 'package:tigramnks/model/nocfreshapplictaionmodel.dart';
 import 'package:tigramnks/model/nocpendinglistmodel.dart';
+import 'package:tigramnks/model/nocviewmodel.dart';
 import 'package:tigramnks/server/serverhelper.dart';
 import 'package:tigramnks/sqflite/dbhelper.dart'; // Add this import
 import 'package:tigramnks/utils/local_storage.dart';
@@ -24,6 +25,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     on<NocPendingApplicationList>(_nocPendingApplicationList);
     on<NocApprovedRejectedList>(_nocApprovedRejectedList);
     on<NocForwardedList>(_nocForwardedList);
+    on<NocListIndividualView>(_nocListIndividualView);
     // TODO: implement event handler
   }
 
@@ -376,6 +378,34 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       emit(NOClistForwardedFailed());
     }
   }
+
+  FutureOr<void> _nocListIndividualView(
+      NocListIndividualView event, Emitter<MainState> emit) async {
+    try {
+      Map<String, dynamic> userData = {
+        'id': event.Ids,
+      };
+
+      emit(NocListIndividualViewLoading());
+      var response = await Initializer.post(
+          'auth/NocApplication', userData, event.sessionToken);
+
+      if (response != null && response is Map<String, dynamic>) {
+        Initializer.nocListViewModel = NOCListViewModel.fromJson(response);
+        if (Initializer.nocListViewModel.status == "true") {
+          emit(NocListIndividualViewLoaded());
+        } else {
+          emit(NocListIndividualViewFailed());
+        }
+      } else {
+        log('Invalid response format: $response');
+        emit(NocListIndividualViewFailed());
+      }
+    } catch (e) {
+      log('Error fetching NOC individual view: $e');
+      emit(NocListIndividualViewFailed());
+    }
+  }
 }
 // Define the events
 
@@ -508,3 +538,18 @@ class NocForwardedListLoaded extends MainState {}
 class NOClistForwardedFailed extends MainState {}
 
 //Noc List Individual View
+class NocListIndividualView extends MainEvent {
+  final String sessionToken;
+  final String Ids;
+
+  NocListIndividualView({
+    required this.sessionToken,
+    required this.Ids,
+  });
+}
+
+class NocListIndividualViewLoading extends MainState {}
+
+class NocListIndividualViewLoaded extends MainState {}
+
+class NocListIndividualViewFailed extends MainState {}

@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tigramnks/Initializer.dart';
 import 'package:tigramnks/bloc/main_bloc.dart';
 import 'package:tigramnks/model/nocpendinglistmodel.dart';
+import 'package:tigramnks/nocview.dart';
 
 class NocPendingListTable extends StatelessWidget {
-  const NocPendingListTable({super.key});
+  final String sessionToken;
+  const NocPendingListTable({super.key, required this.sessionToken});
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +95,7 @@ class NocPendingListTable extends StatelessWidget {
       children: [
         _buildHeader(inProcessingList.length),
         Expanded(
-          child: _buildTable(inProcessingList),
+          child: _buildTable(inProcessingList,context),
         ),
       ],
     );
@@ -243,7 +245,7 @@ class NocPendingListTable extends StatelessWidget {
     );
   }
 
-  Widget _buildTable(List<InProcessingList> inProcessingList) {
+  Widget _buildTable(List<InProcessingList> inProcessingList ,  BuildContext context) {
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
       decoration: BoxDecoration(
@@ -363,10 +365,13 @@ class NocPendingListTable extends StatelessWidget {
                       Container(
                         child: ElevatedButton.icon(
                           onPressed: () {
-                            // Handle view action
-                            // context.read<MainBloc>().add(
-                            //       NocPendingActionEvent(item),
-                            //     );
+                            context.read<MainBloc>().add(NocListIndividualView(
+                                sessionToken: sessionToken,
+                                Ids: item.id.toString() ?? ""));
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => const NOCView()),
+                            );
                           },
                           icon: const Icon(Icons.visibility, size: 16),
                           label: const Text('View'),
