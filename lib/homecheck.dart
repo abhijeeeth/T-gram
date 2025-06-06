@@ -42,6 +42,7 @@ class _HomecheckState extends State<Homecheck> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       drawer: Container(
         child: Drawer(
           child: Container(
@@ -303,6 +304,8 @@ class _HomecheckState extends State<Homecheck> {
         ),
       ),
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 28, 110, 99),
+        foregroundColor: Colors.white,
         title: const Text('Home Page'),
       ),
       body: Center(

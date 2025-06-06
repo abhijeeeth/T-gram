@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:tigramnks/Initializer.dart';
 import 'package:tigramnks/model/nocapprovedrejecedmodel.dart';
@@ -459,8 +460,19 @@ class MainBloc extends Bloc<MainEvent, MainState> {
 
       if (response.statusCode == 200) {
         emit(SiteInspectionLoaded());
+        // Show a snackbar "Opload success"
+        Future.delayed(Duration.zero, () {
+          ScaffoldMessenger.of(event.data['context']).showSnackBar(
+            const SnackBar(content: Text('Upload Success')),
+          );
+        });
       } else {
         emit(SiteInspectionFailed());
+        Future.delayed(Duration.zero, () {
+          ScaffoldMessenger.of(event.data['context']).showSnackBar(
+            const SnackBar(content: Text('Upload Failed')),
+          );
+        });
       }
     } catch (e) {
       emit(SiteInspectionFailed());

@@ -7,6 +7,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tigramnks/bloc/main_bloc.dart';
+import 'package:tigramnks/noctiles.dart';
+import 'package:tigramnks/server/serverhelper.dart';
 
 class ImageCapturePage extends StatefulWidget {
   final String appId;
@@ -172,6 +174,13 @@ class _ImageCapturePageState extends State<ImageCapturePage> {
                             .read<MainBloc>()
                             .add(SiteInspection(data: data));
                         Navigator.pop(context, data);
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => NocApplictaionTiles(
+                                      sessionToken:
+                                          ServerHelper.token.toString(),
+                                    )));
                       },
                       child: const Padding(
                         padding: EdgeInsets.all(12),
