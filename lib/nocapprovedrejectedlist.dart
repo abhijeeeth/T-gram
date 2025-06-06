@@ -35,22 +35,42 @@ class NocApprovedRejectedListTable extends StatelessWidget {
           backgroundColor: Colors.grey.shade50,
           appBar: AppBar(
             title: const Text(
-              'NOC Applications - Approved/Rejected',
+              'NOC Applications',
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 20,
+                color: Colors.white,
               ),
             ),
-            backgroundColor: Colors.white,
-            foregroundColor: Colors.grey.shade800,
-            elevation: 0,
-            bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(1),
-              child: Container(
-                height: 1,
-                color: Colors.grey.shade200,
+            flexibleSpace: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color.fromARGB(255, 28, 110, 99),
+                    Color.fromARGB(207, 28, 110, 99),
+                    Color.fromARGB(195, 105, 138, 132),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
               ),
             ),
+            elevation: 2,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.filter_list, color: Colors.white),
+                onPressed: () {
+                  // Add filter functionality here
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.refresh, color: Colors.white),
+                onPressed: () {
+                  // Add refresh functionality here
+                },
+              ),
+              const SizedBox(width: 8),
+            ],
           ),
           body: _buildBody(context, state),
         );
@@ -106,6 +126,16 @@ class NocApprovedRejectedListTable extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            const Color.fromARGB(255, 28, 110, 99).withOpacity(0.1),
+            const Color.fromARGB(195, 105, 138, 132).withOpacity(0.05),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -252,7 +282,7 @@ class NocApprovedRejectedListTable extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.shade200,
+            color: const Color.fromARGB(255, 28, 110, 99).withOpacity(0.1),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -309,12 +339,16 @@ class NocApprovedRejectedListTable extends StatelessWidget {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
+                          color: const Color.fromARGB(255, 28, 110, 99)
+                              .withOpacity(0.1),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
                           '${index + 1}',
-                          style: const TextStyle(fontWeight: FontWeight.w500),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            color: Color.fromARGB(255, 28, 110, 99),
+                          ),
                         ),
                       ),
                     ),

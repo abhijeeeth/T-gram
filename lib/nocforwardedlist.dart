@@ -34,23 +34,38 @@ class NocForwardedListTable extends StatelessWidget {
         return Scaffold(
           backgroundColor: Colors.grey.shade50,
           appBar: AppBar(
+            flexibleSpace: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color.fromARGB(255, 28, 110, 99),
+                    Color.fromARGB(207, 28, 110, 99),
+                    Color.fromARGB(195, 105, 138, 132),
+                  ],
+                ),
+              ),
+            ),
             title: const Text(
               'NOC Applications - Forwarded',
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 20,
+                color: Colors.white,
               ),
             ),
-            backgroundColor: Colors.white,
-            foregroundColor: Colors.grey.shade800,
-            elevation: 0,
-            bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(1),
-              child: Container(
-                height: 1,
-                color: Colors.grey.shade200,
-              ),
-            ),
+            iconTheme: const IconThemeData(color: Colors.white),
+            elevation: 2,
+            actions: const [
+              // IconButton(
+              //   icon: const Icon(Icons.refresh),
+              //   onPressed: () {
+              //     context.read<MainBloc>().add(const NOCForwardedListEvent());
+              //   },
+              // ),
+              SizedBox(width: 8),
+            ],
           ),
           body: _buildBody(context, state),
         );
