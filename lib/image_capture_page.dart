@@ -102,36 +102,85 @@ class _ImageCapturePageState extends State<ImageCapturePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Capture Images"),
+        title: const Text(
+          "Capture Images",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color.fromARGB(255, 28, 110, 99),
+                Color.fromARGB(207, 28, 110, 99),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        elevation: 4,
       ),
-      body: Stack(
-        children: [
-          ListView(
-            children: [
-              const SizedBox(height: 20),
-              ...List.generate(4, (index) => buildImageButton(index)),
-              const SizedBox(height: 20),
-              if (images.every((img) => img != null))
-                Container(
-                  margin: const EdgeInsets.all(15),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Map<String, dynamic> data = getFormattedData();
-                      Navigator.pop(context, data);
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.all(12),
-                      child: Text("Submit Images"),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color.fromARGB(0, 28, 110, 99),
+              Color.fromARGB(36, 0, 105, 91),
+              Color.fromARGB(34, 105, 138, 132),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Stack(
+          children: [
+            ListView(
+              children: [
+                const SizedBox(height: 20),
+                ...List.generate(4, (index) => buildImageButton(index)),
+                const SizedBox(height: 20),
+                if (images.every((img) => img != null))
+                  Container(
+                    margin: const EdgeInsets.all(15),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 28, 110, 99),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                      onPressed: () {
+                        Map<String, dynamic> data = getFormattedData();
+                        Navigator.pop(context, data);
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(12),
+                        child: Text(
+                          "Submit Images",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-            ],
-          ),
-          if (isLoading)
-            const Center(
-              child: CircularProgressIndicator(),
+              ],
             ),
-        ],
+            if (isLoading)
+              const Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    Color.fromARGB(255, 28, 110, 99),
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
