@@ -26,12 +26,19 @@ class _ImageCapturePageState extends State<ImageCapturePage> {
   List<String> longitudes = List.generate(4, (_) => "");
 
   Future<void> getLocationAndImage(int index) async {
+    setState(() {
+      isLoading = true;
+    });
+
     // Check location permission
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         Fluttertoast.showToast(msg: "Location permission denied");
+        setState(() {
+          isLoading = false;
+        });
         return;
       }
     }
@@ -57,6 +64,10 @@ class _ImageCapturePageState extends State<ImageCapturePage> {
       }
     } catch (e) {
       Fluttertoast.showToast(msg: "Error: $e");
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -90,7 +101,7 @@ class _ImageCapturePageState extends State<ImageCapturePage> {
         leading: const Icon(Icons.camera_alt),
         title: Text("Location Photo ${index + 1}"),
         trailing: Icon(
-          Icons.check_circle,
+          images[index] == null ? Icons.close : Icons.check_circle,
           color: images[index] == null ? Colors.red : Colors.green,
         ),
         onTap: () => getLocationAndImage(index),
@@ -160,9 +171,10 @@ class _ImageCapturePageState extends State<ImageCapturePage> {
                       child: const Padding(
                         padding: EdgeInsets.all(12),
                         child: Text(
-                          "Submit Images",
+                          "Submit",
                           style: TextStyle(
                             fontSize: 16,
+                            color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -172,10 +184,21 @@ class _ImageCapturePageState extends State<ImageCapturePage> {
               ],
             ),
             if (isLoading)
-              const Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    Color.fromARGB(255, 28, 110, 99),
+              Center(
+                child: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  color: const Color.fromARGB(73, 255, 255, 255),
+                  child: const SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Color.fromARGB(255, 28, 110, 99),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
