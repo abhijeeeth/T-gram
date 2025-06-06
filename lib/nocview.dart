@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tigramnks/Initializer.dart';
 import 'package:tigramnks/bloc/main_bloc.dart';
+import 'package:tigramnks/image_capture_page.dart';
 import 'package:tigramnks/model/nocviewmodel.dart';
 
 class NOCView extends StatelessWidget {
@@ -99,7 +100,12 @@ class NOCView extends StatelessWidget {
                           width: double.infinity,
                           child: ElevatedButton.icon(
                             onPressed: () {
-                              // Add your navigation or action here
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) => ImageCapturePage(
+                                          appId: nocData.id.toString(),
+                                        )),
+                              );
                             },
                             icon: const Icon(Icons.arrow_forward),
                             label: const Text('Proceed to site inspection'),

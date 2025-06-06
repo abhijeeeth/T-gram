@@ -1,0 +1,138 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
+
+class ImageCapturePage extends StatefulWidget {
+  final String appId;
+
+  const ImageCapturePage({super.key, required this.appId});
+
+  @override
+  State<ImageCapturePage> createState() => _ImageCapturePageState();
+}
+
+class _ImageCapturePageState extends State<ImageCapturePage> {
+  final picker = ImagePicker();
+  bool isLoading = false;
+
+  // Image data
+  List<File?> images = List.generate(4, (_) => null);
+  List<String> base64Images = List.generate(4, (_) => "");
+  List<String> latitudes = List.generate(4, (_) => "");
+  List<String> longitudes = List.generate(4, (_) => "");
+
+  Future<void> getLocationAndImage(int index) async {
+    // Check location permission
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        Fluttertoast.showToast(msg: "Location permission denied");
+        return;
+      }
+    }
+
+    // Get current location
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+
+      // Capture image
+      final pickedFile =
+          await picker.pickImage(source: ImageSource.camera, imageQuality: 25);
+
+      if (pickedFile != null) {
+        String base64Image = base64Encode(await pickedFile.readAsBytes());
+
+        setState(() {
+          images[index] = File(pickedFile.path);
+          base64Images[index] = base64Image;
+          latitudes[index] = position.latitude.toString();
+          longitudes[index] = position.longitude.toString();
+        });
+      }
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Error: $e");
+    }
+  }
+
+  Map<String, dynamic> getFormattedData() {
+    return {
+      "app_id": widget.appId,
+      "location_img1": base64Images[0],
+      "location_img2": base64Images[1],
+      "location_img3": base64Images[2],
+      "location_img4": base64Images[3],
+      "image1_lat": latitudes[0],
+      "image2_lat": latitudes[1],
+      "image3_lat": latitudes[2],
+      "image4_lat": latitudes[3],
+      "image1_log": longitudes[0],
+      "image2_log": longitudes[1],
+      "image3_log": longitudes[2],
+      "image4_log": longitudes[3],
+    };
+  }
+
+  Widget buildImageButton(int index) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: ListTile(
+        leading: const Icon(Icons.camera_alt),
+        title: Text("Location Photo ${index + 1}"),
+        trailing: Icon(
+          Icons.check_circle,
+          color: images[index] == null ? Colors.red : Colors.green,
+        ),
+        onTap: () => getLocationAndImage(index),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Capture Images"),
+      ),
+      body: Stack(
+        children: [
+          ListView(
+            children: [
+              const SizedBox(height: 20),
+              ...List.generate(4, (index) => buildImageButton(index)),
+              const SizedBox(height: 20),
+              if (images.every((img) => img != null))
+                Container(
+                  margin: const EdgeInsets.all(15),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Map<String, dynamic> data = getFormattedData();
+                      Navigator.pop(context, data);
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.all(12),
+                      child: Text("Submit Images"),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          if (isLoading)
+            const Center(
+              child: CircularProgressIndicator(),
+            ),
+        ],
+      ),
+    );
+  }
+}
