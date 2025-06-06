@@ -36,23 +36,43 @@ class NocPendingListTable extends StatelessWidget {
         return Scaffold(
           backgroundColor: Colors.grey.shade50,
           appBar: AppBar(
+            flexibleSpace: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color.fromARGB(255, 28, 110, 99),
+                    Color.fromARGB(207, 28, 110, 99),
+                    Color.fromARGB(195, 105, 138, 132),
+                  ],
+                ),
+              ),
+            ),
             title: const Text(
               'NOC Applications - In Processing',
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 20,
+                color: Colors.white,
+                letterSpacing: 0.5,
               ),
             ),
-            backgroundColor: Colors.white,
-            foregroundColor: Colors.grey.shade800,
-            elevation: 0,
-            bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(1),
-              child: Container(
-                height: 1,
-                color: Colors.grey.shade200,
-              ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+              onPressed: () => Navigator.of(context).pop(),
             ),
+            actions: const [
+              // IconButton(
+              //   icon: const Icon(Icons.refresh, color: Colors.white),
+              //   onPressed: () {
+              //     // Add refresh functionality here
+              //   },
+              // ),
+              SizedBox(width: 8),
+            ],
+            elevation: 4,
+            shadowColor: Colors.black26,
           ),
           body: _buildBody(context, state),
         );
@@ -95,7 +115,7 @@ class NocPendingListTable extends StatelessWidget {
       children: [
         _buildHeader(inProcessingList.length),
         Expanded(
-          child: _buildTable(inProcessingList,context),
+          child: _buildTable(inProcessingList, context),
         ),
       ],
     );
@@ -245,7 +265,8 @@ class NocPendingListTable extends StatelessWidget {
     );
   }
 
-  Widget _buildTable(List<InProcessingList> inProcessingList ,  BuildContext context) {
+  Widget _buildTable(
+      List<InProcessingList> inProcessingList, BuildContext context) {
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
       decoration: BoxDecoration(
