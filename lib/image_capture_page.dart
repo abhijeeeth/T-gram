@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tigramnks/bloc/main_bloc.dart';
 
 class ImageCapturePage extends StatefulWidget {
   final String appId;
@@ -166,6 +168,9 @@ class _ImageCapturePageState extends State<ImageCapturePage> {
                       ),
                       onPressed: () {
                         Map<String, dynamic> data = getFormattedData();
+                        context
+                            .read<MainBloc>()
+                            .add(SiteInspection(data: data));
                         Navigator.pop(context, data);
                       },
                       child: const Padding(

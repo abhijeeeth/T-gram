@@ -327,33 +327,53 @@ class NocFreshListTable extends StatelessWidget {
                       ),
                     ),
                     DataCell(
-                      Container(
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            context.read<MainBloc>().add(NocListIndividualView(
-                                sessionToken: sessionToken,
-                                Ids: item.id.toString() ?? ""));
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) => const NOCView()),
-                            );
-                          },
-                          icon: const Icon(Icons.visibility, size: 16),
-                          label: const Text('View'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue.shade600,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 8,
+                      item.siteInception == true
+                          ? Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.green.shade50,
+                                borderRadius: BorderRadius.circular(8),
+                                border:
+                                    Border.all(color: Colors.green.shade200),
+                              ),
+                              child: Text(
+                                'Site Inspected',
+                                style: TextStyle(
+                                  color: Colors.green.shade700,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            )
+                          : ElevatedButton.icon(
+                              onPressed: () {
+                                context.read<MainBloc>().add(
+                                    NocListIndividualView(
+                                        sessionToken: sessionToken,
+                                        Ids: item.id.toString() ?? ""));
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) => const NOCView()),
+                                );
+                              },
+                              icon: const Icon(Icons.visibility, size: 16),
+                              label: const Text('View'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue.shade600,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 8,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                elevation: 0,
+                              ),
                             ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            elevation: 0,
-                          ),
-                        ),
-                      ),
                     ),
                   ],
                 );

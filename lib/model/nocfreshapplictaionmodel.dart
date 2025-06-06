@@ -57,13 +57,16 @@ class PendingList {
   String? nocApplicationIdName;
   String? nocApplicationIdNocCreatedAt;
   String? nocApplicationIdPurpose;
+  bool? siteInception;
 
-  PendingList(
-      {this.id,
-      this.nocApplicationIdNocOfLandApplicationId,
-      this.nocApplicationIdName,
-      this.nocApplicationIdNocCreatedAt,
-      this.nocApplicationIdPurpose});
+  PendingList({
+    this.id,
+    this.nocApplicationIdNocOfLandApplicationId,
+    this.nocApplicationIdName,
+    this.nocApplicationIdNocCreatedAt,
+    this.nocApplicationIdPurpose,
+    this.siteInception,
+  });
 
   PendingList.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -72,6 +75,7 @@ class PendingList {
     nocApplicationIdName = json['noc_application_id__name'];
     nocApplicationIdNocCreatedAt = json['noc_application_id__noc_created_at'];
     nocApplicationIdPurpose = json['noc_application_id__purpose'];
+    siteInception = json['site_inception'];
   }
 
   Map<String, dynamic> toJson() {
@@ -82,6 +86,7 @@ class PendingList {
     data['noc_application_id__name'] = nocApplicationIdName;
     data['noc_application_id__noc_created_at'] = nocApplicationIdNocCreatedAt;
     data['noc_application_id__purpose'] = nocApplicationIdPurpose;
+    data['site_inception'] = siteInception;
     return data;
   }
 }

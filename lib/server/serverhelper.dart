@@ -4,6 +4,7 @@
 
 //   static const String withoutapiurl = "https://timber.forest.kerala.gov.in/";
 //   static String? token;
+// static String? userGroup;
 // }
 
 class ServerHelper {
@@ -13,4 +14,5 @@ class ServerHelper {
       "https://f4020lwv-8000.inc1.devtunnels.ms/";
 
   static String? token;
+  static String? userGroup;
 }

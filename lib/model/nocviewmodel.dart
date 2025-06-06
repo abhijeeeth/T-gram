@@ -146,7 +146,7 @@ class NocApplication {
   Null clerkDivisionFileStepTwo;
   Null clerkDivisionStepTwoCommentDate;
   String? clerkDivisionStepTwoApplicationStatus;
-  Null assignedDyrfoUserId;
+  int? assignedDyrfoUserId;
   int? ministerialHeadId;
   String? ministerialHeadCommentStepOne;
   String? ministerialHeadFileStepOne;

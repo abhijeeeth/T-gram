@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io'; // Add this import for HttpClient and X509Certificate
 
 import 'package:flutter/material.dart';
@@ -260,6 +261,8 @@ class _LoginFormState extends State<LoginForm> {
         final userAddress = responseJson["data"]["address"]?.toString() ?? '';
         final sessionToken = responseJson["token"];
         ServerHelper.token = sessionToken;
+        ServerHelper.userGroup = userGroup;
+        log(userGroup);
         final userProfile = responseJson["data"]["photo_proof_img"] ?? '';
         final userCato = responseJson['data']['usr_category'] ?? '';
 

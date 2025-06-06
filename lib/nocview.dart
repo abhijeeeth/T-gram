@@ -4,6 +4,7 @@ import 'package:tigramnks/Initializer.dart';
 import 'package:tigramnks/bloc/main_bloc.dart';
 import 'package:tigramnks/image_capture_page.dart';
 import 'package:tigramnks/model/nocviewmodel.dart';
+import 'package:tigramnks/server/serverhelper.dart';
 
 class NOCView extends StatelessWidget {
   const NOCView({
@@ -96,35 +97,39 @@ class NOCView extends StatelessWidget {
                         // Application ID Card
                         _buildHeaderCard(nocData!.nocOfLandApplicationId),
                         const SizedBox(height: 14),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (context) => ImageCapturePage(
-                                          appId: nocData.id.toString(),
-                                        )),
-                              );
-                            },
-                            icon: const Icon(Icons.arrow_forward),
-                            label: const Text('Proceed to site inspection'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  const Color.fromARGB(255, 28, 110, 99),
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 12),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              textStyle: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        ),
+                        ServerHelper.userGroup == 'deputy range officer'
+                            ? SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton.icon(
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ImageCapturePage(
+                                                appId: nocData.id.toString(),
+                                              )),
+                                    );
+                                  },
+                                  icon: const Icon(Icons.arrow_forward),
+                                  label:
+                                      const Text('Proceed to site inspection'),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        const Color.fromARGB(255, 28, 110, 99),
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 12),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    textStyle: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : const SizedBox.shrink(),
                         const SizedBox(height: 24),
 
                         // Personal Details
