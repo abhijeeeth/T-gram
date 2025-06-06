@@ -39,19 +39,38 @@ class NocFreshListTable extends StatelessWidget {
               'NOC Applications',
               style: TextStyle(
                 fontWeight: FontWeight.w600,
-                fontSize: 20,
+                fontSize: 22,
+                letterSpacing: 0.5,
+                color: Colors.white,
               ),
             ),
-            backgroundColor: Colors.white,
-            foregroundColor: Colors.grey.shade800,
-            elevation: 0,
-            bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(1),
-              child: Container(
-                height: 1,
-                color: Colors.grey.shade200,
+            centerTitle: true,
+            flexibleSpace: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color.fromARGB(255, 28, 110, 99),
+                    Color.fromARGB(207, 28, 110, 99),
+                    Color.fromARGB(195, 105, 138, 132),
+                  ],
+                ),
               ),
             ),
+            elevation: 4,
+            shadowColor:
+                const Color.fromARGB(255, 28, 110, 99).withOpacity(0.4),
+            actions: const [
+              // IconButton(
+              //   icon: const Icon(Icons.refresh, color: Colors.white),
+              //   onPressed: () {
+              //     context.read<MainBloc>().add(
+              //           NocListfresh(sessionToken: sessionToken),
+              //         );
+              //   },
+              // ),
+            ],
           ),
           body: _buildBody(context, state),
         );
