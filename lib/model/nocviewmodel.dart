@@ -6,7 +6,7 @@ class NOCListViewModel {
   NOCListViewModel({this.status, this.message, this.data});
 
   NOCListViewModel.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
+    status = json['status']?.toString();
     message = json['message'];
     data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
@@ -195,9 +195,9 @@ class NocApplication {
   String? surveyReport;
   String? surveySketches;
   Null dfoDigitalSignature;
-  Null clarificationSought;
-  Null returnedOn;
-  Null clarificationResponse;
+  String? clarificationSought;
+  String? returnedOn;
+  String? clarificationResponse;
   bool? siteInception;
   String? stepStatus;
 

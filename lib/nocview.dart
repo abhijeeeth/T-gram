@@ -1,10 +1,17 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:tigramnks/Images.dart';
 import 'package:tigramnks/Initializer.dart';
 import 'package:tigramnks/bloc/main_bloc.dart';
 import 'package:tigramnks/image_capture_page.dart';
 import 'package:tigramnks/model/nocviewmodel.dart';
 import 'package:tigramnks/server/serverhelper.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NOCView extends StatelessWidget {
   const NOCView({
@@ -72,20 +79,6 @@ class NOCView extends StatelessWidget {
                   ),
                   centerTitle: true,
                 ),
-                // floatingActionButton: FloatingActionButton.extended(
-                //   onPressed: () {
-                //     // Add your action here
-                //   },
-                //   backgroundColor: const Color.fromARGB(255, 28, 110, 99),
-                //   icon: const Icon(Icons.check, color: Colors.white),
-                //   label: const Text(
-                //     'Verify Site',
-                //     style: TextStyle(
-                //       color: Colors.white,
-                //       fontWeight: FontWeight.w600,
-                //     ),
-                //   ),
-                // ),
                 body: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   child: Padding(
@@ -139,8 +132,12 @@ class NOCView extends StatelessWidget {
                           [
                             _buildModernDetailRow('Full Name', nocData.name,
                                 Icons.account_circle_outlined),
-                            _buildModernDetailRow('Institute',
-                                nocData.instituteName, Icons.business_outlined),
+                            if (nocData.isInstitute == true)
+                              _buildModernDetailRow(
+                                'Institute',
+                                nocData.instituteName,
+                                Icons.business_outlined,
+                              ),
                             _buildModernDetailRow('Address', nocData.address,
                                 Icons.location_on_outlined),
                           ],
@@ -164,17 +161,8 @@ class NOCView extends StatelessWidget {
                           ],
                         ),
 
-                        // Comments Section
-                        if (Initializer.nocListViewModel.data
-                                ?.divisionCommentsAndFiles?.isNotEmpty ??
-                            false) ...[
-                          const SizedBox(height: 20),
-                          _buildCommentsSection(
-                            'Division Comments',
-                            Initializer.nocListViewModel.data!
-                                .divisionCommentsAndFiles!,
-                          ),
-                        ],
+                        // Comments Section - Fixed variable declarations
+                        _buildCommentsIfVisible(),
 
                         const SizedBox(height: 32),
                       ],
@@ -183,6 +171,46 @@ class NOCView extends StatelessWidget {
                 ),
               );
       },
+    );
+  }
+
+  Widget _buildCommentsIfVisible() {
+    final userGroup = Initializer.nocListViewModel.data?.userGroup;
+    final divisionComments =
+        Initializer.nocListViewModel.data?.divisionCommentsAndFiles;
+    final clerkComments =
+        Initializer.nocListViewModel.data?.clerkCommentsAndFiles;
+
+    return Column(
+      children: [
+        // Show Division Comments only for specific user groups
+        if (userGroup != null &&
+            (userGroup == "clerk division officer" ||
+                userGroup == "ministerial head division officer" ||
+                userGroup == "dfo territorial division officer") &&
+            divisionComments != null &&
+            divisionComments.isNotEmpty) ...[
+          const SizedBox(height: 20),
+          _buildCommentsSection(
+            'Division Comments',
+            divisionComments,
+          ),
+        ],
+
+        // Show Clerk Comments only for specific user groups
+        if (userGroup != null &&
+            (userGroup == "clerk range officer" ||
+                userGroup == "forest range officer" ||
+                userGroup == "deputy range officer") &&
+            clerkComments != null &&
+            clerkComments.isNotEmpty) ...[
+          const SizedBox(height: 20),
+          _buildClerkCommentsSection(
+            'Clerk Comments',
+            clerkComments,
+          ),
+        ],
+      ],
     );
   }
 
@@ -425,7 +453,7 @@ class NOCView extends StatelessWidget {
               ),
               itemBuilder: (context, index) {
                 final comment = comments[index];
-                return _buildCommentItem(comment);
+                return _buildCommentItem(comment, context);
               },
             ),
           ],
@@ -434,7 +462,8 @@ class NOCView extends StatelessWidget {
     );
   }
 
-  Widget _buildCommentItem(DivisionCommentsAndFiles comment) {
+  Widget _buildCommentItem(
+      DivisionCommentsAndFiles comment, BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -478,17 +507,290 @@ class NOCView extends StatelessWidget {
                   ],
                 ),
               ),
-              if (comment.file != null)
+              if (comment.file != "NO_FILE")
+                InkWell(
+                  onTap: () async {
+                    final url =
+                        "${ServerHelper.withoutapiurl}media/upload/${comment.file}" ??
+                            "";
+                    final isPdf = url.toLowerCase().endsWith('.pdf');
+                    const isMain = false; // Set this as needed
+                    if (isPdf) {
+                      {
+                        if (await canLaunchUrl(Uri.parse(url))) {
+                          await launchUrl(Uri.parse(url),
+                              mode: LaunchMode.externalApplication);
+                        } else {
+                          Fluttertoast.showToast(
+                            msg: "Could not open document",
+                            toastLength: Toast.LENGTH_SHORT,
+                          );
+                        }
+                      }
+                    } else {
+                      // Show image in ImageView and also download it
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => ImageView(Images: url),
+                        ),
+                      );
+                      try {
+                        final dio = Dio();
+                        Directory? downloadsDir;
+                        if (Platform.isAndroid) {
+                          downloadsDir = await getExternalStorageDirectory();
+                          final Directory? extDir =
+                              await getExternalStorageDirectory();
+                          if (extDir != null) {
+                            const downloadsPath =
+                                "/storage/emulated/0/Download";
+                            downloadsDir = Directory(downloadsPath);
+                          }
+                        } else if (Platform.isIOS) {
+                          downloadsDir =
+                              await getApplicationDocumentsDirectory();
+                        }
+                        final fileName = url.split('/').last.split('?').first;
+                        final filePath = '${downloadsDir?.path}/$fileName';
+                        await dio.download(url, filePath);
+                        Fluttertoast.showToast(
+                          msg: "Image downloaded to $filePath",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                        );
+                      } catch (e) {
+                        Fluttertoast.showToast(
+                          msg: "Failed to download image",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                        );
+                      }
+                    }
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                      Icons.attachment,
+                      size: 16,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          if (comment.comment != null) ...[
+            const SizedBox(height: 12),
+            Text(
+              comment.comment!,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey.shade700,
+                height: 1.4,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildClerkCommentsSection(
+    String title,
+    List<ClerkCommentsAndFiles> comments,
+  ) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Colors.green.shade50,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
-                    Icons.attachment,
-                    size: 16,
-                    color: Colors.grey.shade600,
+                    Icons.comment_outlined,
+                    color: Colors.green.shade600,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade800,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: comments.length,
+              separatorBuilder: (context, index) => Divider(
+                color: Colors.grey.shade200,
+                height: 24,
+              ),
+              itemBuilder: (context, index) {
+                final comment = comments[index];
+                return _buildClerkCommentItem(comment, context);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildClerkCommentItem(
+      ClerkCommentsAndFiles comment, BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 16,
+                backgroundColor: Colors.green.shade100,
+                child: Icon(
+                  Icons.person,
+                  size: 16,
+                  color: Colors.green.shade600,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      comment.officer ?? 'Unknown Officer',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
+                    ),
+                    if (comment.date != null)
+                      Text(
+                        comment.date!,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              if (comment.file != "NO_FILE")
+                InkWell(
+                  onTap: () async {
+                    final url =
+                        "${ServerHelper.withoutapiurl}media/upload/${comment.file}" ??
+                            "";
+                    final isPdf = url.toLowerCase().endsWith('.pdf');
+                    const isMain = false; // Set this as needed
+                    if (isPdf) {
+                      {
+                        if (await canLaunchUrl(Uri.parse(url))) {
+                          await launchUrl(Uri.parse(url),
+                              mode: LaunchMode.externalApplication);
+                        } else {
+                          Fluttertoast.showToast(
+                            msg: "Could not open document",
+                            toastLength: Toast.LENGTH_SHORT,
+                          );
+                        }
+                      }
+                    } else {
+                      // Show image in ImageView and also download it
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => ImageView(Images: url),
+                        ),
+                      );
+                      try {
+                        final dio = Dio();
+                        Directory? downloadsDir;
+                        if (Platform.isAndroid) {
+                          downloadsDir = await getExternalStorageDirectory();
+                          final Directory? extDir =
+                              await getExternalStorageDirectory();
+                          if (extDir != null) {
+                            const downloadsPath =
+                                "/storage/emulated/0/Download";
+                            downloadsDir = Directory(downloadsPath);
+                          }
+                        } else if (Platform.isIOS) {
+                          downloadsDir =
+                              await getApplicationDocumentsDirectory();
+                        }
+                        final fileName = url.split('/').last.split('?').first;
+                        final filePath = '${downloadsDir?.path}/$fileName';
+                        await dio.download(url, filePath);
+                        Fluttertoast.showToast(
+                          msg: "Image downloaded to $filePath",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                        );
+                      } catch (e) {
+                        Fluttertoast.showToast(
+                          msg: "Failed to download image",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                        );
+                      }
+                    }
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                      Icons.attachment,
+                      size: 16,
+                      color: Colors.grey.shade600,
+                    ),
                   ),
                 ),
             ],
