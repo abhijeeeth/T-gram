@@ -6,7 +6,7 @@ class NOCPendingModel {
   NOCPendingModel({this.status, this.message, this.data});
 
   NOCPendingModel.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
+    status = json['status']?.toString();
     message = json['message'];
     data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }

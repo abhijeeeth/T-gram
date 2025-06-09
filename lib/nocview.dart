@@ -93,8 +93,8 @@ class NOCView extends StatelessWidget {
                           children: [
                             _buildHeaderCard(nocData!.nocOfLandApplicationId),
                             const SizedBox(height: 18),
-                            _buildStepIndicator(),
-                            const SizedBox(height: 18),
+                            // _buildStepIndicator(),
+                            // const SizedBox(height: 18),
                             ServerHelper.userGroup == 'deputy range officer'
                                 ? SizedBox(
                                     width: double.infinity,
@@ -198,18 +198,18 @@ class NOCView extends StatelessWidget {
   }
 
   // Add a step indicator for a form-like feel
-  Widget _buildStepIndicator() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        _buildStepCircle(true, Icons.person, "Personal"),
-        _buildStepLine(),
-        _buildStepCircle(true, Icons.map, "Location"),
-        _buildStepLine(),
-        _buildStepCircle(true, Icons.comment, "Comments"),
-      ],
-    );
-  }
+  // Widget _buildStepIndicator() {
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.center,
+  //     children: [
+  //       _buildStepCircle(true, Icons.person, "Personal"),
+  //       _buildStepLine(),
+  //       _buildStepCircle(true, Icons.map, "Location"),
+  //       _buildStepLine(),
+  //       _buildStepCircle(true, Icons.comment, "Comments"),
+  //     ],
+  //   );
+  // }
 
   Widget _buildStepCircle(bool active, IconData icon, String label) {
     return Column(
