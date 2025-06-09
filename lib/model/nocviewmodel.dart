@@ -6,7 +6,7 @@ class NOCListViewModel {
   NOCListViewModel({this.status, this.message, this.data});
 
   NOCListViewModel.fromJson(Map<String, dynamic> json) {
-    status = json['status']?.toString();
+    status = json['status'];
     message = json['message'];
     data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
@@ -26,7 +26,7 @@ class Data {
   NocApplication? nocApplication;
   String? userGroup;
   List<DivisionCommentsAndFiles>? divisionCommentsAndFiles;
-  // List<ClerkCommentsAndFiles>? clerkCommentsAndFiles;
+  List<ClerkCommentsAndFiles>? clerkCommentsAndFiles;
   String? hasValidEntry;
   String? hasDivisionEntry;
   List<DeputyRfos>? deputyRfos;
@@ -37,6 +37,7 @@ class Data {
       {this.nocApplication,
       this.userGroup,
       this.divisionCommentsAndFiles,
+      this.clerkCommentsAndFiles,
       this.hasValidEntry,
       this.hasDivisionEntry,
       this.deputyRfos,
@@ -54,10 +55,12 @@ class Data {
         divisionCommentsAndFiles!.add(DivisionCommentsAndFiles.fromJson(v));
       });
     }
-    // if (json['clerk_comments_and_files'] != null) {
-    // 	clerkCommentsAndFiles = <ClerkCommentsAndFiles>[];
-    // 	json['clerk_comments_and_files'].forEach((v) { clerkCommentsAndFiles!.add(new ClerkCommentsAndFiles.fromJson(v)); });
-    // }
+    if (json['clerk_comments_and_files'] != null) {
+      clerkCommentsAndFiles = <ClerkCommentsAndFiles>[];
+      json['clerk_comments_and_files'].forEach((v) {
+        clerkCommentsAndFiles!.add(ClerkCommentsAndFiles.fromJson(v));
+      });
+    }
     hasValidEntry = json['has_valid_entry'];
     hasDivisionEntry = json['has_division_entry'];
     if (json['deputy_rfos'] != null) {
@@ -67,8 +70,10 @@ class Data {
       });
     }
     // if (json['additional_documents'] != null) {
-    // 	additionalDocuments = <Null>[];
-    // 	json['additional_documents'].forEach((v) { additionalDocuments!.add(new Null.fromJson(v)); });
+    //   additionalDocuments = <Null>[];
+    //   json['additional_documents'].forEach((v) {
+    //     additionalDocuments!.add(Null.fromJson(v));
+    //   });
     // }
     imageDocuments = json['image_documents'] != null
         ? ImageDocuments.fromJson(json['image_documents'])
@@ -85,16 +90,18 @@ class Data {
       data['division_comments_and_files'] =
           divisionCommentsAndFiles!.map((v) => v.toJson()).toList();
     }
-    // if (this.clerkCommentsAndFiles != null) {
-    //   data['clerk_comments_and_files'] = this.clerkCommentsAndFiles!.map((v) => v.toJson()).toList();
-    // }
+    if (clerkCommentsAndFiles != null) {
+      data['clerk_comments_and_files'] =
+          clerkCommentsAndFiles!.map((v) => v.toJson()).toList();
+    }
     data['has_valid_entry'] = hasValidEntry;
     data['has_division_entry'] = hasDivisionEntry;
     if (deputyRfos != null) {
       data['deputy_rfos'] = deputyRfos!.map((v) => v.toJson()).toList();
     }
-    // if (this.additionalDocuments != null) {
-    //   data['additional_documents'] = this.additionalDocuments!.map((v) => v.toJson()).toList();
+    // if (additionalDocuments != null) {
+    //   data['additional_documents'] =
+    //       additionalDocuments!.map((v) => v.toJson()).toList();
     // }
     if (imageDocuments != null) {
       data['image_documents'] = imageDocuments!.toJson();
@@ -107,7 +114,7 @@ class NocApplication {
   int? id;
   String? nocOfLandApplicationId;
   int? byUserId;
-  String? previousNocId;
+  Null previousNocId;
   String? division;
   String? range;
   bool? hasAppliedBefore;
@@ -187,10 +194,10 @@ class NocApplication {
   String? inspectionReport;
   String? surveyReport;
   String? surveySketches;
-  String? dfoDigitalSignature;
-  String? clarificationSought;
-  String? returnedOn;
-  String? clarificationResponse;
+  Null dfoDigitalSignature;
+  Null clarificationSought;
+  Null returnedOn;
+  Null clarificationResponse;
   bool? siteInception;
   String? stepStatus;
 
@@ -513,6 +520,31 @@ class DivisionCommentsAndFiles {
   }
 }
 
+class ClerkCommentsAndFiles {
+  String? officer;
+  String? comment;
+  String? file;
+  String? date;
+
+  ClerkCommentsAndFiles({this.officer, this.comment, this.file, this.date});
+
+  ClerkCommentsAndFiles.fromJson(Map<String, dynamic> json) {
+    officer = json['officer'];
+    comment = json['comment'];
+    file = json['file'];
+    date = json['date'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['officer'] = officer;
+    data['comment'] = comment;
+    data['file'] = file;
+    data['date'] = date;
+    return data;
+  }
+}
+
 class DeputyRfos {
   int? id;
   String? name;
@@ -536,14 +568,62 @@ class DeputyRfos {
 }
 
 class ImageDocuments {
-  // ImageDocuments({});
+  String? locationImg1;
+  String? locationImg2;
+  String? locationImg3;
+  String? locationImg4;
+  String? image1Lat;
+  String? image2Lat;
+  String? image3Lat;
+  String? image4Lat;
+  String? image1Log;
+  String? image2Log;
+  String? image3Log;
+  String? image4Log;
+
+  ImageDocuments(
+      {this.locationImg1,
+      this.locationImg2,
+      this.locationImg3,
+      this.locationImg4,
+      this.image1Lat,
+      this.image2Lat,
+      this.image3Lat,
+      this.image4Lat,
+      this.image1Log,
+      this.image2Log,
+      this.image3Log,
+      this.image4Log});
 
   ImageDocuments.fromJson(Map<String, dynamic> json) {
-    // Implement parsing logic here if needed
+    locationImg1 = json['location_img1'];
+    locationImg2 = json['location_img2'];
+    locationImg3 = json['location_img3'];
+    locationImg4 = json['location_img4'];
+    image1Lat = json['image1_lat'];
+    image2Lat = json['image2_lat'];
+    image3Lat = json['image3_lat'];
+    image4Lat = json['image4_lat'];
+    image1Log = json['image1_log'];
+    image2Log = json['image2_log'];
+    image3Log = json['image3_log'];
+    image4Log = json['image4_log'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['location_img1'] = locationImg1;
+    data['location_img2'] = locationImg2;
+    data['location_img3'] = locationImg3;
+    data['location_img4'] = locationImg4;
+    data['image1_lat'] = image1Lat;
+    data['image2_lat'] = image2Lat;
+    data['image3_lat'] = image3Lat;
+    data['image4_lat'] = image4Lat;
+    data['image1_log'] = image1Log;
+    data['image2_log'] = image2Log;
+    data['image3_log'] = image3Log;
+    data['image4_log'] = image4Log;
     return data;
   }
 }
