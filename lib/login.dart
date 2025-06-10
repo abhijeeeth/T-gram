@@ -380,7 +380,7 @@ class _LoginFormState extends State<LoginForm> {
                       )));
         }
       } else {
-        String errorMessage = responseJson['message'] ?? 'Invalid credentials';
+        String errorMessage = responseJson['message'] ?? 'Error occurred';
         Fluttertoast.showToast(
             msg: errorMessage,
             toastLength: Toast.LENGTH_SHORT,

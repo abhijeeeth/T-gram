@@ -460,12 +460,19 @@ class MainBloc extends Bloc<MainEvent, MainState> {
 
       if (response.statusCode == 200) {
         emit(SiteInspectionLoaded());
-        // Show a snackbar "Opload success"
-        Future.delayed(Duration.zero, () {
-          ScaffoldMessenger.of(event.data['context']).showSnackBar(
-            const SnackBar(content: Text('Upload Success')),
-          );
-        });
+
+        // Show a toast using Flutter's ScaffoldMessenger if context is available
+        final context = event.data['context'];
+        if (context != null && context is BuildContext) {
+          Future.delayed(Duration.zero, () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Upload Successful'),
+                duration: Duration(seconds: 2),
+              ),
+            );
+          });
+        }
       } else {
         emit(SiteInspectionFailed());
         Future.delayed(Duration.zero, () {

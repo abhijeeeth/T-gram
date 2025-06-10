@@ -90,6 +90,7 @@ class _ImageCapturePageState extends State<ImageCapturePage> {
       "image2_log": longitudes[1],
       "image3_log": longitudes[2],
       "image4_log": longitudes[3],
+      "context": context,
     };
   }
 
