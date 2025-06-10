@@ -95,9 +95,11 @@ class NOCView extends StatelessWidget {
                             const SizedBox(height: 18),
                             // _buildStepIndicator(),
                             // const SizedBox(height: 18),
-                            ServerHelper.userGroup == 'deputy range officer'
+                            ServerHelper.userGroup == 'deputy range officer' ||
+                                    ServerHelper.userGroup ==
+                                        'forest range officer'
                                 ? SizedBox(
-                                    width: double.infinity,
+                                    width: double.infinity, 
                                     child: ElevatedButton.icon(
                                       onPressed: () {
                                         Navigator.of(context).push(

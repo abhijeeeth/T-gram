@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tigramnks/Nocfreshlist.dart';
 import 'package:tigramnks/bloc/main_bloc.dart';
+import 'package:tigramnks/deputyfileupload.dart';
 import 'package:tigramnks/nocapprovedrejectedlist.dart';
 import 'package:tigramnks/nocforwardedlist.dart';
 import 'package:tigramnks/nocpendingwithmelist.dart';
@@ -84,68 +85,77 @@ class _NocApplictaionTilesState extends State<NocApplictaionTiles> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Welcome section
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20.0),
-                margin: const EdgeInsets.only(bottom: 24.0),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [
-                      Color.fromARGB(255, 28, 110, 99),
-                      Color.fromARGB(207, 28, 110, 99),
-                      Color.fromARGB(195, 105, 138, 132)
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const Deputyfileupload(),
+                    ),
+                  );
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20.0),
+                  margin: const EdgeInsets.only(bottom: 24.0),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [
+                        Color.fromARGB(255, 28, 110, 99),
+                        Color.fromARGB(207, 28, 110, 99),
+                        Color.fromARGB(195, 105, 138, 132)
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(16.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.blue[700]!.withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
                     ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
                   ),
-                  borderRadius: BorderRadius.circular(16.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.blue[700]!.withOpacity(0.3),
-                      blurRadius: 8,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(12.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(12.0),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(12.0),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: const Icon(
+                          Icons.description_rounded,
+                          color: Colors.white,
+                          size: 28,
+                        ),
                       ),
-                      child: const Icon(
-                        Icons.description_rounded,
-                        color: Colors.white,
-                        size: 28,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    const Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Application Dashboard',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                      const SizedBox(width: 16),
+                      const Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Application Dashboard',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            'Manage your NOC applications efficiently',
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 14,
+                            SizedBox(height: 4),
+                            Text(
+                              'Manage your NOC applications efficiently',
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 14,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
 
