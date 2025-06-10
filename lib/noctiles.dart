@@ -226,7 +226,7 @@ class _NocApplictaionTilesState extends State<NocApplictaionTiles> {
                         title: 'Approved/Rejected',
                         subtitle: 'Final decisions',
                         icon: Icons.rule_rounded,
-                        color: Colors.purple[600]!,
+                        color: const Color(0xFF8E24AA)!,
                         onTap: () {
                           context.read<MainBloc>().add(NocApprovedRejectedList(
                               sessionToken: _sessionToken));

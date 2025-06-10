@@ -63,16 +63,18 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           useMaterial3: true,
+          primarySwatch: Colors.teal,
           colorScheme: ColorScheme.fromSeed(
             seedColor: const Color.fromRGBO(99, 118, 71, 1),
             brightness: Brightness.light,
+            secondary: const Color.fromARGB(195, 105, 138, 132),
           ),
           appBarTheme: const AppBarTheme(
             backgroundColor: Color.fromRGBO(99, 118, 71, 1),
             foregroundColor: Colors.white,
           ),
         ),
-        home: const login_page.login(), // Ensure login() returns a Widget
+        home: const login_page.login(),
       ),
     );
   }

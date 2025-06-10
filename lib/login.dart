@@ -57,7 +57,8 @@ class _LoginDemoState extends State<LoginDemo> {
                 padding: const EdgeInsets.only(left: 15, right: 15),
                 width: double.infinity,
                 height: 65,
-                color: HexColor("#02075D"),
+                // color: HexColor("#02075D"),
+                color: HexColor("#004d40"),
                 child: Row(
                   children: <Widget>[
                     const Text(
@@ -70,10 +71,13 @@ class _LoginDemoState extends State<LoginDemo> {
                       ),
                     ),
                     const Spacer(),
-                    Image.asset(
-                      "assets/images/tigram01.png",
-                      width: 120,
-                      height: 90,
+                    Container(
+                      // color: const Color.fromARGB(255, 255, 255, 255),
+                      child: Image.asset(
+                        "assets/images/tigram01.png",
+                        width: 120,
+                        height: 90,
+                      ),
                     ),
                   ],
                 ),
