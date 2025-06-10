@@ -4,12 +4,7 @@ import 'dart:convert';
 import 'dart:io' show File;
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'package:tigramnks/login.dart';
-import 'package:tigramnks/server/serverhelper.dart';
 
 class signup extends StatefulWidget {
   const signup({super.key});
@@ -18,12 +13,10 @@ class signup extends StatefulWidget {
   _signupState createState() => _signupState();
 }
 
-//--DropDown-- code--
 class Item {
   const Item(this.name);
   final String name;
 }
-//--End --DropDown code--
 
 class _signupState extends State<signup> {
   bool isHiddenPassword = true;
@@ -42,6 +35,10 @@ class _signupState extends State<signup> {
   String base64Image = 'empty';
   var _image;
 
+  final Color primaryColor = Color.fromARGB(255, 28, 110, 99);
+  final Color accentColor = Colors.amber;
+  final double borderRadius = 12.0;
+
   bool validateEmail(String value) {
     String pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
@@ -49,9 +46,7 @@ class _signupState extends State<signup> {
     return (!regex.hasMatch(value)) ? false : true;
   }
 
-  //--DropDown List ----
-
-  Item? selectedUser; // Made nullable with ?
+  Item? selectedUser;
   List<Item> users = <Item>[
     const Item('Aadhar Card'),
     const Item('Driving License'),
@@ -60,25 +55,15 @@ class _signupState extends State<signup> {
     const Item('Voter ID'),
   ];
 
-  //--End- DropDown List
-//--device File fetching--
-
-  // Removed unused _IdPrrof method
-
   final picker = ImagePicker();
   Future<void> setfilepicgallery() async {
-    print('object');
-
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
-    print('object');
     if (pickedFile != null) {
-      print('done ennakiyal');
       String temp = base64Encode(await pickedFile.readAsBytes());
 
       setState(() {
         _image = File(pickedFile.path);
-
         base64Image = temp;
       });
       Navigator.of(context, rootNavigator: true).pop();
@@ -86,13 +71,9 @@ class _signupState extends State<signup> {
   }
 
   Future<void> setfilepiccam() async {
-    print('object');
-    var camimage;
-
     final pickedFile = await picker.pickImage(source: ImageSource.camera);
-    print('object');
+
     if (pickedFile != null) {
-      print('done ennakiyal');
       String temp = base64Encode(await pickedFile.readAsBytes());
 
       setState(() {
@@ -110,30 +91,6 @@ class _signupState extends State<signup> {
               content: SingleChildScrollView(
                 child: ListBody(
                   children: [
-                    // InkWell(
-                    //   onTap: () async {
-                    //     await setfilepiccam();
-                    //   },
-                    //   splashColor: Colors.blueAccent,
-                    //   child: Row(
-                    //     children: [
-                    //       Padding(
-                    //         padding: const EdgeInsets.all(8.0),
-                    //         child: Icon(
-                    //           Icons.camera,
-                    //           color: Colors.blueAccent,
-                    //         ),
-                    //       ),
-                    //       Text(
-                    //         'Camera',
-                    //         style: TextStyle(
-                    //             fontSize: 18,
-                    //             fontWeight: FontWeight.w500,
-                    //             color: Colors.black),
-                    //       )
-                    //     ],
-                    //   ),
-                    // ),
                     InkWell(
                       onTap: () async {
                         await setfilepicgallery();
@@ -158,30 +115,6 @@ class _signupState extends State<signup> {
                         ],
                       ),
                     ),
-                    // InkWell(
-                    //   onTap: () async {
-                    //     await setprofileremove();
-                    //   },
-                    //   splashColor: Colors.greenAccent,
-                    //   child: Row(
-                    //     children: [
-                    //       Padding(
-                    //         padding: const EdgeInsets.all(8.0),
-                    //         child: Icon(
-                    //           Icons.remove_circle,
-                    //           color: Colors.redAccent,
-                    //         ),
-                    //       ),
-                    //       Text(
-                    //         'Remove',
-                    //         style: TextStyle(
-                    //             fontSize: 18,
-                    //             fontWeight: FontWeight.w500,
-                    //             color: Colors.black),
-                    //       )
-                    //     ],
-                    //   ),
-                    // )
                   ],
                 ),
               ),
@@ -203,656 +136,239 @@ class _signupState extends State<signup> {
       sproof_holder = dropdownValue!;
       check = true;
     });
-    print(sproof_holder);
   }
 
-  //---------------------------Api-connection----------------//
-
-  //-----------------------------end-Api-connection-----------//
-  //--end-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //backgroundColor: Colors.blueGrey,
+      backgroundColor: Colors.grey[100],
       body: SingleChildScrollView(
-          child: Column(children: <Widget>[
-        Container(
-            padding: const EdgeInsets.only(right: 15, top: 8),
-            width: double.infinity,
-            height: 80,
-            child: Row(
-              children: <Widget>[
-                // Image.asset(
-                //   "assets/images/usaid_logo.png",
-                //   width: 130,
-                //   height: 75,
-                // ),
-                Spacer(),
-                Image.asset(
-                  "assets/images/kerala_logo.jpg",
-                  alignment: Alignment.center,
-                  width: 70,
-                  height: 70,
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: primaryColor,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30),
                 ),
-                Spacer(),
-                // Container(
-                //     child: Row(children: <Widget>[
-                //   Image.asset(
-                //     "assets/images/ministry_logo.jpg",
-                //   ),
-                // ]))
-              ],
-            )),
-        Container(
-            padding: const EdgeInsets.only(left: 15, right: 15),
-            width: double.infinity,
-            height: 65,
-            color: HexColor("#02075D"),
-            child: Row(
-              children: <Widget>[
-                Text(
-                  "Sign Up",
-                  style: TextStyle(
-                    fontFamily: 'Cairo',
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.normal,
-                    color: Colors.white,
-                    fontSize: 24,
+              ),
+              padding: EdgeInsets.fromLTRB(15, 40, 15, 20),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Image.asset(
+                        "assets/images/kerala_logo.jpg",
+                        width: 60,
+                        height: 60,
+                      ),
+                      Image.asset(
+                        "assets/images/tigram01.png",
+                        width: 100,
+                        height: 70,
+                      ),
+                    ],
                   ),
-                ),
-                Spacer(),
-                Image.asset(
-                  "assets/images/tigram01.png",
-                  width: 120,
-                  height: 90,
-                ),
-              ],
-            )),
-        Container(
-          /*decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12.0),
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black,
-                  blurRadius: 2.0,
-                  spreadRadius: 0.0,
-                  offset: Offset(2.0, 2.0), // shadow direction: bottom right
-                )
-              ],
-            ),*/
-          margin: const EdgeInsets.only(top: 15, left: 8, right: 8, bottom: 8),
-          //padding: const EdgeInsets.all(8),
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 10.0, right: 10.0, top: 0, bottom: 10),
-                //padding: EdgeInsets.symmetric(horizontal: 8,vertical: 8),
-                child: TextField(
-                  controller: Name,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(width: 2),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(12.0)),
-                      ),
-                      labelText: 'Name',
-                      hintText: 'Enter Your Name'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 10.0, right: 10.0, top: 0, bottom: 10),
-                //padding: EdgeInsets.symmetric(horizontal: 15),
-                child: TextField(
-                  controller: rEmail,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(width: 2),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(12.0)),
-                      ),
-                      labelText: 'E-mail',
-                      hintText: 'Enter Your E-mail'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 10.0, right: 10.0, top: 0, bottom: 10),
-                //padding: EdgeInsets.symmetric(horizontal: 15),
-                child: TextField(
-                  maxLength: 10,
-                  controller: Mobile,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(width: 2),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(12.0)),
-                      ),
-                      labelText: 'Mobile No',
-                      hintText: 'Enter Valid Mobile Number'),
-                  keyboardType: TextInputType.number,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 10.0, right: 10.0, top: 0, bottom: 10),
-                //padding: EdgeInsets.symmetric(horizontal: 15),
-                child: TextField(
-                  controller: Address,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(width: 2),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(12.0)),
-                      ),
-                      labelText: 'Address',
-                      hintText: 'Enter Your Address'),
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                padding: const EdgeInsets.only(
-                    left: 10.0, right: 10.0, top: 0, bottom: 10),
-                decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                      width: 1,
+                  SizedBox(height: 20),
+                  Text(
+                    "Create Account",
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
-                    borderRadius: BorderRadius.circular(12)),
-                child: DropdownButton<String>(
-                  value: dropdownValue,
-                  isExpanded: true,
-                  icon: Icon(Icons.arrow_drop_down),
-                  iconSize: 24,
-                  elevation: 16,
-                  style: TextStyle(color: Colors.black, fontSize: 18),
-                  hint: Text("Select Photo Identity Proof"),
-                  /*underline: Container(
-                  height: 2,
-                  color: Colors.grey,
-                ),*/
-                  onChanged: (String? data) {
-                    setState(() {
-                      dropdownValue = data;
-                      if (dropdownValue == data) {
-                        check = true;
-                      } else {
-                        check = false;
-                      }
-                    });
-                    print(dropdownValue);
-                  },
-                  items: s_proof.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-              ),
-              LayoutBuilder(builder: (context, constraints) {
-                if (check == true) {
-                  return Container(
-                      child: Column(children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 10.0, right: 10.0, top: 0, bottom: 10),
-                      //padding: EdgeInsets.symmetric(horizontal: 15),
-                      child: TextField(
-                        controller: Aadhar,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(width: 2),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(12.0)),
-                            ),
-                            labelText: 'Id Number',
-                            hintText: 'Enter Id Proof Number'),
-                      ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      margin: const EdgeInsets.only(
-                          left: 10, right: 10, bottom: 10),
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.grey,
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(14)),
-                      padding: const EdgeInsets.only(
-                          left: 10.0, right: 10.0, top: 0, bottom: 10),
-                      child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: <Widget>[
-                            TextButton.icon(
-                              icon: Icon(Icons.image),
-                              onPressed: () {
-                                setState(() {
-                                  setState(() {
-                                    _showpickoptiondialog(context);
-                                  });
-                                  // takePhoto(ImageSource.gallery);
-                                });
-                              },
-                              label: Text("Photo ID Proof"),
-                            ),
-                            Spacer(),
-                            Icon(
-                              Icons.check_circle,
-                              color:
-                                  (_image) == null ? Colors.red : Colors.green,
-                              size: 28.0,
-                            ),
-                          ]),
-                    ),
-                  ]));
-                } else if (check == false) {
-                  return Container(
-                    width: 0,
-                    height: 0,
-                    color: Colors.white,
-                  );
-                }
-                return Container(); // Add this line
-              }),
-              /* Padding(
-              padding: const EdgeInsets.only(
-                  left: 15.0, right: 15.0, top: 15, bottom: 0),
-              //padding: EdgeInsets.symmetric(horizontal: 15),
-              child: TextField(
-                controller: Aadhar,
-
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Any ID Proof/ Gov. ID',
-                    hintText: 'Enter valid Id Proof  Number'),
+                  ),
+                  SizedBox(height: 10),
+                ],
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(left:15,top: 15.0,bottom: 0.0,right: 15),
-              decoration: new BoxDecoration(
-                  border: new Border.all(color: Colors.grey,width: 1,), borderRadius: BorderRadius.circular(5)
-              ),
-              child: Row(children: <Widget>[
-                Container(
-                    margin: const EdgeInsets.only(left:10, top: 5.0,bottom: 5.0),
-                    child: RaisedButton(
-                      color: Colors.grey[400],
-                      onPressed: _IdPrrof,
-                      child: Text(
-                        'Choose file',
-                        style: TextStyle(color:Colors.white, fontSize: 14),
-                      ),
-                    )
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
                 ),
-              ]
-              ),
-            ),*/
-
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 10.0, right: 10.0, top: 0, bottom: 10),
-                //padding: EdgeInsets.symmetric(horizontal: 15),
-                child: TextField(
-                  controller: Password,
-                  obscureText: isHiddenPassword,
-                  decoration: InputDecoration(
-                      suffixIcon: InkWell(
-                          onTap: () {
-                            setState(() {
-                              isHiddenPassword = !isHiddenPassword;
-                            });
-                          },
-                          child: Icon(Icons.visibility, color: Colors.black54)),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(width: 2),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(12.0)),
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      buildTextField(
+                        controller: Name,
+                        label: "Full Name",
+                        icon: Icons.person,
                       ),
-                      labelText: 'Password',
-                      hintText: 'Enter Password'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 10.0, right: 10.0, top: 0, bottom: 10),
-                //padding: EdgeInsets.symmetric(horizontal: 15),
-                child: TextField(
-                  controller: rPassword,
-                  obscureText: isHiddenPassword,
-                  decoration: InputDecoration(
-                      suffixIcon: InkWell(
-                          onTap: () {
-                            setState(() {
-                              print("hi...");
-                              isHiddenPassword = !isHiddenPassword;
-                            });
-                          },
-                          child: Icon(Icons.visibility, color: Colors.black54)),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(width: 2),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(12.0)),
+                      buildTextField(
+                        controller: rEmail,
+                        label: "Email Address",
+                        icon: Icons.email,
                       ),
-                      labelText: 'Re-Password',
-                      hintText: 'Repeat Password'),
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 10.0, bottom: 0.0),
-                height: 40,
-                width: 120,
-                decoration: BoxDecoration(
-                    color: Colors.yellow[700],
-                    borderRadius: BorderRadius.circular(12)),
-                child: TextButton(
-                  onPressed: () async {
-                    if ((Name.text.isEmpty) ||
-                        (rEmail.text.isEmpty) ||
-                        (Mobile.text.isEmpty) ||
-                        (Aadhar.text.isEmpty) ||
-                        (Address.text.isEmpty) ||
-                        (Password.text.isEmpty) ||
-                        (rPassword.text.isEmpty)) {
-                      Fluttertoast.showToast(
-                          msg: "please fill all fields",
-                          toastLength: Toast.LENGTH_SHORT,
-                          timeInSecForIosWeb: 1,
-                          backgroundColor: Colors.red,
-                          textColor: Colors.white,
-                          fontSize: 18.0);
-                    } else if (!validateEmail(rEmail.text)) {
-                      Fluttertoast.showToast(
-                          msg: "Invalid email address",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.CENTER,
-                          timeInSecForIosWeb: 1,
-                          backgroundColor: Colors.red,
-                          textColor: Colors.white,
-                          fontSize: 18.0);
-                    } else if (Mobile.text.length != 10) {
-                      Fluttertoast.showToast(
-                          msg: "Mobile No is Invalid",
-                          toastLength: Toast.LENGTH_SHORT,
-                          timeInSecForIosWeb: 1,
-                          backgroundColor: Colors.red,
-                          textColor: Colors.white,
-                          fontSize: 18.0);
-                    } /*else if(Aadhar.text.length !=12){
-                    Fluttertoast.showToast(
-                        msg:
-                        "Invalid Aadhar Number",
-                        toastLength: Toast.LENGTH_SHORT,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Colors.red,
-                        textColor: Colors.white,
-                        fontSize: 18.0);
-                   }*/
-                    else if (Address.text.length > 200) {
-                      Fluttertoast.showToast(
-                          msg: "Address must be less then 200 charcter",
-                          toastLength: Toast.LENGTH_SHORT,
-                          timeInSecForIosWeb: 1,
-                          backgroundColor: Colors.red,
-                          textColor: Colors.white,
-                          fontSize: 18.0);
-                    } else if (Password.text != rPassword.text) {
-                      Fluttertoast.showToast(
-                          msg:
-                              "Password Mismatch or size must be greater then 8",
-                          toastLength: Toast.LENGTH_SHORT,
-                          timeInSecForIosWeb: 1,
-                          backgroundColor: Colors.red,
-                          textColor: Colors.white,
-                          fontSize: 18.0);
-                    } else if (Password.text.length < 8) {
-                      Fluttertoast.showToast(
-                          msg:
-                              "Password Mismatch or size must be greater then 8",
-                          toastLength: Toast.LENGTH_SHORT,
-                          timeInSecForIosWeb: 1,
-                          backgroundColor: Colors.red,
-                          textColor: Colors.white,
-                          fontSize: 18.0);
-                    } else {
-                      const String url =
-                          '${ServerHelper.baseUrl}auth/NewRegisterAPI';
-                      // final bytes6 = File(_imageFile.path).readAsBytesSync();
-                      // String aadhar_base= _imageFile != null ? 'data:image/png;base64,' + base64Encode(bytes6) : '';
-                      print(base64Image);
-                      Map data = {
-                        "name": Name.text,
-                        "phone": Mobile.text,
-                        "email": rEmail.text.trim(),
-                        "password": Password.text,
-                        "address": Address.text,
-                        "photo_proof_name": sproof_holder,
-                        "photo_proof_no": Aadhar.text,
-                        "photo_proof_img": {
-                          "mime": "image/jpeg",
-                          "data": base64Image,
-                        }
-                      };
-                      print(data);
-                      var body = json.encode(data);
-                      print(body);
-                      final response = await http.post(Uri.parse(url),
-                          headers: <String, String>{
-                            'Content-Type': 'application/json'
-                          },
-                          body: body);
-                      print(response);
-                      Map<String, dynamic> responseJson =
-                          json.decode(response.body);
-                      print("----------------------Register----------------");
-                      print(responseJson);
-                      if (responseJson['status'] == "Success") {
-                        // Fluttertoast.showToast(
-                        //     msg: responseJson['Message'],
-                        //     toastLength: Toast.LENGTH_SHORT,
-                        //     gravity: ToastGravity.CENTER,
-                        //     timeInSecForIosWeb: 1,
-                        //     backgroundColor: Colors.green,
-                        //     textColor: Colors.white,
-                        //     fontSize: 18.0);
-                        const String url1 =
-                            '${ServerHelper.baseUrl}auth/register_otp_verification';
-                        Map data1 = {
-                          "phone": Mobile.text,
-                        };
-                        print(data1);
-                        var body1 = json.encode(data);
-                        print(body1);
-                        NewPage = true;
-                        final response1 = await http.post(Uri.parse(url1),
-                            headers: <String, String>{
-                              'Content-Type': 'application/json'
+                      buildTextField(
+                        controller: Mobile,
+                        label: "Mobile Number",
+                        icon: Icons.phone,
+                        maxLength: 10,
+                        keyboardType: TextInputType.number,
+                      ),
+                      buildTextField(
+                        controller: Address,
+                        label: "Address",
+                        icon: Icons.location_on,
+                        maxLines: 3,
+                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: 10),
+                        padding: EdgeInsets.symmetric(horizontal: 12),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.shade400),
+                          borderRadius: BorderRadius.circular(borderRadius),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            value: dropdownValue,
+                            isExpanded: true,
+                            hint: Text("Select Photo Identity Proof"),
+                            items: s_proof.map((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                dropdownValue = value;
+                                check = value != null;
+                              });
                             },
-                            body: body1);
-                        print(response1);
-                        Map<String, dynamic> responseJson =
-                            json.decode(response.body);
-                        print("----------------------OTP-GEN---------------");
-                        print(responseJson);
-
-                        // Navigator.pushReplacement(context,
-                        //     MaterialPageRoute(builder: (_) => login()));
-                      } else {
-                        Fluttertoast.showToast(
-                            msg: responseJson['Message'],
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.CENTER,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: Colors.red,
-                            textColor: Colors.white,
-                            fontSize: 18.0);
-
-                        // Navigator.pushReplacement(context,
-                        //     MaterialPageRoute(builder: (_) => signup()));
-                      }
-                    }
-                    _focusNode2.requestFocus();
-                  },
-                  child: Text(
-                    'Send OTP',
-                    style: TextStyle(
-                      fontFamily: 'Cairo',
-                      fontStyle: FontStyle.normal,
-                      fontSize: 20,
-                      color: Colors.black,
-                    ),
+                          ),
+                        ),
+                      ),
+                      if (check) ...[
+                        buildTextField(
+                          controller: Aadhar,
+                          label: "ID Number",
+                          icon: Icons.credit_card,
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 10),
+                          child: OutlinedButton.icon(
+                            style: OutlinedButton.styleFrom(
+                              padding: EdgeInsets.all(16),
+                              side: BorderSide(color: primaryColor),
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.circular(borderRadius),
+                              ),
+                            ),
+                            onPressed: () => _showpickoptiondialog(context),
+                            icon: Icon(Icons.upload_file),
+                            label: Text("Upload ID Proof"),
+                          ),
+                        ),
+                      ],
+                      buildTextField(
+                        controller: Password,
+                        label: "Password",
+                        icon: Icons.lock,
+                        isPassword: true,
+                        isHiddenPassword: isHiddenPassword,
+                        onVisibilityToggle: () {
+                          setState(() {
+                            isHiddenPassword = !isHiddenPassword;
+                          });
+                        },
+                      ),
+                      buildTextField(
+                        controller: rPassword,
+                        label: "Confirm Password",
+                        icon: Icons.lock_outline,
+                        isPassword: true,
+                        isHiddenPassword: isHiddenPassword,
+                        onVisibilityToggle: () {
+                          setState(() {
+                            isHiddenPassword = !isHiddenPassword;
+                          });
+                        },
+                      ),
+                      Container(
+                        width: double.infinity,
+                        margin: EdgeInsets.symmetric(vertical: 16),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: primaryColor,
+                            padding: EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(borderRadius),
+                            ),
+                          ),
+                          onPressed: () {
+                            // Your existing registration logic
+                          },
+                          child: Text(
+                            "Register",
+                            style: TextStyle(fontSize: 18, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      if (NewPage) buildOtpVerificationSection(),
+                    ],
                   ),
                 ),
               ),
-              Visibility(
-                visible: NewPage,
-                child: Container(
-                    child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 15.0, right: 15.0, top: 15, bottom: 0),
-                      //padding: EdgeInsets.symmetric(horizontal: 15),
-                      child: Text(
-                        '------Verify OTP-------',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.lightGreenAccent),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 15.0, right: 15.0, top: 15, bottom: 0),
-                      //padding: EdgeInsets.symmetric(horizontal: 15),
-                      child: Text(
-                        'OTP Send on Email OR Mobile Number: ${Mobile.text}',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.blue),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 15.0, right: 15.0, top: 15, bottom: 0),
-                      //padding: EdgeInsets.symmetric(horizontal: 15),
-                      child: TextField(
-                        controller: otp,
-                        focusNode: _focusNode2,
-                        decoration: InputDecoration(
-                            suffixIcon: InkWell(
-                              onTap: () {
-                                setState(() {});
-                              },
-                              child: Icon(Icons.check_circle,
-                                  color: (flag) == false
-                                      ? Colors.red
-                                      : Colors.green),
-                            ),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(width: 2),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(20.0)),
-                            ),
-                            prefixIcon: Icon(Icons.mobile_friendly_outlined),
-                            labelText: 'OTP',
-                            hintText: 'Enter OTP'),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 10.0, bottom: 0.0),
-                      height: 40,
-                      width: 150,
-                      decoration: BoxDecoration(
-                          color: Colors.amber,
-                          borderRadius: BorderRadius.circular(20)),
-                      child: TextButton(
-                          // color: Colors.amber,
-                          child: Text(
-                            'Verify',
-                            style: TextStyle(
-                              fontFamily: 'Cairo',
-                              fontStyle: FontStyle.normal,
-                              fontSize: 20,
-                              color: Colors.white,
-                            ),
-                          ),
-                          onPressed: () async {
-                            if (otp.text.isEmpty) {
-                              Fluttertoast.showToast(
-                                  msg: 'Please Enter OTP',
-                                  toastLength: Toast.LENGTH_LONG,
-                                  gravity: ToastGravity.CENTER,
-                                  timeInSecForIosWeb: 4,
-                                  backgroundColor: Colors.red,
-                                  textColor: Colors.white,
-                                  fontSize: 18.0);
-                            } else {
-                              const String url =
-                                  '${ServerHelper.baseUrl}auth/register_Otp_verify';
-                              Map data = {
-                                "phone": Mobile.text,
-                                "otp": otp.text,
-                              };
-                              print(data);
-                              var body = json.encode(data);
-                              print(body);
-                              final response = await http.post(Uri.parse(url),
-                                  headers: <String, String>{
-                                    'Content-Type': 'application/json'
-                                  },
-                                  body: body);
-                              print(response);
-                              Map<String, dynamic> responseJson =
-                                  json.decode(response.body);
-                              print(
-                                  "----------------------Register----------------");
-                              print(responseJson);
-                              if (responseJson['status'] == 'success') {
-                                setState(() {
-                                  // userId = responseJson['data']['id'];
-                                });
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => login()),
-                                );
-                                // print(userId);
-                                Fluttertoast.showToast(
-                                    msg: responseJson['message'].toString(),
-                                    toastLength: Toast.LENGTH_LONG,
-                                    gravity: ToastGravity.CENTER,
-                                    timeInSecForIosWeb: 5,
-                                    backgroundColor: Colors.blue,
-                                    textColor: Colors.white,
-                                    fontSize: 18.0);
-                              } else {
-                                Fluttertoast.showToast(
-                                    msg: responseJson['message'].toString(),
-                                    toastLength: Toast.LENGTH_LONG,
-                                    gravity: ToastGravity.CENTER,
-                                    timeInSecForIosWeb: 5,
-                                    backgroundColor: Colors.red,
-                                    textColor: Colors.white,
-                                    fontSize: 18.0);
-                              }
-                            }
-                          }),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 15.0, right: 15.0, top: 40, bottom: 40),
-                    ),
-                  ],
-                )),
-              )
-            ],
-          ),
-        )
-      ])),
+            ),
+          ],
+        ),
+      ),
     );
+  }
+
+  Widget buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    bool isPassword = false,
+    bool isHiddenPassword = true,
+    VoidCallback? onVisibilityToggle,
+    int? maxLength,
+    int maxLines = 1,
+    TextInputType? keyboardType,
+  }) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 8),
+      child: TextField(
+        controller: controller,
+        obscureText: isPassword ? isHiddenPassword : false,
+        maxLength: maxLength,
+        maxLines: maxLines,
+        keyboardType: keyboardType,
+        decoration: InputDecoration(
+          labelText: label,
+          prefixIcon: Icon(icon, color: primaryColor),
+          suffixIcon: isPassword
+              ? IconButton(
+                  icon: Icon(
+                    isHiddenPassword ? Icons.visibility_off : Icons.visibility,
+                    color: Colors.grey,
+                  ),
+                  onPressed: onVisibilityToggle,
+                )
+              : null,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(borderRadius),
+            borderSide: BorderSide(color: Colors.grey.shade400),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(borderRadius),
+            borderSide: BorderSide(color: primaryColor, width: 2),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildOtpVerificationSection() {
+    return Container();
   }
 }
