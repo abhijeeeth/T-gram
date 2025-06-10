@@ -50,7 +50,7 @@ class _ImageCapturePageState extends State<ImageCapturePage> {
     // Get current location
     try {
       Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
+          desiredAccuracy: LocationAccuracy.low);
 
       // Capture image
       final pickedFile =
