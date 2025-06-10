@@ -17,10 +17,7 @@ class _DeputyfileuploadState extends State<Deputyfileupload> {
   File? surveyReport;
   File? surveySketch;
 
-  double? latImage1, latImage2, latImage3, latImage4;
-  double? longImage1, longImage2, longImage3, longImage4;
   String? ids;
-
   bool isLoading = false;
 
   Future<void> pickFile(String type) async {
@@ -44,25 +41,16 @@ class _DeputyfileuploadState extends State<Deputyfileupload> {
 
       if (result != null) {
         File file = File(result.files.single.path!);
-        Position position = await Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.high);
-
         setState(() {
           switch (type) {
             case 'inspection':
               inspectionReport = file;
-              latImage1 = position.latitude;
-              longImage1 = position.longitude;
               break;
             case 'survey':
               surveyReport = file;
-              latImage2 = position.latitude;
-              longImage2 = position.longitude;
               break;
             case 'sketch':
               surveySketch = file;
-              latImage3 = position.latitude;
-              longImage3 = position.longitude;
               break;
           }
         });
