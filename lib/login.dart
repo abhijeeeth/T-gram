@@ -137,6 +137,7 @@ class _LoginDemoState extends State<LoginDemo> {
                   ),
                   child: const LoginForm(),
                 ),
+                const SizedBox(height: 30),
                 Row(
                   children: [
                     const SizedBox(width: 8.0),
@@ -184,6 +185,7 @@ class _LoginDemoState extends State<LoginDemo> {
                     ),
                   ],
                 ),
+                const SizedBox(height: 25),
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.symmetric(vertical: 20),
