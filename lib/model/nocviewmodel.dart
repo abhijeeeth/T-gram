@@ -31,7 +31,7 @@ class Data {
   String? hasDivisionEntry;
   List<DeputyRfos>? deputyRfos;
   List<AdditionalDocument>? additionalDocuments;
-  ImageDocuments? imageDocuments;
+  List<ImageDocuments>? imageDocuments;
 
   Data(
       {this.nocApplication,
@@ -75,9 +75,18 @@ class Data {
         additionalDocuments!.add(AdditionalDocument.fromJson(v));
       });
     }
-    if (json['image_documents'] != null &&
-        json['image_documents'] is Map<String, dynamic>) {
-      imageDocuments = ImageDocuments.fromJson(json['image_documents']);
+    if (json['image_documents'] != null) {
+      if (json['image_documents'] is List) {
+        imageDocuments = <ImageDocuments>[];
+        json['image_documents'].forEach((v) {
+          imageDocuments!.add(ImageDocuments.fromJson(v));
+        });
+      } else if (json['image_documents'] is Map<String, dynamic>) {
+        // fallback for old API structure
+        imageDocuments = [ImageDocuments.fromJson(json['image_documents'])];
+      } else {
+        imageDocuments = null;
+      }
     } else {
       imageDocuments = null;
     }
@@ -107,7 +116,7 @@ class Data {
           additionalDocuments!.map((v) => v.toJson()).toList();
     }
     if (imageDocuments != null) {
-      data['image_documents'] = imageDocuments!.toJson();
+      data['image_documents'] = imageDocuments!.map((v) => v.toJson()).toList();
     }
     return data;
   }
