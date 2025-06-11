@@ -1236,10 +1236,30 @@ class NOCView extends StatelessWidget {
     if (doc == null) return const SizedBox.shrink();
 
     final List<Map<String, String?>> images = [
-      {'label': 'Location Image 1', 'file': doc['location_img1']},
-      {'label': 'Location Image 2', 'file': doc['location_img2']},
-      {'label': 'Location Image 3', 'file': doc['location_img3']},
-      {'label': 'Location Image 4', 'file': doc['location_img4']},
+      {
+        'label': 'Location Image 1',
+        'file': doc.locationImg1,
+        'lat': doc.image1Lat,
+        'log': doc.image1Log
+      },
+      {
+        'label': 'Location Image 2',
+        'file': doc.locationImg2,
+        'lat': doc.image2Lat,
+        'log': doc.image2Log
+      },
+      {
+        'label': 'Location Image 3',
+        'file': doc.locationImg3,
+        'lat': doc.image3Lat,
+        'log': doc.image3Log
+      },
+      {
+        'label': 'Location Image 4',
+        'file': doc.locationImg4,
+        'lat': doc.image4Lat,
+        'log': doc.image4Log
+      },
     ];
 
     return Container(
@@ -1288,8 +1308,20 @@ class NOCView extends StatelessWidget {
                 .map((img) {
               final file = img['file']!;
               final isPdf = file.toLowerCase().endsWith('.pdf');
-              final url =
-                  "${ServerHelper.withoutapiurl}media/upload/noc/siteinspection/$file";
+              String url;
+              if (img['label'] == 'Location Image 1') {
+                url =
+                    "${ServerHelper.withoutapiurl}media/upload/noc/SiteInspection_img1/$file";
+              } else if (img['label'] == 'Location Image 2') {
+                url =
+                    "${ServerHelper.withoutapiurl}media/upload/noc/SiteInspection_img2/$file";
+              } else if (img['label'] == 'Location Image 3') {
+                url =
+                    "${ServerHelper.withoutapiurl}media/upload/noc/SiteInspection_img3/$file";
+              } else {
+                url =
+                    "${ServerHelper.withoutapiurl}media/upload/noc/SiteInspection_img4/$file";
+              }
               return Padding(
                 padding: const EdgeInsets.only(bottom: 16),
                 child: Row(
