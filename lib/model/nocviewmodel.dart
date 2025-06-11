@@ -30,7 +30,7 @@ class Data {
   String? hasValidEntry;
   String? hasDivisionEntry;
   List<DeputyRfos>? deputyRfos;
-  List<Null>? additionalDocuments;
+  List<AdditionalDocument>? additionalDocuments;
   ImageDocuments? imageDocuments;
 
   Data(
@@ -69,12 +69,12 @@ class Data {
         deputyRfos!.add(DeputyRfos.fromJson(v));
       });
     }
-    // if (json['additional_documents'] != null) {
-    //   additionalDocuments = <Null>[];
-    //   json['additional_documents'].forEach((v) {
-    //     additionalDocuments!.add(Null.fromJson(v));
-    //   });
-    // }
+    if (json['additional_documents'] != null) {
+      additionalDocuments = <AdditionalDocument>[];
+      json['additional_documents'].forEach((v) {
+        additionalDocuments!.add(AdditionalDocument.fromJson(v));
+      });
+    }
     if (json['image_documents'] != null &&
         json['image_documents'] is Map<String, dynamic>) {
       imageDocuments = ImageDocuments.fromJson(json['image_documents']);
@@ -102,10 +102,10 @@ class Data {
     if (deputyRfos != null) {
       data['deputy_rfos'] = deputyRfos!.map((v) => v.toJson()).toList();
     }
-    // if (additionalDocuments != null) {
-    //   data['additional_documents'] =
-    //       additionalDocuments!.map((v) => v.toJson()).toList();
-    // }
+    if (additionalDocuments != null) {
+      data['additional_documents'] =
+          additionalDocuments!.map((v) => v.toJson()).toList();
+    }
     if (imageDocuments != null) {
       data['image_documents'] = imageDocuments!.toJson();
     }
@@ -627,6 +627,40 @@ class ImageDocuments {
     data['image2_log'] = image2Log;
     data['image3_log'] = image3Log;
     data['image4_log'] = image4Log;
+    return data;
+  }
+}
+
+class AdditionalDocument {
+  int? id;
+  String? category;
+  String? document;
+  String? name;
+  String? uploadedAt;
+
+  AdditionalDocument({
+    this.id,
+    this.category,
+    this.document,
+    this.name,
+    this.uploadedAt,
+  });
+
+  AdditionalDocument.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    category = json['category'];
+    document = json['document'];
+    name = json['name'];
+    uploadedAt = json['uploaded_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['category'] = category;
+    data['document'] = document;
+    data['name'] = name;
+    data['uploaded_at'] = uploadedAt;
     return data;
   }
 }
