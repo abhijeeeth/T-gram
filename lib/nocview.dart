@@ -1082,6 +1082,14 @@ class NOCView extends StatelessWidget {
                 Initializer.nocListViewModel.data!.additionalDocuments!,
                 context),
           ),
+        // Image Documents Section
+        if (Initializer.nocListViewModel.data?.imageDocuments != null &&
+            Initializer.nocListViewModel.data!.imageDocuments!.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(top: 24.0),
+            child: _buildImageDocumentsSection(
+                Initializer.nocListViewModel.data!.imageDocuments!, context),
+          ),
       ],
     );
   }
@@ -1209,6 +1217,136 @@ class NOCView extends StatelessWidget {
                           ),
                         ),
                       ),
+                  ],
+                ),
+              );
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Add this widget for image_documents
+  Widget _buildImageDocumentsSection(
+      List<dynamic> imageDocs, BuildContext context) {
+    const mainColor = Color.fromARGB(195, 105, 138, 132);
+    // Only one object in the list is expected
+    final doc = imageDocs.isNotEmpty ? imageDocs[0] : null;
+    if (doc == null) return const SizedBox.shrink();
+
+    final List<Map<String, String?>> images = [
+      {'label': 'Location Image 1', 'file': doc['location_img1']},
+      {'label': 'Location Image 2', 'file': doc['location_img2']},
+      {'label': 'Location Image 3', 'file': doc['location_img3']},
+      {'label': 'Location Image 4', 'file': doc['location_img4']},
+    ];
+
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+        border: Border.all(color: Colors.grey.shade200, width: 1),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.image, color: mainColor, size: 22),
+                const SizedBox(width: 8),
+                const Text(
+                  'Site Inspection Images',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: mainColor,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Divider(
+                    color: Colors.grey.shade300,
+                    thickness: 1,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            ...images
+                .where((img) => img['file'] != null && img['file']!.isNotEmpty)
+                .map((img) {
+              final file = img['file']!;
+              final isPdf = file.toLowerCase().endsWith('.pdf');
+              final url =
+                  "${ServerHelper.withoutapiurl}media/upload/noc/siteinspection/$file";
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: mainColor.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(
+                        isPdf ? Icons.picture_as_pdf : Icons.image,
+                        size: 20,
+                        color: mainColor,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        img['label']!,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    TextButton.icon(
+                      onPressed: () async {
+                        if (isPdf) {
+                          if (await canLaunchUrl(Uri.parse(url))) {
+                            await launchUrl(Uri.parse(url),
+                                mode: LaunchMode.externalApplication);
+                          } else {
+                            Fluttertoast.showToast(
+                                msg: "Could not open document");
+                          }
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => ImageView(Images: url),
+                            ),
+                          );
+                        }
+                      },
+                      icon: Icon(
+                        isPdf ? Icons.visibility : Icons.image,
+                        size: 20,
+                        color: mainColor,
+                      ),
+                      label: Text(
+                        isPdf ? 'View PDF' : 'View Image',
+                        style: const TextStyle(
+                          color: mainColor,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               );
