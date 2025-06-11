@@ -959,6 +959,137 @@ class NOCView extends StatelessWidget {
 
     const mainColor = Color.fromARGB(195, 105, 138, 132);
 
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(18),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.06),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+            border: Border.all(color: Colors.grey.shade200, width: 1),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: documents.entries.map((entry) {
+                final title = entry.key;
+                final filename = entry.value;
+                final bool hasFile = filename != null && filename.isNotEmpty;
+                final bool isPdf =
+                    hasFile && filename.toLowerCase().endsWith('.pdf');
+
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: hasFile
+                              ? mainColor.withOpacity(0.15)
+                              : Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          isPdf ? Icons.picture_as_pdf : Icons.image,
+                          size: 20,
+                          color: mainColor,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          title,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      if (hasFile)
+                        TextButton.icon(
+                          onPressed: () async {
+                            String url = "";
+                            if (title == 'Photo ID Proof') {
+                              url =
+                                  "${ServerHelper.withoutapiurl}media/upload/noc/photo_Id_Proof/$filename";
+                            } else if (title == 'Ownership Pattyam') {
+                              url =
+                                  "${ServerHelper.withoutapiurl}media/upload/noc/ownership_pattyam/$filename";
+                            } else if (title == 'Registration Deed') {
+                              url =
+                                  "${ServerHelper.withoutapiurl}media/upload/noc/registration_deed/$filename";
+                            } else if (title == 'Possession Certificate') {
+                              url =
+                                  "${ServerHelper.withoutapiurl}media/upload/noc/possession_certificate/$filename";
+                            } else if (title == 'Land Tax Receipt') {
+                              url =
+                                  "${ServerHelper.withoutapiurl}media/upload/noc/land_tax_receipt/$filename";
+                            } else {
+                              url =
+                                  "${ServerHelper.withoutapiurl}media/upload/$filename";
+                            }
+                            if (isPdf) {
+                              if (await canLaunchUrl(Uri.parse(url))) {
+                                await launchUrl(Uri.parse(url),
+                                    mode: LaunchMode.externalApplication);
+                              } else {
+                                Fluttertoast.showToast(
+                                    msg: "Could not open document");
+                              }
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => ImageView(Images: url),
+                                ),
+                              );
+                            }
+                          },
+                          icon: Icon(
+                            isPdf ? Icons.visibility : Icons.image,
+                            size: 20,
+                            color: mainColor,
+                          ),
+                          label: Text(
+                            isPdf ? 'View PDF' : 'View Image',
+                            style: const TextStyle(
+                              color: mainColor,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+        // Additional Documents Section
+        if (Initializer.nocListViewModel.data?.additionalDocuments != null &&
+            Initializer.nocListViewModel.data!.additionalDocuments!.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(top: 24.0),
+            child: _buildAdditionalDocumentsSection(
+                Initializer.nocListViewModel.data!.additionalDocuments!,
+                context),
+          ),
+      ],
+    );
+  }
+
+  // Additional Documents Section Widget
+  Widget _buildAdditionalDocumentsSection(
+      List<AdditionalDocument> additionalDocs, BuildContext context) {
+    const mainColor = Color.fromARGB(195, 105, 138, 132);
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -976,97 +1107,113 @@ class NOCView extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
-          children: documents.entries.map((entry) {
-            final title = entry.key;
-            final filename = entry.value;
-            final bool hasFile = filename != null && filename.isNotEmpty;
-            final bool isPdf =
-                hasFile && filename.toLowerCase().endsWith('.pdf');
-
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: hasFile
-                          ? mainColor.withOpacity(0.15)
-                          : Colors.grey.shade100,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Icon(
-                      isPdf ? Icons.picture_as_pdf : Icons.image,
-                      size: 20,
-                      color: mainColor,
-                    ),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.attach_file, color: mainColor, size: 22),
+                const SizedBox(width: 8),
+                const Text(
+                  'Additional Documents',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: mainColor,
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Divider(
+                    color: Colors.grey.shade300,
+                    thickness: 1,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            ...additionalDocs.map((doc) {
+              final isPdf = (doc.document ?? '').toLowerCase().endsWith('.pdf');
+              final hasFile = doc.document != null && doc.document!.isNotEmpty;
+              final url =
+                  "${ServerHelper.withoutapiurl}media/upload/noc/Additional_documents/${doc.document ?? ''}";
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: hasFile
+                            ? mainColor.withOpacity(0.15)
+                            : Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                    ),
-                  ),
-                  if (hasFile)
-                    TextButton.icon(
-                      onPressed: () async {
-                        String url = "";
-                        if (title == 'Photo ID Proof') {
-                          url =
-                              "${ServerHelper.withoutapiurl}media/upload/noc/photo_Id_Proof/$filename";
-                        } else if (title == 'Ownership Pattyam') {
-                          url =
-                              "${ServerHelper.withoutapiurl}media/upload/noc/ownership_pattyam/$filename";
-                        } else if (title == 'Registration Deed') {
-                          url =
-                              "${ServerHelper.withoutapiurl}media/upload/noc/registration_deed/$filename";
-                        } else if (title == 'Possession Certificate') {
-                          url =
-                              "${ServerHelper.withoutapiurl}media/upload/noc/possession_certificate/$filename";
-                        } else if (title == 'Land Tax Receipt') {
-                          url =
-                              "${ServerHelper.withoutapiurl}media/upload/noc/land_tax_receipt/$filename";
-                        } else {
-                          url =
-                              "${ServerHelper.withoutapiurl}media/upload/$filename";
-                        }
-                        if (isPdf) {
-                          if (await canLaunchUrl(Uri.parse(url))) {
-                            await launchUrl(Uri.parse(url),
-                                mode: LaunchMode.externalApplication);
-                          } else {
-                            Fluttertoast.showToast(
-                                msg: "Could not open document");
-                          }
-                        } else {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => ImageView(Images: url),
-                            ),
-                          );
-                        }
-                      },
-                      icon: Icon(
-                        isPdf ? Icons.visibility : Icons.image,
+                      child: Icon(
+                        isPdf ? Icons.picture_as_pdf : Icons.image,
                         size: 20,
                         color: mainColor,
                       ),
-                      label: Text(
-                        isPdf ? 'View PDF' : 'View Image',
-                        style: const TextStyle(
-                          color: mainColor,
-                        ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            doc.name ?? doc.category ?? 'Additional Document',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          if (doc.uploadedAt != null)
+                            Text(
+                              doc.uploadedAt!,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade500,
+                              ),
+                            ),
+                        ],
                       ),
                     ),
-                ],
-              ),
-            );
-          }).toList(),
+                    if (hasFile)
+                      TextButton.icon(
+                        onPressed: () async {
+                          if (isPdf) {
+                            if (await canLaunchUrl(Uri.parse(url))) {
+                              await launchUrl(Uri.parse(url),
+                                  mode: LaunchMode.externalApplication);
+                            } else {
+                              Fluttertoast.showToast(
+                                  msg: "Could not open document");
+                            }
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => ImageView(Images: url),
+                              ),
+                            );
+                          }
+                        },
+                        icon: Icon(
+                          isPdf ? Icons.visibility : Icons.image,
+                          size: 20,
+                          color: mainColor,
+                        ),
+                        label: Text(
+                          isPdf ? 'View PDF' : 'View Image',
+                          style: const TextStyle(
+                            color: mainColor,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              );
+            }),
+          ],
         ),
       ),
     );
