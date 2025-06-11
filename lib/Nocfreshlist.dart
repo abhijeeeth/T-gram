@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tigramnks/Initializer.dart';
 import 'package:tigramnks/bloc/main_bloc.dart';
+import 'package:tigramnks/deputyfileupload.dart';
 import 'package:tigramnks/nocview.dart';
 
 class NocFreshListTable extends StatelessWidget {
@@ -415,20 +416,29 @@ class NocFreshListTable extends StatelessWidget {
 
   Widget _buildActionCell(dynamic item, BuildContext context) {
     return item.siteInception == true
-        ? Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.green.shade50,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.green.shade300),
-            ),
-            child: Text(
-              'Site Inspected',
-              style: TextStyle(
-                color: Colors.green.shade700,
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
+        ? ElevatedButton.icon(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => Deputyfileupload(
+                    ids: item.id.toString() ?? "",
+                  ),
+                ),
+              );
+            },
+            icon: const Icon(Icons.visibility, size: 18),
+            label: const Text('Upload Report'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromARGB(255, 28, 110, 99),
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 12,
               ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              elevation: 0,
             ),
           )
         : ElevatedButton.icon(

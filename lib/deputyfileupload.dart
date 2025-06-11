@@ -3,20 +3,22 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:tigramnks/bloc/main_bloc.dart';
 
 class Deputyfileupload extends StatefulWidget {
-  const Deputyfileupload({super.key});
+  final String? ids;
+  const Deputyfileupload({super.key, required this.ids});
 
   @override
   State<Deputyfileupload> createState() => _DeputyfileuploadState();
 }
 
 class _DeputyfileuploadState extends State<Deputyfileupload> {
+  String? latitude;
+  String? longitude;
   File? inspectionReport;
-  File? surveyReport;
-  File? surveySketch;
-
   String? ids;
   bool isLoading = false;
 
@@ -24,7 +26,6 @@ class _DeputyfileuploadState extends State<Deputyfileupload> {
     setState(() {
       isLoading = true;
     });
-
     try {
       LocationPermission permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
@@ -34,6 +35,9 @@ class _DeputyfileuploadState extends State<Deputyfileupload> {
         }
       }
 
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.low);
+
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['jpg', 'pdf', 'png'],
@@ -41,17 +45,13 @@ class _DeputyfileuploadState extends State<Deputyfileupload> {
 
       if (result != null) {
         File file = File(result.files.single.path!);
+        String base64File = base64Encode(await file.readAsBytes());
+
         setState(() {
-          switch (type) {
-            case 'inspection':
-              inspectionReport = file;
-              break;
-            case 'survey':
-              surveyReport = file;
-              break;
-            case 'sketch':
-              surveySketch = file;
-              break;
+          if (type == 'inspection') {
+            inspectionReport = file;
+            latitude = position.latitude.toString();
+            longitude = position.longitude.toString();
           }
         });
       }
@@ -64,24 +64,12 @@ class _DeputyfileuploadState extends State<Deputyfileupload> {
 
   Map<String, dynamic> prepareData() {
     return {
-      "app_id": ids,
-      "location_img1": {
+      "app_id": widget.ids ?? "",
+      "inspection_report": {
         "mime": "image/jpeg",
         "data": inspectionReport != null
             ? base64Encode(inspectionReport!.readAsBytesSync())
-            : null
-      },
-      "location_img2": {
-        "mime": "image/jpeg",
-        "data": surveyReport != null
-            ? base64Encode(surveyReport!.readAsBytesSync())
-            : null
-      },
-      "location_img3": {
-        "mime": "image/jpeg",
-        "data": surveySketch != null
-            ? base64Encode(surveySketch!.readAsBytesSync())
-            : null
+            : null,
       },
     };
   }
@@ -91,15 +79,50 @@ class _DeputyfileuploadState extends State<Deputyfileupload> {
       width: double.infinity,
       margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey),
+        border: Border.all(color: const Color.fromARGB(255, 28, 110, 99)),
         borderRadius: BorderRadius.circular(14),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
       child: ListTile(
-        leading: const Icon(Icons.upload_file),
-        title: Text(title),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        leading: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 28, 110, 99).withOpacity(0.1),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: const Icon(Icons.upload_file,
+              color: Color.fromARGB(255, 28, 110, 99)),
+        ),
+        title: Text(
+          title,
+          style: const TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
+          ),
+        ),
+        subtitle: Text(
+          file != null ? 'File selected' : 'Tap to select file',
+          style: TextStyle(
+            color: file != null ? Colors.green : Colors.grey,
+            fontSize: 12,
+          ),
+        ),
         trailing: Icon(
-          file == null ? Icons.close : Icons.check_circle,
-          color: file == null ? Colors.red : Colors.green,
+          file == null ? Icons.add_circle_outline : Icons.check_circle,
+          color: file == null
+              ? const Color.fromARGB(255, 28, 110, 99)
+              : Colors.green,
+          size: 28,
         ),
         onTap: () => pickFile(type),
       ),
@@ -115,6 +138,7 @@ class _DeputyfileuploadState extends State<Deputyfileupload> {
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
+            fontSize: 20,
           ),
         ),
         centerTitle: true,
@@ -133,12 +157,12 @@ class _DeputyfileuploadState extends State<Deputyfileupload> {
         elevation: 4,
       ),
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color.fromARGB(0, 28, 110, 99),
-              Color.fromARGB(36, 0, 105, 91),
-              Color.fromARGB(34, 105, 138, 132),
+              const Color.fromARGB(255, 28, 110, 99).withOpacity(0.1),
+              Colors.white,
+              Colors.white,
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -147,39 +171,81 @@ class _DeputyfileuploadState extends State<Deputyfileupload> {
         child: Stack(
           children: [
             ListView(
+              padding: const EdgeInsets.symmetric(vertical: 20),
               children: [
-                const SizedBox(height: 20),
+                Container(
+                  margin: const EdgeInsets.all(15),
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(14),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 1,
+                        blurRadius: 3,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Upload Inspection Report",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 28, 110, 99),
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        "Please upload the inspection report in JPG, PNG, or PDF format.",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 buildFileButton(
                     'Inspection Report', 'inspection', inspectionReport),
-                buildFileButton('Survey Report', 'survey', surveyReport),
-                buildFileButton('Survey Sketches', 'sketch', surveySketch),
                 const SizedBox(height: 20),
-                if (inspectionReport != null &&
-                    surveyReport != null &&
-                    surveySketch != null)
+                if (inspectionReport != null)
                   Container(
-                    margin: const EdgeInsets.all(15),
+                    margin: const EdgeInsets.symmetric(horizontal: 15),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color.fromARGB(255, 28, 110, 99),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14),
                         ),
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        elevation: 2,
                       ),
                       onPressed: () {
                         final data = prepareData();
+                        context
+                            .read<MainBloc>()
+                            .add(DeputyFileUpload(data: data));
                         print(data);
                       },
-                      child: const Padding(
-                        padding: EdgeInsets.all(12),
-                        child: Text(
-                          "Submit",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.cloud_upload, color: Colors.white),
+                          SizedBox(width: 8),
+                          Text(
+                            "Submit Report",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
                   ),

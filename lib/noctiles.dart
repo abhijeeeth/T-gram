@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tigramnks/Nocfreshlist.dart';
 import 'package:tigramnks/bloc/main_bloc.dart';
-import 'package:tigramnks/deputyfileupload.dart';
 import 'package:tigramnks/nocapprovedrejectedlist.dart';
 import 'package:tigramnks/nocforwardedlist.dart';
 import 'package:tigramnks/nocpendingwithmelist.dart';
@@ -86,13 +85,7 @@ class _NocApplictaionTilesState extends State<NocApplictaionTiles> {
             children: [
               // Welcome section
               InkWell(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const Deputyfileupload(),
-                    ),
-                  );
-                },
+                onTap: () {},
                 child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(20.0),
@@ -226,7 +219,7 @@ class _NocApplictaionTilesState extends State<NocApplictaionTiles> {
                         title: 'Approved/Rejected',
                         subtitle: 'Final decisions',
                         icon: Icons.rule_rounded,
-                        color: const Color(0xFF8E24AA)!,
+                        color: const Color(0xFF8E24AA),
                         onTap: () {
                           context.read<MainBloc>().add(NocApprovedRejectedList(
                               sessionToken: _sessionToken));

@@ -29,6 +29,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     on<NocListIndividualView>(_nocListIndividualView);
     on<SiteInspection>(_siteInspection);
     on<SiteInspectionByRFO>(_siteInspectionByRFO);
+    on<DeputyFileUpload>(_deputyFileUpload);
     // TODO: implement event handler
   }
 
@@ -564,6 +565,60 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       emit(SiteInspectionByRFOFailed());
     }
   }
+
+  FutureOr<void> _deputyFileUpload(
+      DeputyFileUpload event, Emitter<MainState> emit) async {
+    try {
+      emit(DeputyFileUploadLoading());
+      final String sessionToken = ServerHelper.token.toString();
+      log('Uploading deputy file data: $sessionToken');
+      final String ids = event.data['app_id'].toString();
+      final String base64ImagePic1 = event.data['inspection_report']['data'];
+
+      const String url = '${ServerHelper.baseUrl}auth/noc_inception_report/';
+      Map data = {
+        "app_id": ids,
+        "inspection_report": {"mime": "image/jpeg", "data": base64ImagePic1},
+      };
+      log(data.toString());
+      var body = json.encode(data);
+
+      final response = await http.post(Uri.parse(url),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': "token $sessionToken"
+          },
+          body: body);
+
+      Map<String, dynamic> responseJson = json.decode(response.body);
+      log(body.toString());
+      log('Response: ${responseJson.toString()}');
+
+      if (response.statusCode == 200) {
+        emit(DeputyFileUploadLoaded());
+
+        // Show a toast using Flutter's ScaffoldMessenger if context is available
+        final context = event.data['context'];
+        if (context != null && context is BuildContext) {
+          Future.delayed(Duration.zero, () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Upload Successful'),
+                duration: Duration(seconds: 2),
+              ),
+            );
+          });
+        }
+      } else {
+        emit(DeputyFileUploadFailed());
+        // Future.delayed(Duration.zero, () {
+        //   ScaffoldMessenger.of(event.data['context']).showSnackBar(
+        //     const SnackBar(content: Text('Upload Failed')),
+        //   );
+        // });
+      }
+    } catch (e) {}
+  }
 }
 // Define the events
 
@@ -739,3 +794,16 @@ class SiteInspectionByRFOLoading extends MainState {}
 class SiteInspectionByRFOLoaded extends MainState {}
 
 class SiteInspectionByRFOFailed extends MainState {}
+
+//deputy file upload
+class DeputyFileUpload extends MainEvent {
+  final Map<String, dynamic> data;
+
+  DeputyFileUpload({required this.data});
+}
+
+class DeputyFileUploadLoading extends MainState {}
+
+class DeputyFileUploadLoaded extends MainState {}
+
+class DeputyFileUploadFailed extends MainState {}
