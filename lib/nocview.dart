@@ -957,6 +957,8 @@ class NOCView extends StatelessWidget {
       'Land Tax Receipt': nocData.landTaxReceipt,
     };
 
+    const mainColor = Color.fromARGB(195, 105, 138, 132);
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -988,14 +990,15 @@ class NOCView extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color:
-                          hasFile ? Colors.blue.shade50 : Colors.grey.shade100,
+                      color: hasFile
+                          ? mainColor.withOpacity(0.15)
+                          : Colors.grey.shade100,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(
                       isPdf ? Icons.picture_as_pdf : Icons.image,
                       size: 20,
-                      color: isPdf ? Colors.blue.shade700 : Colors.red,
+                      color: mainColor,
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -1051,12 +1054,12 @@ class NOCView extends StatelessWidget {
                       icon: Icon(
                         isPdf ? Icons.visibility : Icons.image,
                         size: 20,
-                        color: isPdf ? Colors.blue.shade700 : Colors.red,
+                        color: mainColor,
                       ),
                       label: Text(
                         isPdf ? 'View PDF' : 'View Image',
-                        style: TextStyle(
-                          color: isPdf ? Colors.blue.shade700 : Colors.red,
+                        style: const TextStyle(
+                          color: mainColor,
                         ),
                       ),
                     ),
