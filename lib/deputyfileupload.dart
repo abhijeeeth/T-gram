@@ -2,10 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:tigramnks/bloc/main_bloc.dart';
+import 'package:tigramnks/noctiles.dart';
+import 'package:tigramnks/server/serverhelper.dart';
 
 class Deputyfileupload extends StatefulWidget {
   final String? ids;
@@ -31,6 +35,7 @@ class _DeputyfileuploadState extends State<Deputyfileupload> {
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
+          Fluttertoast.showToast(msg: "Location permission denied");
           return;
         }
       }
@@ -45,8 +50,6 @@ class _DeputyfileuploadState extends State<Deputyfileupload> {
 
       if (result != null) {
         File file = File(result.files.single.path!);
-        String base64File = base64Encode(await file.readAsBytes());
-
         setState(() {
           if (type == 'inspection') {
             inspectionReport = file;
@@ -55,6 +58,8 @@ class _DeputyfileuploadState extends State<Deputyfileupload> {
           }
         });
       }
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Error: $e");
     } finally {
       setState(() {
         isLoading = false;
@@ -156,122 +161,149 @@ class _DeputyfileuploadState extends State<Deputyfileupload> {
         ),
         elevation: 4,
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              const Color.fromARGB(255, 28, 110, 99).withOpacity(0.1),
-              Colors.white,
-              Colors.white,
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: Stack(
-          children: [
-            ListView(
-              padding: const EdgeInsets.symmetric(vertical: 20),
+      body: BlocConsumer<MainBloc, MainState>(
+        listener: (context, state) {
+          if (state is DeputyFileUploadLoaded) {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => NocApplictaionTiles(
+                          sessionToken: ServerHelper.token.toString(),
+                        )));
+          } else if (state is DeputyFileUploadFailed) {
+            Fluttertoast.showToast(
+              msg: "Failed to upload file",
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+            );
+          }
+        },
+        builder: (context, state) {
+          return Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  const Color.fromARGB(255, 28, 110, 99).withOpacity(0.1),
+                  Colors.white,
+                  Colors.white,
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+            child: Stack(
               children: [
-                Container(
-                  margin: const EdgeInsets.all(15),
-                  padding: const EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(14),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
-                        spreadRadius: 1,
-                        blurRadius: 3,
-                        offset: const Offset(0, 2),
+                ListView(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.all(15),
+                      padding: const EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(14),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.1),
+                            spreadRadius: 1,
+                            blurRadius: 3,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  child: const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Upload Inspection Report",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 28, 110, 99),
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        "Please upload the inspection report in JPG, PNG, or PDF format.",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                buildFileButton(
-                    'Inspection Report', 'inspection', inspectionReport),
-                const SizedBox(height: 20),
-                if (inspectionReport != null)
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 15),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 28, 110, 99),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                        elevation: 2,
-                      ),
-                      onPressed: () {
-                        final data = prepareData();
-                        context
-                            .read<MainBloc>()
-                            .add(DeputyFileUpload(data: data));
-                        print(data);
-                      },
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      child: const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(Icons.cloud_upload, color: Colors.white),
-                          SizedBox(width: 8),
                           Text(
-                            "Submit Report",
+                            "Upload Inspection Report",
                             style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
+                              fontSize: 18,
                               fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 28, 110, 99),
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            "Please upload the inspection report in JPG, PNG, or PDF format.",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-              ],
-            ),
-            if (isLoading)
-              Center(
-                child: Container(
-                  width: double.infinity,
-                  height: double.infinity,
-                  color: const Color.fromARGB(73, 255, 255, 255),
-                  child: const SizedBox(
-                    width: 50,
-                    height: 50,
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          Color.fromARGB(255, 28, 110, 99),
+                    buildFileButton(
+                        'Inspection Report', 'inspection', inspectionReport),
+                    const SizedBox(height: 20),
+                    if (inspectionReport != null)
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 15),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 28, 110, 99),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 15),
+                            elevation: 2,
+                          ),
+                          onPressed: () {
+                            final data = prepareData();
+                            context
+                                .read<MainBloc>()
+                                .add(DeputyFileUpload(data: data));
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: state is DeputyFileUploadLoading
+                                ? const CupertinoActivityIndicator(
+                                    color: Colors.white)
+                                : const Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.cloud_upload,
+                                          color: Colors.white),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        "Submit Report",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                if (isLoading)
+                  Center(
+                    child: Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      color: const Color.fromARGB(73, 255, 255, 255),
+                      child: const SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Color.fromARGB(255, 28, 110, 99),
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ),
-          ],
-        ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
