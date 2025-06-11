@@ -573,7 +573,8 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       final String sessionToken = ServerHelper.token.toString();
       log('Uploading deputy file data: $sessionToken');
       final String ids = event.data['app_id'].toString();
-      final String base64ImagePic1 = event.data['inspection_report']['data'];
+      final file = event.data['inspection_report']['data'];
+      final String base64ImagePic1 = base64Encode(await file.readAsBytes());
 
       const String url = '${ServerHelper.baseUrl}auth/noc_inception_report/';
       Map data = {

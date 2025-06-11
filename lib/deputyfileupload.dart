@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
@@ -6,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:tigramnks/bloc/main_bloc.dart';
 import 'package:tigramnks/noctiles.dart';
 import 'package:tigramnks/server/serverhelper.dart';
@@ -20,10 +18,7 @@ class Deputyfileupload extends StatefulWidget {
 }
 
 class _DeputyfileuploadState extends State<Deputyfileupload> {
-  String? latitude;
-  String? longitude;
   File? inspectionReport;
-  String? ids;
   bool isLoading = false;
 
   Future<void> pickFile(String type) async {
@@ -31,18 +26,6 @@ class _DeputyfileuploadState extends State<Deputyfileupload> {
       isLoading = true;
     });
     try {
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          Fluttertoast.showToast(msg: "Location permission denied");
-          return;
-        }
-      }
-
-      Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.low);
-
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['jpg', 'pdf', 'png'],
@@ -53,8 +36,6 @@ class _DeputyfileuploadState extends State<Deputyfileupload> {
         setState(() {
           if (type == 'inspection') {
             inspectionReport = file;
-            latitude = position.latitude.toString();
-            longitude = position.longitude.toString();
           }
         });
       }
@@ -70,12 +51,7 @@ class _DeputyfileuploadState extends State<Deputyfileupload> {
   Map<String, dynamic> prepareData() {
     return {
       "app_id": widget.ids ?? "",
-      "inspection_report": {
-        "mime": "image/jpeg",
-        "data": inspectionReport != null
-            ? base64Encode(inspectionReport!.readAsBytesSync())
-            : null,
-      },
+      "inspection_report": {"mime": "image/jpeg", "data": inspectionReport},
     };
   }
 
