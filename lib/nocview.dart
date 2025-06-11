@@ -9,6 +9,7 @@ import 'package:tigramnks/Images.dart';
 import 'package:tigramnks/Initializer.dart';
 import 'package:tigramnks/bloc/main_bloc.dart';
 import 'package:tigramnks/image_capture_page.dart';
+import 'package:tigramnks/image_capture_page_by_rfo.dart';
 import 'package:tigramnks/model/nocviewmodel.dart';
 import 'package:tigramnks/server/serverhelper.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -102,14 +103,24 @@ class NOCView extends StatelessWidget {
                                     width: double.infinity,
                                     child: ElevatedButton.icon(
                                       onPressed: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ImageCapturePage(
-                                                    appId:
-                                                        nocData.id.toString(),
-                                                  )),
-                                        );
+                                        ServerHelper.userGroup ==
+                                                'deputy range officer'
+                                            ? Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ImageCapturePage(
+                                                          appId: nocData.id
+                                                              .toString(),
+                                                        )),
+                                              )
+                                            : Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ImageCapturePageByRfo(
+                                                          appId: nocData.id
+                                                              .toString(),
+                                                        )),
+                                              );
                                       },
                                       icon: const Icon(Icons.arrow_forward),
                                       label: const Text(
