@@ -291,7 +291,11 @@ class NocFreshListTable extends StatelessWidget {
                       DataCell(_buildNameCell(item)),
                       DataCell(_buildDateCell(item)),
                       DataCell(_buildPurposeCell(item)),
-                      DataCell(_buildActionCell(item, context)),
+                      DataCell(
+                          Initializer.nocFreshapplicationModel.data?.group ==
+                                  'forest range officer'
+                              ? _buildActionCellforRFO(item, context)
+                              : _buildActionCell(item, context)),
                     ],
                   );
                 }),
@@ -362,6 +366,51 @@ class NocFreshListTable extends StatelessWidget {
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
     );
+  }
+
+  Widget _buildActionCellforRFO(dynamic item, BuildContext context) {
+    return item.siteInception == true &&
+            item.rfoSiteInception == true &&
+            item.siteInceptionRfo == false
+        ? ElevatedButton.icon(
+            onPressed: () {
+              context.read<MainBloc>().add(NocListIndividualView(
+                  sessionToken: sessionToken, Ids: item.id.toString() ?? ""));
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const NOCView()),
+              );
+            },
+            icon: const Icon(Icons.visibility, size: 18),
+            label: const Text('View Details'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromARGB(255, 28, 110, 99),
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 12,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              elevation: 0,
+            ),
+          )
+        : Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.green.shade50,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.green.shade300),
+            ),
+            child: Text(
+              'Site Inspected',
+              style: TextStyle(
+                color: Colors.green.shade700,
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+              ),
+            ),
+          );
   }
 
   Widget _buildActionCell(dynamic item, BuildContext context) {

@@ -28,6 +28,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     on<NocForwardedList>(_nocForwardedList);
     on<NocListIndividualView>(_nocListIndividualView);
     on<SiteInspection>(_siteInspection);
+    on<SiteInspectionByRFO>(_siteInspectionByRFO);
     // TODO: implement event handler
   }
 
@@ -486,6 +487,83 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       emit(SiteInspectionFailed());
     }
   }
+
+  FutureOr<void> _siteInspectionByRFO(
+      SiteInspectionByRFO event, Emitter<MainState> emit) async {
+    try {
+      emit(SiteInspectionByRFOLoading());
+      final String sessionToken = ServerHelper.token.toString();
+      log('Uploading site inspection data: $sessionToken');
+      final String ids = event.data['app_id'].toString();
+      final String base64ImagePic1 = event.data['location_img1'];
+      final String base64ImagePic2 = event.data['location_img2'];
+      final String base64ImagePic3 = event.data['location_img3'];
+      final String base64ImagePic4 = event.data['location_img4'];
+      final String latImage1 = event.data['image1_lat'];
+      final String latImage2 = event.data['image2_lat'];
+      final String latImage3 = event.data['image3_lat'];
+      final String latImage4 = event.data['image4_lat'];
+      final String longImage1 = event.data['image1_log'];
+      final String longImage2 = event.data['image2_log'];
+      final String longImage3 = event.data['image3_log'];
+      final String longImage4 = event.data['image4_log'];
+
+      const String url = '${ServerHelper.baseUrl}auth/noc_site_inception_rfo/';
+      Map data = {
+        "app_id": ids,
+        "location_img1": {"mime": "image/jpeg", "data": base64ImagePic1},
+        "location_img2": {"mime": "image/jpeg", "data": base64ImagePic2},
+        "location_img3": {"mime": "image/jpeg", "data": base64ImagePic3},
+        "location_img4": {"mime": "image/jpeg", "data": base64ImagePic4},
+        "image1_lat": latImage1,
+        "image2_lat": latImage2,
+        "image3_lat": latImage3,
+        "image4_lat": latImage4,
+        "image1_log": longImage1,
+        "image2_log": longImage2,
+        "image3_log": longImage3,
+        "image4_log": longImage4,
+      };
+      log(data.toString());
+      var body = json.encode(data);
+
+      final response = await http.post(Uri.parse(url),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': "token $sessionToken"
+          },
+          body: body);
+
+      Map<String, dynamic> responseJson = json.decode(response.body);
+      log(body.toString());
+      log('Response: ${responseJson.toString()}');
+
+      if (response.statusCode == 200) {
+        emit(SiteInspectionByRFOLoaded());
+
+        final context = event.data['context'];
+        if (context != null && context is BuildContext) {
+          Future.delayed(Duration.zero, () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Upload Successful'),
+                duration: Duration(seconds: 2),
+              ),
+            );
+          });
+        }
+      } else {
+        emit(SiteInspectionByRFOFailed());
+        Future.delayed(Duration.zero, () {
+          ScaffoldMessenger.of(event.data['context']).showSnackBar(
+            const SnackBar(content: Text('Upload Failed')),
+          );
+        });
+      }
+    } catch (e) {
+      emit(SiteInspectionByRFOFailed());
+    }
+  }
 }
 // Define the events
 
@@ -647,3 +725,17 @@ class SiteInspectionLoading extends MainState {}
 class SiteInspectionLoaded extends MainState {}
 
 class SiteInspectionFailed extends MainState {}
+
+// Site Inspection BY RFO
+class SiteInspectionByRFO extends MainEvent {
+  final Map<String, dynamic> data;
+  SiteInspectionByRFO({
+    required this.data,
+  });
+}
+
+class SiteInspectionByRFOLoading extends MainState {}
+
+class SiteInspectionByRFOLoaded extends MainState {}
+
+class SiteInspectionByRFOFailed extends MainState {}

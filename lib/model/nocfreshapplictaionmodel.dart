@@ -58,6 +58,8 @@ class PendingList {
   String? nocApplicationIdNocCreatedAt;
   String? nocApplicationIdPurpose;
   bool? siteInception;
+  bool? rfoSiteInception;
+  bool? siteInceptionRfo;
 
   PendingList({
     this.id,
@@ -66,6 +68,8 @@ class PendingList {
     this.nocApplicationIdNocCreatedAt,
     this.nocApplicationIdPurpose,
     this.siteInception,
+    this.rfoSiteInception,
+    this.siteInceptionRfo,
   });
 
   PendingList.fromJson(Map<String, dynamic> json) {
@@ -76,6 +80,8 @@ class PendingList {
     nocApplicationIdNocCreatedAt = json['noc_application_id__noc_created_at'];
     nocApplicationIdPurpose = json['noc_application_id__purpose'];
     siteInception = json['site_inception'];
+    rfoSiteInception = json['rfo_site_inception'];
+    siteInceptionRfo = json['site_inception_rfo'];
   }
 
   Map<String, dynamic> toJson() {
@@ -87,6 +93,8 @@ class PendingList {
     data['noc_application_id__noc_created_at'] = nocApplicationIdNocCreatedAt;
     data['noc_application_id__purpose'] = nocApplicationIdPurpose;
     data['site_inception'] = siteInception;
+    data['rfo_site_inception'] = rfoSiteInception;
+    data['site_inception_rfo'] = siteInceptionRfo;
     return data;
   }
 }
