@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -140,57 +141,105 @@ class _ImageCapturePageState extends State<ImageCapturePage> {
         ),
         elevation: 4,
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromARGB(0, 28, 110, 99),
-              Color.fromARGB(36, 0, 105, 91),
-              Color.fromARGB(34, 105, 138, 132),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: Stack(
-          children: [
-            ListView(
+      body: BlocConsumer<MainBloc, MainState>(
+        listener: (context, state) {
+          if (state is SiteInspectionLoaded) {
+            // Fluttertoast.showToast(
+            //   msg: "Images submitted successfully",
+            //   backgroundColor: Colors.green,
+            //   textColor: Colors.white,
+            // );
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => NocApplictaionTiles(
+                          sessionToken: ServerHelper.token.toString(),
+                        )));
+          } else if (state is SiteInspectionFailed) {
+            Fluttertoast.showToast(
+              msg: "Failed to submit",
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+            );
+          }
+        },
+        builder: (context, state) {
+          return Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromARGB(0, 28, 110, 99),
+                  Color.fromARGB(36, 0, 105, 91),
+                  Color.fromARGB(34, 105, 138, 132),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+            child: Stack(
               children: [
-                const SizedBox(height: 20),
-                ...List.generate(4, (index) => buildImageButton(index)),
-                const SizedBox(height: 20),
-                if (images.every((img) => img != null))
-                  Container(
-                    margin: const EdgeInsets.all(15),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 28, 110, 99),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
+                ListView(
+                  children: [
+                    const SizedBox(height: 20),
+                    ...List.generate(4, (index) => buildImageButton(index)),
+                    const SizedBox(height: 20),
+                    if (images.every((img) => img != null))
+                      Container(
+                        margin: const EdgeInsets.all(15),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 28, 110, 99),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                          ),
+                          onPressed: () {
+                            Map<String, dynamic> data = getFormattedData();
+                            context
+                                .read<MainBloc>()
+                                .add(SiteInspection(data: data));
+                            // Navigator.pop(context, data);
+                            // Navigator.pushReplacement(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (_) => NocApplictaionTiles(
+                            //               sessionToken:
+                            //                   ServerHelper.token.toString(),
+                            //             )));
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: state is SiteInspectionLoading
+                                ? const CupertinoActivityIndicator(
+                                    color: Colors.white)
+                                : const Text(
+                                    "Submit",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                          ),
                         ),
                       ),
-                      onPressed: () {
-                        Map<String, dynamic> data = getFormattedData();
-                        context
-                            .read<MainBloc>()
-                            .add(SiteInspection(data: data));
-                        Navigator.pop(context, data);
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => NocApplictaionTiles(
-                                      sessionToken:
-                                          ServerHelper.token.toString(),
-                                    )));
-                      },
-                      child: const Padding(
-                        padding: EdgeInsets.all(12),
-                        child: Text(
-                          "Submit",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                  ],
+                ),
+                if (isLoading)
+                  Center(
+                    child: Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      color: const Color.fromARGB(73, 255, 255, 255),
+                      child: const SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Color.fromARGB(255, 28, 110, 99),
+                            ),
                           ),
                         ),
                       ),
@@ -198,27 +247,8 @@ class _ImageCapturePageState extends State<ImageCapturePage> {
                   ),
               ],
             ),
-            if (isLoading)
-              Center(
-                child: Container(
-                  width: double.infinity,
-                  height: double.infinity,
-                  color: const Color.fromARGB(73, 255, 255, 255),
-                  child: const SizedBox(
-                    width: 50,
-                    height: 50,
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          Color.fromARGB(255, 28, 110, 99),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

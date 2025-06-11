@@ -412,6 +412,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   FutureOr<void> _siteInspection(
       SiteInspection event, Emitter<MainState> emit) async {
     try {
+      emit(SiteInspectionLoading());
       final String sessionToken = ServerHelper.token.toString();
       log('Uploading site inspection data: $sessionToken');
       final String ids = event.data['app_id'].toString();

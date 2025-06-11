@@ -126,7 +126,7 @@ class NocApplication {
   int? id;
   String? nocOfLandApplicationId;
   int? byUserId;
-  Null previousNocId;
+  String? previousNocId;
   String? division;
   String? range;
   bool? hasAppliedBefore;
