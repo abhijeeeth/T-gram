@@ -141,7 +141,7 @@ class _signupState extends State<signup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -149,173 +149,184 @@ class _signupState extends State<signup> {
               decoration: BoxDecoration(
                 color: primaryColor,
                 borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(30),
+                  bottomLeft: Radius.circular(40),
+                  bottomRight: Radius.circular(40),
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: Offset(0, 3),
+                  ),
+                ],
               ),
-              padding: EdgeInsets.fromLTRB(15, 40, 15, 20),
+              padding: EdgeInsets.fromLTRB(20, 60, 20, 30),
               child: Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Image.asset(
-                        "assets/images/kerala_logo.jpg",
-                        width: 60,
-                        height: 60,
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.asset(
+                          "assets/images/kerala_logo.jpg",
+                          width: 50,
+                          height: 50,
+                        ),
                       ),
                       Image.asset(
                         "assets/images/tigram01.png",
-                        width: 100,
-                        height: 70,
+                        width: 90,
+                        height: 60,
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 25),
                   Text(
                     "Create Account",
                     style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 26,
+                      fontWeight: FontWeight.w600,
                       color: Colors.white,
+                      letterSpacing: 1,
                     ),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 5),
                 ],
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(16),
-              child: Card(
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      buildTextField(
-                        controller: Name,
-                        label: "Full Name",
-                        icon: Icons.person,
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+              child: Column(
+                children: [
+                  buildTextField(
+                    controller: Name,
+                    label: "Full Name",
+                    icon: Icons.person_outline,
+                  ),
+                  buildTextField(
+                    controller: rEmail,
+                    label: "Email Address",
+                    icon: Icons.email_outlined,
+                  ),
+                  buildTextField(
+                    controller: Mobile,
+                    label: "Mobile Number",
+                    icon: Icons.phone_outlined,
+                    maxLength: 10,
+                    keyboardType: TextInputType.number,
+                  ),
+                  buildTextField(
+                    controller: Address,
+                    label: "Address",
+                    icon: Icons.location_on_outlined,
+                    maxLines: 2,
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 10),
+                    padding: EdgeInsets.symmetric(horizontal: 15),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.shade300),
+                      borderRadius: BorderRadius.circular(borderRadius),
+                      color: Colors.grey.shade50,
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: dropdownValue,
+                        isExpanded: true,
+                        hint: Text("Select ID Proof Type"),
+                        items: s_proof.map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            dropdownValue = value;
+                            check = value != null;
+                          });
+                        },
                       ),
-                      buildTextField(
-                        controller: rEmail,
-                        label: "Email Address",
-                        icon: Icons.email,
+                    ),
+                  ),
+                  if (check) ...[
+                    buildTextField(
+                      controller: Aadhar,
+                      label: "ID Number",
+                      icon: Icons.credit_card_outlined,
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 10),
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          padding: EdgeInsets.all(16),
+                          foregroundColor: primaryColor,
+                          side: BorderSide(color: primaryColor),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(borderRadius),
+                          ),
+                        ),
+                        onPressed: () => _showpickoptiondialog(context),
+                        icon: Icon(Icons.upload_outlined),
+                        label: Text("Upload ID Proof"),
                       ),
-                      buildTextField(
-                        controller: Mobile,
-                        label: "Mobile Number",
-                        icon: Icons.phone,
-                        maxLength: 10,
-                        keyboardType: TextInputType.number,
-                      ),
-                      buildTextField(
-                        controller: Address,
-                        label: "Address",
-                        icon: Icons.location_on,
-                        maxLines: 3,
-                      ),
-                      Container(
-                        margin: EdgeInsets.symmetric(vertical: 10),
-                        padding: EdgeInsets.symmetric(horizontal: 12),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey.shade400),
+                    ),
+                  ],
+                  buildTextField(
+                    controller: Password,
+                    label: "Password",
+                    icon: Icons.lock_outline,
+                    isPassword: true,
+                    isHiddenPassword: isHiddenPassword,
+                    onVisibilityToggle: () {
+                      setState(() {
+                        isHiddenPassword = !isHiddenPassword;
+                      });
+                    },
+                  ),
+                  buildTextField(
+                    controller: rPassword,
+                    label: "Confirm Password",
+                    icon: Icons.lock_outline,
+                    isPassword: true,
+                    isHiddenPassword: isHiddenPassword,
+                    onVisibilityToggle: () {
+                      setState(() {
+                        isHiddenPassword = !isHiddenPassword;
+                      });
+                    },
+                  ),
+                  SizedBox(height: 10),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primaryColor,
+                        padding: EdgeInsets.symmetric(vertical: 15),
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(borderRadius),
                         ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            value: dropdownValue,
-                            isExpanded: true,
-                            hint: Text("Select Photo Identity Proof"),
-                            items: s_proof.map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                dropdownValue = value;
-                                check = value != null;
-                              });
-                            },
-                          ),
+                      ),
+                      onPressed: () {
+                        // Your existing registration logic
+                      },
+                      child: Text(
+                        "Register",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                          letterSpacing: 1,
                         ),
                       ),
-                      if (check) ...[
-                        buildTextField(
-                          controller: Aadhar,
-                          label: "ID Number",
-                          icon: Icons.credit_card,
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(vertical: 10),
-                          child: OutlinedButton.icon(
-                            style: OutlinedButton.styleFrom(
-                              padding: EdgeInsets.all(16),
-                              side: BorderSide(color: primaryColor),
-                              shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.circular(borderRadius),
-                              ),
-                            ),
-                            onPressed: () => _showpickoptiondialog(context),
-                            icon: Icon(Icons.upload_file),
-                            label: Text("Upload ID Proof"),
-                          ),
-                        ),
-                      ],
-                      buildTextField(
-                        controller: Password,
-                        label: "Password",
-                        icon: Icons.lock,
-                        isPassword: true,
-                        isHiddenPassword: isHiddenPassword,
-                        onVisibilityToggle: () {
-                          setState(() {
-                            isHiddenPassword = !isHiddenPassword;
-                          });
-                        },
-                      ),
-                      buildTextField(
-                        controller: rPassword,
-                        label: "Confirm Password",
-                        icon: Icons.lock_outline,
-                        isPassword: true,
-                        isHiddenPassword: isHiddenPassword,
-                        onVisibilityToggle: () {
-                          setState(() {
-                            isHiddenPassword = !isHiddenPassword;
-                          });
-                        },
-                      ),
-                      Container(
-                        width: double.infinity,
-                        margin: EdgeInsets.symmetric(vertical: 16),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: primaryColor,
-                            padding: EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(borderRadius),
-                            ),
-                          ),
-                          onPressed: () {
-                            // Your existing registration logic
-                          },
-                          child: Text(
-                            "Register",
-                            style: TextStyle(fontSize: 18, color: Colors.white),
-                          ),
-                        ),
-                      ),
-                      if (NewPage) buildOtpVerificationSection(),
-                    ],
+                    ),
                   ),
-                ),
+                  if (NewPage) buildOtpVerificationSection(),
+                ],
               ),
             ),
           ],
