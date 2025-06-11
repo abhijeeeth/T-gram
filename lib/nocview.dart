@@ -99,7 +99,7 @@ class NOCView extends StatelessWidget {
                                     ServerHelper.userGroup ==
                                         'forest range officer'
                                 ? SizedBox(
-                                    width: double.infinity, 
+                                    width: double.infinity,
                                     child: ElevatedButton.icon(
                                       onPressed: () {
                                         Navigator.of(context).push(
@@ -180,6 +180,13 @@ class NOCView extends StatelessWidget {
                                     Icons.numbers_outlined),
                               ],
                             ),
+                            const SizedBox(height: 24),
+
+                            // Documents Section
+                            _buildSectionHeader(
+                                'Documents', Icons.file_copy_outlined),
+                            const SizedBox(height: 8),
+                            _buildDocumentsSection(nocData, context),
                             const SizedBox(height: 24),
 
                             // Comments Section
@@ -937,6 +944,127 @@ class NOCView extends StatelessWidget {
             ),
           ],
         ],
+      ),
+    );
+  }
+
+  Widget _buildDocumentsSection(NocApplication nocData, BuildContext context) {
+    final documents = {
+      'Photo ID Proof': nocData.photoIdProof,
+      'Ownership Pattyam': nocData.ownershipPattyam,
+      'Registration Deed': nocData.registrationDeed,
+      'Possession Certificate': nocData.possessionCertificate,
+      'Land Tax Receipt': nocData.landTaxReceipt,
+    };
+
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+        border: Border.all(color: Colors.grey.shade200, width: 1),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: documents.entries.map((entry) {
+            final title = entry.key;
+            final filename = entry.value;
+            final bool hasFile = filename != null && filename.isNotEmpty;
+            final bool isPdf =
+                hasFile && filename.toLowerCase().endsWith('.pdf');
+
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color:
+                          hasFile ? Colors.blue.shade50 : Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                      isPdf ? Icons.picture_as_pdf : Icons.image,
+                      size: 20,
+                      color: isPdf ? Colors.blue.shade700 : Colors.red,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  if (hasFile)
+                    TextButton.icon(
+                      onPressed: () async {
+                        String url = "";
+                        if (title == 'Photo ID Proof') {
+                          url =
+                              "${ServerHelper.withoutapiurl}media/upload/noc/photo_Id_Proof/$filename";
+                        } else if (title == 'Ownership Pattyam') {
+                          url =
+                              "${ServerHelper.withoutapiurl}media/upload/noc/ownership_pattyam/$filename";
+                        } else if (title == 'Registration Deed') {
+                          url =
+                              "${ServerHelper.withoutapiurl}media/upload/noc/registration_deed/$filename";
+                        } else if (title == 'Possession Certificate') {
+                          url =
+                              "${ServerHelper.withoutapiurl}media/upload/noc/possession_certificate/$filename";
+                        } else if (title == 'Land Tax Receipt') {
+                          url =
+                              "${ServerHelper.withoutapiurl}media/upload/noc/land_tax_receipt/$filename";
+                        } else {
+                          url =
+                              "${ServerHelper.withoutapiurl}media/upload/$filename";
+                        }
+                        if (isPdf) {
+                          if (await canLaunchUrl(Uri.parse(url))) {
+                            await launchUrl(Uri.parse(url),
+                                mode: LaunchMode.externalApplication);
+                          } else {
+                            Fluttertoast.showToast(
+                                msg: "Could not open document");
+                          }
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => ImageView(Images: url),
+                            ),
+                          );
+                        }
+                      },
+                      icon: Icon(
+                        isPdf ? Icons.visibility : Icons.image,
+                        size: 20,
+                        color: isPdf ? Colors.blue.shade700 : Colors.red,
+                      ),
+                      label: Text(
+                        isPdf ? 'View PDF' : 'View Image',
+                        style: TextStyle(
+                          color: isPdf ? Colors.blue.shade700 : Colors.red,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            );
+          }).toList(),
+        ),
       ),
     );
   }

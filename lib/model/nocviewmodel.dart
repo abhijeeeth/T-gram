@@ -75,9 +75,12 @@ class Data {
     //     additionalDocuments!.add(Null.fromJson(v));
     //   });
     // }
-    imageDocuments = json['image_documents'] != null
-        ? ImageDocuments.fromJson(json['image_documents'])
-        : null;
+    if (json['image_documents'] != null &&
+        json['image_documents'] is Map<String, dynamic>) {
+      imageDocuments = ImageDocuments.fromJson(json['image_documents']);
+    } else {
+      imageDocuments = null;
+    }
   }
 
   Map<String, dynamic> toJson() {
