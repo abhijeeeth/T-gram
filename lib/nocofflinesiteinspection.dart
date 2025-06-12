@@ -241,7 +241,7 @@ class _NocofflinesiteinspectionState extends State<Nocofflinesiteinspection> {
                               "image4_log": longitudes[3],
                             };
 
-                            // Store to application_location_images table
+                            // Store to application_locations_images table
                             int result = await DbHelper()
                                 .insertApplicationLocationImages(data);
                             if (result > 0) {
