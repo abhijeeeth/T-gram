@@ -396,7 +396,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
 
       if (response != null && response is Map<String, dynamic>) {
         Initializer.nocListViewModel = NOCListViewModel.fromJson(response);
-        if (Initializer.nocListViewModel.status == "true") {
+        if (Initializer.nocListViewModel.status == "Success") {
           if (event.download) {
             // Store NOC application data in SQLite
             DbHelper dbHelper = DbHelper();

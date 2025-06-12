@@ -32,7 +32,7 @@ class DbHelper {
       // Open the database with explicit onCreate callback
       return await openDatabase(
         path,
-        version: 4, // Increment version number to 4
+        version: 6, // Increment version number to 6
         onCreate: _onCreate,
         onUpgrade: _onUpgrade, // Add upgrade handler
         onOpen: (db) {
@@ -315,7 +315,9 @@ class DbHelper {
         returned_on TEXT,
         clarification_response TEXT,
         site_inception INTEGER,
-        step_status TEXT
+        step_status TEXT,
+        rfo_site_inception INTEGER,
+        site_inception_rfo INTEGER
       )
     ''');
 
@@ -576,7 +578,9 @@ class DbHelper {
           returned_on TEXT,
           clarification_response TEXT,
           site_inception INTEGER,
-          step_status TEXT
+          step_status TEXT,
+          rfo_site_inception INTEGER,
+          site_inception_rfo INTEGER
         )
       ''');
       await db.execute('''
@@ -640,6 +644,39 @@ class DbHelper {
           FOREIGN KEY (noc_application_id) REFERENCES noc_applications (id)
         )
       ''');
+    }
+
+    // Add this for upgrades from version 4 to 5 (or higher)
+    if (oldVersion < 5) {
+      try {
+        await db.execute(
+            "ALTER TABLE noc_applications ADD COLUMN rfo_site_inception INTEGER");
+      } catch (e) {
+        print("Column rfo_site_inception may already exist: $e");
+      }
+      try {
+        await db.execute(
+            "ALTER TABLE noc_applications ADD COLUMN site_inception_rfo INTEGER");
+      } catch (e) {
+        print("Column site_inception_rfo may already exist: $e");
+      }
+    }
+    // Ensure columns exist for any upgrade (defensive)
+    try {
+      var tableInfo = await db.rawQuery("PRAGMA table_info(noc_applications)");
+      var columns = tableInfo.map((col) => col['name']).toSet();
+      if (!columns.contains('rfo_site_inception')) {
+        await db.execute(
+            "ALTER TABLE noc_applications ADD COLUMN rfo_site_inception INTEGER");
+        print("Added missing column rfo_site_inception to noc_applications");
+      }
+      if (!columns.contains('site_inception_rfo')) {
+        await db.execute(
+            "ALTER TABLE noc_applications ADD COLUMN site_inception_rfo INTEGER");
+        print("Added missing column site_inception_rfo to noc_applications");
+      }
+    } catch (e) {
+      print("Error ensuring columns in noc_applications: $e");
     }
   }
 
@@ -1121,7 +1158,18 @@ class DbHelper {
   // CRUD for noc_applications
   Future<int> insertNocApplication(Map<String, dynamic> data) async {
     final db = await database;
-    return await db.insert('noc_applications', data);
+    // Convert boolean values to integers
+    var sanitizedData = Map<String, dynamic>.from(data);
+    sanitizedData.forEach((key, value) {
+      if (value is bool) {
+        sanitizedData[key] = value ? 1 : 0;
+      }
+    });
+    return await db.insert(
+      'noc_applications',
+      sanitizedData,
+      conflictAlgorithm: ConflictAlgorithm.replace, // <-- Add this line
+    );
   }
 
   Future<List<Map<String, dynamic>>> getNocApplications() async {
