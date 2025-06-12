@@ -14,11 +14,21 @@ import 'package:tigramnks/model/nocviewmodel.dart';
 import 'package:tigramnks/server/serverhelper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class NOCView extends StatelessWidget {
+class NOCView extends StatefulWidget {
   const NOCView({
     super.key,
+    required this.sessionToken,
+    required this.Ids,
   });
 
+  final String sessionToken;
+  final String Ids;
+
+  @override
+  State<NOCView> createState() => _NOCViewState();
+}
+
+class _NOCViewState extends State<NOCView> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<MainBloc, MainState>(
@@ -78,7 +88,22 @@ class NOCView extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-                  centerTitle: true,
+                  centerTitle: false,
+                  actions: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.download,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        context.read<MainBloc>().add(NocListIndividualView(
+                            download: true,
+                            sessionToken: widget.sessionToken,
+                            Ids: widget.Ids.toString() ?? ""));
+                      },
+                      tooltip: 'Download NOC Case For Offline Use',
+                    ),
+                  ],
                 ),
                 floatingActionButton: const ScrollToTopButton(),
                 body: Center(
@@ -218,19 +243,6 @@ class NOCView extends StatelessWidget {
   }
 
   // Add a step indicator for a form-like feel
-  // Widget _buildStepIndicator() {
-  //   return Row(
-  //     mainAxisAlignment: MainAxisAlignment.center,
-  //     children: [
-  //       _buildStepCircle(true, Icons.person, "Personal"),
-  //       _buildStepLine(),
-  //       _buildStepCircle(true, Icons.map, "Location"),
-  //       _buildStepLine(),
-  //       _buildStepCircle(true, Icons.comment, "Comments"),
-  //     ],
-  //   );
-  // }
-
   Widget _buildStepCircle(bool active, IconData icon, String label) {
     return Column(
       children: [

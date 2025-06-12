@@ -376,9 +376,15 @@ class NocFreshListTable extends StatelessWidget {
         ? ElevatedButton.icon(
             onPressed: () {
               context.read<MainBloc>().add(NocListIndividualView(
-                  sessionToken: sessionToken, Ids: item.id.toString() ?? ""));
+                  download: false,
+                  sessionToken: sessionToken,
+                  Ids: item.id.toString() ?? ""));
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const NOCView()),
+                MaterialPageRoute(
+                    builder: (context) => NOCView(
+                          sessionToken: sessionToken,
+                          Ids: item.id.toString() ?? "",
+                        )),
               );
             },
             icon: const Icon(Icons.visibility, size: 18),
@@ -444,9 +450,15 @@ class NocFreshListTable extends StatelessWidget {
         : ElevatedButton.icon(
             onPressed: () {
               context.read<MainBloc>().add(NocListIndividualView(
-                  sessionToken: sessionToken, Ids: item.id.toString() ?? ""));
+                  download: false,
+                  sessionToken: sessionToken,
+                  Ids: item.id.toString() ?? ""));
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const NOCView()),
+                MaterialPageRoute(
+                    builder: (context) => NOCView(
+                          sessionToken: sessionToken,
+                          Ids: item.id.toString() ?? "",
+                        )),
               );
             },
             icon: const Icon(Icons.visibility, size: 18),

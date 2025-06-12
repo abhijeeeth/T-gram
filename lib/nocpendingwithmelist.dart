@@ -392,11 +392,15 @@ class NocPendingListTable extends StatelessWidget {
                         child: ElevatedButton.icon(
                           onPressed: () {
                             context.read<MainBloc>().add(NocListIndividualView(
+                                download: false,
                                 sessionToken: sessionToken,
                                 Ids: item.id.toString() ?? ""));
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                  builder: (context) => const NOCView()),
+                                  builder: (context) => NOCView(
+                                        sessionToken: sessionToken,
+                                        Ids: item.id.toString() ?? "",
+                                      )),
                             );
                           },
                           icon: const Icon(Icons.visibility, size: 16),
