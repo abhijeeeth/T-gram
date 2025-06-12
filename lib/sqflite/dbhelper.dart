@@ -1385,4 +1385,14 @@ class DbHelper {
       whereArgs: [appId],
     );
   }
+
+  Future<List<Map<String, dynamic>>> getAllApplicationLocationImages() async {
+    final db = await database;
+    return await db.query('application_location_images');
+  }
+
+  Future<List<Map<String, dynamic>>> listAllApplicationLocationImages() async {
+    final db = await database;
+    return await db.query('application_location_images');
+  }
 }
