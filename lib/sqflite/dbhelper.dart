@@ -32,7 +32,7 @@ class DbHelper {
       // Open the database with explicit onCreate callback
       return await openDatabase(
         path,
-        version: 3, // Increment version number to 3
+        version: 4, // Increment version number to 4
         onCreate: _onCreate,
         onUpgrade: _onUpgrade, // Add upgrade handler
         onOpen: (db) {
@@ -223,6 +223,172 @@ class DbHelper {
         FOREIGN KEY (app_form_id) REFERENCES applications (id)
       )
     ''');
+
+    // NOC Applications table
+    await db.execute('''
+      CREATE TABLE noc_applications (
+        id INTEGER PRIMARY KEY,
+        noc_of_land_application_id TEXT,
+        by_user_id INTEGER,
+        previous_noc_id TEXT,
+        division TEXT,
+        range TEXT,
+        has_applied_before INTEGER,
+        previous_noc TEXT,
+        name TEXT,
+        noc_issued_name TEXT,
+        other_name TEXT,
+        is_institute INTEGER,
+        designation TEXT,
+        institute_name TEXT,
+        address TEXT,
+        survey_number TEXT,
+        district TEXT,
+        taluka TEXT,
+        with_forest INTEGER,
+        approximate_distance TEXT,
+        village TEXT,
+        panchayat TEXT,
+        legislative_assembly TEXT,
+        block TEXT,
+        pin_code TEXT,
+        purpose TEXT,
+        selected_id_proof TEXT,
+        photo_id_proof TEXT,
+        ownership_pattyam TEXT,
+        registration_deed TEXT,
+        possession_certificate TEXT,
+        land_tax_receipt TEXT,
+        noc_created_at TEXT,
+        clerk_division_id INTEGER,
+        clerk_division_comment_step_one TEXT,
+        clerk_division_file_step_one TEXT,
+        clerk_division_step_one_comment_date TEXT,
+        clerk_division_step_one_application_status TEXT,
+        clerk_division_comment_step_two TEXT,
+        clerk_division_file_step_two TEXT,
+        clerk_division_step_two_comment_date TEXT,
+        clerk_division_step_two_application_status TEXT,
+        assigned_dyrfo_user_id INTEGER,
+        ministerial_head_id INTEGER,
+        ministerial_head_comment_step_one TEXT,
+        ministerial_head_file_step_one TEXT,
+        ministerial_head_step_one_comment_date TEXT,
+        ministerial_head_step_one_application_status TEXT,
+        ministerial_head_comment_step_two TEXT,
+        ministerial_head_file_step_two TEXT,
+        ministerial_head_step_two_comment_date TEXT,
+        ministerial_head_step_two_application_status TEXT,
+        dfo_id INTEGER,
+        dfo_comment_step_one TEXT,
+        dfo_file_step_one TEXT,
+        dfo_step_one_comment_date TEXT,
+        dfo_step_one_application_status TEXT,
+        dfo_comment_step_two TEXT,
+        dfo_file_step_two TEXT,
+        dfo_step_two_comment_date TEXT,
+        dfo_step_two_application_status TEXT,
+        clerk_range_id INTEGER,
+        clerk_range_comment TEXT,
+        clerk_range_file TEXT,
+        clerk_range_comment_date TEXT,
+        clerk_range_application_status TEXT,
+        rfo_id INTEGER,
+        rfo_comment_step_one TEXT,
+        rfo_file_step_one TEXT,
+        rfo_step_one_comment_date TEXT,
+        rfo_step_one_application_status TEXT,
+        rfo_comment_step_two TEXT,
+        rfo_file_step_two TEXT,
+        rfo_step_two_comment_date TEXT,
+        rfo_step_two_application_status TEXT,
+        dyrfo_id INTEGER,
+        dyrfo_comment TEXT,
+        dyrfo_file TEXT,
+        dyrfo_comment_date TEXT,
+        dyrfo_application_status TEXT,
+        inspection_report TEXT,
+        survey_report TEXT,
+        survey_sketches TEXT,
+        dfo_digital_signature TEXT,
+        clarification_sought TEXT,
+        returned_on TEXT,
+        clarification_response TEXT,
+        site_inception INTEGER,
+        step_status TEXT
+      )
+    ''');
+
+    // Division Comments and Files table
+    await db.execute('''
+      CREATE TABLE division_comments_and_files (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        noc_application_id INTEGER,
+        officer TEXT,
+        comment TEXT,
+        file TEXT,
+        date TEXT,
+        FOREIGN KEY (noc_application_id) REFERENCES noc_applications (id)
+      )
+    ''');
+
+    // Clerk Comments and Files table
+    await db.execute('''
+      CREATE TABLE clerk_comments_and_files (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        noc_application_id INTEGER,
+        officer TEXT,
+        comment TEXT,
+        file TEXT,
+        date TEXT,
+        FOREIGN KEY (noc_application_id) REFERENCES noc_applications (id)
+      )
+    ''');
+
+    // Deputy RFOs table
+    await db.execute('''
+      CREATE TABLE deputy_rfos (
+        id INTEGER PRIMARY KEY,
+        noc_application_id INTEGER,
+        name TEXT,
+        address TEXT,
+        FOREIGN KEY (noc_application_id) REFERENCES noc_applications (id)
+      )
+    ''');
+
+    // Image Documents NOC table
+    await db.execute('''
+      CREATE TABLE image_documents_noc (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        noc_application_id INTEGER,
+        location_img1 TEXT,
+        location_img2 TEXT,
+        location_img3 TEXT,
+        location_img4 TEXT,
+        image1_lat TEXT,
+        image2_lat TEXT,
+        image3_lat TEXT,
+        image4_lat TEXT,
+        image1_log TEXT,
+        image2_log TEXT,
+        image3_log TEXT,
+        image4_log TEXT,
+        FOREIGN KEY (noc_application_id) REFERENCES noc_applications (id)
+      )
+    ''');
+
+    // Additional Documents NOC table
+    await db.execute('''
+      CREATE TABLE additional_documents_noc (
+        id INTEGER PRIMARY KEY,
+        noc_application_id INTEGER,
+        category TEXT,
+        document TEXT,
+        name TEXT,
+        uploaded_at TEXT,
+        FOREIGN KEY (noc_application_id) REFERENCES noc_applications (id)
+      )
+    ''');
   }
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -318,6 +484,163 @@ class DbHelper {
         print("Error creating application_locations table: $e");
       }
     }
+
+    if (oldVersion < 4) {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS noc_applications (
+          id INTEGER PRIMARY KEY,
+          noc_of_land_application_id TEXT,
+          by_user_id INTEGER,
+          previous_noc_id TEXT,
+          division TEXT,
+          range TEXT,
+          has_applied_before INTEGER,
+          previous_noc TEXT,
+          name TEXT,
+          noc_issued_name TEXT,
+          other_name TEXT,
+          is_institute INTEGER,
+          designation TEXT,
+          institute_name TEXT,
+          address TEXT,
+          survey_number TEXT,
+          district TEXT,
+          taluka TEXT,
+          with_forest INTEGER,
+          approximate_distance TEXT,
+          village TEXT,
+          panchayat TEXT,
+          legislative_assembly TEXT,
+          block TEXT,
+          pin_code TEXT,
+          purpose TEXT,
+          selected_id_proof TEXT,
+          photo_id_proof TEXT,
+          ownership_pattyam TEXT,
+          registration_deed TEXT,
+          possession_certificate TEXT,
+          land_tax_receipt TEXT,
+          noc_created_at TEXT,
+          clerk_division_id INTEGER,
+          clerk_division_comment_step_one TEXT,
+          clerk_division_file_step_one TEXT,
+          clerk_division_step_one_comment_date TEXT,
+          clerk_division_step_one_application_status TEXT,
+          clerk_division_comment_step_two TEXT,
+          clerk_division_file_step_two TEXT,
+          clerk_division_step_two_comment_date TEXT,
+          clerk_division_step_two_application_status TEXT,
+          assigned_dyrfo_user_id INTEGER,
+          ministerial_head_id INTEGER,
+          ministerial_head_comment_step_one TEXT,
+          ministerial_head_file_step_one TEXT,
+          ministerial_head_step_one_comment_date TEXT,
+          ministerial_head_step_one_application_status TEXT,
+          ministerial_head_comment_step_two TEXT,
+          ministerial_head_file_step_two TEXT,
+          ministerial_head_step_two_comment_date TEXT,
+          ministerial_head_step_two_application_status TEXT,
+          dfo_id INTEGER,
+          dfo_comment_step_one TEXT,
+          dfo_file_step_one TEXT,
+          dfo_step_one_comment_date TEXT,
+          dfo_step_one_application_status TEXT,
+          dfo_comment_step_two TEXT,
+          dfo_file_step_two TEXT,
+          dfo_step_two_comment_date TEXT,
+          dfo_step_two_application_status TEXT,
+          clerk_range_id INTEGER,
+          clerk_range_comment TEXT,
+          clerk_range_file TEXT,
+          clerk_range_comment_date TEXT,
+          clerk_range_application_status TEXT,
+          rfo_id INTEGER,
+          rfo_comment_step_one TEXT,
+          rfo_file_step_one TEXT,
+          rfo_step_one_comment_date TEXT,
+          rfo_step_one_application_status TEXT,
+          rfo_comment_step_two TEXT,
+          rfo_file_step_two TEXT,
+          rfo_step_two_comment_date TEXT,
+          rfo_step_two_application_status TEXT,
+          dyrfo_id INTEGER,
+          dyrfo_comment TEXT,
+          dyrfo_file TEXT,
+          dyrfo_comment_date TEXT,
+          dyrfo_application_status TEXT,
+          inspection_report TEXT,
+          survey_report TEXT,
+          survey_sketches TEXT,
+          dfo_digital_signature TEXT,
+          clarification_sought TEXT,
+          returned_on TEXT,
+          clarification_response TEXT,
+          site_inception INTEGER,
+          step_status TEXT
+        )
+      ''');
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS division_comments_and_files (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          noc_application_id INTEGER,
+          officer TEXT,
+          comment TEXT,
+          file TEXT,
+          date TEXT,
+          FOREIGN KEY (noc_application_id) REFERENCES noc_applications (id)
+        )
+      ''');
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS clerk_comments_and_files (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          noc_application_id INTEGER,
+          officer TEXT,
+          comment TEXT,
+          file TEXT,
+          date TEXT,
+          FOREIGN KEY (noc_application_id) REFERENCES noc_applications (id)
+        )
+      ''');
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS deputy_rfos (
+          id INTEGER PRIMARY KEY,
+          noc_application_id INTEGER,
+          name TEXT,
+          address TEXT,
+          FOREIGN KEY (noc_application_id) REFERENCES noc_applications (id)
+        )
+      ''');
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS image_documents_noc (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          noc_application_id INTEGER,
+          location_img1 TEXT,
+          location_img2 TEXT,
+          location_img3 TEXT,
+          location_img4 TEXT,
+          image1_lat TEXT,
+          image2_lat TEXT,
+          image3_lat TEXT,
+          image4_lat TEXT,
+          image1_log TEXT,
+          image2_log TEXT,
+          image3_log TEXT,
+          image4_log TEXT,
+          FOREIGN KEY (noc_application_id) REFERENCES noc_applications (id)
+        )
+      ''');
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS additional_documents_noc (
+          id INTEGER PRIMARY KEY,
+          noc_application_id INTEGER,
+          category TEXT,
+          document TEXT,
+          name TEXT,
+          uploaded_at TEXT,
+          FOREIGN KEY (noc_application_id) REFERENCES noc_applications (id)
+        )
+      ''');
+    }
   }
 
   Future<bool> isDatabaseCreated() async {
@@ -385,7 +708,13 @@ class DbHelper {
         'species',
         'additional_documents',
         'transit_passes',
-        'application_locations'
+        'application_locations',
+        'noc_applications',
+        'division_comments_and_files',
+        'clerk_comments_and_files',
+        'deputy_rfos',
+        'image_documents_noc',
+        'additional_documents_noc'
       ];
 
       final allTablesExist = requiredTables
@@ -787,5 +1116,158 @@ class DbHelper {
         'application_locations': locationData,
       }
     };
+  }
+
+  // CRUD for noc_applications
+  Future<int> insertNocApplication(Map<String, dynamic> data) async {
+    final db = await database;
+    return await db.insert('noc_applications', data);
+  }
+
+  Future<List<Map<String, dynamic>>> getNocApplications() async {
+    final db = await database;
+    return await db.query('noc_applications');
+  }
+
+  Future<Map<String, dynamic>?> getNocApplication(int id) async {
+    final db = await database;
+    final result =
+        await db.query('noc_applications', where: 'id = ?', whereArgs: [id]);
+    return result.isNotEmpty ? result.first : null;
+  }
+
+  Future<int> updateNocApplication(Map<String, dynamic> data) async {
+    final db = await database;
+    return await db.update('noc_applications', data,
+        where: 'id = ?', whereArgs: [data['id']]);
+  }
+
+  Future<int> deleteNocApplication(int id) async {
+    final db = await database;
+    return await db
+        .delete('noc_applications', where: 'id = ?', whereArgs: [id]);
+  }
+
+  // CRUD for division_comments_and_files
+  Future<int> insertDivisionComment(Map<String, dynamic> data) async {
+    final db = await database;
+    return await db.insert('division_comments_and_files', data);
+  }
+
+  Future<List<Map<String, dynamic>>> getDivisionComments(
+      int nocApplicationId) async {
+    final db = await database;
+    return await db.query('division_comments_and_files',
+        where: 'noc_application_id = ?', whereArgs: [nocApplicationId]);
+  }
+
+  Future<int> updateDivisionComment(Map<String, dynamic> data) async {
+    final db = await database;
+    return await db.update('division_comments_and_files', data,
+        where: 'id = ?', whereArgs: [data['id']]);
+  }
+
+  Future<int> deleteDivisionComment(int id) async {
+    final db = await database;
+    return await db.delete('division_comments_and_files',
+        where: 'id = ?', whereArgs: [id]);
+  }
+
+  // CRUD for clerk_comments_and_files
+  Future<int> insertClerkComment(Map<String, dynamic> data) async {
+    final db = await database;
+    return await db.insert('clerk_comments_and_files', data);
+  }
+
+  Future<List<Map<String, dynamic>>> getClerkComments(
+      int nocApplicationId) async {
+    final db = await database;
+    return await db.query('clerk_comments_and_files',
+        where: 'noc_application_id = ?', whereArgs: [nocApplicationId]);
+  }
+
+  Future<int> updateClerkComment(Map<String, dynamic> data) async {
+    final db = await database;
+    return await db.update('clerk_comments_and_files', data,
+        where: 'id = ?', whereArgs: [data['id']]);
+  }
+
+  Future<int> deleteClerkComment(int id) async {
+    final db = await database;
+    return await db
+        .delete('clerk_comments_and_files', where: 'id = ?', whereArgs: [id]);
+  }
+
+  // CRUD for deputy_rfos
+  Future<int> insertDeputyRfo(Map<String, dynamic> data) async {
+    final db = await database;
+    return await db.insert('deputy_rfos', data);
+  }
+
+  Future<List<Map<String, dynamic>>> getDeputyRfos(int nocApplicationId) async {
+    final db = await database;
+    return await db.query('deputy_rfos',
+        where: 'noc_application_id = ?', whereArgs: [nocApplicationId]);
+  }
+
+  Future<int> updateDeputyRfo(Map<String, dynamic> data) async {
+    final db = await database;
+    return await db
+        .update('deputy_rfos', data, where: 'id = ?', whereArgs: [data['id']]);
+  }
+
+  Future<int> deleteDeputyRfo(int id) async {
+    final db = await database;
+    return await db.delete('deputy_rfos', where: 'id = ?', whereArgs: [id]);
+  }
+
+  // CRUD for image_documents_noc
+  Future<int> insertImageDocumentNoc(Map<String, dynamic> data) async {
+    final db = await database;
+    return await db.insert('image_documents_noc', data);
+  }
+
+  Future<List<Map<String, dynamic>>> getImageDocumentsNoc(
+      int nocApplicationId) async {
+    final db = await database;
+    return await db.query('image_documents_noc',
+        where: 'noc_application_id = ?', whereArgs: [nocApplicationId]);
+  }
+
+  Future<int> updateImageDocumentNoc(Map<String, dynamic> data) async {
+    final db = await database;
+    return await db.update('image_documents_noc', data,
+        where: 'id = ?', whereArgs: [data['id']]);
+  }
+
+  Future<int> deleteImageDocumentNoc(int id) async {
+    final db = await database;
+    return await db
+        .delete('image_documents_noc', where: 'id = ?', whereArgs: [id]);
+  }
+
+  // CRUD for additional_documents_noc
+  Future<int> insertAdditionalDocumentNoc(Map<String, dynamic> data) async {
+    final db = await database;
+    return await db.insert('additional_documents_noc', data);
+  }
+
+  Future<List<Map<String, dynamic>>> getAdditionalDocumentsNoc(
+      int nocApplicationId) async {
+    final db = await database;
+    return await db.query('additional_documents_noc',
+        where: 'noc_application_id = ?', whereArgs: [nocApplicationId]);
+  }
+
+  Future<int> updateAdditionalDocumentNoc(Map<String, dynamic> data) async {
+    final db = await database;
+    return await db.update('additional_documents_noc', data,
+        where: 'id = ?', whereArgs: [data['id']]);
+  }
+
+  Future<int> deleteAdditionalDocumentNoc(int id) async {
+    final db = await database;
+    return await db
+        .delete('additional_documents_noc', where: 'id = ?', whereArgs: [id]);
   }
 }

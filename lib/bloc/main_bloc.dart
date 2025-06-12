@@ -397,7 +397,54 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       if (response != null && response is Map<String, dynamic>) {
         Initializer.nocListViewModel = NOCListViewModel.fromJson(response);
         if (Initializer.nocListViewModel.status == "true") {
-          if (event.download) {}
+          if (event.download) {
+            // Store NOC application data in SQLite
+            DbHelper dbHelper = DbHelper();
+            await dbHelper.ensureDatabaseCreated();
+
+            if (response['data'] != null) {
+              // Store main NOC application data
+              if (response['data']['noc_application'] != null) {
+                await dbHelper
+                    .insertNocApplication(response['data']['noc_application']);
+              }
+
+              // Store division comments and files
+              if (response['data']['division_comments'] != null) {
+                for (var comment in response['data']['division_comments']) {
+                  await dbHelper.insertDivisionComment(comment);
+                }
+              }
+
+              // Store clerk comments and files
+              if (response['data']['clerk_comments'] != null) {
+                for (var comment in response['data']['clerk_comments']) {
+                  await dbHelper.insertClerkComment(comment);
+                }
+              }
+
+              // Store deputy RFO data
+              if (response['data']['deputy_rfos'] != null) {
+                for (var rfo in response['data']['deputy_rfos']) {
+                  await dbHelper.insertDeputyRfo(rfo);
+                }
+              }
+
+              // Store NOC image documents
+              if (response['data']['image_documents'] != null) {
+                for (var doc in response['data']['image_documents']) {
+                  await dbHelper.insertImageDocumentNoc(doc);
+                }
+              }
+
+              // Store NOC additional documents
+              if (response['data']['additional_documents'] != null) {
+                for (var doc in response['data']['additional_documents']) {
+                  await dbHelper.insertAdditionalDocumentNoc(doc);
+                }
+              }
+            }
+          }
           emit(NocListIndividualViewLoaded());
         } else {
           emit(NocListIndividualViewFailed());
