@@ -410,15 +410,17 @@ class MainBloc extends Bloc<MainEvent, MainState> {
               }
 
               // Store division comments and files
-              if (response['data']['division_comments'] != null) {
-                for (var comment in response['data']['division_comments']) {
+              if (response['data']['division_comments_and_files'] != null) {
+                for (var comment in response['data']
+                    ['division_comments_and_files']) {
                   await dbHelper.insertDivisionComment(comment);
                 }
               }
 
               // Store clerk comments and files
-              if (response['data']['clerk_comments'] != null) {
-                for (var comment in response['data']['clerk_comments']) {
+              if (response['data']['clerk_comments_and_files'] != null) {
+                for (var comment in response['data']
+                    ['clerk_comments_and_files']) {
                   await dbHelper.insertClerkComment(comment);
                 }
               }
