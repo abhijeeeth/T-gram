@@ -60,11 +60,8 @@ class _NocofflinesiteinspectionState extends State<Nocofflinesiteinspection> {
           await picker.pickImage(source: ImageSource.camera, imageQuality: 25);
 
       if (pickedFile != null) {
-        String base64Image = base64Encode(await pickedFile.readAsBytes());
-
         setState(() {
           images[index] = File(pickedFile.path);
-          base64Images[index] = base64Image;
           latitudes[index] = position.latitude.toString();
           longitudes[index] = position.longitude.toString();
         });
@@ -101,10 +98,14 @@ class _NocofflinesiteinspectionState extends State<Nocofflinesiteinspection> {
   Map<String, dynamic> getLocationImageData() {
     return {
       "app_id": widget.appId,
-      "location_img1": base64Images[0],
-      "location_img2": base64Images[1],
-      "location_img3": base64Images[2],
-      "location_img4": base64Images[3],
+      "location_img1":
+          images[0] != null ? base64Encode(images[0]!.readAsBytesSync()) : null,
+      "location_img2":
+          images[1] != null ? base64Encode(images[1]!.readAsBytesSync()) : null,
+      "location_img3":
+          images[2] != null ? base64Encode(images[2]!.readAsBytesSync()) : null,
+      "location_img4":
+          images[3] != null ? base64Encode(images[3]!.readAsBytesSync()) : null,
       "image1_lat": latitudes[0],
       "image2_lat": latitudes[1],
       "image3_lat": latitudes[2],
@@ -216,7 +217,30 @@ class _NocofflinesiteinspectionState extends State<Nocofflinesiteinspection> {
                             ),
                           ),
                           onPressed: () async {
-                            Map<String, dynamic> data = getLocationImageData();
+                            // First populate the base64Images list from the image files
+                            for (int i = 0; i < images.length; i++) {
+                              if (images[i] != null) {
+                                base64Images[i] =
+                                    base64Encode(images[i]!.readAsBytesSync());
+                              }
+                            }
+
+                            Map<String, dynamic> data = {
+                              "app_id": widget.appId,
+                              "location_img1": base64Images[0],
+                              "location_img2": base64Images[1],
+                              "location_img3": base64Images[2],
+                              "location_img4": base64Images[3],
+                              "image1_lat": latitudes[0],
+                              "image2_lat": latitudes[1],
+                              "image3_lat": latitudes[2],
+                              "image4_lat": latitudes[3],
+                              "image1_log": longitudes[0],
+                              "image2_log": longitudes[1],
+                              "image3_log": longitudes[2],
+                              "image4_log": longitudes[3],
+                            };
+
                             // Store to application_location_images table
                             int result = await DbHelper()
                                 .insertApplicationLocationImages(data);
@@ -227,13 +251,13 @@ class _NocofflinesiteinspectionState extends State<Nocofflinesiteinspection> {
                                 textColor: Colors.white,
                               );
                               // Optionally navigate or pop
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => NocApplictaionTiles(
-                                            sessionToken:
-                                                ServerHelper.token.toString(),
-                                          )));
+                              // Navigator.pushReplacement(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (_) => NocApplictaionTiles(
+                              //               sessionToken:
+                              //                   ServerHelper.token.toString(),
+                              //             )));
                             } else {
                               Fluttertoast.showToast(
                                 msg: "Failed to save images",

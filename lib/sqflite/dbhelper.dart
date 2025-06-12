@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:path/path.dart';
@@ -220,6 +221,27 @@ class DbHelper {
         image3_log TEXT,
         image4_log TEXT,
         created_at TEXT,
+        FOREIGN KEY (app_form_id) REFERENCES applications (id)
+      )
+    ''');
+
+    // Duplicate for application_locations_images
+    await db.execute('''
+      CREATE TABLE application_locations_images (
+        id INTEGER PRIMARY KEY,
+        app_form_id INTEGER,
+        location_img1 TEXT,
+        location_img2 TEXT,
+        location_img3 TEXT,
+        location_img4 TEXT,
+        image1_lat TEXT,
+        image2_lat TEXT,
+        image3_lat TEXT,
+        image4_lat TEXT,
+        image1_log TEXT,
+        image2_log TEXT,
+        image3_log TEXT,
+        image4_log TEXT,
         FOREIGN KEY (app_form_id) REFERENCES applications (id)
       )
     ''');
@@ -1373,27 +1395,49 @@ class DbHelper {
   // CRUD for application_location_images
   Future<int> insertApplicationLocationImages(Map<String, dynamic> data) async {
     final db = await database;
-    return await db.insert('application_location_images', data);
+    try {
+      // Create a copy to avoid mutating the original map
+      var insertData = Map<String, dynamic>.from(data);
+
+      // Check for app_form_id and map to app_id if needed
+      if (insertData.containsKey('app_form_id') &&
+          !insertData.containsKey('app_id')) {
+        insertData['app_id'] = insertData['app_form_id'];
+        insertData.remove('app_form_id');
+      }
+
+      // Remove any invalid columns
+      var tableInfo =
+          await db.rawQuery("PRAGMA table_info(application_location_images)");
+      var validColumns = tableInfo.map((col) => col['name'].toString()).toSet();
+      var invalidColumns =
+          insertData.keys.where((k) => !validColumns.contains(k)).toList();
+      for (var key in invalidColumns) {
+        insertData.remove(key);
+      }
+
+      // Ensure images are base64 strings and not too large
+      for (var i = 1; i <= 4; i++) {
+        final imgKey = 'location_img$i';
+        if (insertData[imgKey] != null && insertData[imgKey] is! String) {
+          // Defensive: convert to base64 if not already
+          insertData[imgKey] = base64Encode(insertData[imgKey]);
+        }
+      }
+
+      return await db.insert('application_location_images', insertData);
+    } catch (e) {
+      print("Error inserting application location images: $e");
+      print("Data tried to insert: ${data.keys}");
+      return -1;
+    }
   }
 
+  // Fetch only the necessary columns to avoid CursorWindow issues
   Future<List<Map<String, dynamic>>> getApplicationLocationImages(
       int appId) async {
     final db = await database;
-    return await db.query(
-      'application_location_images',
-      where: 'app_id = ?',
-      whereArgs: [appId],
-    );
-  }
-
-  Future<List<Map<String, dynamic>>> getAllApplicationLocationImages() async {
-    final db = await database;
-    return await db.query('application_location_images');
-  }
-
-  Future<List<Map<String, dynamic>>> listAllApplicationLocationImages() async {
-    final db = await database;
-    // Select only necessary columns for listing
+    // Only select necessary columns, avoid SELECT * for large images
     return await db.query(
       'application_location_images',
       columns: [
@@ -1401,9 +1445,121 @@ class DbHelper {
         'app_id',
         'location_img1',
         'location_img2',
+        'location_img3',
+        'location_img4',
         'image1_lat',
-        'image1_log'
+        'image1_log',
+        'image2_lat',
+        'image2_log',
+        'image3_lat',
+        'image3_log',
+        'image4_lat',
+        'image4_log'
+      ],
+      where: 'app_id = ?',
+      whereArgs: [appId],
+    );
+  }
+
+  // Fetch a single record by ID (for large images)
+  Future<Map<String, dynamic>?> getApplicationLocationImageById(int id) async {
+    final db = await database;
+    final result = await db.query(
+      'application_location_images',
+      where: 'id = ?',
+      whereArgs: [id],
+      limit: 1,
+    );
+    return result.isNotEmpty ? result.first : null;
+  }
+
+  // List all, but only select IDs and metadata, not images (for summary lists)
+  Future<List<Map<String, dynamic>>> listAllApplicationLocationImages() async {
+    final db = await database;
+    // Select only metadata columns for listing, not the image blobs
+    return await db.query(
+      'application_location_images',
+      columns: [
+        'id',
+        'app_id',
+        'image1_lat',
+        'image1_log',
+        'image2_lat',
+        'image2_log',
+        'image3_lat',
+        'image3_log',
+        'image4_lat',
+        'image4_log'
       ],
     );
+  }
+
+  // CRUD for application_locations_images
+  Future<int> insertApplicationLocationsImage(
+      Map<String, dynamic> locationData) async {
+    Database db = await database;
+    try {
+      var data = Map<String, dynamic>.from(locationData);
+      var tableInfo =
+          await db.rawQuery("PRAGMA table_info(application_locations_images)");
+      var existingColumns =
+          tableInfo.map((col) => col['name'].toString()).toSet();
+      var invalidColumns =
+          data.keys.where((key) => !existingColumns.contains(key)).toList();
+      for (var key in invalidColumns) {
+        data.remove(key);
+      }
+      return await db.insert('application_locations_images', data);
+    } catch (e) {
+      print("Error inserting application_locations_images: $e");
+      return -1;
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getApplicationLocationsImages(
+      int appFormId) async {
+    Database db = await database;
+    try {
+      return await db.query(
+        'application_locations_images',
+        where: 'app_form_id = ?',
+        whereArgs: [appFormId],
+      );
+    } catch (e) {
+      print("Error fetching application_locations_images: $e");
+      return [];
+    }
+  }
+
+  Future<Map<String, dynamic>?> getApplicationLocationsImage(int id) async {
+    Database db = await database;
+    List<Map<String, dynamic>> result = await db.query(
+      'application_locations_images',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    return result.isNotEmpty ? result.first : null;
+  }
+
+  Future<int> updateApplicationLocationsImage(
+      Map<String, dynamic> locationData) async {
+    Database db = await database;
+    return await db.update(
+      'application_locations_images',
+      locationData,
+      where: 'id = ?',
+      whereArgs: [locationData['id']],
+    );
+  }
+
+  Future<int> deleteApplicationLocationsImage(int id) async {
+    Database db = await database;
+    try {
+      return await db.delete('application_locations_images',
+          where: 'id = ?', whereArgs: [id]);
+    } catch (e) {
+      print("Error deleting application_locations_images: $e");
+      return 0;
+    }
   }
 }
