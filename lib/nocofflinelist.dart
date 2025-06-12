@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tigramnks/nocofflinesiteinspection.dart';
 
 import 'sqflite/dbhelper.dart';
 
@@ -106,30 +107,36 @@ class _NocofflinelistState extends State<Nocofflinelist> {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(16),
                     onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          title: Text(app['name'] ?? 'No Name'),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Division: ${app['division'] ?? '-'}'),
-                              Text('Village: ${app['village'] ?? '-'}'),
-                              Text('ID: ${app['id']}'),
-                            ],
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text('Close'),
-                            ),
-                          ],
-                        ),
-                      );
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => Nocofflinesiteinspection(
+                                    appId: app['id'].toString(),
+                                  )));
+                      // showDialog(
+                      //   context: context,
+                      //   builder: (context) => AlertDialog(
+                      //     shape: RoundedRectangleBorder(
+                      //       borderRadius: BorderRadius.circular(16),
+                      //     ),
+                      //     title: Text(app['name'] ?? 'No Name'),
+                      //     content: Column(
+                      //       mainAxisSize: MainAxisSize.min,
+                      //       crossAxisAlignment: CrossAxisAlignment.start,
+                      //       children: [
+                      //         Text('Division: ${app['division'] ?? '-'}'),
+                      //         Text('Village: ${app['village'] ?? '-'}'),
+                      //         Text('ID: ${app['id']}'),
+                      //       ],
+                      //     ),
+                      //     actions: [
+                      //       TextButton(
+                      //         onPressed: () => Navigator.pop(context),
+                      //         child: const Text('Close'),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // );
                     },
                     child: Container(
                       padding: const EdgeInsets.all(16),

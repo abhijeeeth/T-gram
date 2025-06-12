@@ -391,6 +391,26 @@ class DbHelper {
         FOREIGN KEY (noc_application_id) REFERENCES noc_applications (id)
       )
     ''');
+
+    // Application Location Images table
+    await db.execute('''
+      CREATE TABLE application_location_images (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        app_id INTEGER,
+        location_img1 TEXT,
+        location_img2 TEXT,
+        location_img3 TEXT,
+        location_img4 TEXT,
+        image1_lat TEXT,
+        image2_lat TEXT,
+        image3_lat TEXT,
+        image4_lat TEXT,
+        image1_log TEXT,
+        image2_log TEXT,
+        image3_log TEXT,
+        image4_log TEXT
+      )
+    ''');
   }
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -677,6 +697,31 @@ class DbHelper {
       }
     } catch (e) {
       print("Error ensuring columns in noc_applications: $e");
+    }
+
+    // Defensive: create application_location_images table if not exists
+    try {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS application_location_images (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          app_id INTEGER,
+          location_img1 TEXT,
+          location_img2 TEXT,
+          location_img3 TEXT,
+          location_img4 TEXT,
+          image1_lat TEXT,
+          image2_lat TEXT,
+          image3_lat TEXT,
+          image4_lat TEXT,
+          image1_log TEXT,
+          image2_log TEXT,
+          image3_log TEXT,
+          image4_log TEXT
+        )
+      ''');
+      print("Ensured application_location_images table exists");
+    } catch (e) {
+      print("Error creating application_location_images table: $e");
     }
   }
 
@@ -1323,5 +1368,21 @@ class DbHelper {
     final db = await database;
     return await db
         .delete('additional_documents_noc', where: 'id = ?', whereArgs: [id]);
+  }
+
+  // CRUD for application_location_images
+  Future<int> insertApplicationLocationImages(Map<String, dynamic> data) async {
+    final db = await database;
+    return await db.insert('application_location_images', data);
+  }
+
+  Future<List<Map<String, dynamic>>> getApplicationLocationImages(
+      int appId) async {
+    final db = await database;
+    return await db.query(
+      'application_location_images',
+      where: 'app_id = ?',
+      whereArgs: [appId],
+    );
   }
 }
