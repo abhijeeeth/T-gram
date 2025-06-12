@@ -24,6 +24,16 @@ class _NocofflinelistState extends State<Nocofflinelist> {
     });
   }
 
+  void _clearAllData() async {
+    await DbHelper().deleteAllNocApplications();
+    _refreshList();
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('All offline NOC applications cleared.')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -185,6 +195,38 @@ class _NocofflinelistState extends State<Nocofflinelist> {
               },
             );
           },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final confirm = await showDialog<bool>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Clear All Data'),
+              content: const Text(
+                  'Are you sure you want to delete all offline NOC applications? This action cannot be undone.'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context, true),
+                  child: const Text('Delete All'),
+                ),
+              ],
+            ),
+          );
+          if (confirm == true) {
+            _clearAllData();
+          }
+        },
+        backgroundColor: const Color.fromARGB(255, 28, 110, 99),
+        tooltip: 'Clear All Data From Offline List',
+        child: const Icon(
+          Icons.delete_forever,
+          color: Colors.white,
+          size: 28,
         ),
       ),
     );

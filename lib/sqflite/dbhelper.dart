@@ -1246,6 +1246,12 @@ class DbHelper {
         .delete('clerk_comments_and_files', where: 'id = ?', whereArgs: [id]);
   }
 
+  // Delete all NOC applications
+  Future<int> deleteAllNocApplications() async {
+    final db = await database;
+    return await db.delete('noc_applications');
+  }
+
   // CRUD for deputy_rfos
   Future<int> insertDeputyRfo(Map<String, dynamic> data) async {
     final db = await database;
