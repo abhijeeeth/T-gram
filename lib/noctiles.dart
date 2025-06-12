@@ -5,6 +5,7 @@ import 'package:tigramnks/bloc/main_bloc.dart';
 import 'package:tigramnks/nocapprovedrejectedlist.dart';
 import 'package:tigramnks/nocforwardedlist.dart';
 import 'package:tigramnks/noclistofflinesiteinspected.dart';
+import 'package:tigramnks/nocofflinelist.dart';
 import 'package:tigramnks/nocpendingwithmelist.dart';
 
 class NocApplictaionTiles extends StatefulWidget {
@@ -242,6 +243,79 @@ class _NocApplictaionTilesState extends State<NocApplictaionTiles> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => const OfflineSiteInspectionList(),
+                    ),
+                  );
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20.0),
+                  margin: const EdgeInsets.only(bottom: 24.0),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [
+                        Colors.orange,
+                        Colors.deepOrange,
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(16.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.orange.withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(12.0),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: const Icon(
+                          Icons.offline_pin_rounded,
+                          color: Colors.white,
+                          size: 28,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      const Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Upload Offline Inspections',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              'View locally saved NOC applications',
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const Nocofflinelist(),
                     ),
                   );
                 },

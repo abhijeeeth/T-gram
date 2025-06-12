@@ -130,7 +130,7 @@ class NocApplication {
   String? division;
   String? range;
   bool? hasAppliedBefore;
-  Null previousNoc;
+  dynamic previousNoc;
   String? name;
   String? nocIssuedName;
   String? otherName;
