@@ -397,84 +397,17 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       if (response != null && response is Map<String, dynamic>) {
         Initializer.nocListViewModel = NOCListViewModel.fromJson(response);
         if (Initializer.nocListViewModel.status == "true") {
-          if (event.download == true) {
-            try {
-              DbHelper dbHelper = DbHelper();
-              await dbHelper.ensureDatabaseCreated();
-
-              // Extract and save main NOC application data
-              if (Initializer.nocListViewModel.data?.nocApplication != null) {
-                await dbHelper.insertNocApplication(Initializer
-                    .nocListViewModel.data!.nocApplication!
-                    .toJson());
-              }
-
-              // Save image documents
-              if (Initializer.nocListViewModel.data?.imageDocuments != null) {
-                for (var doc
-                    in Initializer.nocListViewModel.data!.imageDocuments!) {
-                  await dbHelper.insertImageDocument({
-                    'noc_id': event.Ids,
-                    ...doc.toJson(),
-                  });
-                }
-              }
-
-              // Save additional documents
-              if (Initializer.nocListViewModel.data?.additionalDocuments !=
-                  null) {
-                for (var doc in Initializer
-                    .nocListViewModel.data!.additionalDocuments!) {
-                  await dbHelper.insertAdditionalDocument({
-                    'noc_id': event.Ids,
-                    ...doc.toJson(),
-                  });
-                }
-              }
-
-              // Save division comments and files
-              if (Initializer.nocListViewModel.data?.divisionCommentsAndFiles !=
-                  null) {
-                for (var comment in Initializer
-                    .nocListViewModel.data!.divisionCommentsAndFiles!) {
-                  await dbHelper.insertNocCommentsAndFiles({
-                    'noc_id': event.Ids,
-                    'type': 'division',
-                    ...comment.toJson(),
-                  });
-                }
-              }
-
-              // Save clerk comments and files
-              if (Initializer.nocListViewModel.data?.clerkCommentsAndFiles !=
-                  null) {
-                for (var comment in Initializer
-                    .nocListViewModel.data!.clerkCommentsAndFiles!) {
-                  await dbHelper.insertNocCommentsAndFiles({
-                    'noc_id': event.Ids,
-                    'type': 'division',
-                    ...comment.toJson(),
-                  });
-                }
-              }
-
-              log("NOC application data successfully saved to database");
-            } catch (dbError) {
-              print(
-                  'Error saving NOC application to SQLite database: $dbError');
-              // Continue execution even if database save fails
-            }
-          }
+          if (event.download) {}
           emit(NocListIndividualViewLoaded());
         } else {
           emit(NocListIndividualViewFailed());
         }
       } else {
-        print('Invalid response format: $response');
+        log('Invalid response format: $response');
         emit(NocListIndividualViewFailed());
       }
     } catch (e) {
-      print('Error fetching NOC individual view: $e');
+      log('Error fetching NOC individual view: $e');
       emit(NocListIndividualViewFailed());
     }
   }
