@@ -1393,6 +1393,17 @@ class DbHelper {
 
   Future<List<Map<String, dynamic>>> listAllApplicationLocationImages() async {
     final db = await database;
-    return await db.query('application_location_images');
+    // Select only necessary columns for listing
+    return await db.query(
+      'application_location_images',
+      columns: [
+        'id',
+        'app_id',
+        'location_img1',
+        'location_img2',
+        'image1_lat',
+        'image1_log'
+      ],
+    );
   }
 }

@@ -4,7 +4,7 @@ import 'package:tigramnks/Nocfreshlist.dart';
 import 'package:tigramnks/bloc/main_bloc.dart';
 import 'package:tigramnks/nocapprovedrejectedlist.dart';
 import 'package:tigramnks/nocforwardedlist.dart';
-import 'package:tigramnks/nocofflinelist.dart';
+import 'package:tigramnks/noclistofflinesiteinspected.dart';
 import 'package:tigramnks/nocpendingwithmelist.dart';
 
 class NocApplictaionTiles extends StatefulWidget {
@@ -241,7 +241,7 @@ class _NocApplictaionTilesState extends State<NocApplictaionTiles> {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => const Nocofflinelist(),
+                      builder: (context) => const OfflineSiteInspectionList(),
                     ),
                   );
                 },
