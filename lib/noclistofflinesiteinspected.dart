@@ -529,35 +529,56 @@ class _OfflineSiteInspectionListState extends State<OfflineSiteInspectionList>
           ),
         ],
       ),
-      body: Column(
-        children: [
-          if (!_isLoading && _siteInspections.isNotEmpty) _buildSearchBar(),
-          Expanded(
-            child: () {
-              if (_errorMessage != null && !_isLoading) {
-                return _buildErrorState();
-              }
-              if (_isLoading) {
-                return _buildLoadingState();
-              }
-              if (_filteredInspections.isEmpty) {
-                return _buildEmptyState();
-              }
-              return RefreshIndicator(
-                onRefresh: _onRefresh,
-                color: Theme.of(context).primaryColor,
-                child: ListView.builder(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  itemCount: _filteredInspections.length,
-                  itemBuilder: (context, index) {
-                    return _buildInspectionCard(
-                        _filteredInspections[index], index);
-                  },
+      body: BlocConsumer<MainBloc, MainState>(
+        listener: (context, state) {
+          if (state is OfflineUploadSiteInspectionLoaded) {
+            _onRefresh();
+          }
+        },
+        builder: (context, state) {
+          if (state is OfflineUploadSiteInspectionLoading) {
+            return Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).primaryColor,
                 ),
-              );
-            }(),
-          ),
-        ],
+              ),
+            );
+          }
+          if (state is OfflineUploadSiteInspectionLoaded) {
+            _onRefresh();
+          }
+          return Column(
+            children: [
+              if (!_isLoading && _siteInspections.isNotEmpty) _buildSearchBar(),
+              Expanded(
+                child: () {
+                  if (_errorMessage != null && !_isLoading) {
+                    return _buildErrorState();
+                  }
+                  if (_isLoading) {
+                    return _buildLoadingState();
+                  }
+                  if (_filteredInspections.isEmpty) {
+                    return _buildEmptyState();
+                  }
+                  return RefreshIndicator(
+                    onRefresh: _onRefresh,
+                    color: Theme.of(context).primaryColor,
+                    child: ListView.builder(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      itemCount: _filteredInspections.length,
+                      itemBuilder: (context, index) {
+                        return _buildInspectionCard(
+                            _filteredInspections[index], index);
+                      },
+                    ),
+                  );
+                }(),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
