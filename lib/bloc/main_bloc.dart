@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     on<SiteInspection>(_siteInspection);
     on<SiteInspectionByRFO>(_siteInspectionByRFO);
     on<DeputyFileUpload>(_deputyFileUpload);
+    on<OfflineUploadSiteInspection>(_offlineUploadSiteInspection);
     // TODO: implement event handler
   }
 
@@ -682,6 +684,107 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       }
     } catch (e) {}
   }
+
+  FutureOr<void> _offlineUploadSiteInspection(
+      OfflineUploadSiteInspection event, Emitter<MainState> emit) async {
+    try {
+      emit(OfflineUploadSiteInspectionLoading());
+      final String sessionToken = ServerHelper.token.toString();
+      log('Uploading site inspection data: $sessionToken');
+      final String ids = event.data['app_id'].toString();
+      // Get image file paths from event.data and convert them to base64
+      final String imagePath1 = event.data['location_img1'];
+      final String imagePath2 = event.data['location_img2'];
+      final String imagePath3 = event.data['location_img3'];
+      final String imagePath4 = event.data['location_img4'];
+
+      String base64ImagePic1 = '';
+      String base64ImagePic2 = '';
+      String base64ImagePic3 = '';
+      String base64ImagePic4 = '';
+
+      if (imagePath1.isNotEmpty) {
+        final bytes1 = await File(imagePath1).readAsBytes();
+        base64ImagePic1 = base64Encode(bytes1);
+      }
+      if (imagePath2.isNotEmpty) {
+        final bytes2 = await File(imagePath2).readAsBytes();
+        base64ImagePic2 = base64Encode(bytes2);
+      }
+      if (imagePath3.isNotEmpty) {
+        final bytes3 = await File(imagePath3).readAsBytes();
+        base64ImagePic3 = base64Encode(bytes3);
+      }
+      if (imagePath4.isNotEmpty) {
+        final bytes4 = await File(imagePath4).readAsBytes();
+        base64ImagePic4 = base64Encode(bytes4);
+      }
+      final String latImage1 = event.data['image1_lat'];
+      final String latImage2 = event.data['image2_lat'];
+      final String latImage3 = event.data['image3_lat'];
+      final String latImage4 = event.data['image4_lat'];
+      final String longImage1 = event.data['image1_log'];
+      final String longImage2 = event.data['image2_log'];
+      final String longImage3 = event.data['image3_log'];
+      final String longImage4 = event.data['image4_log'];
+
+      const String url = '${ServerHelper.baseUrl}auth/noc_site_inception/';
+      Map data = {
+        "app_id": ids,
+        "location_img1": {"mime": "image/jpeg", "data": base64ImagePic1},
+        "location_img2": {"mime": "image/jpeg", "data": base64ImagePic2},
+        "location_img3": {"mime": "image/jpeg", "data": base64ImagePic3},
+        "location_img4": {"mime": "image/jpeg", "data": base64ImagePic4},
+        "image1_lat": latImage1,
+        "image2_lat": latImage2,
+        "image3_lat": latImage3,
+        "image4_lat": latImage4,
+        "image1_log": longImage1,
+        "image2_log": longImage2,
+        "image3_log": longImage3,
+        "image4_log": longImage4,
+      };
+      log(data.toString());
+      var body = json.encode(data);
+
+      final response = await http.post(Uri.parse(url),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': "token $sessionToken"
+          },
+          body: body);
+
+      Map<String, dynamic> responseJson = json.decode(response.body);
+      log(body.toString());
+      log('Response: ${responseJson.toString()}');
+
+      if (response.statusCode == 200) {
+        emit(OfflineUploadSiteInspectionLoaded());
+
+        // Show a toast using Flutter's ScaffoldMessenger if context is available
+        final context = event.data['context'];
+        if (context != null && context is BuildContext) {
+          Future.delayed(Duration.zero, () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Upload Successful'),
+                duration: Duration(seconds: 2),
+              ),
+            );
+          });
+        }
+      } else {
+        emit(OfflineUploadSiteInspectionFailed());
+        Future.delayed(Duration.zero, () {
+          ScaffoldMessenger.of(event.data['context']).showSnackBar(
+            const SnackBar(content: Text('Upload Failed')),
+          );
+        });
+      }
+    } catch (e) {
+      emit(OfflineUploadSiteInspectionFailed());
+    }
+  }
 }
 // Define the events
 
@@ -872,3 +975,16 @@ class DeputyFileUploadLoading extends MainState {}
 class DeputyFileUploadLoaded extends MainState {}
 
 class DeputyFileUploadFailed extends MainState {}
+
+// Offline Upload
+class OfflineUploadSiteInspection extends MainEvent {
+  final Map<String, dynamic> data;
+
+  OfflineUploadSiteInspection({required this.data});
+}
+
+class OfflineUploadSiteInspectionLoading extends MainState {}
+
+class OfflineUploadSiteInspectionLoaded extends MainState {}
+
+class OfflineUploadSiteInspectionFailed extends MainState {}

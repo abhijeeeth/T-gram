@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tigramnks/bloc/main_bloc.dart';
 
 import 'sqflite/dbhelper.dart';
 
@@ -230,7 +232,7 @@ class _OfflineSiteInspectionListState extends State<OfflineSiteInspectionList>
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        'Application ID: ${inspection['app_id']}',
+                        'Name: ${inspection['name']}',
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -242,18 +244,18 @@ class _OfflineSiteInspectionListState extends State<OfflineSiteInspectionList>
                   Row(
                     children: [
                       const Icon(
-                        Icons.access_time,
+                        Icons.map,
                         color: Color.fromARGB(255, 28, 110, 99),
                         size: 20,
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        'Date: ${inspection['date'] ?? 'N/A'}',
+                        'Division: ${inspection['division'] ?? 'N/A'}',
                         style: const TextStyle(fontSize: 14),
                       ),
                     ],
                   ),
-                  if (inspection['summary'] != null) ...[
+                  if (inspection['village'] != null) ...[
                     const SizedBox(height: 8),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -266,7 +268,7 @@ class _OfflineSiteInspectionListState extends State<OfflineSiteInspectionList>
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            'Summary: ${inspection['summary']}',
+                            'Village: ${inspection['village'] ?? 'N/A'}',
                             style: const TextStyle(fontSize: 14),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
@@ -288,7 +290,14 @@ class _OfflineSiteInspectionListState extends State<OfflineSiteInspectionList>
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      onPressed: () => _showInspectionDetailsDialog(inspection),
+                      onPressed: () {
+                        Map<String, dynamic> data =
+                            getFormattedData(inspection);
+                        context
+                            .read<MainBloc>()
+                            .add(OfflineUploadSiteInspection(data: data));
+                      },
+                      // onPressed: () => _showInspectionDetailsDialog(inspection),
                     ),
                   ),
                 ],
@@ -551,5 +560,25 @@ class _OfflineSiteInspectionListState extends State<OfflineSiteInspectionList>
         ],
       ),
     );
+  }
+
+  Map<String, dynamic> getFormattedData(Map<String, dynamic> inspection) {
+    return {
+      "offline": true,
+      "app_id": inspection['app_id'],
+      "location_img1": inspection['location_img1'],
+      "location_img2": inspection['location_img2'],
+      "location_img3": inspection['location_img3'],
+      "location_img4": inspection['location_img4'],
+      "image1_lat": inspection['image1_lat'],
+      "image2_lat": inspection['image2_lat'],
+      "image3_lat": inspection['image3_lat'],
+      "image4_lat": inspection['image4_lat'],
+      "image1_log": inspection['image1_log'],
+      "image2_log": inspection['image2_log'],
+      "image3_log": inspection['image3_log'],
+      "image4_log": inspection['image4_log'],
+      "context": context,
+    };
   }
 }
