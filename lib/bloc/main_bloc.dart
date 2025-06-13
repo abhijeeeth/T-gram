@@ -762,6 +762,8 @@ class MainBloc extends Bloc<MainEvent, MainState> {
 
       if (response.statusCode == 200) {
         emit(OfflineUploadSiteInspectionLoaded());
+        DbHelper dbHelper = DbHelper();
+        await dbHelper.deleteNocDataByAppId(ids);
 
         // Show a toast using Flutter's ScaffoldMessenger if context is available
         final context = event.data['context'];

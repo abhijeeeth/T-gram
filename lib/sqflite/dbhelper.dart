@@ -1704,4 +1704,80 @@ class DbHelper {
     final db = await database;
     return await db.query('noc_site_inspection_images');
   }
+
+  /// Delete all data from every user table (but not the tables themselves)
+  Future<void> deleteAllData() async {
+    final db = await database;
+    // List all user tables explicitly
+    final userTables = [
+      'applications',
+      'image_documents',
+      'timber_logs',
+      'species',
+      'additional_documents',
+      'transit_passes',
+      'application_locations',
+      'application_locations_images',
+      'noc_applications',
+      'division_comments_and_files',
+      'clerk_comments_and_files',
+      'deputy_rfos',
+      'image_documents_noc',
+      'additional_documents_noc',
+      'application_location_images',
+      'noc_site_inspection_images',
+    ];
+    // Disable foreign key checks to avoid constraint errors during deletion
+    await db.execute('PRAGMA foreign_keys = OFF');
+    await db.transaction((txn) async {
+      for (var tableName in userTables) {
+        try {
+          await txn.delete(tableName);
+          print("Deleted all data from $tableName");
+        } catch (e) {
+          print("Error deleting data from $tableName: $e");
+        }
+      }
+    });
+    // Re-enable foreign key checks
+    await db.execute('PRAGMA foreign_keys = ON');
+  }
+
+  Future<Map<String, dynamic>> deleteNocDataByAppId(String appId) async {
+    final db = await database;
+    int siteImagesDeleted = 0;
+    int applicationsDeleted = 0;
+
+    try {
+      // 1. Delete from noc_site_inspection_images using app_id directly
+      siteImagesDeleted = await db.delete(
+        'noc_site_inspection_images',
+        where: 'app_id = ?',
+        whereArgs: [appId],
+      );
+
+      // 2. Delete from noc_applications where noc_of_land_application_id matches the app_id
+      applicationsDeleted = await db.delete(
+        'noc_applications',
+        where: 'id = ?',
+        whereArgs: [appId],
+      );
+
+      return {
+        'success': true,
+        'message':
+            'Deleted $siteImagesDeleted site inspection records and $applicationsDeleted application records',
+        'siteImagesDeleted': siteImagesDeleted,
+        'applicationsDeleted': applicationsDeleted
+      };
+    } catch (e) {
+      print("Error deleting NOC data by app_id: $e");
+      return {
+        'success': false,
+        'message': 'Error: ${e.toString()}',
+        'siteImagesDeleted': siteImagesDeleted,
+        'applicationsDeleted': applicationsDeleted
+      };
+    }
+  }
 }

@@ -11,6 +11,7 @@ import 'package:tigramnks/noctiles.dart';
 import 'package:tigramnks/pages/application_locations_list_page.dart';
 import 'package:tigramnks/screens/applications_list_page.dart';
 import 'package:tigramnks/server/serverhelper.dart';
+import 'package:tigramnks/sqflite/dbhelper.dart';
 import 'package:tigramnks/utils/local_storage.dart';
 
 class Homecheck extends StatefulWidget {
@@ -227,6 +228,7 @@ class _HomecheckState extends State<Homecheck> {
                                       false); // Close the dialog without logging out
                                   await LocalStorage.removeToken();
                                   await LocalStorage.removeUserGroup();
+                                  await DbHelper().deleteAllData();
                                 },
                                 child: const Text("Cancel"),
                               ),
