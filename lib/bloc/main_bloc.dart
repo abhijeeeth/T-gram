@@ -320,6 +320,8 @@ class MainBloc extends Bloc<MainEvent, MainState> {
               'auth/PendingListViewApplicationNOC', event.sessionToken));
       if (Initializer.nocFreshapplicationModel.status == true) {
         emit(NocFreshListLoaded());
+        log('NOC Fresh Application List Loaded Successfully'
+            '${Initializer.nocFreshapplicationModel.data} ');
       } else {
         emit(NOClistfreshFailed());
       }
@@ -627,9 +629,19 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       final String base64ImagePic1 = base64Encode(await file.readAsBytes());
 
       const String url = '${ServerHelper.baseUrl}auth/noc_inception_report/';
+      // Determine the mime type based on the file extension
+      String fileName = event.data['inspection_report']['name'] ?? '';
+      String mimeType = 'application/pdf';
+      if (fileName.toLowerCase().endsWith('.jpg') ||
+          fileName.toLowerCase().endsWith('.jpeg')) {
+        mimeType = 'image/jpeg';
+      } else if (fileName.toLowerCase().endsWith('.png')) {
+        mimeType = 'image/png';
+      }
+
       Map data = {
         "app_id": ids,
-        "inspection_report": {"mime": "image/jpeg", "data": base64ImagePic1},
+        "inspection_report": {"mime": mimeType, "data": base64ImagePic1},
       };
       log(data.toString());
       var body = json.encode(data);

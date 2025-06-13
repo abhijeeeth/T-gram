@@ -427,7 +427,7 @@ class NocFreshListTable extends StatelessWidget {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => Deputyfileupload(
-                    ids: item.id.toString() ?? "",
+                    ids: item.idMain.toString() ?? "",
                   ),
                 ),
               );

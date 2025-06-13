@@ -53,6 +53,7 @@ class Data {
 
 class PendingList {
   int? id;
+  int? idMain; // Added field
   String? nocApplicationIdNocOfLandApplicationId;
   String? nocApplicationIdName;
   String? nocApplicationIdNocCreatedAt;
@@ -63,6 +64,7 @@ class PendingList {
 
   PendingList({
     this.id,
+    this.idMain, // Added to constructor
     this.nocApplicationIdNocOfLandApplicationId,
     this.nocApplicationIdName,
     this.nocApplicationIdNocCreatedAt,
@@ -74,6 +76,7 @@ class PendingList {
 
   PendingList.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    idMain = json['id_main']; // Added fromJson
     nocApplicationIdNocOfLandApplicationId =
         json['noc_application_id__noc_of_land_application_id'];
     nocApplicationIdName = json['noc_application_id__name'];
@@ -87,6 +90,7 @@ class PendingList {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
+    data['id_main'] = idMain; // Added toJson
     data['noc_application_id__noc_of_land_application_id'] =
         nocApplicationIdNocOfLandApplicationId;
     data['noc_application_id__name'] = nocApplicationIdName;

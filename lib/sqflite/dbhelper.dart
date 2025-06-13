@@ -1660,17 +1660,21 @@ class DbHelper {
         insertData.remove(key);
       }
 
+      // Always use app_id, map app_form_id to app_id if present
+      if (insertData.containsKey('app_form_id')) {
+        insertData['app_id'] = insertData['app_form_id'];
+        insertData.remove('app_form_id');
+      }
+
       // Ensure only file paths (as String) are stored for image*_path columns
       for (var i = 1; i <= 4; i++) {
         final pathKey = 'image${i}_path';
         if (insertData.containsKey(pathKey)) {
           var value = insertData[pathKey];
           if (value != null && value is! String) {
-            // If it's a File object, use its path property
             if (value is File) {
               insertData[pathKey] = value.path;
             } else {
-              // Otherwise, just convert to string
               insertData[pathKey] = value.toString();
             }
           }
