@@ -1706,42 +1706,6 @@ class DbHelper {
   }
 
   /// Delete all data from every user table (but not the tables themselves)
-  Future<void> deleteAllData() async {
-    final db = await database;
-    // List all user tables explicitly
-    final userTables = [
-      'applications',
-      'image_documents',
-      'timber_logs',
-      'species',
-      'additional_documents',
-      'transit_passes',
-      'application_locations',
-      'application_locations_images',
-      'noc_applications',
-      'division_comments_and_files',
-      'clerk_comments_and_files',
-      'deputy_rfos',
-      'image_documents_noc',
-      'additional_documents_noc',
-      'application_location_images',
-      'noc_site_inspection_images',
-    ];
-    // Disable foreign key checks to avoid constraint errors during deletion
-    await db.execute('PRAGMA foreign_keys = OFF');
-    await db.transaction((txn) async {
-      for (var tableName in userTables) {
-        try {
-          await txn.delete(tableName);
-          print("Deleted all data from $tableName");
-        } catch (e) {
-          print("Error deleting data from $tableName: $e");
-        }
-      }
-    });
-    // Re-enable foreign key checks
-    await db.execute('PRAGMA foreign_keys = ON');
-  }
 
   Future<Map<String, dynamic>> deleteNocDataByAppId(String appId) async {
     final db = await database;
@@ -1778,6 +1742,47 @@ class DbHelper {
         'siteImagesDeleted': siteImagesDeleted,
         'applicationsDeleted': applicationsDeleted
       };
+    }
+  }
+
+  /// Clears all data from all tables while preserving the table structures
+  Future<Map<String, int>> clearAllData() async {
+    final db = await database;
+    Map<String, int> deletionResults = {};
+
+    try {
+      // Delete data from all tables
+      deletionResults['applications'] = await db.delete('applications');
+      deletionResults['image_documents'] = await db.delete('image_documents');
+      deletionResults['timber_logs'] = await db.delete('timber_logs');
+      deletionResults['species'] = await db.delete('species');
+      deletionResults['additional_documents'] =
+          await db.delete('additional_documents');
+      deletionResults['transit_passes'] = await db.delete('transit_passes');
+      deletionResults['application_locations'] =
+          await db.delete('application_locations');
+      deletionResults['application_locations_images'] =
+          await db.delete('application_locations_images');
+      deletionResults['noc_applications'] = await db.delete('noc_applications');
+      deletionResults['division_comments_and_files'] =
+          await db.delete('division_comments_and_files');
+      deletionResults['clerk_comments_and_files'] =
+          await db.delete('clerk_comments_and_files');
+      deletionResults['deputy_rfos'] = await db.delete('deputy_rfos');
+      deletionResults['image_documents_noc'] =
+          await db.delete('image_documents_noc');
+      deletionResults['additional_documents_noc'] =
+          await db.delete('additional_documents_noc');
+      deletionResults['application_location_images'] =
+          await db.delete('application_location_images');
+      deletionResults['noc_site_inspection_images'] =
+          await db.delete('noc_site_inspection_images');
+
+      print('All data cleared successfully');
+      return deletionResults;
+    } catch (e) {
+      print('Error clearing database: $e');
+      return deletionResults;
     }
   }
 }

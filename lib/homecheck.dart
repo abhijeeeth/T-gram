@@ -228,7 +228,7 @@ class _HomecheckState extends State<Homecheck> {
                                       false); // Close the dialog without logging out
                                   await LocalStorage.removeToken();
                                   await LocalStorage.removeUserGroup();
-                                  await DbHelper().deleteAllData();
+                                  await DbHelper().clearAllData();
                                 },
                                 child: const Text("Cancel"),
                               ),
