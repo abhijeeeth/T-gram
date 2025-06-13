@@ -728,7 +728,9 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       final String longImage3 = event.data['image3_log'];
       final String longImage4 = event.data['image4_log'];
 
-      const String url = '${ServerHelper.baseUrl}auth/noc_site_inception/';
+      String url = ServerHelper.userGroup == 'forest range officer'
+          ? '${ServerHelper.baseUrl}auth/noc_site_inception_rfo/'
+          : '${ServerHelper.baseUrl}auth/noc_site_inception/';
       Map data = {
         "app_id": ids,
         "location_img1": {"mime": "image/jpeg", "data": base64ImagePic1},

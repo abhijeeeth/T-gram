@@ -281,8 +281,8 @@ class _OfflineSiteInspectionListState extends State<OfflineSiteInspectionList>
                   Align(
                     alignment: Alignment.centerRight,
                     child: ElevatedButton.icon(
-                      icon: const Icon(Icons.info, size: 18),
-                      label: const Text('View Details'),
+                      icon: const Icon(Icons.upload, size: 18),
+                      label: const Text('Upload'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color.fromARGB(255, 28, 110, 99),
                         foregroundColor: Colors.white,

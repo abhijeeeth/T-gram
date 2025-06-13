@@ -16,6 +16,7 @@ import 'package:tigramnks/homePage.dart';
 import 'package:tigramnks/homecheck.dart';
 import 'package:tigramnks/server/serverhelper.dart';
 import 'package:tigramnks/signup.dart';
+import 'package:tigramnks/sqflite/localstorage.dart';
 
 import 'checkPostDash.dart';
 
@@ -228,6 +229,15 @@ class _LoginFormState extends State<LoginForm> {
         final sessionToken = responseJson["token"];
         ServerHelper.token = sessionToken;
         ServerHelper.userGroup = userGroup;
+        LocalStorage.saveToken(sessionToken);
+        LocalStorage.saveUserGroup(userGroup);
+        LocalStorage.saveUserId(userId.toString());
+        LocalStorage.saveUserName(userName);
+        LocalStorage.saveUserEmail(userEmail);
+        LocalStorage.saveRange(responseJson['data']['range']?.toString() ?? '');
+        LocalStorage.saveUserMobile(userMobile);
+        LocalStorage.saveUserAddress(userAddress);
+
         log(userGroup);
         final userProfile = responseJson["data"]["photo_proof_img"] ?? '';
         final userCato = responseJson['data']['usr_category'] ?? '';

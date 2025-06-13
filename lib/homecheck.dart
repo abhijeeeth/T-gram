@@ -11,6 +11,7 @@ import 'package:tigramnks/noctiles.dart';
 import 'package:tigramnks/pages/application_locations_list_page.dart';
 import 'package:tigramnks/screens/applications_list_page.dart';
 import 'package:tigramnks/server/serverhelper.dart';
+import 'package:tigramnks/utils/local_storage.dart';
 
 class Homecheck extends StatefulWidget {
   String sessionToken;
@@ -221,8 +222,12 @@ class _HomecheckState extends State<Homecheck> {
                                 const Text('Are you sure you want to logout?'),
                             actions: <Widget>[
                               TextButton(
-                                onPressed: () =>
-                                    Navigator.of(context).pop(false),
+                                onPressed: () async {
+                                  Navigator.of(context).pop(
+                                      false); // Close the dialog without logging out
+                                  await LocalStorage.removeToken();
+                                  await LocalStorage.removeUserGroup();
+                                },
                                 child: const Text("Cancel"),
                               ),
                               TextButton(
@@ -280,6 +285,8 @@ class _HomecheckState extends State<Homecheck> {
                         SharedPreferences prefs =
                             await SharedPreferences.getInstance();
                         await prefs.remove('isLoggedIn');
+                        await LocalStorage.removeToken();
+                        await LocalStorage.removeUserGroup();
 
                         // Navigate to login screen
                         Navigator.of(context, rootNavigator: true)

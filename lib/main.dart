@@ -5,7 +5,10 @@ import 'package:flutter/foundation.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tigramnks/bloc/main_bloc.dart';
+import 'package:tigramnks/homecheck.dart'; // Import your Homecheck page
 import 'package:tigramnks/login.dart' as login_page;
+import 'package:tigramnks/server/serverhelper.dart';
+import 'package:tigramnks/sqflite/localstorage.dart'; // Add this import
 import 'package:tigramnks/utils/db_initializer.dart';
 
 // Add this class for SSL certificate bypass
@@ -23,7 +26,7 @@ void _setHttpOverrides() {
   HttpOverrides.global = MyHttpOverrides();
 }
 
-void main() {
+void main() async {
   // Only bypass SSL in debug mode for safety
   if (kDebugMode) {
     _setHttpOverrides();
@@ -31,9 +34,38 @@ void main() {
 
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Check token and user group before running the app
+  String? token = await LocalStorage.getToken();
+  String? userGroup = await LocalStorage.getUserGroup();
+  String? userId = await LocalStorage.getUserId();
+  String? range = await LocalStorage.getRange();
+  String? email = await LocalStorage.getUserEmail();
+  String? userName = await LocalStorage.getUserName();
+  String? userMobile = await LocalStorage.getUserMobile();
+  String? userAdress = await LocalStorage.getUserAddress();
+
+  Widget initialScreen;
+  if (token != null && userGroup != "user") {
+    ServerHelper.token = token;
+    ServerHelper.userGroup = userGroup;
+    initialScreen = Homecheck(
+      userId: int.parse(userId ?? '0'),
+      userName: userName.toString(),
+      userEmail: email.toString(),
+      sessionToken: token.toString(),
+      userGroup: userGroup.toString(),
+      dropdownValue: '',
+      Range: range != null && range.isNotEmpty ? range.split(',') : [],
+      userMobile: userMobile,
+      userAddress: userAdress,
+    ); // Replace with your Homecheck widget
+  } else {
+    initialScreen = const login_page.login();
+  }
+
   runApp(
     DatabaseInitializer.wrapWithDatabaseInitialization(
-      child: const MyApp(),
+      child: MyApp(initialScreen: initialScreen),
       loadingWidget: const MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
@@ -53,7 +85,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final Widget initialScreen;
+  const MyApp({super.key, required this.initialScreen});
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +107,7 @@ class MyApp extends StatelessWidget {
             foregroundColor: Colors.white,
           ),
         ),
-        home: const login_page.login(),
+        home: initialScreen,
       ),
     );
   }
