@@ -144,7 +144,7 @@ class NocFreshListTable extends StatelessWidget {
               Text(
                 'Fresh Applications',
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.grey.shade800,
                 ),
@@ -224,82 +224,84 @@ class NocFreshListTable extends StatelessWidget {
   }
 
   Widget _buildTable(List pendingList, BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: const Color.fromARGB(255, 28, 110, 99).withOpacity(0.1),
-            blurRadius: 20,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(minWidth: 800),
-            child: Theme(
-              data: Theme.of(context).copyWith(
-                dataTableTheme: DataTableThemeData(
-                  headingRowColor: WidgetStateProperty.all(
-                    const Color.fromARGB(255, 28, 110, 99).withOpacity(0.1),
+    return SingleChildScrollView(
+      child: Container(
+        margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: const Color.fromARGB(255, 28, 110, 99).withOpacity(0.1),
+              blurRadius: 20,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 800),
+              child: Theme(
+                data: Theme.of(context).copyWith(
+                  dataTableTheme: DataTableThemeData(
+                    headingRowColor: WidgetStateProperty.all(
+                      const Color.fromARGB(255, 28, 110, 99).withOpacity(0.1),
+                    ),
+                    dataRowColor: WidgetStateProperty.resolveWith<Color?>(
+                      (Set<WidgetState> states) {
+                        if (states.contains(WidgetState.hovered)) {
+                          return const Color.fromARGB(255, 28, 110, 99)
+                              .withOpacity(0.05);
+                        }
+                        return null;
+                      },
+                    ),
                   ),
-                  dataRowColor: WidgetStateProperty.resolveWith<Color?>(
-                    (Set<WidgetState> states) {
-                      if (states.contains(WidgetState.hovered)) {
-                        return const Color.fromARGB(255, 28, 110, 99)
-                            .withOpacity(0.05);
-                      }
-                      return null;
-                    },
+                ),
+                child: DataTable(
+                  headingRowHeight: 60,
+                  dataRowMinHeight: 68,
+                  dataRowMaxHeight: 76,
+                  columnSpacing: 28,
+                  horizontalMargin: 24,
+                  headingTextStyle: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
+                    color: Color.fromARGB(255, 28, 110, 99),
                   ),
+                  dataTextStyle: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey.shade800,
+                  ),
+                  columns: const [
+                    DataColumn(label: Text('S.No'), numeric: true),
+                    DataColumn(label: Text('Application ID')),
+                    DataColumn(label: Text('Applicant Name')),
+                    DataColumn(label: Text('Created Date')),
+                    DataColumn(label: Text('Purpose')),
+                    DataColumn(label: Text('Action')),
+                  ],
+                  rows: List.generate(pendingList.length, (index) {
+                    final item = pendingList[index];
+                    return DataRow(
+                      cells: [
+                        DataCell(_buildIndexCell(index)),
+                        DataCell(_buildApplicationIdCell(item)),
+                        DataCell(_buildNameCell(item)),
+                        DataCell(_buildDateCell(item)),
+                        DataCell(_buildPurposeCell(item)),
+                        DataCell(
+                            Initializer.nocFreshapplicationModel.data?.group ==
+                                    'forest range officer'
+                                ? _buildActionCellforRFO(item, context)
+                                : _buildActionCell(item, context)),
+                      ],
+                    );
+                  }),
                 ),
-              ),
-              child: DataTable(
-                headingRowHeight: 60,
-                dataRowMinHeight: 68,
-                dataRowMaxHeight: 76,
-                columnSpacing: 28,
-                horizontalMargin: 24,
-                headingTextStyle: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 15,
-                  color: Color.fromARGB(255, 28, 110, 99),
-                ),
-                dataTextStyle: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey.shade800,
-                ),
-                columns: const [
-                  DataColumn(label: Text('S.No'), numeric: true),
-                  DataColumn(label: Text('Application ID')),
-                  DataColumn(label: Text('Applicant Name')),
-                  DataColumn(label: Text('Created Date')),
-                  DataColumn(label: Text('Purpose')),
-                  DataColumn(label: Text('Action')),
-                ],
-                rows: List.generate(pendingList.length, (index) {
-                  final item = pendingList[index];
-                  return DataRow(
-                    cells: [
-                      DataCell(_buildIndexCell(index)),
-                      DataCell(_buildApplicationIdCell(item)),
-                      DataCell(_buildNameCell(item)),
-                      DataCell(_buildDateCell(item)),
-                      DataCell(_buildPurposeCell(item)),
-                      DataCell(
-                          Initializer.nocFreshapplicationModel.data?.group ==
-                                  'forest range officer'
-                              ? _buildActionCellforRFO(item, context)
-                              : _buildActionCell(item, context)),
-                    ],
-                  );
-                }),
               ),
             ),
           ),

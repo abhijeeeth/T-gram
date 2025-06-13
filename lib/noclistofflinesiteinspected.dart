@@ -205,10 +205,10 @@ class _OfflineSiteInspectionListState extends State<OfflineSiteInspectionList>
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.location_on, color: Colors.white),
+                  const Icon(Icons.person, color: Colors.white),
                   const SizedBox(width: 8),
                   Text(
-                    'Location: ${inspection['location_name'] ?? 'N/A'}',
+                    'Name: ${inspection['name'] ?? 'N/A'}',
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -296,6 +296,7 @@ class _OfflineSiteInspectionListState extends State<OfflineSiteInspectionList>
                         context
                             .read<MainBloc>()
                             .add(OfflineUploadSiteInspection(data: data));
+                        _onRefresh();
                       },
                       // onPressed: () => _showInspectionDetailsDialog(inspection),
                     ),
@@ -518,7 +519,7 @@ class _OfflineSiteInspectionListState extends State<OfflineSiteInspectionList>
           'Site Inspections',
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromARGB(255, 28, 110, 99),
         elevation: 0,
         scrolledUnderElevation: 1,
         actions: [
@@ -531,9 +532,9 @@ class _OfflineSiteInspectionListState extends State<OfflineSiteInspectionList>
       ),
       body: BlocConsumer<MainBloc, MainState>(
         listener: (context, state) {
-          if (state is OfflineUploadSiteInspectionLoaded) {
-            _onRefresh();
-          }
+          // if (state is OfflineUploadSiteInspectionLoaded) {
+          //   _onRefresh();
+          // }
         },
         builder: (context, state) {
           if (state is OfflineUploadSiteInspectionLoading) {
@@ -545,9 +546,9 @@ class _OfflineSiteInspectionListState extends State<OfflineSiteInspectionList>
               ),
             );
           }
-          if (state is OfflineUploadSiteInspectionLoaded) {
-            _onRefresh();
-          }
+          // if (state is OfflineUploadSiteInspectionLoaded) {
+          //   _onRefresh();
+          // }
           return Column(
             children: [
               if (!_isLoading && _siteInspections.isNotEmpty) _buildSearchBar(),
