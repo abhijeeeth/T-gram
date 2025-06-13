@@ -438,11 +438,10 @@ class DbHelper {
     // NOC Site Inspection Images table
     await db.execute('''
       CREATE TABLE noc_site_inspection_images (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        app_id TEXT PRIMARY KEY,
         name TEXT,
         division TEXT,
         village TEXT,
-        app_id TEXT,
         location_img1 TEXT,
         location_img2 TEXT,
         location_img3 TEXT,
@@ -778,11 +777,10 @@ class DbHelper {
     try {
       await db.execute('''
         CREATE TABLE IF NOT EXISTS noc_site_inspection_images (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          app_id TEXT PRIMARY KEY,
           name TEXT,
           division TEXT,
           village TEXT,
-          app_id TEXT,
           location_img1 TEXT,
           location_img2 TEXT,
           location_img3 TEXT,
@@ -1662,7 +1660,7 @@ class DbHelper {
 
       // Always use app_id, map app_form_id to app_id if present
       if (insertData.containsKey('app_form_id')) {
-        insertData['app_id'] = insertData['app_form_id'];
+        insertData['app_id'] = insertData['app_form_id'].toString();
         insertData.remove('app_form_id');
       }
 
@@ -1681,7 +1679,9 @@ class DbHelper {
         }
       }
 
-      return await db.insert('noc_site_inspection_images', insertData);
+      // Use ConflictAlgorithm.replace to avoid duplicates for same app_id
+      return await db.insert('noc_site_inspection_images', insertData,
+          conflictAlgorithm: ConflictAlgorithm.replace);
     } catch (e) {
       print("Error inserting into noc_site_inspection_images: $e");
       return -1;
