@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:path/path.dart';
@@ -1424,7 +1425,7 @@ class DbHelper {
           insertData[imgKey] = base64Encode(insertData[imgKey]);
         }
       }
-
+      log(insertData.toString());
       return await db.insert('application_location_images', insertData);
     } catch (e) {
       print("Error inserting application location images: $e");
@@ -1509,6 +1510,7 @@ class DbHelper {
       for (var key in invalidColumns) {
         data.remove(key);
       }
+      log(data.toString());
       return await db.insert('application_locations_images', data);
     } catch (e) {
       print("Error inserting application_locations_images: $e");
