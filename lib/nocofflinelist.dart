@@ -112,6 +112,9 @@ class _NocofflinelistState extends State<Nocofflinelist> {
                           MaterialPageRoute(
                               builder: (_) => Nocofflinesiteinspection(
                                     appId: app['id'].toString(),
+                                    name: app['name'] ?? 'No Name',
+                                    division: app['division'] ?? '-',
+                                    village: app['village'] ?? '-',
                                   )));
                       // showDialog(
                       //   context: context,

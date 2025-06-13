@@ -58,8 +58,8 @@ class _OfflineSiteInspectionListState extends State<OfflineSiteInspectionList>
       });
 
       final dbHelper = DbHelper();
-      // Fetch data from application_location_images table
-      final inspections = await dbHelper.listAllApplicationLocationImages();
+      // Fetch data from noc_site_inspection_images table
+      final inspections = await dbHelper.listAllNocSiteInspectionImages();
 
       setState(() {
         _siteInspections = inspections;
@@ -104,176 +104,198 @@ class _OfflineSiteInspectionListState extends State<OfflineSiteInspectionList>
     });
   }
 
-  /// Shows detailed information for a site inspection
-  void _showInspectionDetails(Map<String, dynamic> inspection) {
-    showModalBottomSheet(
+  /// Shows detailed information for a site inspection (as dialog, like reference)
+  void _showInspectionDetailsDialog(Map<String, dynamic> inspection) {
+    showDialog(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      builder: (context) => AlertDialog(
+        title: Text('Inspection Details (ID: ${inspection['id']})'),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildDetailItem('Application ID', '${inspection['app_id']}'),
+              _buildDetailItem(
+                  'Location Name', '${inspection['location_name'] ?? 'N/A'}'),
+              _buildDetailItem('Date', '${inspection['date'] ?? 'N/A'}'),
+              _buildDetailItem('Summary', '${inspection['summary'] ?? 'N/A'}'),
+              const Divider(),
+              const Text('Location Images:',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              _buildDetailItem(
+                  'Image 1', '${inspection['location_img1'] ?? 'None'}'),
+              _buildDetailItem(
+                  'Image 2', '${inspection['location_img2'] ?? 'None'}'),
+              _buildDetailItem(
+                  'Image 3', '${inspection['location_img3'] ?? 'None'}'),
+              _buildDetailItem(
+                  'Image 4', '${inspection['location_img4'] ?? 'None'}'),
+              const Divider(),
+              const Text('Coordinates:',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              _buildDetailItem('Image 1',
+                  'Lat: ${inspection['image1_lat'] ?? 'N/A'}, Long: ${inspection['image1_log'] ?? 'N/A'}'),
+              _buildDetailItem('Image 2',
+                  'Lat: ${inspection['image2_lat'] ?? 'N/A'}, Long: ${inspection['image2_log'] ?? 'N/A'}'),
+              _buildDetailItem('Image 3',
+                  'Lat: ${inspection['image3_lat'] ?? 'N/A'}, Long: ${inspection['image3_log'] ?? 'N/A'}'),
+              _buildDetailItem('Image 4',
+                  'Lat: ${inspection['image4_lat'] ?? 'N/A'}, Long: ${inspection['image4_log'] ?? 'N/A'}'),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Close'),
+          ),
+        ],
       ),
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.7,
-        maxChildSize: 0.95,
-        minChildSize: 0.5,
-        expand: false,
-        builder: (context, scrollController) => Column(
+    );
+  }
+
+  Widget _buildDetailItem(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: RichText(
+        text: TextSpan(
+          style: const TextStyle(color: Colors.black),
           children: [
-            // Handle bar
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 12),
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(2),
-              ),
+            TextSpan(
+              text: '$label: ',
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            // Header
+            TextSpan(text: value),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Builds a site inspection list item styled like the reference
+  Widget _buildInspectionCard(Map<String, dynamic> inspection, int index) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16, left: 12, right: 12),
+      elevation: 3,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: const Color.fromARGB(255, 28, 110, 99),
+            width: 1.5,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor.withOpacity(0.1),
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(20)),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(255, 28, 110, 99),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10.5),
+                  topRight: Radius.circular(10.5),
+                ),
               ),
               child: Row(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Icon(
-                      Icons.description,
+                  const Icon(Icons.location_on, color: Colors.white),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Location: ${inspection['location_name'] ?? 'N/A'}',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                       color: Colors.white,
-                      size: 24,
                     ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Site Inspection Details',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          'App ID: ${inspection['app_id'] ?? 'N/A'}',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: Icon(Icons.close, color: Colors.grey[600]),
                   ),
                 ],
               ),
             ),
-            // Content
-            Expanded(
-              child: SingleChildScrollView(
-                controller: scrollController,
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildDetailCard('General Information', [
-                      _buildDetailRow(
-                          Icons.tag, 'Application ID', inspection['app_id']),
-                      _buildDetailRow(
-                          Icons.fingerprint, 'Inspection ID', inspection['id']),
-                      _buildDetailRow(Icons.location_on, 'Location Name',
-                          inspection['location_name']),
-                      _buildDetailRow(
-                          Icons.calendar_today, 'Date', inspection['date']),
-                    ]),
-                    const SizedBox(height: 16),
-                    // Add more sections as needed
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.apps,
+                        color: Color.fromARGB(255, 28, 110, 99),
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Application ID: ${inspection['app_id']}',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.access_time,
+                        color: Color.fromARGB(255, 28, 110, 99),
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Date: ${inspection['date'] ?? 'N/A'}',
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                    ],
+                  ),
+                  if (inspection['summary'] != null) ...[
+                    const SizedBox(height: 8),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Icon(
+                          Icons.description,
+                          color: Color.fromARGB(255, 28, 110, 99),
+                          size: 20,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'Summary: ${inspection['summary']}',
+                            style: const TextStyle(fontSize: 14),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
-                ),
+                  const SizedBox(height: 8),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: ElevatedButton.icon(
+                      icon: const Icon(Icons.info, size: 18),
+                      label: const Text('View Details'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 28, 110, 99),
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      onPressed: () => _showInspectionDetailsDialog(inspection),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  /// Builds a detail card with grouped information
-  Widget _buildDetailCard(String title, List<Widget> children) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 16),
-            ...children,
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// Builds a detail row with icon for the inspection details
-  Widget _buildDetailRow(IconData icon, String label, dynamic value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(
-            icon,
-            size: 20,
-            color: Theme.of(context).primaryColor,
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey[600],
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  value?.toString() ?? 'Not specified',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.black87,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -306,117 +328,6 @@ class _OfflineSiteInspectionListState extends State<OfflineSiteInspectionList>
           border: InputBorder.none,
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        ),
-      ),
-    );
-  }
-
-  /// Builds a site inspection list item with improved styling
-  Widget _buildInspectionCard(Map<String, dynamic> inspection, int index) {
-    return AnimatedBuilder(
-      animation: _fadeAnimation,
-      builder: (context, child) => Transform.translate(
-        offset: Offset(0, (1 - _fadeAnimation.value) * 50),
-        child: Opacity(
-          opacity: _fadeAnimation.value,
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-            child: Card(
-              elevation: 3,
-              shadowColor: Colors.black.withOpacity(0.1),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: InkWell(
-                onTap: () => _showInspectionDetails(inspection),
-                borderRadius: BorderRadius.circular(16),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    children: [
-                      // Status indicator
-                      Container(
-                        width: 4,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      // Main content
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context)
-                                        .primaryColor
-                                        .withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Text(
-                                    'ID: ${inspection['app_id'] ?? 'N/A'}',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                ),
-                                const Spacer(),
-                                Icon(
-                                  Icons.chevron_right,
-                                  color: Colors.grey[400],
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            if (inspection['location_name'] != null)
-                              Text(
-                                inspection['location_name'],
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black87,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            const SizedBox(height: 4),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.calendar_today,
-                                  size: 14,
-                                  color: Colors.grey[500],
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  inspection['date'] ?? 'No date',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
         ),
       ),
     );
@@ -611,28 +522,18 @@ class _OfflineSiteInspectionListState extends State<OfflineSiteInspectionList>
       ),
       body: Column(
         children: [
-          // Search bar (only show when not loading and has data)
           if (!_isLoading && _siteInspections.isNotEmpty) _buildSearchBar(),
-
-          // Main content
           Expanded(
             child: () {
-              // Handle error state
               if (_errorMessage != null && !_isLoading) {
                 return _buildErrorState();
               }
-
-              // Handle loading state
               if (_isLoading) {
                 return _buildLoadingState();
               }
-
-              // Handle empty state
               if (_filteredInspections.isEmpty) {
                 return _buildEmptyState();
               }
-
-              // Build the main list
               return RefreshIndicator(
                 onRefresh: _onRefresh,
                 color: Theme.of(context).primaryColor,

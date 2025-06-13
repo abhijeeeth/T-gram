@@ -434,6 +434,33 @@ class DbHelper {
         image4_log TEXT
       )
     ''');
+
+    // NOC Site Inspection Images table
+    await db.execute('''
+      CREATE TABLE noc_site_inspection_images (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT,
+        division TEXT,
+        village TEXT,
+        app_id TEXT,
+        location_img1 TEXT,
+        location_img2 TEXT,
+        location_img3 TEXT,
+        location_img4 TEXT,
+        image1_lat TEXT,
+        image2_lat TEXT,
+        image3_lat TEXT,
+        image4_lat TEXT,
+        image1_log TEXT,
+        image2_log TEXT,
+        image3_log TEXT,
+        image4_log TEXT,
+        image1_path TEXT,
+        image2_path TEXT,
+        image3_path TEXT,
+        image4_path TEXT
+      )
+    ''');
   }
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -745,6 +772,59 @@ class DbHelper {
       print("Ensured application_location_images table exists");
     } catch (e) {
       print("Error creating application_location_images table: $e");
+    }
+
+    // Defensive: create noc_site_inspection_images table if not exists
+    try {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS noc_site_inspection_images (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT,
+          division TEXT,
+          village TEXT,
+          app_id TEXT,
+          location_img1 TEXT,
+          location_img2 TEXT,
+          location_img3 TEXT,
+          location_img4 TEXT,
+          image1_lat TEXT,
+          image2_lat TEXT,
+          image3_lat TEXT,
+          image4_lat TEXT,
+          image1_log TEXT,
+          image2_log TEXT,
+          image3_log TEXT,
+          image4_log TEXT,
+          image1_path TEXT,
+          image2_path TEXT,
+          image3_path TEXT,
+          image4_path TEXT
+        )
+      ''');
+      print("Ensured noc_site_inspection_images table exists");
+    } catch (e) {
+      print("Error creating noc_site_inspection_images table: $e");
+    }
+    // Add columns if upgrading from previous versions
+    try {
+      var tableInfo =
+          await db.rawQuery("PRAGMA table_info(noc_site_inspection_images)");
+      var columns = tableInfo.map((col) => col['name']).toSet();
+      for (var col in [
+        'image1_path',
+        'image2_path',
+        'image3_path',
+        'image4_path'
+      ]) {
+        if (!columns.contains(col)) {
+          await db.execute(
+              "ALTER TABLE noc_site_inspection_images ADD COLUMN $col TEXT");
+          print("Added missing column $col to noc_site_inspection_images");
+        }
+      }
+    } catch (e) {
+      print(
+          "Error ensuring image path columns in noc_site_inspection_images: $e");
     }
   }
 
@@ -1563,5 +1643,61 @@ class DbHelper {
       print("Error deleting application_locations_images: $e");
       return 0;
     }
+  }
+
+  // Insert into noc_site_inspection_images
+  Future<int> insertNocSiteInspectionImage(Map<String, dynamic> data) async {
+    final db = await database;
+    try {
+      // Defensive: Remove any keys not present in the table
+      var insertData = Map<String, dynamic>.from(data);
+      var tableInfo =
+          await db.rawQuery("PRAGMA table_info(noc_site_inspection_images)");
+      var validColumns = tableInfo.map((col) => col['name'].toString()).toSet();
+      var invalidColumns =
+          insertData.keys.where((k) => !validColumns.contains(k)).toList();
+      for (var key in invalidColumns) {
+        insertData.remove(key);
+      }
+
+      // Ensure only file paths (as String) are stored for image*_path columns
+      for (var i = 1; i <= 4; i++) {
+        final pathKey = 'image${i}_path';
+        if (insertData.containsKey(pathKey)) {
+          var value = insertData[pathKey];
+          if (value != null && value is! String) {
+            // If it's a File object, use its path property
+            if (value is File) {
+              insertData[pathKey] = value.path;
+            } else {
+              // Otherwise, just convert to string
+              insertData[pathKey] = value.toString();
+            }
+          }
+        }
+      }
+
+      return await db.insert('noc_site_inspection_images', insertData);
+    } catch (e) {
+      print("Error inserting into noc_site_inspection_images: $e");
+      return -1;
+    }
+  }
+
+  // Fetch all records for a given app_id
+  Future<List<Map<String, dynamic>>> getNocSiteInspectionImages(
+      String appId) async {
+    final db = await database;
+    return await db.query(
+      'noc_site_inspection_images',
+      where: 'app_id = ?',
+      whereArgs: [appId],
+    );
+  }
+
+  // Fetch all records from noc_site_inspection_images (for listing)
+  Future<List<Map<String, dynamic>>> listAllNocSiteInspectionImages() async {
+    final db = await database;
+    return await db.query('noc_site_inspection_images');
   }
 }

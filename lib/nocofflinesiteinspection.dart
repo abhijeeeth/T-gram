@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,8 +11,17 @@ import 'package:tigramnks/sqflite/dbhelper.dart';
 
 class Nocofflinesiteinspection extends StatefulWidget {
   final String appId;
+  final String? division;
+  final String? village;
+  final String? name;
 
-  const Nocofflinesiteinspection({super.key, required this.appId});
+  const Nocofflinesiteinspection({
+    super.key,
+    required this.appId,
+    required this.division,
+    required this.village,
+    required this.name,
+  });
 
   @override
   State<Nocofflinesiteinspection> createState() =>
@@ -27,7 +33,7 @@ class _NocofflinesiteinspectionState extends State<Nocofflinesiteinspection> {
   bool isLoading = false;
 
   // Image data
-  List<File?> images = List.generate(4, (_) => null);
+  List<String?> images = List.generate(4, (_) => null); // Store file paths
   List<String> base64Images = List.generate(4, (_) => "");
   List<String> latitudes = List.generate(4, (_) => "");
   List<String> longitudes = List.generate(4, (_) => "");
@@ -61,7 +67,7 @@ class _NocofflinesiteinspectionState extends State<Nocofflinesiteinspection> {
 
       if (pickedFile != null) {
         setState(() {
-          images[index] = File(pickedFile.path);
+          images[index] = pickedFile.path; // Store path instead of File
           latitudes[index] = position.latitude.toString();
           longitudes[index] = position.longitude.toString();
         });
@@ -98,14 +104,10 @@ class _NocofflinesiteinspectionState extends State<Nocofflinesiteinspection> {
   Map<String, dynamic> getLocationImageData() {
     return {
       "app_id": widget.appId,
-      "location_img1":
-          images[0] != null ? base64Encode(images[0]!.readAsBytesSync()) : null,
-      "location_img2":
-          images[1] != null ? base64Encode(images[1]!.readAsBytesSync()) : null,
-      "location_img3":
-          images[2] != null ? base64Encode(images[2]!.readAsBytesSync()) : null,
-      "location_img4":
-          images[3] != null ? base64Encode(images[3]!.readAsBytesSync()) : null,
+      "location_img1": images[0] ?? "",
+      "location_img2": images[1] ?? "",
+      "location_img3": images[2] ?? "",
+      "location_img4": images[3] ?? "",
       "image1_lat": latitudes[0],
       "image2_lat": latitudes[1],
       "image3_lat": latitudes[2],
@@ -114,6 +116,32 @@ class _NocofflinesiteinspectionState extends State<Nocofflinesiteinspection> {
       "image2_log": longitudes[1],
       "image3_log": longitudes[2],
       "image4_log": longitudes[3],
+    };
+  }
+
+  // Prepare data for noc_site_inspection_images table
+  Map<String, dynamic> getNocSiteInspectionImageData() {
+    return {
+      "name": widget.name ?? "",
+      "division": widget.division ?? "",
+      "village": widget.village ?? "",
+      "app_id": widget.appId,
+      "location_img1": images[0] ?? "",
+      "location_img2": images[1] ?? "",
+      "location_img3": images[2] ?? "",
+      "location_img4": images[3] ?? "",
+      "image1_lat": latitudes[0],
+      "image2_lat": latitudes[1],
+      "image3_lat": latitudes[2],
+      "image4_lat": latitudes[3],
+      "image1_log": longitudes[0],
+      "image2_log": longitudes[1],
+      "image3_log": longitudes[2],
+      "image4_log": longitudes[3],
+      "image1_path": images[0] ?? "",
+      "image2_path": images[1] ?? "",
+      "image3_path": images[2] ?? "",
+      "image4_path": images[3] ?? "",
     };
   }
 
@@ -217,20 +245,13 @@ class _NocofflinesiteinspectionState extends State<Nocofflinesiteinspection> {
                             ),
                           ),
                           onPressed: () async {
-                            // First populate the base64Images list from the image files
-                            for (int i = 0; i < images.length; i++) {
-                              if (images[i] != null) {
-                                base64Images[i] =
-                                    base64Encode(images[i]!.readAsBytesSync());
-                              }
-                            }
-
+                            // No need to populate base64Images, just use file paths
                             Map<String, dynamic> data = {
                               "app_id": widget.appId,
-                              "location_img1": base64Images[0],
-                              "location_img2": base64Images[1],
-                              "location_img3": base64Images[2],
-                              "location_img4": base64Images[3],
+                              "location_img1": images[0] ?? "",
+                              "location_img2": images[1] ?? "",
+                              "location_img3": images[2] ?? "",
+                              "location_img4": images[3] ?? "",
                               "image1_lat": latitudes[0],
                               "image2_lat": latitudes[1],
                               "image3_lat": latitudes[2],
@@ -244,7 +265,13 @@ class _NocofflinesiteinspectionState extends State<Nocofflinesiteinspection> {
                             // Store to application_locations_images table
                             int result = await DbHelper()
                                 .insertApplicationLocationImages(data);
-                            if (result > 0) {
+
+                            // Store to noc_site_inspection_images table
+                            int nocResult = await DbHelper()
+                                .insertNocSiteInspectionImage(
+                                    getNocSiteInspectionImageData());
+
+                            if (result > 0 && nocResult > 0) {
                               Fluttertoast.showToast(
                                 msg: "Images saved locally",
                                 backgroundColor: Colors.green,
