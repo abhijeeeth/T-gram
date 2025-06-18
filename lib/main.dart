@@ -11,6 +11,9 @@ import 'package:tigramnks/server/serverhelper.dart';
 import 'package:tigramnks/sqflite/localstorage.dart'; // Add this import
 import 'package:tigramnks/utils/db_initializer.dart';
 
+import 'utils/config.dart';
+import 'utils/http_overrides.dart';
+
 // Add this class for SSL certificate bypass
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -27,6 +30,10 @@ void _setHttpOverrides() {
 }
 
 void main() async {
+  if (AppConfig.shouldBypassSecurity) {
+    setupTestHttpOverrides();
+  }
+
   // Only bypass SSL in debug mode for safety
   if (kDebugMode) {
     _setHttpOverrides();
